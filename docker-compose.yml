@@ -1,0 +1,52 @@
+services:
+  erp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: macasa_erp
+    restart: always
+    volumes:
+      - ./:/var/www/html:cached
+    networks:
+      - macasa-red-docker
+    depends_on:
+      - mariadb
+
+  nginx:
+    image: nginx:latest
+    container_name: macasa_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./:/var/www/html:cached
+    depends_on:
+      - erp
+    networks:
+      - macasa-red-docker
+
+  mariadb:
+    image: mariadb:10.6
+    container_name: macasa_mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: erp_ecommerce_db
+      MYSQL_USER: macasa_user
+      MYSQL_PASSWORD: macasa123
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - macasa-red-docker
+
+networks:
+  macasa-red-docker:
+    external: true
+
+volumes:
+  mariadb_data:
+    name: mariadb_data  # <- Esto fuerza a Docker a NO renombrarlo
+

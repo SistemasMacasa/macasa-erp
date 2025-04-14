@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+// Todos los clientes tienen un vendedor asignado (id_vendedor)
+class Cliente extends Model
+{
+    protected $table = 'clientes'; // Solo si el nombre no sigue la convención 'clientes'
+    protected $primaryKey = 'id_cliente'; // Si no es 'id'
+    public $timestamps = false; // Si tu tabla no tiene created_at / updated_at
+    protected $fillable = [
+        'nombre', 'apellido', 'estatus', 'tipo', 'id_vendedor'
+    ];
+
+    // Devuelve el usuario interno (vendedor) asignado
+    public function vendedor()
+    {
+        return $this->belongsTo(Usuario::class, 'id_vendedor', 'id_usuario');
+        // "id_vendedor" en "clientes" apunta a "id_usuario" en "usuarios"
+    }
+    
+}
