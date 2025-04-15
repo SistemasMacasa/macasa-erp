@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
     @stack('styles')
 </head>
@@ -26,6 +27,21 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
+                    @if($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-alert">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     @yield('content')
                 </div>
             </div>
@@ -59,6 +75,17 @@
             }
         });
     </script>   
+    <script>
+        setTimeout(function () {
+            const alert = document.getElementById('success-alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+                setTimeout(() => alert.remove(), 500); // se elimina del DOM después del fade
+            }
+        }, 5000);
+    </script>
+
     @stack('scripts')
 </body>
 </html>

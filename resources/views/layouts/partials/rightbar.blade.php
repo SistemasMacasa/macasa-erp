@@ -3,7 +3,7 @@
             <div data-simplebar class="h-100">
                 <div class="rightbar-title d-flex align-items-center p-3">
 
-                    <h5 class="m-0 me-2">Theme Customizer</h5>
+                    <h5 class="m-0 me-2">Funciones Administrador</h5>
 
                     <a href="javascript:void(0);" class="right-bar-toggle ms-auto">
                         <i class="mdi mdi-close noti-icon"></i>
@@ -12,8 +12,27 @@
 
                 <!-- Settings -->
                 <hr class="m-0" />
+                    <ul>
+                        <li class="mb-4">
+                            <a href="/usuarios"><i data-feather="users"></i><span>Usuarios del SIS</span></a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="/"><i data-feather="user-check"></i><span>Traspaso de Cuentas</span></a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="/"><i data-feather="user-x"></i><span>Registro de Cuentas eliminadas</span></a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="/"><i data-feather="award"></i><span>Metas de Venta</span></a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="/"><i data-feather="users"></i><span>Reportes</span></a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="/"><i data-feather="users"></i><span>Proveedores</span></a>
+                        </li>
+                    </ul>
 
-                <div class="p-4">
                     <h6 class="mb-3">Layout</h6>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="layout"

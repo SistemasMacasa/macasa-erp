@@ -49,4 +49,3 @@ networks:
 volumes:
   mariadb_data:
     name: mariadb_data  # <- Esto fuerza a Docker a NO renombrarlo
-

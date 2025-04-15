@@ -1,0 +1,40 @@
+/* Por defecto (expandido) muestro el logo grande y oculto el pequeño */
+.logo-lg {
+    display: inline-block;
+}
+.logo-sm {
+    display: none;
+}
+
+/* Expandido (lg) */
+body[data-sidebar-size="lg"] .logo-lg {
+    display: inline-block;
+}
+body[data-sidebar-size="lg"] .logo-sm {
+    display: none;
+}
+body[data-sidebar-size="lg"] .logo-lg img {
+    width: 126px; /* Ajusta como quieras */
+    height: auto;
+}
+
+/* Colapsado (sm o md) */
+body[data-sidebar-size="sm"] .logo-lg,
+body[data-sidebar-size="md"] .logo-lg {
+    display: none !important;
+}
+body[data-sidebar-size="sm"] .logo-sm,
+body[data-sidebar-size="md"] .logo-sm {
+    display: inline-block !important;
+}
+body[data-sidebar-size="sm"] .logo-sm img,
+body[data-sidebar-size="md"] .logo-sm img {
+    width: 50px; /* Ajusta aquí tu tamaño colapsado */
+    height: auto;
+}
+
+/* Opcional: transición suave */
+.navbar-brand-box .logo-sm img,
+.navbar-brand-box .logo-lg img {
+    transition: all 0.3s ease;
+}

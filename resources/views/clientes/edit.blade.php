@@ -1,34 +1,24 @@
 @extends('layouts.app')
 
-@section('title', 'Crear Nuevo Cliente')
+@section('title','Editar Cliente')
 
 @section('content')
 <div class="card shadow">
     <div class="card-header">
-        <h4 class="mb-0">Crear Nuevo Cliente</h4>
+        <h4 class="mb-0">Editar Cliente</h4>
     </div>
 
     <div class="card-body">
-        {{-- Muestra errores de validación (si los hay) --}}
-        @if ($errors->any())
-            <div class="alert alert-danger mb-4">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="{{ route('clientes.store') }}" method="POST">
+        <form action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST">
             @csrf
+            @method('PUT')
 
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text"
                        name="nombre"
                        id="nombre"
-                       value="{{ old('nombre') }}"
+                       value="{{ old('nombre', $cliente->nombre) }}"
                        class="form-control">
             </div>
 
@@ -37,23 +27,23 @@
                 <input type="text"
                        name="apellido"
                        id="apellido"
-                       value="{{ old('apellido') }}"
+                       value="{{ old('apellido', $cliente->apellido) }}"
                        class="form-control">
             </div>
 
             <div class="mb-3">
                 <label for="estatus" class="form-label">Estatus</label>
                 <select name="estatus" id="estatus" class="form-select">
-                    <option value="Activo"  {{ old('estatus') === 'Activo' ? 'selected' : '' }}>Activo</option>
-                    <option value="Inactivo" {{ old('estatus') === 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
+                    <option value="Activo" {{ old('estatus', $cliente->estatus) == 'Activo' ? 'selected' : '' }}>Activo</option>
+                    <option value="Inactivo" {{ old('estatus', $cliente->estatus) == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
                 </select>
             </div>
 
             <div class="mb-3">
                 <label for="tipo" class="form-label">Tipo</label>
                 <select name="tipo" id="tipo" class="form-select">
-                    <option value="ERP"        {{ old('tipo') === 'ERP' ? 'selected' : '' }}>ERP</option>
-                    <option value="ECOMMERCE"  {{ old('tipo') === 'ECOMMERCE' ? 'selected' : '' }}>ECOMMERCE</option>
+                    <option value="ERP" {{ old('tipo', $cliente->tipo) == 'ERP' ? 'selected' : '' }}>ERP</option>
+                    <option value="ECOMMERCE" {{ old('tipo', $cliente->tipo) == 'ECOMMERCE' ? 'selected' : '' }}>ECOMMERCE</option>
                 </select>
             </div>
 
@@ -63,15 +53,16 @@
                     <option value="">-- Selecciona un vendedor --</option>
                     @foreach ($vendedores as $vendedor)
                         <option value="{{ $vendedor->id_usuario }}"
-                            {{ old('id_vendedor', $vendedor->id_vendedor) == $vendedor->id_usuario ? 'selected' : '' }}>
+                            {{ old('id_vendedor', $cliente->id_vendedor) == $vendedor->id_usuario ? 'selected' : '' }}>
                             {{ $vendedor->username }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">
-                Guardar
+
+            <button type="submit" class="btn btn-success">
+                Actualizar
             </button>
         </form>
     </div>

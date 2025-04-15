@@ -5,19 +5,19 @@
                         <div class="navbar-brand-box d-flex align-items-center justify-content-center">
                             <a href="/" class="logo logo-dark">
                                 <span class="logo-sm">
-                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="" height="24">
+                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="" height="24">
+                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
                                 </span>
                             </a>
                     
                             <a href="/" class="logo logo-light">
                                 <span class="logo-sm">
-                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="" height="24">
+                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="" height="24">
+                                    <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
                                 </span>
                             </a>
                         </div>
