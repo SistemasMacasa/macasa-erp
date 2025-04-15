@@ -5,11 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/hola', function () {
-    return "Hola Mundo :v/"; 
+    return view('inicio');
 });
 
 //name sirve para darle un alias a la ruta y que puedes usar en todo el código de Laravel
