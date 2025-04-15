@@ -4,7 +4,7 @@
 @endpush
 
 
-@section('title', 'Listado de Clientes')
+@section('title', 'Macasa | SIS 2.0')
 
 @section('content')
 <!-- start page title -->

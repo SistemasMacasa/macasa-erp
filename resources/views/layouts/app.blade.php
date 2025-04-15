@@ -7,8 +7,6 @@
     <link rel="shortcut icon" href="assets/images/favicon.ico">
     <link href="{{ asset('assets/css/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('assets/css/preloader.min.css') }}" type="text/css" />
-
-    
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">

@@ -19,7 +19,7 @@ Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.ind
 Route::post('/clientes', [ClienteController::class, 'store'])
     ->name('clientes.store');
 
-// routes/web.php
+// routes/web.php     
 Route::get('/demo', function () {
     return view('clientes.index');
 });
