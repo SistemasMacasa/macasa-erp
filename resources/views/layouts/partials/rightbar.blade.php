@@ -10,7 +10,6 @@
                     </a>
                 </div>
 
-                <!-- Settings -->
                 <hr class="m-0" />
                     <ul>
                         <li class="mb-4">
@@ -33,6 +32,7 @@
                         </li>
                     </ul>
 
+                    <!-- 
                     <h6 class="mb-3">Layout</h6>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="layout"
@@ -145,7 +145,7 @@
                             id="layout-direction-rtl" value="rtl">
                         <label class="form-check-label" for="layout-direction-rtl">RTL</label>
                     </div>
-
+                    Settings -->
                 </div>
 
             </div> <!-- end slimscroll-menu-->

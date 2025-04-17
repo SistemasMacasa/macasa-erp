@@ -38,3 +38,15 @@ body[data-sidebar-size="md"] .logo-sm img {
 .navbar-brand-box .logo-lg img {
     transition: all 0.3s ease;
 }
+
+@media (max-width: 991.98px) {
+    .navbar-brand-box .logo-lg img {
+        width: 100px !important;
+        height: auto !important;
+    }
+
+    .navbar-brand-box .logo-sm img {
+        width: 60px !important;
+        height: auto !important;
+    }
+}

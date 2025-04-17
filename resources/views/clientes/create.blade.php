@@ -52,8 +52,10 @@
             <div class="mb-3">
                 <label for="tipo" class="form-label">Tipo</label>
                 <select name="tipo" id="tipo" class="form-select">
-                    <option value="ERP"        {{ old('tipo') === 'ERP' ? 'selected' : '' }}>ERP</option>
-                    <option value="ECOMMERCE"  {{ old('tipo') === 'ECOMMERCE' ? 'selected' : '' }}>ECOMMERCE</option>
+                    <option value="SIS"        {{ old('tipo') === 'SIS' ? 'selected' : '' }}>SIS</option>
+                    <option value="Ecommerce 1"  {{ old('tipo') === 'Ecommerce 1' ? 'selected' : '' }}>Ecommerce 1</option>
+                    <option value="Ecommerce 2"  {{ old('tipo') === 'Ecommerce 2' ? 'selected' : '' }}>Ecommerce 2</option>
+
                 </select>
             </div>
 

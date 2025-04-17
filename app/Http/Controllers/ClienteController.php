@@ -76,7 +76,6 @@ class ClienteController extends Controller
         }
     
         // Redirigir a la lista
-        return redirect('clientes.index')
-            ->with('success', 'Cliente creado correctamente');
+        return redirect('clientes.index')->with('success', 'Cliente creado correctamente');
     }
 }

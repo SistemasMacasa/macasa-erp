@@ -61,7 +61,7 @@
             </div>
 
 
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-primary">
                 Actualizar
             </button>
         </form>

@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'MACASA')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>
+        //Cargar info de LocalStorage para Botón dark mode
+        (function () {
+            const savedTheme = localStorage.getItem("macasa-theme") || "light";
+            document.documentElement.setAttribute("data-bs-theme", savedTheme);
+            document.body.setAttribute("data-bs-theme", savedTheme);
+            document.body.setAttribute("data-topbar", savedTheme);
+            document.body.setAttribute("data-sidebar", savedTheme);
+        })();
+    </script>
+
+    <script>
+        //Cargar info de LocalStorage para Botón hamburguesa que contrae el menú lateral
+        (function () {
+            const savedSidebarSize = localStorage.getItem("sidebarSize") || 'lg';
+            document.body.setAttribute('data-sidebar-size', savedSidebarSize);
+        })();
+    </script>
+
     <link rel="shortcut icon" href="assets/images/favicon.ico">
     <link href="{{ asset('assets/css/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('assets/css/preloader.min.css') }}" type="text/css" />
@@ -14,9 +35,10 @@
 
     @stack('styles')
 </head>
+
 <body>
     <div id="layout-wrapper">
-        
+
         {{-- Topbar --}}
         @include('layouts.partials.topbar')
 
@@ -45,7 +67,7 @@
                     @yield('content')
                 </div>
             </div>
-            
+
             @include('layouts.partials.footer')
         </div>
     </div>
@@ -73,9 +95,28 @@
             } else {
                 console.error('Feather no está cargado o no está disponible.');
             }
+
+            const toggleBtn = document.getElementById("vertical-menu-btn");
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    // Alternar clase
+                    document.body.classList.toggle("sidebar-enable");
+
+                    // Alternar data-sidebar-size
+                    const currentSize = document.body.getAttribute("data-sidebar-size") || 'lg';
+                    const newSize = currentSize === 'lg' ? 'sm' : 'lg';
+                    document.body.setAttribute('data-sidebar-size', newSize);
+                    localStorage.setItem('sidebarSize', newSize);
+                });
+            }
         });
-    </script>   
+    </script>
     <script>
+        //Quitar mensaje de éxito después de 5 segundos
+        // Se utiliza setTimeout para eliminar el mensaje después de 5 segundos
         setTimeout(function () {
             const alert = document.getElementById('success-alert');
             if (alert) {
@@ -85,7 +126,24 @@
             }
         }, 5000);
     </script>
+    <script>
+        $('#vertical-menu-btn').on('click', function (t) {
+            t.preventDefault();
+            $('body').toggleClass('sidebar-enable');
+
+            if ($(window).width() >= 992) {
+                const currentSize = document.body.getAttribute('data-sidebar-size') || 'lg';
+                const newSize = currentSize === 'lg' ? 'sm' : 'lg';
+
+                document.body.setAttribute('data-sidebar-size', newSize);
+                localStorage.setItem('sidebarSize', newSize);
+            }
+        });
+
+
+    </script>
 
     @stack('scripts')
 </body>
+
 </html>

@@ -12,7 +12,9 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        //
+        return view('usuarios.index', [
+            'usuarios' => Usuario::all(),
+        ]);
     }
 
     /**
@@ -20,7 +22,7 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        //
+        return view('usuarios.create');
     }
 
     /**
@@ -28,8 +30,29 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'username' => 'required|max:100',
+            'email' => 'nullable|email|max:100',
+        ]);
+
+        $datos = [
+            'username' => $request->username,
+            'email' => $request->email,
+            'cargo' => $request->cargo,
+            'tipo' => 'ERP',
+            'estatus' => 'Activo',
+            'es_admin' => $request->has('es_admin') ? 1 : 0,
+            'fecha_alta' => now() // alternativa moderna a date()
+        ];
+
+        try {
+            Usuario::create($datos);
+            return redirect()->route('usuarios.index')->with('success', 'Usuario creado correctamente');
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -42,9 +65,11 @@ class UsuarioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Usuario $usuario)
+    public function edit($id)
     {
-        //
+        $usuario = Usuario::find($id);
+        return view('usuarios.edit', compact('usuario'));
+
     }
 
     /**
@@ -52,7 +77,8 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, Usuario $usuario)
     {
-        //
+        $usuario->update($request->all());
+        return redirect()->route('usuarios.index')->with('success', 'Se editó el usuario exitosamente');
     }
 
     /**
