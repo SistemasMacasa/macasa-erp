@@ -25,7 +25,7 @@ class Usuario extends Authenticatable
     public $timestamps = false; // Solo si no usas created_at / updated_at
 
     protected $fillable = [
-        'username', 'email', 'password', 'tipo', 'estatus', 'es_admin'
+        'username', 'email', 'password', 'cargo', 'tipo', 'estatus', 'es_admin', 'fecha_alta'
     ];
 
     // Opcional: si quieres que Laravel reconozca el "name"

@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         return view('usuarios.index', [
@@ -17,17 +15,11 @@ class UsuarioController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('usuarios.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -53,18 +45,11 @@ class UsuarioController extends Controller
         }
     }
 
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Usuario $usuario)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $usuario = Usuario::find($id);
@@ -72,20 +57,35 @@ class UsuarioController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Usuario $usuario)
     {
-        $usuario->update($request->all());
+        // Se tiene que preparar $datos a causa de 'es_admin' que manda 'on' en vez de 1
+        $request->validate([
+            'username' => 'required|max:100',
+            'email'    => 'nullable|email|max:100',
+            'cargo'    => 'required|max:100',
+            'estatus'  => 'required|in:Activo,Archivado',
+        ]);
+        
+    
+        $datos = [
+            'username' => $request->username ?? $usuario->username,
+            'email'    => $request->email ?? $usuario->email,
+            'cargo'    => $request->cargo ?? $usuario->cargo,
+            'estatus'  => $request->estatus ?? $usuario->estatus,
+            'es_admin' => $request->has('es_admin') ? 1 : 0,
+        ];
+        
+        $usuario->update($datos);
         return redirect()->route('usuarios.index')->with('success', 'Se editó el usuario exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Usuario $usuario)
     {
-        //
+        $usuario->delete();
+    
+        return redirect()->route('usuarios.index')
+                         ->with('success', 'Usuario eliminado exitosamente');
     }
+    
 }

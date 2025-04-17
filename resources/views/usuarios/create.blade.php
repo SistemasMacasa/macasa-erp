@@ -32,14 +32,15 @@
             </div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">Cargo</label>
-                <select name="id_cargo" id="id_cargo" class="form-select">
-                        <option value="Dirección" {{ old('direccion') == "Direccion" ? 'selected' : '' }}>Dirección</option>
-                        <option value="Administracion" {{ old('administracion') == "Administracion" ? 'selected' : '' }}>Administración</option>
-                        <option value="Compras" {{ old('compras') == "Compras" ? 'selected' : '' }}>Compras</option>
-                        <option value="Aux Compras" {{ old('contabilidad') == "Contabilidad" ? 'selected' : '' }}>Contabilidad</option>
-                        <option value="Sistemas" {{ old('sistemas') == "Sistemas" ? 'selected' : '' }}>Sistemas</option>
-                        <option value="Ejecutivo" {{ old('ventas') == "Ventas" ? 'selected' : '' }}>Ejecutivo de Ventas</option>
+                <label for="cargo" class="form-label">Cargo</label>
+                <select name="cargo" id="cargo" class="form-select">
+                        <option value="Direccion" {{ old('cargo') == "Direccion" ? 'selected' : '' }}>Dirección</option>
+                        <option value="Administracion" {{ old('cargo') == "Administracion" ? 'selected' : '' }}>Administración</option>
+                        <option value="Compras" {{ old('cargo') == "Compras" ? 'selected' : '' }}>Compras</option>
+                        <option value="Aux Compras" {{ old('cargo') == "Aux Compras" ? 'selected' : '' }}>Aux Compras</option>
+                        <option value="Marketing" {{ old('cargo') == "Marketing" ? 'selected' : '' }}>Marketing</option>
+                        <option value="Sistemas" {{ old('cargo') == "Sistemas" ? 'selected' : '' }}>Sistemas</option>
+                        <option value="Ejecutivo" {{ old('cargo') == "Ejecutivo" ? 'selected' : '' }}>Ejecutivo de Ventas</option>
 
                 </select>
 
