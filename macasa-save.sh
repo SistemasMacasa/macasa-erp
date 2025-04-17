@@ -1,20 +1,17 @@
 #!/bin/bash
 
-# Verifica si se proporcionó un mensaje de commit
-if [ -z "$1" ]; then
-    # Si no se proporcionó, usa la fecha y hora actuales
-    COMMIT_MSG="Auto-commit: $(date '+%Y-%m-%d %H:%M:%S')"
-else
-    COMMIT_MSG="$1"
+PROYECTO=~/macasa-erp
+cd $PROYECTO || exit
+
+# Verificar si hay cambios para guardar
+if git diff --quiet && git diff --cached --quiet; then
+  echo "😎 ¿Qué le quieres actualizar? Si ya está actualizado."
+  exit 0
 fi
 
-echo "🔄 Agregando cambios al repositorio..."
+COMMIT_MSG=${1:-"Auto-commit: $(date '+%Y-%m-%d %H:%M:%S')"}
+echo "📦 [macasa-save] Agregando y haciendo commit con mensaje: $COMMIT_MSG"
 git add .
-
-echo "📝 Haciendo commit con el mensaje: \"$COMMIT_MSG\""
 git commit -m "$COMMIT_MSG"
-
-echo "📤 Haciendo push al repositorio remoto..."
-git push origin HEAD
-
-echo "✅ Cambios guardados y enviados exitosamente."
+git push origin dev
+echo "✅ Cambios guardados y enviados a 'dev'."
