@@ -3,6 +3,11 @@
 @section('title', 'Crear Nuevo Cliente')
 
 @section('content')
+@section('breadcrumb')
+        <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('clientes.index') }}">Mis Cuentas</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('clientes.create') }}">Nuevo Cliente</a></li>
+    @endsection
 <div class="card shadow">
     <div class="card-header">
         <h4 class="mb-0">Crear Nuevo Cliente</h4>

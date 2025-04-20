@@ -3,22 +3,22 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box d-flex align-items-center justify-content-center">
-                <a href="/" class="logo">
+                <a href="/" class="logo logo-dark">
                     <span class="logo-sm">
                         <img id="logo-img" src="{{ asset('assets/images/imglogin/logo.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img id="logo-img-lg" src="{{ asset('assets/images/imglogin/logo.png') }}" alt="" height="50">
+                        <img id="logo-img-lg" src="{{ asset('assets/images/imglogin/logo.png') }}" alt="" height="22">
                     </span>
                 </a>
 
 
                 <a href="/" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
+                        <img id="logo-img" src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
+                        <img id="logo-img-lg" src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
                     </span>
                 </a>
             </div>
@@ -100,9 +100,10 @@
 
             <div class="dropdown d-none d-sm-inline-block">
                 <button type="button" class="btn header-item" id="mode-setting-btn">
-                    <i data-feather="moon" class="icon-lg layout-mode-dark"></i>
-                    <i data-feather="sun" class="icon-lg layout-mode-light"></i>
+                    <span id="theme-icon-dark"><i data-feather="moon" class="icon-lg"></i></span>
+                    <span id="theme-icon-light"><i data-feather="sun" class="icon-lg"></i></span>
                 </button>
+
             </div>
 
             <div class="dropdown d-none d-lg-inline-block ms-1">
@@ -272,8 +273,15 @@
                     <a class="dropdown-item" href="auth-lock-screen.html"><i
                             class="mdi mdi-lock font-size-16 align-middle me-1"></i> Lock Screen</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="auth-logout.html"><i
-                            class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout</a>
+                    <div class="dropdown-item">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item">
+                                <i class="mdi mdi-logout font-size-16 align-middle me-1"></i> Cerrar sesión
+                            </button>
+                        </form>
+
+                    </div>
                 </div>
             </div>
 

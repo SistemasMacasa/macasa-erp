@@ -3,16 +3,11 @@
 @section('title', 'Usuarios del Sistema')
 
 @section('content')
-    <a href="{{ url()->previous() }}" class="btn btn-outline-secondary mb-2">
-        ← Volver
-    </a>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('clientes.index') }}">Clientes</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Ver cliente</li>
-        </ol>
-    </nav>
+    @section('breadcrumb')
+        <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('usuarios.index') }}">Usuarios de SIS</a></li>
+    @endsection
+
 
     <h1 class="mb-4">Usuarios del Sistema</h1>
 
@@ -21,6 +16,10 @@
             Nuevo Usuario
         </a>
     </p>
+
+    <div class="mb-3">
+        <input type="text" id="buscador-usuarios" class="form-control" placeholder="Buscar usuario...">
+    </div>
 
     <table class="table table-striped table-bordered align-middle">
         <thead class="table-dark">

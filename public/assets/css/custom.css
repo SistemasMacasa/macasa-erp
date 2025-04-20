@@ -33,6 +33,39 @@ body[data-sidebar-size="md"] .logo-sm img {
     height: auto;
 }
 
+/* Cambia el color del logo según el tema */
+.layout-mode-dark,
+.layout-mode-light {
+    display: none;
+}
+
+[data-bs-theme="light"] .layout-mode-dark {
+    display: inline-block;
+}
+
+[data-bs-theme="dark"] .layout-mode-light {
+    display: inline-block;
+}
+
+/* Estilo para animar la rotación */
+.theme-icon-animate {
+    display: inline-block;
+    transition: transform 0.4s ease;
+    transform: rotate(360deg);
+}
+
+/* Animación de rotación rápida */
+@keyframes rotateIcon {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#mode-setting-btn.animate-theme {
+    animation: rotateIcon 0.5s ease;
+}
+
+
+
 /* Opcional: transición suave */
 .navbar-brand-box .logo-sm img,
 .navbar-brand-box .logo-lg img {
@@ -50,3 +83,26 @@ body[data-sidebar-size="md"] .logo-sm img {
         height: auto !important;
     }
 }
+
+/* Custom styles for the right sidebar */
+.right-bar {
+    background-color: var(--bs-body-bg);
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    color: var(--bs-body-color);
+}
+
+.rightbar-title h5 {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.right-bar a {
+    transition: all 0.2s ease-in-out;
+}
+
+.right-bar a:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    border-radius: 0.375rem;
+    padding-left: 0.5rem;
+}
+

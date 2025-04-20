@@ -59,23 +59,35 @@ class UsuarioController extends Controller
 
     public function update(Request $request, Usuario $usuario)
     {
+        $datos = $request->only([
+            'username',
+            'email',
+            'cargo',
+            'estatus',
+            'tipo',
+            'es_admin'
+        ]);
+
+        if ($request->filled('password')) {
+            $datos['password'] = bcrypt($request->password);
+        }
+
         // Se tiene que preparar $datos a causa de 'es_admin' que manda 'on' en vez de 1
         $request->validate([
             'username' => 'required|max:100',
-            'email'    => 'nullable|email|max:100',
-            'cargo'    => 'required|max:100',
-            'estatus'  => 'required|in:Activo,Archivado',
+            'email' => 'nullable|email|max:100',
+            'cargo' => 'required|max:100',
+            'estatus' => 'required|in:Activo,Archivado',
         ]);
-        
-    
-        $datos = [
-            'username' => $request->username ?? $usuario->username,
-            'email'    => $request->email ?? $usuario->email,
-            'cargo'    => $request->cargo ?? $usuario->cargo,
-            'estatus'  => $request->estatus ?? $usuario->estatus,
-            'es_admin' => $request->has('es_admin') ? 1 : 0,
-        ];
-        
+
+
+        $datos['username'] = $request->username ?? $usuario->username;
+        $datos['email'] = $request->email ?? $usuario->email;
+        $datos['cargo'] = $request->cargo ?? $usuario->cargo;
+        $datos['estatus'] = $request->estatus ?? $usuario->estatus;
+        $datos['es_admin'] = $request->has('es_admin') ? 1 : 0;
+
+
         $usuario->update($datos);
         return redirect()->route('usuarios.index')->with('success', 'Se editó el usuario exitosamente');
     }
@@ -83,9 +95,9 @@ class UsuarioController extends Controller
     public function destroy(Usuario $usuario)
     {
         $usuario->delete();
-    
+
         return redirect()->route('usuarios.index')
-                         ->with('success', 'Usuario eliminado exitosamente');
+            ->with('success', 'Usuario eliminado exitosamente');
     }
-    
+
 }

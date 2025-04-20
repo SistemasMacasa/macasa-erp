@@ -64,8 +64,10 @@
                             {{ session('success') }}
                         </div>
                     @endif
+                    {{-- Breadcrumbs --}}
+                    @includeWhen(View::hasSection('breadcrumb'), 'layouts.partials.breadcrumbs')
 
-                    @yield('content')
+                    @yield(section: 'content')
                 </div>
             </div>
 
@@ -141,7 +143,40 @@
             }
         });
 
+    </script>
 
+    <script>
+        // Buscador de clientes
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('buscador-clientes');
+            const filas = document.querySelectorAll('table tbody tr');
+
+            input.addEventListener('input', function () {
+                const filtro = input.value.toLowerCase();
+
+                filas.forEach(fila => {
+                    const texto = fila.textContent.toLowerCase();
+                    fila.style.display = texto.includes(filtro) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+
+    <script>
+        // Buscador de usuarios
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('buscador-usuarios');
+            const filas = document.querySelectorAll('table tbody tr');
+
+            input.addEventListener('input', function () {
+                const filtro = input.value.toLowerCase();
+
+                filas.forEach(fila => {
+                    const texto = fila.textContent.toLowerCase();
+                    fila.style.display = texto.includes(filtro) ? '' : 'none';
+                });
+            });
+        });
     </script>
 
     @stack('scripts')

@@ -11,26 +11,45 @@
                 </div>
 
                 <hr class="m-0" />
-                    <ul>
-                        <li class="mb-4">
-                            <a href="/usuarios"><i data-feather="users"></i><span>Usuarios del SIS</span></a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="/"><i data-feather="user-check"></i><span>Traspaso de Cuentas</span></a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="/"><i data-feather="user-x"></i><span>Registro de Cuentas eliminadas</span></a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="/"><i data-feather="award"></i><span>Metas de Venta</span></a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="/"><i data-feather="users"></i><span>Reportes</span></a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="/"><i data-feather="users"></i><span>Proveedores</span></a>
-                        </li>
-                    </ul>
+                <ul class="list-unstyled p-3">
+                    <li class="mb-3">
+                        <a href="/usuarios" class="d-flex align-items-center text-decoration-none text-reset">
+                            <i data-feather="users" class="icon-sm me-2"></i>
+                            <span>Usuarios del SIS</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="/" class="d-flex align-items-center text-decoration-none text-reset">
+                            <i data-feather="user-check" class="icon-sm me-2"></i>
+                            <span>Traspaso de Cuentas</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="/" class="d-flex align-items-center text-decoration-none text-reset">
+                            <i data-feather="user-x" class="icon-sm me-2"></i>
+                            <span>Cuentas Eliminadas</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="/" class="d-flex align-items-center text-decoration-none text-reset">
+                            <i data-feather="award" class="icon-sm me-2"></i>
+                            <span>Metas de Venta</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="/" class="d-flex align-items-center text-decoration-none text-reset">
+                            <i data-feather="file-text" class="icon-sm me-2"></i>
+                            <span>Reportes</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="/" class="d-flex align-items-center text-decoration-none text-reset">
+                            <i data-feather="truck" class="icon-sm me-2"></i>
+                            <span>Proveedores</span>
+                        </a>
+                    </li>
+                </ul>
+
 
                     <!-- 
                     <h6 class="mb-3">Layout</h6>

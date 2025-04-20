@@ -3,6 +3,12 @@
 @section('title', 'Editar usuario')
 
 @section('content')
+    @section('breadcrumb')
+        <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('usuarios.index') }}">Usuarios del SIS</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a
+                href="{{ route('usuarios.edit', $usuario->id_usuario) }}">Editar Usuario</a></li>
+    @endsection
     <div class="card shadow">
         <div class="card-header">
             <h4 class="mb-0">Editar Usuario</h4>
@@ -18,6 +24,13 @@
                     <input type="text" name="username" id="nombre" value="{{ old('username', $usuario->username) }}"
                         class="form-control">
                 </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" name="password" id="password" class="form-control"
+                        placeholder="Dejar en blanco para no cambiar">
+                </div>
+
 
                 <div class="mb-3">
                     <label for="apellido" class="form-label">Email</label>

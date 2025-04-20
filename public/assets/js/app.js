@@ -9,6 +9,37 @@
     }
 
     $(document).ready(function () {
+
+        const body = document.body;
+
+        // 🟢 Restaurar tema desde localStorage
+        const savedTheme = localStorage.getItem("macasa-theme") || "light";
+        body.setAttribute("data-bs-theme", savedTheme);
+        body.setAttribute("data-topbar", savedTheme);
+        body.setAttribute("data-sidebar", savedTheme);
+
+        // 🟢 Restaurar tamaño del sidebar
+        const savedSidebarSize = localStorage.getItem("sidebarSize");
+        if (savedSidebarSize) {
+            document.body.setAttribute("data-sidebar-size", savedSidebarSize);
+        }
+
+        const iconDark = document.getElementById("theme-icon-dark");
+        const iconLight = document.getElementById("theme-icon-light");
+
+        // Mostrar el icono correcto al cargar
+        function syncThemeIcons(theme) {
+            // Solo mostrar/ocultar, sin animar
+            iconDark.style.display = (theme === "dark") ? "none" : "inline-block";
+            iconLight.style.display = (theme === "dark") ? "inline-block" : "none";
+        }
+        
+
+
+        syncThemeIcons(savedTheme); // al cargar
+
+
+
         // Sidebar menú
         $("#side-menu").metisMenu();
 
@@ -27,9 +58,8 @@
         });
 
         // Modo oscuro / claro
-        const body = document.body;
         $("#mode-setting-btn").on("click", function () {
-            const isDark = body.getAttribute("data-bs-theme") === "dark";  // ✅ ESTA LÍNEA FALTABA
+            const isDark = body.getAttribute("data-bs-theme") === "dark";
             const newTheme = isDark ? "light" : "dark";
         
             body.setAttribute("data-bs-theme", newTheme);
@@ -37,11 +67,19 @@
             body.setAttribute("data-sidebar", newTheme);
             localStorage.setItem("macasa-theme", newTheme);
         
-            toggleThemeSwitch("layout-mode-" + newTheme);
-            toggleThemeSwitch("sidebar-color-" + newTheme);
-            toggleThemeSwitch("topbar-color-" + newTheme);
+            syncThemeIcons(newTheme); // ← esta ya no tiene animaciones internas
+        
+            // 🔁 Solo aquí se anima el botón
+            const btn = document.getElementById("mode-setting-btn");
+            btn.classList.add("animate-theme");
+            setTimeout(() => {
+                btn.classList.remove("animate-theme");
+            }, 500);
         });
         
+
+
+
 
         function toggleThemeSwitch(id) {
             const el = document.getElementById(id);

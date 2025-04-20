@@ -46,7 +46,7 @@ class ClienteController extends Controller
         return redirect('clientes')->with('success', 'Cliente actualizado correctamente');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         // 1) Buscar el registro existente
         $cliente = Cliente::findOrFail($id);

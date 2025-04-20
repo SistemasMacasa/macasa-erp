@@ -28,6 +28,16 @@ class Usuario extends Authenticatable
         'username', 'email', 'password', 'cargo', 'tipo', 'estatus', 'es_admin', 'fecha_alta'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
+    //Un usuario interno no debe tener referencia de cliente y debe de marcarse en tipo
+    public function isInterno()
+    {
+        return $this->tipo === 'ERP' && is_null($this->id_cliente);
+    }
+
     // Opcional: si quieres que Laravel reconozca el "name"
     public function getNameAttribute()
     {
