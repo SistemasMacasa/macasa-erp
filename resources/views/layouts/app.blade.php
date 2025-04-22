@@ -6,6 +6,8 @@
     <title>@yield('title', 'MACASA')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="{{ asset('assets/js/dashboard.js') }}"></script>
     <script>
         //Cargar info de LocalStorage para Botón dark mode
         (function () {
@@ -90,7 +92,7 @@
     <script src="{{ asset('assets/js/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('assets/js/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
-    <script src="{{ asset('assets/js/dashboard.init.js') }}"></script>
+    <!-- <script src="{{ asset('assets/js/dashboard.init.js') }}"></script> -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             if (typeof feather !== 'undefined') {

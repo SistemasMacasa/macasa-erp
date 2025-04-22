@@ -106,3 +106,8 @@ body[data-sidebar-size="md"] .logo-sm img {
     padding-left: 0.5rem;
 }
 
+#progress1, #progress2 {
+    min-height: 60px;
+    padding-left: 10px;
+  }
+  
