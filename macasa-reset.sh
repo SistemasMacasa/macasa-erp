@@ -1,48 +1,82 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-PROYECTO=~/macasa-erp
-cd $PROYECTO || exit
+# === CONFIG ===============================================================
+PROYECTO="${HOME}/macasa-erp"
+SERVICE_DB="mariadb"                 # nombre del servicio en docker-compose
+DB_NAME="erp_ecommerce_db"
+DB_USER="${DB_USER:-macasa_user}"
+DB_PASS="${DB_PASS:-macasa123}"
+RED_EXTERNA="macasa-red-docker"
+BACKUP_DIR="${PROYECTO}/database"
+BACKUP_FILE="${BACKUP_DIR}/backup-latest.sql.gz"
 
-echo "💥 [macasa-reset] Lanzando Genkidama sobre Docker..."
+# === UI helpers ===========================================================
+c()  { printf "\e[1;36m%s\e[0m\n" "▶ $*"; }     # cyan
+g()  { printf "\e[1;32m%s\e[0m\n" "✔ $*"; }     # green
+r()  { printf "\e[1;31m%s\e[0m\n" "✖ $*" >&2; } # red
+die(){ r "$*"; exit 1; }
 
-# 1. Apagar y eliminar contenedores
-echo "🛑 Deteniendo y eliminando todos los contenedores..."
-docker rm -f $(docker ps -aq) 2>/dev/null || echo "⚠️ No había contenedores."
+cd "$PROYECTO" || die "No se pudo entrar a $PROYECTO"
 
-# 2. Eliminar volúmenes relevantes
-echo "🧹 Eliminando volumen 'mariadb_data' si existe..."
-docker volume rm mariadb_data 2>/dev/null || echo "⚠️ No se pudo eliminar 'mariadb_data' o no existe."
+############################################################################
+c "💥  [macasa-reset] Desatando la GENKIDAMA sobre Docker…"
 
-# 3. Limpiar volúmenes y redes sin uso
+### 1. Derribo controlado de stack
+c "🛑 Deteniendo contenedores del proyecto…"
+docker compose down --remove-orphans || true
+
+c "🗑️  Eliminando contenedores sueltos…"
+docker ps -aq | xargs -r docker rm -f
+
+### 2. Limpiar volúmenes y redes huérfanas
+c "🧹 Borrando volumen de MariaDB…"
+docker volume rm -f mariadb_data 2>/dev/null || true
 docker volume prune -f
 docker network prune -f
 
-# 4. Volver a crear la red (si es externa)
-echo "🔁 Verificando red externa 'macasa-red-docker'..."
-if ! docker network ls | grep -q macasa-red-docker; then
-  docker network create macasa-red-docker
-  echo "🌐 Red 'macasa-red-docker' creada."
-else
-  echo "✅ Red 'macasa-red-docker' ya existe."
-fi
+### 3. Garantizar que la red externa exista
+c "🌐 Verificando red externa '${RED_EXTERNA}'…"
+docker network inspect "$RED_EXTERNA" &>/dev/null || {
+  docker network create "$RED_EXTERNA"
+  g "Red '${RED_EXTERNA}' creada."
+}
 
-# 5. Reconstruir el entorno
-echo "🔨 Reconstruyendo entorno desde las cenizas..."
+### 4. Levantar el stack de cero
+c "🔨 Reconstruyendo contenedores…"
 docker compose up -d --build
 
-# 6. Restaurar la base de datos si backup existe
-BACKUP="$PROYECTO/database/backup-latest.sql"
-if [ -f "$BACKUP" ]; then
-  echo "🧠 Restaurando base de datos desde backup-latest.sql..."
-  docker exec -i macasa_mariadb mysql -umacasa_user -pmacasa123 erp_ecommerce_db < "$BACKUP"
-  echo "✅ Base de datos restaurada correctamente."
+### 5. Esperar a MariaDB
+c "⌛ Esperando a MariaDB…"
+until docker compose exec -T "$SERVICE_DB" \
+        mysqladmin ping -p"$DB_PASS" --silent &>/dev/null; do
+  sleep 2
+done
+g "MariaDB lista."
+
+### 6. Restaurar backup (si existe y la BD está vacía)
+TABLAS=$(docker compose exec -T "$SERVICE_DB" \
+  mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
+  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME';")
+
+if [ "$TABLAS" -eq 0 ] && [ -s "$BACKUP_FILE" ]; then
+  c "🧠 Restaurando backup-latest.sql.gz…"
+  gunzip -c "$BACKUP_FILE" | \
+    docker compose exec -T "$SERVICE_DB" \
+      mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
+  g "Base restaurada."
 else
-  echo "⚠️ No se encontró backup-latest.sql, la base de datos no se restauró."
+  c "⚠️  Sin backup válido o la base ya tiene tablas."
 fi
 
-# 7. Crear usuario de emergencia (si no existe)
-echo "🧙 Verificando usuario ancla"
-docker exec -it macasa_erp php artisan tinker --execute \
-"App\\Models\\Usuario::firstOrCreate(['email' => 'sistemas@macasahs.com.mx'], ['name' => 'ancla', 'password' => bcrypt('Macasa2019$', 'es_admin' => 1]);"
+### 7. Usuario “ancla” de emergencia
+c "🧙 Creando usuario ancla (si falta)…"
+docker compose exec -T erp \
+  php artisan tinker --execute \
+  "App\\Models\\Usuario::firstOrCreate(
+      ['email'=>'sistemas@macasahs.com.mx'],
+      ['name'=>'ancla','password'=>bcrypt('Macasa2019$'),'es_admin'=>1]
+  );"
 
-echo "🌅 Entorno restaurado, base lista y acceso disponible en http://localhost"
+############################################################################
+g "🌅 GENKIDAMA completada: entorno limpio, base restaurada y listo en http://localhost"
