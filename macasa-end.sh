@@ -1,36 +1,58 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail    # aborta ante cualquier fallo inesperado
 
-PROYECTO=~/macasa-erp
-cd "$PROYECTO" || exit
+# === CONFIG ===
+PROYECTO="${HOME}/macasa-erp"
+DB_NAME="erp_ecommerce_db"
+DB_USER="${DB_USER:-macasa_user}"
+DB_PASS="${DB_PASS:-macasa123}"
+SERVICE_DB="mariadb"
+EXPORT_DIR="${PROYECTO}/database"
+mkdir -p "$EXPORT_DIR"
 
-# Exportar base de datos
-EXPORT_DIR="$PROYECTO/database"
-EXPORT_TIMESTAMP="$EXPORT_DIR/backup-$(date '+%Y-%m-%d_%H-%M-%S').sql"
-EXPORT_LATEST="$EXPORT_DIR/backup-latest.sql"
+STAMP=$(date '+%Y-%m-%d_%H-%M-%S')
+DUMP_FILE="${EXPORT_DIR}/backup-${STAMP}.sql.gz"
+LATEST="${EXPORT_DIR}/backup-latest.sql.gz"
 
-echo "💾 [macasa-end] Respaldando base de datos antes de cerrar..."
-docker exec macasa_mariadb sh -c 'exec mysqldump -umacasa_user -pmacasa123 erp_ecommerce_db' > "$EXPORT_TIMESTAMP"
-cp "$EXPORT_TIMESTAMP" "$EXPORT_LATEST"
+# === UI helpers ===
+c()  { printf "\e[1;36m%s\e[0m\n" "$*"; }  # cyan
+g()  { printf "\e[1;32m%s\e[0m\n" "$*"; }  # green
+r()  { printf "\e[1;31m%s\e[0m\n" "$*" >&2; }
+die(){ r "✖ $*"; exit 1; }
 
-# Limpiar backups antiguos (mantener los 3 más recientes)
-echo "🧹 Eliminando backups antiguos..."
-cd "$EXPORT_DIR"
-ls -1t backup-*.sql | tail -n +4 | xargs -r rm -v
+cd "$PROYECTO" || die "No se pudo entrar a $PROYECTO"
 
-# Apagar contenedores
-echo "🧼 Deteniendo contenedores Docker..."
+# === 1. Backup antes de apagar ===
+c "💾 [macasa-end] Respaldando base de datos…"
+
+# ¿Está corriendo el servicio?
+if ! docker compose ps --services --filter "status=running" | grep -qx "$SERVICE_DB"; then
+  r "⚠️  El servicio $SERVICE_DB no está activo; salto respaldo."
+else
+  if docker compose exec -T "$SERVICE_DB" \
+        mysqldump -u"$DB_USER" -p"$DB_PASS" --quick "$DB_NAME" \
+        | gzip > "$DUMP_FILE"; then
+      [ -s "$DUMP_FILE" ] || die "Dump vacío"
+      ln -fs "$(basename "$DUMP_FILE")" "$LATEST"
+      g "✔ Backup creado: $(basename "$DUMP_FILE")  ($(du -h "$DUMP_FILE" | cut -f1))"
+  else
+      rm -f "$DUMP_FILE"; die "mysqldump falló"
+  fi
+
+  # Rotación (mantener 3 más recientes)
+  ls -1t "$EXPORT_DIR"/backup-*.sql.gz | tail -n +4 | xargs -r rm -v
+fi
+
+# === 2. Parar contenedores ===
+c "🧼 Deteniendo contenedores Docker…"
 docker compose down
 
-# Cerrar apps Windows (Docker Desktop, GitHub Desktop, VS Code)
-echo "🧊 Cerrando aplicaciones en segundo plano (si están abiertas)..."
-powershell.exe -Command "Stop-Process -Name 'Docker Desktop' -Force" 2>/dev/null
-powershell.exe -Command "Stop-Process -Name 'GitHubDesktop' -Force" 2>/dev/null
-powershell.exe -Command "Stop-Process -Name 'Code' -Force" 2>/dev/null
+# === 3. Cerrar apps Windows (ignorar si no existen) ===
+c "🧊 Cerrando aplicaciones de Windows…"
+if grep -qi "microsoft" /proc/version; then
+  powershell.exe -Command "Stop-Process -Name 'Docker Desktop','Code','GitHubDesktop' -Force -ErrorAction SilentlyContinue"
+fi
 
-# Despedida legendaria
-echo "💌 [macasa-end] ¡Buen trabajo, Zerezo! Hoy diste cátedra 🧠⚡"
-echo "⏳ Cerrando Visual Studio Code en 5 segundos... (Ctrl+C para abortar)"
-sleep 5
-
-echo "👋 [macasa-end] Hasta mañana, crack. ¡Proyecto a salvo!"
-sleep 1
+# === 4. Despedida legendaria ===
+g "🚀 Proyecto a salvo, contenedores apagados."
+echo -e "\e[1;35m💌 ¡Buen trabajo, Zerezo! 🧠⚡ Disfruta tu merecido descanso.\e[0m"

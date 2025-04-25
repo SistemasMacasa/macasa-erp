@@ -1,93 +1,98 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-PROYECTO=~/macasa-erp
-cd "$PROYECTO" || exit
+PROYECTO="${HOME}/macasa-erp"
+DB_NAME="erp_ecommerce_db"
+DB_USER="${DB_USER:-macasa_user}"
+DB_PASS="${DB_PASS:-macasa123}"
+SERVICE_DB="mariadb"
 
-echo "📥 [macasa-init] Haciendo git pull desde 'dev'..."
-git pull origin dev 2>&1 | tee /tmp/gitlog
-if grep -q "Already up to date" /tmp/gitlog; then
-  echo "✅ El proyecto ya está actualizado."
+cd "$PROYECTO" || { echo "✖ No se pudo entrar a $PROYECTO"; exit 1; }
+
+# === Helpers UI ===
+cyan()  { printf "\e[1;36m%s\e[0m\n" "$*"; }
+green() { printf "\e[1;32m%s\e[0m\n" "$*"; }
+red()   { printf "\e[1;31m%s\e[0m\n" "$*"; }
+die()   { red "✖ $*"; exit 1; }
+
+# === Git Pull ===
+cyan "📥 Haciendo git pull desde 'dev'..."
+if git pull origin dev 2>&1 | tee /tmp/gitlog | grep -q "Already up to date"; then
+  green "✅ El proyecto ya está actualizado."
 else
-  echo "📦 Cambios aplicados desde la rama 'dev'."
+  green "📦 Cambios aplicados desde la rama 'dev'."
 fi
-rm /tmp/gitlog
+rm -f /tmp/gitlog
 
-echo "🖥️ [macasa-init] Verificando Docker Desktop..."
+# === Docker Desktop (solo si estás en WSL) ===
+cyan "🖥️ Verificando Docker Desktop..."
 
-# Solo iniciar Docker Desktop si no está corriendo
-if ! pgrep -f "Docker Desktop.exe" > /dev/null; then
-  echo "🪟 Iniciando Docker Desktop..."
-  powershell.exe -Command "Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'" 2>/dev/null
-else
-  echo "🐋 Docker Desktop ya estaba corriendo."
+if grep -qi "microsoft" /proc/version; then
+  if ! pgrep -f "Docker Desktop.exe" > /dev/null; then
+    echo "🪟 Iniciando Docker Desktop..."
+    powershell.exe -Command "Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'" 2>/dev/null
+  else
+    green "🐋 Docker Desktop ya estaba corriendo."
+  fi
 fi
 
-# Esperar a que Docker esté disponible
+# === Esperar Docker ===
 wait_for_docker() {
   echo "⌛ Esperando a que Docker esté listo..."
   local retry=0
-  while ! docker info &> /dev/null; do
+  until docker info &>/dev/null; do
     sleep 1
     ((retry++))
     if [ "$retry" -gt 20 ]; then
-      echo "❌ Docker no está listo después de 20 segundos."
-      return 1
+      die "Docker no está listo después de 20 segundos."
     fi
   done
-  echo "✅ Docker está listo."
+  green "✅ Docker está listo."
 }
 
-wait_for_docker || exit 1
+wait_for_docker
 
-# Abrir VS Code
-echo "💻 [macasa-init] Abriendo VS Code en $PROYECTO..."
-
-if grep -qi "microsoft" /proc/version; then
-  if command -v code &> /dev/null; then
-    code .
-  else
-    echo "⚠️ VS Code no está disponible como 'code'. ¿Está instalado en WSL?"
-  fi
+# === Abrir VS Code ===
+cyan "💻 Abriendo VS Code en $PROYECTO..."
+if command -v code &> /dev/null; then
+  code .
 else
-  DISTRO=$(wsl -l --quiet | grep -i ubuntu | head -n 1)
-  if [ -z "$DISTRO" ]; then
-    echo "❌ No se encontró una distro Ubuntu activa en WSL."
-  else
-    code --remote "wsl+$DISTRO" "$PROYECTO"
-  fi
+  red "⚠️ VS Code no está disponible como 'code'. ¿Está instalado en WSL?"
 fi
 
-echo "🧼 Limpiando contenedores antiguos..."
+# === Docker Compose Up ===
+cyan "🧼 Limpiando contenedores antiguos..."
 docker compose down --remove-orphans
 
-echo "🐳 Levantando contenedores Docker..."
+cyan "🐳 Levantando contenedores Docker..."
 docker compose up -d --build
 
-echo "🗄️  Verificando si la base de datos necesita restaurarse…"
+# === Restaurar base si está vacía ===
+cyan "🗄️ Verificando si la base de datos necesita restaurarse…"
 
 DB_READY() {
-  docker exec macasa_mariadb mysqladmin ping -pmacasa123 --silent &> /dev/null
+  docker compose exec -T "$SERVICE_DB" \
+    mysqladmin ping -p"$DB_PASS" --silent &>/dev/null
 }
 
 until DB_READY; do
   echo "⌛ Esperando a MariaDB…"
   sleep 2
 done
-echo "✅ MariaDB responde."
+green "✅ MariaDB responde."
 
-TABLE_COUNT=$(docker exec macasa_mariadb \
-  mysql -N -s -umacasa_user -pmacasa123 \
-  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='erp_ecommerce_db';")
+TABLE_COUNT=$(docker compose exec -T "$SERVICE_DB" \
+  mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
+  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME';")
 
-if [ "$TABLE_COUNT" -eq 0 ] && [ -s "$PROYECTO/database/backup-latest.sql" ]; then
-  echo "🔄 Restaurando backup-latest.sql…"
-  docker exec -i macasa_mariadb \
-    mysql -umacasa_user -pmacasa123 erp_ecommerce_db \
-    < "$PROYECTO/database/backup-latest.sql"
-  echo "✅ Restauración completada."
+if [ "$TABLE_COUNT" -eq 0 ] && [ -s "$PROYECTO/database/backup-latest.sql.gz" ]; then
+  cyan "🔄 Restaurando backup-latest.sql.gz…"
+  gunzip -c "$PROYECTO/database/backup-latest.sql.gz" | \
+    docker compose exec -T "$SERVICE_DB" \
+      mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
+  green "✅ Restauración completada."
 else
   echo "📂 La base ya contiene tablas o no existe backup válido; se omite la restauración."
 fi
 
-
-echo "✅ [macasa-init] Entorno iniciado exitosamente. ¡Hora de programar!"
+green "✅ [macasa-init] Entorno iniciado exitosamente. ¡Hora de programar! 😎"
