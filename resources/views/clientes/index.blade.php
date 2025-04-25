@@ -10,10 +10,24 @@
     <h1 class="mb-4">Listado de Clientes</h1>
 
     <p>
-        <a href="{{ route('clientes.create') }}" class="btn btn-primary">
-            Crear Nuevo
-        </a>
+
     </p>
+
+    <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
+    <div class="d-flex gap-2 mb-3">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left me-1"></i> Regresar
+        </a>
+
+        <a href="{{ route('clientes.create') }}" class="btn btn-primary">
+            <i class="fa fa-phone me-1"></i> Mis Recall's
+        </a>
+
+        <a href="{{ route('clientes.create') }}" class="btn btn-primary">
+            <i class="fa fa-check me-1"></i> Enviar carta de presentación
+        </a>
+
+    </div>
 
     <div class="mb-3">
         <input type="text" id="buscador-clientes" class="form-control" placeholder="Buscar cliente...">
@@ -40,7 +54,7 @@
                     <td>{{ $cliente->vendedor->username ?? 'Sin vendedor' }}</td>
                     <td>
                         <a href="{{ route('clientes.edit', $cliente->id_cliente) }}" class="btn btn-warning btn-sm">
-                            Editar
+                            <i class="fa fa-edit me-1"></i> Editar
                         </a>
 
                         <form action="{{ route('clientes.destroy', $cliente->id_cliente) }}" method="POST"
@@ -48,7 +62,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" onclick="return confirm('¿Estás seguro?')" class="btn btn-danger btn-sm">
-                                Borrar
+                            <i class="fa fa-trash me-1"></i> Borrar
                             </button>
                         </form>
                     </td>

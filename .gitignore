@@ -21,3 +21,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+# Ignorar todos los .sql en la carpeta database excepto el último respaldo
+/database/*.sql
+!/database/backup-latest.sql
+

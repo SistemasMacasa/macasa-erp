@@ -180,7 +180,93 @@
             });
         });
     </script>
+    <script>
+        /*   alterna todos los checks de clientes.index   */
+        document.addEventListener('DOMContentLoaded', () => {
+            const master = document.getElementById('check-all');
+            master?.addEventListener('change', () => {
+                document
+                    .querySelectorAll('.chk-row')
+                    .forEach(chk => chk.checked = master.checked);
+            });
+        });
+    </script>
+    <script>
+        //Agregar direcciones de entrega al formulario de nueva cuenta
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnAgregar = document.getElementById('agregarDireccionEntrega');
+            const contenedor = document.getElementById('contenedorDireccionesEntrega');
+            let index = 1;
 
+            btnAgregar.addEventListener('click', function () {
+                if (index >= 10) return;
+
+                const nuevo = document.createElement('div');
+                nuevo.className = "entrega-block mb-4 border rounded p-3 bg-light-subtle";
+                nuevo.innerHTML = `
+                <h6 class="mb-3 text-muted">Dirección ${index + 1}</h6>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label">Nombre de la Dirección</label>
+                        <input name="direcciones_entrega[${index}][nombre]" class="form-control">
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4"><label class="form-label">Calle</label>
+                        <input name="direcciones_entrega[${index}][calle]" class="form-control">
+                    </div>
+                    <div class="col-md-2"><label class="form-label">Num. ext.</label>
+                        <input name="direcciones_entrega[${index}][num_ext]" class="form-control">
+                    </div>
+                    <div class="col-md-2"><label class="form-label">Num. int.</label>
+                        <input name="direcciones_entrega[${index}][num_int]" class="form-control">
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Colonia</label>
+                        <input name="direcciones_entrega[${index}][colonia]" class="form-control">
+                    </div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-md-4"><label class="form-label">Ciudad / Municipio</label>
+                        <input name="direcciones_entrega[${index}][ciudad]" class="form-control">
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Estado</label>
+                        <input name="direcciones_entrega[${index}][estado]" class="form-control">
+                    </div>
+                    <div class="col-md-2"><label class="form-label">País</label>
+                        <input name="direcciones_entrega[${index}][pais]" class="form-control" value="México">
+                    </div>
+                    <div class="col-md-2"><label class="form-label">C.P.</label>
+                        <input name="direcciones_entrega[${index}][cp]" class="form-control">
+                    </div>
+                </div>
+            `;
+
+                contenedor.appendChild(nuevo);
+                index++;
+            });
+        });
+    </script>
+    <script>
+        //Agregar datos de facturación al formulario de nueva cuenta
+        // Solo se permite agregar hasta 10 bloques de facturación
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnAgregar = document.getElementById('agregarFacturacion');
+            const contenedor = document.getElementById('contenedorFacturacion');
+            let index = 1;
+
+            btnAgregar.addEventListener('click', function () {
+                if (index >= 10) return;
+
+                const bloque = contenedor.querySelector('.facturacion-block').cloneNode(true);
+                bloque.querySelector('h6').innerText = `Razón Social ${index + 1}`;
+
+                // Reemplazar todos los índices [0] por [index]
+                bloque.innerHTML = bloque.innerHTML.replace(/\[0\]/g, `[${index}]`);
+                contenedor.appendChild(bloque);
+
+                index++;
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 

@@ -14,11 +14,14 @@ class ClienteController extends Controller
         return view('clientes.index', compact('clientes'));
     }
     
-    public function create()
+    public function create(Request $request)
     {
-        //dd('create ok');
+        $tipo = $request->input('tipo', 'moral'); // por defecto: moral
         $vendedores = Usuario::whereNull('id_cliente')->get(); // usuarios internos
-        return view('clientes.create', compact('vendedores'));
+        $fuentesContacto = [] ;
+        $catalogoEntregas = [];
+        $catalogoCondicionesPago = [];
+        return view('clientes.create', compact('vendedores','fuentesContacto','catalogoEntregas', 'catalogoCondicionesPago', 'tipo'));
     }
     
     public function edit($id)
@@ -78,4 +81,5 @@ class ClienteController extends Controller
         // Redirigir a la lista
         return redirect('clientes.index')->with('success', 'Cliente creado correctamente');
     }
+
 }

@@ -4,7 +4,7 @@
 @endpush
 
 
-@section('title', 'Macasa | SIS 2.0')
+@section('title', 'SIS 3.0 | Macasa Hardware & Software')
 
 @section('content')
 
@@ -87,7 +87,9 @@
         </div>
     </div>
 </div>
-
+    <div class="row">
+        <h4>¿Cómo vamos?</h4>
+    </div>
 
     <!-- Graficas -->
     <div class="row">

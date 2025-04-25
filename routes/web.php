@@ -12,8 +12,7 @@ Route::get('/', function () {
     return view('inicio');
 })->name('inicio');
 
-//CRUD Clientes
-
+//CRUD Clientes (Cuentas Eje)
 //create
 Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
 //read
@@ -28,10 +27,10 @@ Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name
 //name sirve para darle un alias a la ruta y que puedes usar en todo el código de Laravel
 // por ejemplo: <a href="{{ route('clientes.create') }}">Crear Cliente</a>
 
-//CRUD Usuarios
+//CRUD Usuarios internos de SIS
 Route::resource('usuarios', UsuarioController::class);
 
-//login
+//Login y Logout
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
 Route::post('/logout', function () {

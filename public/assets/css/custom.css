@@ -1,3 +1,5 @@
+
+/*Botón hamburguesa, icono de menú lateral*/
 /* Por defecto (expandido) muestro el logo grande y oculto el pequeño */
 .logo-lg {
     display: inline-block;
@@ -84,7 +86,9 @@ body[data-sidebar-size="md"] .logo-sm img {
     }
 }
 
-/* Custom styles for the right sidebar */
+/* ────────────────────────────────────────────────────────────────────────────────
+    Estilos para Right Bar
+──────────────────────────────────────────────────────────────────────────────── */
 .right-bar {
     background-color: var(--bs-body-bg);
     box-shadow: -2px 0 5px rgba(0,0,0,0.1);
@@ -110,4 +114,211 @@ body[data-sidebar-size="md"] .logo-sm img {
     min-height: 60px;
     padding-left: 10px;
   }
-  
+
+
+ /*───────────────────────────────────────────────
+  LIGHT MODE  – nada cambia, mantiene lavanda
+───────────────────────────────────────────────*/
+body:not([data-sidebar="dark"]) .section-card              {background:#f7f9fc;border:1px solid #e1e6ef;}
+body:not([data-sidebar="dark"]) .section-card-header       {background:#e9eef6;color:#39475a;}
+body:not([data-sidebar="dark"]) .section-card .form-control,
+body:not([data-sidebar="dark"]) .section-card .form-select {border-color:#cfd5e3;}
+
+/*───────────────────────────────────────────────
+  DARK MODE  – paleta slate-indigo
+───────────────────────────────────────────────*/
+body[data-sidebar="dark"] .section-card              {background:#242933;border:1px solid #3a4150;}
+body[data-sidebar="dark"] .section-card-header       {background:#2d3440;color:#e8eaf3;border-bottom:1px solid #3a4150;}
+body[data-sidebar="dark"] .card-body                 {background:#242933;}  /* evita “cartas blancas” */
+
+body[data-sidebar="dark"] .section-card .form-control,
+body[data-sidebar="dark"] .section-card .form-select {
+    background:#2f343e;
+    color:#e8eaf3;
+    border-color:#4a5265;
+}
+body[data-sidebar="dark"] .section-card .form-control::placeholder {color:#8d96ad;}
+
+body[data-sidebar="dark"] .section-card .form-label,
+body[data-sidebar="dark"] .section-card label                    {color:#c6cad5;}
+
+/* ─────────────────────────────────────────────────────────────────────────────────
+   Hover slide-in para las opciones del sidebar
+   ------------------------------------------------------------------
+   1.  Añadimos transición suave a color, fondo y transform.
+   2.  En :hover y en el estado .mm-active (el que usa MetisMenu
+       cuando la ruta está seleccionada) desplazamos 4 px a la derecha.
+─────────────────────────────────────────────────────────────── */
+#sidebar-menu .metismenu > li > a {
+    display: flex;
+    align-items: center;
+    transition: background-color .20s ease, color .20s ease, transform .20s ease;
+}
+
+/* efecto cuando el cursor pasa encima  */
+#sidebar-menu .metismenu > li > a:hover,
+#sidebar-menu .metismenu > li.mm-active > a {
+    transform: translateX(4px);
+}
+
+/* Si quieres que los sub-menús hereden el mismo efecto: */
+#sidebar-menu .metismenu ul.sub-menu li > a {
+    transition: background-color .20s ease, color .20s ease, transform .20s ease;
+}
+#sidebar-menu .metismenu ul.sub-menu li > a:hover,
+#sidebar-menu .metismenu ul.sub-menu li.mm-active > a {
+    transform: translateX(4px);
+}
+/* ─────────────── Termina el efecto hover ──────────────────────────────────── */
+
+/* ────────────── Estilos del modal: Nueva Cuenta ─────────────── */
+
+/* Z-index de modal y fondo */
+.modal-backdrop {
+    z-index: 999 !important;
+}
+.modal {
+    z-index: 1050 !important;
+}
+
+/* Estructura general */
+#modalTipoCuenta .modal-content {
+    border-radius: 0.85rem;
+    border: none;
+    box-shadow: 0 0 1.75rem rgba(0, 0, 0, 0.2);
+}
+
+#modalTipoCuenta .modal-header {
+    background-color: #ffffff;
+    border: none;
+    padding: 1.25rem 1.5rem 0.5rem;
+    position: relative;
+    text-align: center;
+}
+
+#modalTipoCuenta .modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+#modalTipoCuenta .btn-close {
+    filter: grayscale(1);
+    opacity: 0.6;
+    transition: 0.2s;
+}
+
+#modalTipoCuenta .modal-body {
+    padding: 2rem 2.5rem;
+    background-color: #ffffff;
+    border-radius: 0 0 0.85rem 0.85rem;
+}
+
+#modalTipoCuenta .modal-body p {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+#modalTipoCuenta .btn-close:hover {
+    opacity: 1;
+}
+
+
+/* ───── Estilo de opciones tipo tarjeta ───── */
+.tipo-opcion-card {
+    text-decoration: none;
+    display: block;
+    border: 2px solid transparent;
+    border-radius: 0.65rem;
+    background: #eaebf3d7;
+    color: #2b2f38;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 0 0 0 transparent;
+}
+
+.tipo-opcion-card:hover {
+    border-color: #5b6dfa;
+    background: #eef1f9;
+    box-shadow: 0 0 0 2px rgba(91, 109, 250, 0.2);
+    text-decoration: none;
+}
+
+.tipo-opcion-card:focus {
+    outline: none;
+    border-color: #5b6dfa;
+    box-shadow: 0 0 0 3px rgba(91, 109, 250, 0.25);
+}
+
+
+.opcion-card-body {
+    padding: 1rem 1.25rem;
+}
+
+.opcion-card-body strong {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #2b2f38; /* título más oscuro */
+}
+
+.opcion-card-body p {
+    margin: 0;
+    color: #4f5d6b; /* texto auxiliar más visible */
+    font-size: 0.875rem;
+}
+
+/* ─────────────── Modal tipo cuenta - Dark Mode ─────────────── */
+body[data-sidebar="dark"] #modalTipoCuenta .modal-content {
+    background-color: #1f232a;
+    color: #e3e6ed;
+    border: 1px solid #2e333c;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+}
+
+body[data-sidebar="dark"] #modalTipoCuenta .modal-header {
+    background-color: transparent !important;
+    color: #ffffff;
+    border-bottom: none;
+}
+
+body[data-sidebar="dark"] #modalTipoCuenta .modal-title {
+    color: #b7bef5;
+}
+
+body[data-sidebar="dark"] #modalTipoCuenta .modal-body {
+    background-color: transparent;
+}
+
+body[data-sidebar="dark"] #modalTipoCuenta .modal-body p {
+    color: #9ca3b2;
+}
+
+/* Tarjetas */
+body[data-sidebar="dark"] .tipo-opcion-card {
+    background: #2a2f38;
+    border: 1px solid #3a414e;
+    color: #e3e6ed;
+}
+
+body[data-sidebar="dark"] .tipo-opcion-card:hover {
+    background: #313844;
+    border-color: #7782ff;
+    box-shadow: 0 0 0 2px rgba(123, 144, 255, 0.2);
+}
+
+body[data-sidebar="dark"] .tipo-opcion-card:focus {
+    box-shadow: 0 0 0 3px rgba(123, 144, 255, 0.3);
+}
+
+body[data-sidebar="dark"] .opcion-card-body strong {
+    color: #e5e9f2;
+}
+
+body[data-sidebar="dark"] .opcion-card-body p {
+    color: #b2b8c6;
+}
+
+
+
+/* ─────────────── Termina Estilos del modal/popup Nueva Cuenta ─────────────────── */
