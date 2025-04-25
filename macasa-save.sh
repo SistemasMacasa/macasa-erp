@@ -1,37 +1,57 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-PROYECTO=~/macasa-erp
-cd $PROYECTO || exit
+# === Configuración ===
+PROYECTO="${HOME}/macasa-erp"
+DB_NAME="erp_ecommerce_db"
+DB_USER="${DB_USER:-macasa_user}"
+DB_PASS="${DB_PASS:-macasa123}"
+SERVICE="mariadb"
+EXPORT_DIR="${PROYECTO}/database"
+mkdir -p "$EXPORT_DIR"
 
-# Exportar base de datos
-EXPORT_DIR="$PROYECTO/database"
-EXPORT_TIMESTAMP="$EXPORT_DIR/backup-$(date '+%Y-%m-%d_%H-%M-%S').sql"
-EXPORT_LATEST="$EXPORT_DIR/backup-latest.sql"
+TIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
+EXPORT_FILE="${EXPORT_DIR}/backup-${TIMESTAMP}.sql.gz"
+LATEST_FILE="${EXPORT_DIR}/backup-latest.sql.gz"
 
-echo "🧠 Exportando base de datos a: $EXPORT_TIMESTAMP"
-docker exec macasa_mariadb sh -c 'exec mysqldump -umacasa_user -pmacasa123 erp_ecommerce_db' > "$EXPORT_TIMESTAMP"
+# === Funciones de UI ===
+cyan() { printf "\e[1;36m%s\e[0m\n" "$*"; }
+red()  { printf "\e[1;31m%s\e[0m\n" "$*" >&2; }
+green() { printf "\e[1;32m%s\e[0m\n" "$*"; }
+die()  { red "✖ $*"; exit 1; }
 
-# Copiar como respaldo principal
-cp "$EXPORT_TIMESTAMP" "$EXPORT_LATEST"
+# === Validación de entorno ===
+cd "$PROYECTO" || die "No se pudo entrar a $PROYECTO"
 
-# Limpiar backups antiguos (mantener solo los 3 más recientes)
-echo "🧹 Limpiando respaldos antiguos..."
-cd "$EXPORT_DIR"
-ls -1t backup-*.sql | tail -n +4 | xargs -r rm -v
-echo "🧹 Respaldo más antiguo eliminado."
+cyan "▶ Exportando base de datos → ${EXPORT_FILE}"
 
-# Verificar si hay cambios para guardar
-echo "💾 Guardando en GitHub..."
+if ! docker compose ps --services --filter "status=running" | grep -qx "$SERVICE"; then
+  die "El servicio '$SERVICE' no está corriendo (via docker compose)"
+fi
+
+# Dump + gzip
+if ! docker compose exec -T "$SERVICE" \
+        mysqldump -u"$DB_USER" -p"$DB_PASS" --quick "$DB_NAME" \
+        | gzip > "$EXPORT_FILE"; then
+  rm -f "$EXPORT_FILE"; die "mysqldump falló"
+fi
+
+[ -s "$EXPORT_FILE" ] || { rm -f "$EXPORT_FILE"; die "Dump vacío"; }
+
+ln -fs "$(basename "$EXPORT_FILE")" "$LATEST_FILE"
+green "✔ Backup creado: $(basename "$EXPORT_FILE") ($(du -h "$EXPORT_FILE" | cut -f1))"
+
+# Limpiar antiguos
+ls -1t "$EXPORT_DIR"/backup-*.sql.gz | tail -n +4 | xargs -r rm -v
+
+# === Git ===
+cyan "💾 Guardando cambios en Git..."
 if git diff --quiet && git diff --cached --quiet; then
-  echo "😎 ¿Qué le quieres actualizar? Si ya está actualizado."
+  green "😎 No hay cambios que guardar. Código limpio."
   exit 0
 fi
 
-# Agregar y hacer commit
-COMMIT_MSG=${1:-"Auto-commit: $(date '+%Y-%m-%d %H:%M:%S')"}
-echo "📦 [macasa-save] Agregando cambios con mensaje: $COMMIT_MSG"
+MSG=${1:-"Auto-commit: $(date '+%Y-%m-%d %H:%M:%S')"}
 git add -A
-git commit -m "$COMMIT_MSG"
-git push origin dev
-
-echo "✅ Cambios guardados, respaldo actualizado, y basura eliminada 😄"
+git commit -m "$MSG"
+git push origin dev && green "✔ Cambios guardados y enviados al repo"

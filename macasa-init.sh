@@ -63,4 +63,31 @@ docker compose down --remove-orphans
 echo "🐳 Levantando contenedores Docker..."
 docker compose up -d --build
 
+echo "🗄️  Verificando si la base de datos necesita restaurarse…"
+
+DB_READY() {
+  docker exec macasa_mariadb mysqladmin ping -pmacasa123 --silent &> /dev/null
+}
+
+until DB_READY; do
+  echo "⌛ Esperando a MariaDB…"
+  sleep 2
+done
+echo "✅ MariaDB responde."
+
+TABLE_COUNT=$(docker exec macasa_mariadb \
+  mysql -N -s -umacasa_user -pmacasa123 \
+  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='erp_ecommerce_db';")
+
+if [ "$TABLE_COUNT" -eq 0 ] && [ -s "$PROYECTO/database/backup-latest.sql" ]; then
+  echo "🔄 Restaurando backup-latest.sql…"
+  docker exec -i macasa_mariadb \
+    mysql -umacasa_user -pmacasa123 erp_ecommerce_db \
+    < "$PROYECTO/database/backup-latest.sql"
+  echo "✅ Restauración completada."
+else
+  echo "📂 La base ya contiene tablas o no existe backup válido; se omite la restauración."
+fi
+
+
 echo "✅ [macasa-init] Entorno iniciado exitosamente. ¡Hora de programar!"
