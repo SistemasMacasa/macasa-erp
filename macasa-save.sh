@@ -29,20 +29,38 @@ if ! docker compose ps --services --filter "status=running" | grep -qx "$SERVICE
   die "El servicio '$SERVICE' no está corriendo (via docker compose)"
 fi
 
-# Dump + gzip
+# ------------------------------------------------------------------
+# 1. Verificar que la base esté “sana” antes de respaldar
+TABLES=$(docker compose exec -T "$SERVICE" \
+  mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
+  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${DB_NAME}';")
+
+MIN_TABLES=10          # ajusta según tu esquema mínimo aceptable
+if [[ "$TABLES" -lt "$MIN_TABLES" ]]; then
+  err "❌ Solo $TABLES tablas en ${DB_NAME}. Cancelando backup para no sobre-escribir uno bueno."
+  exit 1
+fi
+cyan "La base contiene $TABLES tablas — procede el dump."
+
+# ------------------------------------------------------------------
+# 2. Dump + compresión
 if ! docker compose exec -T "$SERVICE" \
         mysqldump -u"$DB_USER" -p"$DB_PASS" --quick "$DB_NAME" \
         | gzip > "$EXPORT_FILE"; then
-  rm -f "$EXPORT_FILE"; die "mysqldump falló"
+  rm -f "$EXPORT_FILE"
+  die "mysqldump falló"
 fi
 
+# 3. Validar que el archivo exista y pese >0
 [ -s "$EXPORT_FILE" ] || { rm -f "$EXPORT_FILE"; die "Dump vacío"; }
 
+# 4. Enlace simbólico a backup-latest y mensaje
 ln -fs "$(basename "$EXPORT_FILE")" "$LATEST_FILE"
 green "✔ Backup creado: $(basename "$EXPORT_FILE") ($(du -h "$EXPORT_FILE" | cut -f1))"
 
-# Limpiar antiguos
+# 5. Rotar (mantener 3 más recientes)
 ls -1t "$EXPORT_DIR"/backup-*.sql.gz | tail -n +4 | xargs -r rm -v
+
 
 # === Git ===
 cyan "💾 Guardando cambios en Git..."

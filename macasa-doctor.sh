@@ -172,6 +172,13 @@ if [[ $LARAVEL_OK -eq 1 ]]; then
 fi
 
 [[ $LARAVEL_OK -eq 1 ]] || FAIL=1
+# 5. ¿Tabla sessions?
+docker compose exec -T "$APP_CONTAINER" \
+  mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
+  -e "SHOW TABLES LIKE 'sessions';" | grep -q sessions \
+  && ok "Tabla sessions presente" \
+  || warn "Falta tabla sessions (¿ejecutaste migraciones?)"
+
 echo -e "\e[1;34m-------------------------------------------------\e[0m"
 # -------------------------------------------------
 # === E. Git ============================================================== #

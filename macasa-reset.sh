@@ -78,5 +78,16 @@ docker compose exec -T erp \
       ['name'=>'ancla','password'=>bcrypt('Macasa2019$'),'es_admin'=>1]
   );"
 
+# 1) Ejecutar migraciones faltantes
+cyan "🔧 Sincronizando esquema (migraciones)…"
+if docker compose exec -T erp php artisan migrate --force --no-interaction; then
+  green "Migraciones al día."
+else
+  warn "Migraciones con error; revisa manualmente."
+fi
+
+# 2) (Opcional) seed inicial de tablas críticas
+# docker compose exec -T erp php artisan db:seed --class=InitialSeeder
+
 ############################################################################
 green "🌅 GENKIDAMA completada: entorno limpio, base restaurada y listo en http://localhost"
