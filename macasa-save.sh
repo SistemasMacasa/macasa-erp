@@ -72,4 +72,4 @@ fi
 MSG=${1:-"Auto-commit: $(date '+%Y-%m-%d %H:%M:%S')"}
 git add -A
 git commit -m "$MSG"
-git push origin dev && green "✔ Cambios guardados y enviados al repo"
+git push -u origin dev && green "✔ Cambios guardados y enviados al repo"
