@@ -25,6 +25,7 @@
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary">
                     <i class="fa fa-list me-1"></i> Mis cuentas
                 </a>
+                
             </div>
 
             <!-- Aviso temporal para dirección -->
@@ -43,8 +44,17 @@
 
                 <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
-                    <div class="card-header section-card-header">
+                    <div class="card-header section-card-header d-flex align-items-center justify-content-between">
                         <h5 class="mb-0">Cuenta Empresarial</h5>
+                        <div class="d-flex align-items-center">
+                            <label for="nombre" class="form-label me-2 mb-0">Asignado a:</label>
+                            <select name="id_vendedor" id="id_vendedor" class="form-select form-select-sm" style="width: auto;">
+                                <option value="" selected>Ejecutivo</option>
+                                @foreach ($vendedores as $id => $vendedor)
+                                    <option value="{{ $id }}" @selected(old('nombre'))>{{ $vendedor->username }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
@@ -55,7 +65,7 @@
                             <div class="col-md-3">
                                 <label for="sector" class="form-label">Sector</label>
                                 <select name="sector" id="sector" class="form-select">
-                                    <option value="">—</option>
+                                    <option value="" selected>-- Elige -- </option>
                                     <option value="privada">Empresa Privada</option>
                                     <option value="gobierno">Empresa Gobierno</option>
                                 </select>
@@ -63,7 +73,7 @@
                             <div class="col-md-3">
                                 <label for="segmento" class="form-label">Segmento</label>
                                 <select name="segmento" id="segmento" class="form-select">
-                                    <option value="">—</option>
+                                    <option value="">-- Elige --</option>
                                     <option value="Macasa Cuentas Especiales">Macasa Cuentas Especiales</option>
                                     <option value="Macasa Ecommerce">Macasa Ecommerce</option>
                                     <option value="Tekne Store ECommerce">Tekne Store ECommerce</option>
@@ -98,9 +108,13 @@
                         </div>
 
                         <div class="row g-3 mt-1">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="contacto[email]" class="form-label">Correo Electrónico</label>
                                 <input name="contacto[email]" class="form-control" value="{{ old('contacto.email') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="contacto[puesto]" class="form-label">Puesto</label>
+                                <input name="contacto[puesto]" class="form-control" value="{{ old('contacto.puesto') }}">
                             </div>
                         </div>
 
@@ -147,37 +161,37 @@
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label">Calle</label>
-                                        <input name="direcciones_entrega[0][calle]" class="form-control">
+                                        <input name="direcciones_entrega[${index}][calle]" class="form-control">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Num. ext.</label>
-                                        <input name="direcciones_entrega[0][num_ext]" class="form-control">
+                                        <input name="direcciones_entrega[${index}][num_ext]" class="form-control">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Num. int.</label>
-                                        <input name="direcciones_entrega[0][num_int]" class="form-control">
+                                        <input name="direcciones_entrega[${index}][num_int]" class="form-control">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Colonia</label>
-                                        <input name="direcciones_entrega[0][colonia]" class="form-control">
+                                        <input name="direcciones_entrega[${index}][colonia]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
-                                        <input name="direcciones_entrega[0][ciudad]" class="form-control">
+                                        <input name="direcciones_entrega[${index}][id_ciudad]" class="form-control">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
-                                        <input name="direcciones_entrega[0][estado]" class="form-control">
+                                        <input name="direcciones_entrega[${index}][id_estado]" class="form-control">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">País</label>
-                                        <input name="direcciones_entrega[0][pais]" class="form-control" value="México">
+                                        <input name="direcciones_entrega[${index}][id_pais]" class="form-control" value="México">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
-                                        <input name="direcciones_entrega[0][cp]" class="form-control">
+                                        <input name="direcciones_entrega[${index}][cp]" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +222,7 @@
                                         <label class="form-label">RFC</label>
                                         <input name="razones[0][rfc]" class="form-control">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label">Método de pago</label>
                                         <select name="razones[0][metodo_pago]" class="form-select">
                                             <option value="">—</option>
@@ -216,7 +230,7 @@
                                             <option value="PPD">PPD - Pago en parcialidades o diferido</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label">Forma de pago</label>
                                         <select name="razones[0][forma_pago]" class="form-select">
                                             <option value="">—</option>
@@ -227,7 +241,17 @@
                                             <option value="99">99 - Por definir</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Uso del CFDI</label>
+                                        <select name="razones[0][uso_cfdi]" class="form-select">
+                                            <option value="">—</option>
+                                            <option value="G01">G01 - Adquisición de mercancías</option>
+                                            <option value="G02">G02 - Devoluciones, descuentos o bonificaciones</option>
+                                            <option value="G03">G03 - Gastos en general</option>
+                                            <option value="I01">I01 - Construcciones</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label class="form-label">Régimen fiscal</label>
                                         <select name="razones[0][regimen_fiscal]" class="form-select">
                                             <option value="">—</option>
@@ -271,15 +295,15 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
-                                        <input name="razones[0][direccion][ciudad]" class="form-control">
+                                        <input name="razones[0][direccion][id_ciudad]" class="form-control">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
-                                        <input name="razones[0][direccion][estado]" class="form-control">
+                                        <input name="razones[0][direccion][id_estado]" class="form-control">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">País</label>
-                                        <input name="razones[0][direccion][pais]" class="form-control" value="México">
+                                        <input name="razones[0][direccion][id_pais]" class="form-control" value="México">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
@@ -544,19 +568,19 @@
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label" for="entrega_calle">Calle</label>
-                                        <input name="direccion_entrega[calle]" id="entrega_calle" class="form-control"
-                                            value="{{ old('direccion_entrega.calle') }}">
+                                        <input name="direccion_entrega[0][calle]" id="entrega_calle" class="form-control"
+                                            value="{{ old('direccion_entrega.0.calle') }}">
                                     </div>
 
                                     <div class="col-md-2">
                                         <label class="form-label" for="entrega_num_ext">Num. ext.</label>
-                                        <input name="direccion_entrega[num_ext]" id="entrega_num_ext" class="form-control"
+                                        <input name="direccion_entrega[0][num_ext]" id="entrega_num_ext" class="form-control"
                                             value="{{ old('direccion_entrega.num_ext') }}">
                                     </div>
 
                                     <div class="col-md-2">
                                         <label class="form-label" for="entrega_num_int">Num. int.</label>
-                                        <input name="direccion_entrega[num_int]" id="entrega_num_int" class="form-control"
+                                        <input name="direccion_entrega[0][num_int]" id="entrega_num_int" class="form-control"
                                             value="{{ old('direccion_entrega.num_int') }}">
                                     </div>
 
@@ -665,18 +689,3 @@
     @endif
 
 @endsection
-
-{{-- =============================================================
-Notas de implementación
--------------------------------------------------------------
-• El controlador debe enviar al Blade:
-$vendedores = User::pluck('nombre','id');
-$fuentesContacto = ["BD SIEM","CONTACTO","PAGINA WEB","REDES SOCIALES","RECOMENDACION","SIS","SISTEMAS","ECOMMERCE"];
-$catalogoEntregas = [...]; // lista dura o CatTiempoEntrega::pluck('nombre')
-$catalogoCondicionesPago= [...]; // idem
-
-• Puedes extraer los <option> a components si decides crear
-    <x-select> más adelante.
-        • Acordeón: arranca colapsado para no abrumar al usuario;
-        sólo "Cuenta eje" está visible por defecto.
-        ================================================================= --}}

@@ -43,7 +43,7 @@ wait_for_docker() {
   until docker info &>/dev/null; do
     sleep 1
     ((retry++))
-    if [ "$retry" -gt 20 ]; then
+    if [ "$retry" -gt 60 ]; then
       die "Docker no está listo después de 20 segundos."
     fi
   done
