@@ -1,3 +1,11 @@
+/* LOGO DE LOGIN   */
+.auth-logo img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+}
 
 /*Botón hamburguesa, icono de menú lateral*/
 /* Por defecto (expandido) muestro el logo grande y oculto el pequeño */
@@ -175,7 +183,7 @@ body[data-sidebar="dark"] .section-card label                    {color:#c6cad5;
 
 /* Z-index de modal y fondo */
 .modal-backdrop {
-    z-index: 999 !important;
+    z-index: 4 !important;
 }
 .modal {
     z-index: 1050 !important;

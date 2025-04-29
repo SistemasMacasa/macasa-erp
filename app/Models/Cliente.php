@@ -11,7 +11,15 @@ class Cliente extends Model
     protected $primaryKey = 'id_cliente'; // Si no es 'id'
     public $timestamps = false; // Si tu tabla no tiene created_at / updated_at
     protected $fillable = [
-        'nombre', 'apellido_p', 'apellido_m', 'ciclo_venta', 'estatus', 'tipo', 'id_vendedor', 'sector', 'segmento'
+        'nombre',
+        'apellido_p',
+        'apellido_m',
+        'ciclo_venta',
+        'estatus',
+        'tipo',
+        'id_vendedor',
+        'sector',
+        'segmento'
     ];
 
     // Devuelve el usuario interno (vendedor) asignado
@@ -24,4 +32,16 @@ class Cliente extends Model
     {
         return $this->hasMany(Direccion::class, 'id_cliente');
     }
+    /** Todos los contactos del cliente */
+    public function contactos()
+    {
+        return $this->hasMany(Contacto::class, 'id_cliente', 'id_cliente');
+    }
+    /** El primer contacto (el “principal”) */
+    public function primerContacto()
+    {
+        return $this->hasOne(Contacto::class, 'id_cliente', 'id_cliente')
+            ->oldestOfMany('id_contacto');
+    }
+
 }

@@ -23,8 +23,6 @@
                                 Nueva Cuenta
                             </a>
                         </li>
-
-                        <li><a href="{{ route('inicio') }}">Cuentas Ecommerce</a></li>
                         <li><a href="{{ route('clientes.index') }}">Mis Cuentas</a></li>
                         <li><a href="{{ route('inicio') }}">Traspaso de Cuentas</a></li>
                         <li><a href="{{ route('inicio') }}">Mis Recall's</a></li>

@@ -3,13 +3,15 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Iniciar Sesión | MACASA</title>
+    <title>SIS 3.0 | Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/preloader.min.css') }}" />
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -24,8 +26,10 @@
                                 <div class="mb-4 mb-md-5 text-center">
                                     <a href="{{ url('/') }}" class="d-block auth-logo">
                                         <img src="{{ asset('assets/images/imglogin/logo.png') }}" alt="MACASA"
-                                            height="50">
+                                            class="img-fluid" style="max-height: 50px;">
                                     </a>
+
+
 
                                 </div>
 

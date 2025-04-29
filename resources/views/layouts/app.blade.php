@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'MACASA')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('assets/js/dashboard.js') }}"></script>

@@ -18,20 +18,10 @@ class ClienteController extends Controller
 {
     public function index()
     {
-        $clientes = Cliente::with('vendedor')->get();
-        $metodos_pago = MetodoPago::all();
-        $formas_pago = FormaPago::all();
-        $usos_cfdi = UsoCfdi::all();
-        $razones_sociales = RazonSocial::all();
-        $ciudades = Ciudad::all();
-        $estados = Estado::all();
-        $paises = [
-            'MX' => 'México',
-            'US' => 'Estados Unidos',
-            'CA' => 'Canadá',
-            // Agrega más países según sea necesario
-        ];
-        return view('clientes.index', compact('clientes', 'metodos_pago', 'formas_pago', 'usos_cfdi', 'razones_sociales', 'ciudades', 'estados', 'paises'));
+        $clientes = Cliente::with(['primerContacto'])
+            ->paginate(25);
+
+        return view('clientes.index', compact('clientes'));
     }
 
     public function create(Request $request)
@@ -185,21 +175,21 @@ class ClienteController extends Controller
                 if (!empty($request->contacto['nombre'])) {
 
                     $c = $request->contacto;   // array con todos los campos
-                
+
                     Contacto::create([
-                        'id_cliente'      => $cliente->id_cliente,
-                        'nombre'          => $c['nombre']             ?? null,
-                        'apellido_p'      => $c['apellido_p']   ?? null,
-                        'apellido_m'      => $c['apellido_m']   ?? null,
-                        'email'           => $c['email']              ?? null,
-                        'puesto'          => $c['puesto']             ?? null,
-                        'telefono1'       => $c['telefono1']           ?? null,
-                        'ext1'            => $c['ext1']                ?? null,
-                        'telefono2'       => $c['telefono2']          ?? null,
-                        'ext2'            => $c['ext2']               ?? null,
+                        'id_cliente' => $cliente->id_cliente,
+                        'nombre' => $c['nombre'] ?? null,
+                        'apellido_p' => $c['apellido_p'] ?? null,
+                        'apellido_m' => $c['apellido_m'] ?? null,
+                        'email' => $c['email'] ?? null,
+                        'puesto' => $c['puesto'] ?? null,
+                        'telefono1' => $c['telefono1'] ?? null,
+                        'ext1' => $c['ext1'] ?? null,
+                        'telefono2' => $c['telefono2'] ?? null,
+                        'ext2' => $c['ext2'] ?? null,
                     ]);
                 }
-                
+
 
                 // Crear direcciones de entrega (opcional)
                 if (!empty($request->direcciones_entrega)) {

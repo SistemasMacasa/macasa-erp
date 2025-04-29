@@ -4,7 +4,7 @@
 @endpush
 
 
-@section('title', 'SIS 3.0 | Macasa Hardware & Software')
+@section('title', 'SIS 3.0 | Inicio')
 
 @section('content')
 

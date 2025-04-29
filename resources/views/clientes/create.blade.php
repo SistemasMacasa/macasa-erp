@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'SIS 3.0 | Nueva Cuenta Organizacional')
+@section('title', 'SIS 3.0 | Nueva Cuenta')
 
 @section('content')
     @section('breadcrumb')
