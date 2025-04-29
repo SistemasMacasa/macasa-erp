@@ -1,52 +1,31 @@
 #!/usr/bin/env bash
-set -euo pipefail    # aborta ante cualquier fallo inesperado
+set -euo pipefail
 
 # === CONFIG ===
 PROYECTO="${HOME}/macasa-erp"
-DB_NAME="erp_ecommerce_db"
-DB_USER="${DB_USER:-macasa_user}"
-DB_PASS="${DB_PASS:-macasa123}"
 SERVICE_DB="mariadb"
-EXPORT_DIR="${PROYECTO}/database"
-mkdir -p "$EXPORT_DIR"
-
-STAMP=$(date '+%Y-%m-%d_%H-%M-%S')
-DUMP_FILE="${EXPORT_DIR}/backup-${STAMP}.sql.gz"
-LATEST="${EXPORT_DIR}/backup-latest.sql.gz"
 
 # === UI helpers ===
-c()  { printf "\e[1;36m%s\e[0m\n" "$*"; }  # cyan
-g()  { printf "\e[1;32m%s\e[0m\n" "$*"; }  # green
-r()  { printf "\e[1;31m%s\e[0m\n" "$*" >&2; }
+c(){ printf "\e[1;36m%s\e[0m\n" "$*"; }
+g(){ printf "\e[1;32m%s\e[0m\n" "$*"; }
+r(){ printf "\e[1;31m%s\e[0m\n" "$*" >&2; }
 die(){ r "✖ $*"; exit 1; }
 
 cd "$PROYECTO" || die "No se pudo entrar a $PROYECTO"
 
-# === 1. Backup antes de apagar ===
-c "💾 [macasa-end] Respaldando base de datos…"
+# === 1. Ejecutar macasa-save.sh (dump + commit + push) ===
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
-# ¿Está corriendo el servicio?
-if ! docker compose ps --services --filter "status=running" | grep -qx "$SERVICE_DB"; then
-  r "⚠️  El servicio $SERVICE_DB no está activo; salto respaldo."
+if   [[ -x "$SCRIPT_DIR/macasa-save.sh" ]]; then
+  SAVE_SCRIPT="$SCRIPT_DIR/macasa-save.sh"
+elif [[ -x "$SCRIPT_DIR/macasa-save"    ]]; then
+  SAVE_SCRIPT="$SCRIPT_DIR/macasa-save"
 else
-  if docker compose exec -T "$SERVICE_DB" \
-       mysqldump --skip-lock-tables --single-transaction --quick \
-       -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
-       2> >(tee /tmp/mysqldump.err >&2) | \
-       pv -f -i 1 -w 80 | \
-       gzip > "$DUMP_FILE"; then
-    [ -s "$DUMP_FILE" ] || die "Dump vacío"
-    ln -fs "$(basename "$DUMP_FILE")" "$LATEST"
-    g "✔ Backup creado: $(basename "$DUMP_FILE")  ($(du -h "$DUMP_FILE" | cut -f1))"
-else
-    rm -f "$DUMP_FILE"
-    r "❌ mysqldump falló. Revisa /tmp/mysqldump.err"
-    exit 1
+  die "No encontré macasa-save(.sh) en $SCRIPT_DIR o no es ejecutable"
 fi
 
-  # Rotación (mantener 3 más recientes)
-  ls -1t "$EXPORT_DIR"/backup-*.sql.gz | tail -n +4 | xargs -r rm -v
-fi
+c "💾 [macasa-end] Ejecutando $(basename "$SAVE_SCRIPT")…"
+"$SAVE_SCRIPT" "$@"   # pasa cualquier mensaje de commit
 
 # === 2. Parar contenedores ===
 c "🧼 Deteniendo contenedores Docker…"
