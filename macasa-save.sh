@@ -59,7 +59,8 @@ fi
 [ -s "$EXPORT_FILE" ] || { rm -f "$EXPORT_FILE"; die "Dump vacío"; }
 
 # 4. Enlace simbólico a backup-latest y mensaje
-ln -fs "$(basename "$EXPORT_FILE")" "$LATEST_FILE"
+rm -f "$LATEST_FILE"
+ln -s  "$(basename "$EXPORT_FILE")" "$LATEST_FILE"
 green "✔ Backup creado: $(basename "$EXPORT_FILE") ($(du -h "$EXPORT_FILE" | cut -f1))"
 
 # 5. Rotar backups (mantener los 3 más recientes)
@@ -76,3 +77,4 @@ MSG=${1:-"Auto-commit: $(date '+%Y-%m-%d %H:%M:%S')"}
 git add -A
 git commit -m "$MSG"
 git push -u origin dev && green "✔ Cambios guardados y enviados al repo"
+du -h "$EXPORT_FILE"
