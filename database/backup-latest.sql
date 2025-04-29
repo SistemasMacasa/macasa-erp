@@ -42,10 +42,6 @@ CREATE TABLE `actividades` (
 -- Dumping data for table `actividades`
 --
 
-LOCK TABLES `actividades` WRITE;
-/*!40000 ALTER TABLE `actividades` DISABLE KEYS */;
-/*!40000 ALTER TABLE `actividades` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `asistencias`
@@ -69,11 +65,6 @@ CREATE TABLE `asistencias` (
 -- Dumping data for table `asistencias`
 --
 
-LOCK TABLES `asistencias` WRITE;
-/*!40000 ALTER TABLE `asistencias` DISABLE KEYS */;
-/*!40000 ALTER TABLE `asistencias` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `cache`
 --
@@ -93,11 +84,6 @@ CREATE TABLE `cache` (
 -- Dumping data for table `cache`
 --
 
-LOCK TABLES `cache` WRITE;
-/*!40000 ALTER TABLE `cache` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cache` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `cache_locks`
 --
@@ -116,11 +102,6 @@ CREATE TABLE `cache_locks` (
 --
 -- Dumping data for table `cache_locks`
 --
-
-LOCK TABLES `cache_locks` WRITE;
-/*!40000 ALTER TABLE `cache_locks` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cache_locks` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `carrito_compras`
@@ -149,10 +130,6 @@ CREATE TABLE `carrito_compras` (
 -- Dumping data for table `carrito_compras`
 --
 
-LOCK TABLES `carrito_compras` WRITE;
-/*!40000 ALTER TABLE `carrito_compras` DISABLE KEYS */;
-/*!40000 ALTER TABLE `carrito_compras` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ciudades`
@@ -173,11 +150,6 @@ CREATE TABLE `ciudades` (
 -- Dumping data for table `ciudades`
 --
 
-LOCK TABLES `ciudades` WRITE;
-/*!40000 ALTER TABLE `ciudades` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ciudades` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `clientes`
 --
@@ -192,6 +164,8 @@ CREATE TABLE `clientes` (
   `estatus` varchar(50) DEFAULT NULL,
   `tipo` varchar(50) DEFAULT NULL,
   `id_vendedor` int(11) DEFAULT NULL,
+  `sector` varchar(100) DEFAULT NULL,
+  `segmento` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_cliente`),
   KEY `fk_clientes_id_vendedor` (`id_vendedor`),
   CONSTRAINT `fk_clientes_id_vendedor` FOREIGN KEY (`id_vendedor`) REFERENCES `usuarios` (`id_usuario`)
@@ -202,11 +176,9 @@ CREATE TABLE `clientes` (
 -- Dumping data for table `clientes`
 --
 
-LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (2,'cliente','de prueba','Activo','ECOMMERCE',1),(7,'cliente 3','de prueba','Activo','ERP',1),(8,'Diestra','de prueba','Activo','ERP',1),(9,'Saavi','Prueba','Activo','ECOMMERCE',1),(10,'Cliente 6','apellido','Activo','Ecommerce 1',1);
+INSERT INTO `clientes` VALUES (2,'cliente','de prueba','Activo','ECOMMERCE',1,'Empresa Privada', 'Macasa Cuentas Especiales'),(7,'cliente 3','de prueba','Activo','ERP',1,'Empresa Privada', 'Macasa Cuentas Especiales'),(8,'Diestra','de prueba','Activo','ERP',1,'Empresa Privada', 'Macasa Cuentas Especiales'),(9,'Saavi','Prueba','Activo','ECOMMERCE',1,'Empresa Privada', 'Macasa Cuentas Especiales'),(10,'Cliente 6','apellido','Activo','Ecommerce 1',1,'Empresa Privada', 'Macasa Cuentas Especiales');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `compras`
@@ -234,10 +206,6 @@ CREATE TABLE `compras` (
 -- Dumping data for table `compras`
 --
 
-LOCK TABLES `compras` WRITE;
-/*!40000 ALTER TABLE `compras` DISABLE KEYS */;
-/*!40000 ALTER TABLE `compras` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `compras_partidas`
@@ -264,10 +232,6 @@ CREATE TABLE `compras_partidas` (
 -- Dumping data for table `compras_partidas`
 --
 
-LOCK TABLES `compras_partidas` WRITE;
-/*!40000 ALTER TABLE `compras_partidas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `compras_partidas` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `contactos`
@@ -280,11 +244,14 @@ CREATE TABLE `contactos` (
   `id_contacto` int(11) NOT NULL AUTO_INCREMENT,
   `id_cliente` int(11) DEFAULT NULL,
   `nombre` varchar(100) DEFAULT NULL,
-  `puesto` varchar(100) DEFAULT NULL,
+  `apellido_p` varchar(100) DEFAULT NULL,
+  `apellido_m` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `telefono` varchar(100) DEFAULT NULL,
-  `celular` varchar(100) DEFAULT NULL,
-  `ext` varchar(10) DEFAULT NULL,
+  `puesto` varchar(100) DEFAULT NULL,
+  `telefono1` varchar(100) DEFAULT NULL,
+  `ext1` varchar(10) DEFAULT NULL,
+  `telefono2` varchar(100) DEFAULT NULL,
+  `ext2` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id_contacto`),
   KEY `fk_contactos_id_cliente` (`id_cliente`),
   CONSTRAINT `fk_contactos_id_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`)
@@ -295,10 +262,6 @@ CREATE TABLE `contactos` (
 -- Dumping data for table `contactos`
 --
 
-LOCK TABLES `contactos` WRITE;
-/*!40000 ALTER TABLE `contactos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `contactos` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `cotizaciones`
@@ -341,10 +304,6 @@ CREATE TABLE `cotizaciones` (
 -- Dumping data for table `cotizaciones`
 --
 
-LOCK TABLES `cotizaciones` WRITE;
-/*!40000 ALTER TABLE `cotizaciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cotizaciones` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `cotizaciones_partidas`
@@ -374,12 +333,6 @@ CREATE TABLE `cotizaciones_partidas` (
 --
 -- Dumping data for table `cotizaciones_partidas`
 --
-
-LOCK TABLES `cotizaciones_partidas` WRITE;
-/*!40000 ALTER TABLE `cotizaciones_partidas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cotizaciones_partidas` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `direcciones`
 --
@@ -416,10 +369,6 @@ CREATE TABLE `direcciones` (
 -- Dumping data for table `direcciones`
 --
 
-LOCK TABLES `direcciones` WRITE;
-/*!40000 ALTER TABLE `direcciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `direcciones` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `divisas`
@@ -441,10 +390,6 @@ CREATE TABLE `divisas` (
 -- Dumping data for table `divisas`
 --
 
-LOCK TABLES `divisas` WRITE;
-/*!40000 ALTER TABLE `divisas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `divisas` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `estados`
@@ -464,11 +409,6 @@ CREATE TABLE `estados` (
 --
 -- Dumping data for table `estados`
 --
-
-LOCK TABLES `estados` WRITE;
-/*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-/*!40000 ALTER TABLE `estados` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `failed_jobs`
@@ -494,11 +434,6 @@ CREATE TABLE `failed_jobs` (
 -- Dumping data for table `failed_jobs`
 --
 
-LOCK TABLES `failed_jobs` WRITE;
-/*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `forma_pagos`
 --
@@ -518,10 +453,30 @@ CREATE TABLE `forma_pagos` (
 -- Dumping data for table `forma_pagos`
 --
 
-LOCK TABLES `forma_pagos` WRITE;
 /*!40000 ALTER TABLE `forma_pagos` DISABLE KEYS */;
+INSERT INTO `forma_pagos` VALUES 
+(1,'01','Efectivo'),
+(2,'02','Cheque nominativo'),
+(3,'03','Transferencia electrónica de fondos'),
+(4,'04','Tarjeta de crédito'),
+(5,'05','Monedero electrónico'),
+(6,'06','Dinero electrónico'),
+(7,'08','Vales de despensa'),
+(8,'12','Dación en pago'),
+(9,'13','Pago por subrogación'),
+(10,'14','Pago por consignación'),
+(11,'15','Condonación'),
+(12,'17','Compensación'),
+(13,'23','Novación'),
+(14,'24','Confusión'),
+(15,'25','Remisión de deuda'),
+(16,'26','Prescripción o caducidad'),
+(17,'27','A satisfacción del acreedor'),
+(18,'28','Tarjeta de débito'),
+(19,'29','Tarjeta de servicios'),
+(20,'30','Aplicación de anticipos'),
+(21,'99','Por definir');
 /*!40000 ALTER TABLE `forma_pagos` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `job_batches`
@@ -549,11 +504,6 @@ CREATE TABLE `job_batches` (
 -- Dumping data for table `job_batches`
 --
 
-LOCK TABLES `job_batches` WRITE;
-/*!40000 ALTER TABLE `job_batches` DISABLE KEYS */;
-/*!40000 ALTER TABLE `job_batches` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `jobs`
 --
@@ -578,10 +528,6 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
-LOCK TABLES `jobs` WRITE;
-/*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `metas_ventas`
@@ -608,11 +554,6 @@ CREATE TABLE `metas_ventas` (
 -- Dumping data for table `metas_ventas`
 --
 
-LOCK TABLES `metas_ventas` WRITE;
-/*!40000 ALTER TABLE `metas_ventas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `metas_ventas` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `metodo_pagos`
 --
@@ -632,10 +573,58 @@ CREATE TABLE `metodo_pagos` (
 -- Dumping data for table `metodo_pagos`
 --
 
-LOCK TABLES `metodo_pagos` WRITE;
 /*!40000 ALTER TABLE `metodo_pagos` DISABLE KEYS */;
+INSERT INTO `metodo_pagos` VALUES (1,'PUE','Pago en Una sola Exhibición'),(2,'PPD','Pago en Parcialidades o Diferido'),(3,'99','por definir');
+
 /*!40000 ALTER TABLE `metodo_pagos` ENABLE KEYS */;
-UNLOCK TABLES;
+
+--
+-- Table structure for table `uso_cfdis`
+--
+
+DROP TABLE IF EXISTS `uso_cfdis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `uso_cfdis` (
+  `id_uso_cfdi` int(11) NOT NULL AUTO_INCREMENT,
+  `clave` varchar(50) DEFAULT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_uso_cfdi`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `uso_cfdis`
+--
+
+/*!40000 ALTER TABLE `uso_cfdis` DISABLE KEYS */;
+INSERT INTO `uso_cfdis` VALUES 
+(1, 'G01', 'Adquisición de mercancías'),
+(2, 'G02', 'Devoluciones, descuentos o bonificaciones'),
+(3, 'G03', 'Gastos en general'),
+(4, 'I01', 'Construcciones'),
+(5, 'I02', 'Mobiliario y equipo de oficina por inversiones'),
+(6, 'I03', 'Equipo de transporte'),
+(7, 'I04', 'Equipo de cómputo y accesorios'),
+(8, 'I05', 'Dados, troqueles, moldes, matrices y herramental'),
+(9, 'I06', 'Comunicaciones telefónicas'),
+(10, 'I07', 'Comunicaciones satelitales'),
+(11, 'I08', 'Otra maquinaria y equipo'),
+(12, 'D01', 'Honorarios médicos, dentales y gastos hospitalarios'),
+(13, 'D02', 'Gastos médicos por incapacidad o discapacidad'),
+(14, 'D03', 'Gastos funerales'),
+(15, 'D04', 'Donativos'),
+(16, 'D05', 'Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación)'),
+(17, 'D06', 'Aportaciones voluntarias al SAR'),
+(18, 'D07', 'Primas por seguros de gastos médicos'),
+(19, 'D08', 'Gastos de transportación escolar obligatorio'),
+(20, 'D09', 'Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones'),
+(21, 'D10', 'Pagos por servicios educativos (colegiaturas)'),
+(22, 'S01', 'Sin efectos fiscales'),
+(23, 'CP01', 'Pagos'),
+(24, 'CN01', 'Nómina');
+
+/*!40000 ALTER TABLE `metodo_pagos` ENABLE KEYS */;
+
 
 --
 -- Table structure for table `migrations`
@@ -656,11 +645,9 @@ CREATE TABLE `migrations` (
 -- Dumping data for table `migrations`
 --
 
-LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
 INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `notificaciones`
@@ -690,10 +677,6 @@ CREATE TABLE `notificaciones` (
 -- Dumping data for table `notificaciones`
 --
 
-LOCK TABLES `notificaciones` WRITE;
-/*!40000 ALTER TABLE `notificaciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `notificaciones` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `pagos`
@@ -730,10 +713,6 @@ CREATE TABLE `pagos` (
 -- Dumping data for table `pagos`
 --
 
-LOCK TABLES `pagos` WRITE;
-/*!40000 ALTER TABLE `pagos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pagos` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `paises`
@@ -754,10 +733,6 @@ CREATE TABLE `paises` (
 -- Dumping data for table `paises`
 --
 
-LOCK TABLES `paises` WRITE;
-/*!40000 ALTER TABLE `paises` DISABLE KEYS */;
-/*!40000 ALTER TABLE `paises` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `password_reset_tokens`
@@ -778,10 +753,6 @@ CREATE TABLE `password_reset_tokens` (
 -- Dumping data for table `password_reset_tokens`
 --
 
-LOCK TABLES `password_reset_tokens` WRITE;
-/*!40000 ALTER TABLE `password_reset_tokens` DISABLE KEYS */;
-/*!40000 ALTER TABLE `password_reset_tokens` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `pedidos`
@@ -828,11 +799,6 @@ CREATE TABLE `pedidos` (
 -- Dumping data for table `pedidos`
 --
 
-LOCK TABLES `pedidos` WRITE;
-/*!40000 ALTER TABLE `pedidos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pedidos` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `pedidos_partidas`
 --
@@ -863,10 +829,6 @@ CREATE TABLE `pedidos_partidas` (
 -- Dumping data for table `pedidos_partidas`
 --
 
-LOCK TABLES `pedidos_partidas` WRITE;
-/*!40000 ALTER TABLE `pedidos_partidas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pedidos_partidas` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `proveedores`
@@ -894,10 +856,6 @@ CREATE TABLE `proveedores` (
 -- Dumping data for table `proveedores`
 --
 
-LOCK TABLES `proveedores` WRITE;
-/*!40000 ALTER TABLE `proveedores` DISABLE KEYS */;
-/*!40000 ALTER TABLE `proveedores` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `razones_sociales`
@@ -908,27 +866,30 @@ DROP TABLE IF EXISTS `razones_sociales`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `razones_sociales` (
   `id_razon_social` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
-  `RFC` varchar(13) DEFAULT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  `rfc` varchar(13) DEFAULT NULL,
   `id_metodo_pago` int(11) DEFAULT NULL,
   `id_forma_pago` int(11) DEFAULT NULL,
+  `id_uso_cfdi` int(11) DEFAULT NULL,
   `id_regimen_fiscal` int(11) DEFAULT NULL,
-  `saldo` decimal(10,2) DEFAULT NULL,
   `limite_credito` decimal(10,2) DEFAULT NULL,
   `dias_credito` int(11) DEFAULT NULL,
+  `saldo` decimal(10,2) DEFAULT NULL,
   `id_direccion_facturacion` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_razon_social`),
   KEY `fk_razones_sociales_id_cliente` (`id_cliente`),
   KEY `fk_razones_sociales_id_metodo_pago` (`id_metodo_pago`),
   KEY `fk_razones_sociales_id_forma_pago` (`id_forma_pago`),
+  KEY `fk_razones_sociales_id_uso_cfdi` (`id_uso_cfdi`),
   KEY `fk_razones_sociales_id_regimen_fiscal` (`id_regimen_fiscal`),
   KEY `fk_razones_sociales_id_direccion_facturacion` (`id_direccion_facturacion`),
   CONSTRAINT `fk_razones_sociales_id_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
-  CONSTRAINT `fk_razones_sociales_id_direccion_facturacion` FOREIGN KEY (`id_direccion_facturacion`) REFERENCES `direcciones` (`id_direccion`),
-  CONSTRAINT `fk_razones_sociales_id_forma_pago` FOREIGN KEY (`id_forma_pago`) REFERENCES `forma_pagos` (`id_forma_pago`),
   CONSTRAINT `fk_razones_sociales_id_metodo_pago` FOREIGN KEY (`id_metodo_pago`) REFERENCES `metodo_pagos` (`id_metodo_pago`),
+  CONSTRAINT `fk_razones_sociales_id_forma_pago` FOREIGN KEY (`id_forma_pago`) REFERENCES `forma_pagos` (`id_forma_pago`),
+  CONSTRAINT `fk_razones_sociales_id_uso_cfdi` FOREIGN KEY (`id_uso_cfdi`) REFERENCES `uso_cfdi` (`id_uso_cfdi`),
   CONSTRAINT `fk_razones_sociales_id_regimen_fiscal` FOREIGN KEY (`id_regimen_fiscal`) REFERENCES `regimen_fiscales` (`id_regimen_fiscal`)
+  CONSTRAINT `fk_razones_sociales_id_direccion_facturacion` FOREIGN KEY (`id_direccion_facturacion`) REFERENCES `direcciones` (`id_direccion`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -936,10 +897,6 @@ CREATE TABLE `razones_sociales` (
 -- Dumping data for table `razones_sociales`
 --
 
-LOCK TABLES `razones_sociales` WRITE;
-/*!40000 ALTER TABLE `razones_sociales` DISABLE KEYS */;
-/*!40000 ALTER TABLE `razones_sociales` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `regimen_fiscales`
@@ -952,18 +909,22 @@ CREATE TABLE `regimen_fiscales` (
   `id_regimen_fiscal` int(11) NOT NULL AUTO_INCREMENT,
   `clave` varchar(50) DEFAULT NULL,
   `nombre` varchar(100) DEFAULT NULL,
+  `tipo` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_regimen_fiscal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `regimen_fiscales`
+-- Dumping data for table `usuaregimen_fiscalesrios`
 --
 
-LOCK TABLES `regimen_fiscales` WRITE;
 /*!40000 ALTER TABLE `regimen_fiscales` DISABLE KEYS */;
+INSERT INTO `regimen_fiscales` VALUES (1,'601','General de Ley Personas Morales','Moral'),(2,'603','Personas Morales con Fines no Lucrativos','Moral'),(3,'607','Régimen de Enajenación o Adquisición de Bienes','Moral'),(4,'610','Residentes en el Extranjero sin Establecimiento Permanente en México','Moral'),(5,'620','Sociedades Cooperativas de Producción que optan por diferir sus ingresos','Moral'),(6,'622','Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras','Moral'),(7,'623','Opcional para Grupos de Sociedades','Moral'),(8,'624','Coordinados','Moral'),(9,'626','Régimen Simplificado de Confianza','Moral'),(10,'628','Hidrocarburos','Moral'),
+                                      (11,'605','Sueldos y Salarios e Ingresos Asimilados a Salarios','Fisica'),(12,'606','Arrendamiento','Fisica'),(13,'608','Demás ingresos','Fisica'),(14,'611','Ingresos por Dividendos (socios y accionistas)','Fisica'),(15,'612','Personas Físicas con Actividades Empresariales y Profesionales','Fisica'),(16,'614','Ingresos por intereses','Fisica'),(17,'615','Régimen de los ingresos por obtención de premios','Fisica'),(18,'616','Sin obligaciones fiscales','Fisica'),(19,'621','Incorporación Fiscal','Fisica'),(20,'625','Régimen de Actividades Empresariales con ingresos a través de Plataformas Tecnológicas','Fisica'),(21,'629','De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales','Fisica'),(22,'630','Enajenación de acciones en bolsa de valores');
 /*!40000 ALTER TABLE `regimen_fiscales` ENABLE KEYS */;
-UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+
 
 --
 -- Table structure for table `sessions`
@@ -989,11 +950,9 @@ CREATE TABLE `sessions` (
 -- Dumping data for table `sessions`
 --
 
-LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
 INSERT INTO `sessions` VALUES ('J3PBdWAVHZ1U31AWOelny9y58KzvjO94Ik9SHzM4',1,'172.19.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36','YTo1OntzOjY6Il90b2tlbiI7czo0MDoiU1hBVVBjNDRUSGVPUmkzTTJ3RUFsS1REZ0hZT21lRFByTUJpRTVCeSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjE2OiJodHRwOi8vbG9jYWxob3N0Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9',1745555668);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `usuarios`
@@ -1023,11 +982,9 @@ CREATE TABLE `usuarios` (
 -- Dumping data for table `usuarios`
 --
 
-LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'TerranceZer','sistemas@macasahs.com.mx','$2y$12$ikFedIUuMaYK6/7PNurHAeJr4ITkQpZ13yqx/JLgDHCGwK17gvNnO','Sistemas','ERP','Activo',NULL,1,NULL),(2,'mcarreon','mcarreon@macasahs.com.mx',NULL,'Direccion','ERP','Activo',NULL,1,NULL),(7,'prueba2','prueba2@algo.com',NULL,'Aux Compras','ERP','Inactivo',NULL,0,'2025-04-17 00:36:10');
+INSERT INTO `usuarios` VALUES (1,'sistemas','sistemas@macasahs.com.mx','$2y$12$ikFedIUuMaYK6/7PNurHAeJr4ITkQpZ13yqx/JLgDHCGwK17gvNnO','Sistemas','ERP','Activo',NULL,1,NULL),(2,'mcarreon','mcarreon@macasahs.com.mx',NULL,'Direccion','ERP','Activo',NULL,1,NULL),(7,'prueba2','prueba2@algo.com',NULL,'Aux Compras','ERP','Inactivo',NULL,0,'2025-04-17 00:36:10');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

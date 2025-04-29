@@ -7,6 +7,11 @@ DB_USER="${DB_USER:-macasa_user}"
 DB_PASS="${DB_PASS:-macasa123}"
 SERVICE_DB="mariadb"
 
+FORCE_RESTORE=false
+if [[ "${1:-}" == "--force-db" ]]; then
+  FORCE_RESTORE=true
+fi
+
 cd "$PROYECTO" || { echo "✖ No se pudo entrar a $PROYECTO"; exit 1; }
 
 # === Helpers UI ===
@@ -44,7 +49,7 @@ wait_for_docker() {
     sleep 1
     ((retry++))
     if [ "$retry" -gt 60 ]; then
-      die "Docker no está listo después de 20 segundos."
+      die "Docker no está listo después de 60 segundos."
     fi
   done
   green "✅ Docker está listo."
@@ -67,7 +72,7 @@ docker compose down --remove-orphans
 cyan "🐳 Levantando contenedores Docker..."
 docker compose up -d --build
 
-# === Restaurar base si está vacía ===
+# === Restaurar base si corresponde ===
 cyan "🗄️ Verificando si la base de datos necesita restaurarse…"
 
 DB_READY() {
@@ -85,11 +90,40 @@ TABLE_COUNT=$(docker compose exec -T "$SERVICE_DB" \
   mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
   -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME';")
 
-if [ "$TABLE_COUNT" -eq 0 ] && [ -s "$PROYECTO/database/backup-latest.sql.gz" ]; then
+if $FORCE_RESTORE && [ -s "$PROYECTO/database/backup-latest.sql.gz" ]; then
+  cyan "⚠️  Modo forzado activado: eliminando todas las tablas existentes..."
+  
+  # Borrar todas las tablas
+  docker compose exec -T "$SERVICE_DB" \
+    mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "SET FOREIGN_KEY_CHECKS=0; \
+    SET @tables = NULL; \
+    SELECT GROUP_CONCAT(CONCAT('`', table_name, '`')) INTO @tables \
+    FROM information_schema.tables WHERE table_schema = '$DB_NAME'; \
+    SET @tables = IFNULL(@tables, 'dummy'); \
+    SET @sql = CONCAT('DROP TABLE IF EXISTS ', @tables); \
+    PREPARE stmt FROM @sql; \
+    EXECUTE stmt; \
+    DEALLOCATE PREPARE stmt; \
+    SET FOREIGN_KEY_CHECKS=1;"
+
+  green "✅ Todas las tablas eliminadas."
   cyan "🔄 Restaurando backup-latest.sql.gz…"
-  gunzip -c "$PROYECTO/database/backup-latest.sql.gz" | \
-    docker compose exec -T "$SERVICE_DB" \
-      mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
+
+  # Copiar el SQL temporalmente al contenedor
+  docker compose exec -T "$SERVICE_DB" bash -c "cat > /tmp/restore.sql" < <(gunzip -c "$PROYECTO/database/backup-latest.sql.gz")
+
+  # Ejecutar el SQL dentro del contenedor
+  docker compose exec -T "$SERVICE_DB" mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < <(docker compose exec -T "$SERVICE_DB" cat /tmp/restore.sql)
+
+  green "✅ Restauración completada."
+
+elif [ "$TABLE_COUNT" -eq 0 ] && [ -s "$PROYECTO/database/backup-latest.sql.gz" ]; then
+  cyan "🔄 Restaurando backup-latest.sql.gz…"
+
+  docker compose exec -T "$SERVICE_DB" bash -c "cat > /tmp/restore.sql" < <(gunzip -c "$PROYECTO/database/backup-latest.sql.gz")
+
+  docker compose exec -T "$SERVICE_DB" mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < <(docker compose exec -T "$SERVICE_DB" cat /tmp/restore.sql)
+
   green "✅ Restauración completada."
 else
   echo "📂 La base ya contiene tablas o no existe backup válido; se omite la restauración."

@@ -2,28 +2,56 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\Cliente;
 use App\Models\Usuario;
+use App\Models\Cliente;
 use App\Models\Contacto;
 use App\Models\Direccion;
+use App\Models\Ciudad;
+use App\Models\Estado;
+use App\Models\RazonSocial;
+use App\Models\FormaPago;
+use App\Models\MetodoPago;
+use App\Models\UsoCfdi;
+use App\Models\RegimenFiscal;
 
 class ClienteController extends Controller
 {
     public function index()
     {
         $clientes = Cliente::with('vendedor')->get();
-        //dd(Cliente::all());
-        return view('clientes.index', compact('clientes'));
+        $metodos_pago = MetodoPago::all();
+        $formas_pago = FormaPago::all();
+        $usos_cfdi = UsoCfdi::all();
+        $razones_sociales = RazonSocial::all();
+        $ciudades = Ciudad::all();
+        $estados = Estado::all();
+        $paises = [
+            'MX' => 'México',
+            'US' => 'Estados Unidos',
+            'CA' => 'Canadá',
+            // Agrega más países según sea necesario
+        ];
+        return view('clientes.index', compact('clientes', 'metodos_pago', 'formas_pago', 'usos_cfdi', 'razones_sociales', 'ciudades', 'estados', 'paises'));
     }
 
     public function create(Request $request)
     {
         $tipo = $request->input('tipo', 'moral'); // por defecto: moral
         $vendedores = Usuario::whereNull('id_cliente')->get(); // usuarios internos
-        $fuentesContacto = [];
-        $catalogoEntregas = [];
-        $catalogoCondicionesPago = [];
-        return view('clientes.create', compact('vendedores', 'fuentesContacto', 'catalogoEntregas', 'catalogoCondicionesPago', 'tipo'));
+        $metodos_pago = MetodoPago::all();
+        $formas_pago = FormaPago::all();
+        $usos_cfdi = UsoCfdi::all();
+        $razones_sociales = RazonSocial::all();
+        $ciudades = Ciudad::all();
+        $estados = Estado::all();
+        $paises = [
+            'MX' => 'México',
+            'US' => 'Estados Unidos',
+            'CA' => 'Canadá',
+            // Agrega más países según sea necesario
+        ];
+        $regimen_fiscales = RegimenFiscal::all();
+        return view('clientes.create', compact('vendedores', 'metodos_pago', 'formas_pago', 'usos_cfdi', 'razones_sociales', 'ciudades', 'estados', 'paises', 'tipo', 'regimen_fiscales'));
     }
 
     public function edit($id)
@@ -96,7 +124,7 @@ class ClienteController extends Controller
                 'nombre' => 'required|max:100',
                 'sector' => 'required|max:100',
                 'segmento' => 'required|max:100',
-                'id_vendedor'=> 'required|integer',
+                'id_vendedor' => 'nullable|integer',
 
                 // Contacto
                 'contacto.nombre' => 'nullable|max:100',
@@ -140,60 +168,102 @@ class ClienteController extends Controller
             $request->validate($rules);
 
             // Guardar en la base de datos
-            try 
-            {
+            try {
                 $cliente = Cliente::create([
                     'nombre' => $request->input('nombre'),
+                    'apellido_p' => "" ?? null, // No se usa en cuentas empresariales
+                    'apellido_m' => "" ?? null, // No se usa en cuentas empresariales
+                    'ciclo_venta' => $request->input('ciclo_venta'),
+                    'estatus' => $request->input('estatus'),
+                    'tipo' => $request->input('tipo'),
                     'sector' => $request->input('sector'),
                     'segmento' => $request->input('segmento'),
-                    'estatus' => 'Activo',
-                    'id_vendedor' => $request->input('id_vendedor'),
+                    'id_vendedor' => $request->filled('id_vendedor') ? $request->id_vendedor : null,
                 ]);
 
                 // Crear contacto (opcional)
                 if (!empty($request->contacto['nombre'])) {
+
+                    $c = $request->contacto;   // array con todos los campos
+                
                     Contacto::create([
-                        'id_cliente' => $cliente->id,
-                        'nombre' => $request->input('contacto.nombre'),
-                        'apellido_paterno' => $request->input('contacto.apellido_paterno'),
-                        'apellido_materno' => $request->input('contacto.apellido_materno'),
-                        'email' => $request->input('contacto.email'),
-                        'telefono' => $request->input('contacto.telefono'),
-                        'ext' => $request->input('contacto.ext'),
-                        'telefono2' => $request->input('contacto.telefono2'),
-                        'ext2' => $request->input('contacto.ext2'),
-                        'puesto' => $request->input('contacto.puesto')
+                        'id_cliente'      => $cliente->id_cliente,
+                        'nombre'          => $c['nombre']             ?? null,
+                        'apellido_p'      => $c['apellido_p']   ?? null,
+                        'apellido_m'      => $c['apellido_m']   ?? null,
+                        'email'           => $c['email']              ?? null,
+                        'puesto'          => $c['puesto']             ?? null,
+                        'telefono1'       => $c['telefono1']           ?? null,
+                        'ext1'            => $c['ext1']                ?? null,
+                        'telefono2'       => $c['telefono2']          ?? null,
+                        'ext2'            => $c['ext2']               ?? null,
                     ]);
                 }
+                
 
                 // Crear direcciones de entrega (opcional)
                 if (!empty($request->direcciones_entrega)) {
-                    foreach ($request->direcciones_entrega as $direccion) {
-                        Direccion::create([
-                            'id_cliente' => $cliente->id,
-                            'calle' => $direccion['calle'],
-                            'num_ext' => $direccion['num_ext'],
-                            'num_int' => $direccion['num_int'],
-                            'colonia' => $direccion['colonia'],
-                            'id_ciudad' => $direccion['id_ciudad'],
-                            'id_estado' => $direccion['id_estado'],
-                            'id_pais' => $direccion['id_pais'],
-                            'cp' => $direccion['cp']
-                        ]);
+                    foreach ($request->direcciones_entrega as $dir) {
+                        if (!empty($dir['calle'])) {
+                            $cliente->direcciones()->create([
+                                'tipo' => 'entrega',
+                                'nombre' => $dir['nombre'] ?? null,
+                                'calle' => $dir['calle'] ?? null,
+                                'num_ext' => $dir['num_ext'] ?? null,
+                                'num_int' => $dir['num_int'] ?? null,
+                                'colonia' => $dir['colonia'] ?? null,
+                                'id_ciudad' => $dir['id_ciudad'] ?? null,
+                                'id_estado' => $dir['id_estado'] ?? null,
+                                'id_pais' => $dir['id_pais'] ?? null,
+                                'cp' => $dir['cp'] ?? null,
+                            ]);
+                        }
                     }
+
                 }
 
+                // Crear datos de facturación - Razón Social + Dirección (opcional)
+                if (!empty($request->razones)) {
+                    foreach ($request->razones as $razon) {
+                        if (empty($razon['nombre'])) {
+                            continue; // Si no hay nombre, saltar esta razón social
+                        }
+
+                        $razon_social = RazonSocial::create([
+                            'id_cliente' => $cliente->id_cliente,
+                            'nombre' => $razon['nombre'],
+                            'rfc' => $razon['rfc'],
+                            'id_metodo_pago' => $razon['metodo_pago'] ?? null,
+                            'id_forma_pago' => $razon['forma_pago'] ?? null,
+                            'id_regimen_fiscal' => $razon['regimen_fiscal'] ?? null,
+                            'limite_credito' => $razon['limite_credito'] ?? null,
+                            'dias_credito' => $razon['dias_credito'] ?? null,
+                            'saldo' => 0
+                        ]);
+
+                        // Crear dirección dentro de razón social (opcional)
+                        if (!empty($razon['direccion']['calle'])) {
+                            Direccion::create([
+                                'id_cliente' => $cliente->id_cliente,
+                                'calle' => $razon['direccion']['calle'] ?? null,
+                                'num_ext' => $razon['direccion']['num_ext'] ?? null,
+                                'num_int' => $razon['direccion']['num_int'] ?? null,
+                                'colonia' => $razon['direccion']['colonia'] ?? null,
+                                'id_ciudad' => $razon['direccion']['id_ciudad'] ?? null,
+                                'id_estado' => $razon['direccion']['id_estado'] ?? null,
+                                'id_pais' => $razon['direccion']['id_pais'] ?? null,
+                                'cp' => $razon['direccion']['cp']
+                            ]);
+                        }
+                    }
+
+                }
 
                 return redirect('/clientes')->with('success', 'Cliente creado correctamente');
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()]);
             }
-
-
         }
-
-
-
         // Redirigir a la lista
         return redirect('clientes.index')->with('success', 'Cliente creado correctamente');
     }

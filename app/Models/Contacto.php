@@ -12,11 +12,11 @@ class Contacto extends Model
     protected $fillable = [
         'id_cliente',   // FK a Cliente
         'nombre',
-        'apellido_paterno',
-        'apellido_materno',
+        'apellido_p',
+        'apellido_m',
         'email',
-        'telefono',
-        'ext',
+        'telefono1',
+        'ext1',
         'telefono2',
         'ext2',
         'puesto',

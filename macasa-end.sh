@@ -30,14 +30,19 @@ if ! docker compose ps --services --filter "status=running" | grep -qx "$SERVICE
   r "⚠️  El servicio $SERVICE_DB no está activo; salto respaldo."
 else
   if docker compose exec -T "$SERVICE_DB" \
-        mysqldump -u"$DB_USER" -p"$DB_PASS" --quick "$DB_NAME" \
-        | gzip > "$DUMP_FILE"; then
-      [ -s "$DUMP_FILE" ] || die "Dump vacío"
-      ln -fs "$(basename "$DUMP_FILE")" "$LATEST"
-      g "✔ Backup creado: $(basename "$DUMP_FILE")  ($(du -h "$DUMP_FILE" | cut -f1))"
-  else
-      rm -f "$DUMP_FILE"; die "mysqldump falló"
-  fi
+       mysqldump --skip-lock-tables --single-transaction --quick \
+       -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
+       2> >(tee /tmp/mysqldump.err >&2) | \
+       pv -f -i 1 -w 80 | \
+       gzip > "$DUMP_FILE"; then
+    [ -s "$DUMP_FILE" ] || die "Dump vacío"
+    ln -fs "$(basename "$DUMP_FILE")" "$LATEST"
+    g "✔ Backup creado: $(basename "$DUMP_FILE")  ($(du -h "$DUMP_FILE" | cut -f1))"
+else
+    rm -f "$DUMP_FILE"
+    r "❌ mysqldump falló. Revisa /tmp/mysqldump.err"
+    exit 1
+fi
 
   # Rotación (mantener 3 más recientes)
   ls -1t "$EXPORT_DIR"/backup-*.sql.gz | tail -n +4 | xargs -r rm -v

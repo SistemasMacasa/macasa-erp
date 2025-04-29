@@ -9,10 +9,6 @@
     @endsection
     <h1 class="mb-4">Listado de Clientes</h1>
 
-    <p>
-
-    </p>
-
     <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
     <div class="d-flex gap-2 mb-3">
         <a href="{{ url()->previous() }}" class="btn btn-secondary">

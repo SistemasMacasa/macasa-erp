@@ -11,7 +11,7 @@ class Cliente extends Model
     protected $primaryKey = 'id_cliente'; // Si no es 'id'
     public $timestamps = false; // Si tu tabla no tiene created_at / updated_at
     protected $fillable = [
-        'nombre', 'apellido', 'estatus', 'tipo', 'id_vendedor'
+        'nombre', 'apellido_p', 'apellido_m', 'ciclo_venta', 'estatus', 'tipo', 'id_vendedor', 'sector', 'segmento'
     ];
 
     // Devuelve el usuario interno (vendedor) asignado
@@ -20,5 +20,8 @@ class Cliente extends Model
         return $this->belongsTo(Usuario::class, 'id_vendedor', 'id_usuario');
         // "id_vendedor" en "clientes" apunta a "id_usuario" en "usuarios"
     }
-    
+    public function direcciones()
+    {
+        return $this->hasMany(Direccion::class, 'id_cliente');
+    }
 }

@@ -25,7 +25,7 @@
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary">
                     <i class="fa fa-list me-1"></i> Mis cuentas
                 </a>
-                
+
             </div>
 
             <!-- Aviso temporal para dirección -->
@@ -38,9 +38,9 @@
                 @csrf
 
                 <!-- Valores por defecto / lógica de negocio -->
-                <input type="hidden" name="ciclo_venta" value="Cotizacion">
-                <input type="hidden" name="estatus" value="Activo">
-                <input type="hidden" name="tipo" value="ERP"><!-- alta desde ERP -->
+                <input type="hidden" name="ciclo_venta" value="cotizacion">
+                <input type="hidden" name="estatus" value="activo">
+                <input type="hidden" name="tipo" value="erp"><!-- alta desde ERP -->
 
                 <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
@@ -48,10 +48,17 @@
                         <h5 class="mb-0">Cuenta Empresarial</h5>
                         <div class="d-flex align-items-center">
                             <label for="nombre" class="form-label me-2 mb-0">Asignado a:</label>
-                            <select name="id_vendedor" id="id_vendedor" class="form-select form-select-sm" style="width: auto;">
-                                <option value="" selected>Ejecutivo</option>
-                                @foreach ($vendedores as $id => $vendedor)
-                                    <option value="{{ $id }}" @selected(old('nombre'))>{{ $vendedor->username }}</option>
+
+                            <select name="id_vendedor" id="id_vendedor" class="form-select form-select-sm" style="width:auto;">
+                                <option value="">-- Ejecutivo --</option>
+
+                                {{-- Base General = NULL --}}
+                                <option value="" @selected(old('id_vendedor') === '')>Base General</option>
+                                @foreach ($vendedores as $vendedor)
+                                    <option value="{{ $vendedor->id_usuario }}"
+                                        @selected(old('id_vendedor') == $vendedor->id_usuario)>
+                                        {{ $vendedor->username }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,7 +72,7 @@
                             <div class="col-md-3">
                                 <label for="sector" class="form-label">Sector</label>
                                 <select name="sector" id="sector" class="form-select">
-                                    <option value="" selected>-- Elige -- </option>
+                                    <option value="" selected>-- Selecciona -- </option>
                                     <option value="privada">Empresa Privada</option>
                                     <option value="gobierno">Empresa Gobierno</option>
                                 </select>
@@ -73,11 +80,11 @@
                             <div class="col-md-3">
                                 <label for="segmento" class="form-label">Segmento</label>
                                 <select name="segmento" id="segmento" class="form-select">
-                                    <option value="">-- Elige --</option>
-                                    <option value="Macasa Cuentas Especiales">Macasa Cuentas Especiales</option>
-                                    <option value="Macasa Ecommerce">Macasa Ecommerce</option>
-                                    <option value="Tekne Store ECommerce">Tekne Store ECommerce</option>
-                                    <option value="La Plaza Ecommerce">La Plaza Ecommerce</option>
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="macasa cuentas especiales">Macasa Cuentas Especiales</option>
+                                    <option value="macasa ecommerce">Macasa Ecommerce</option>
+                                    <option value="tekne store ecommerce">Tekne Store ECommerce</option>
+                                    <option value="la plaza ecommerce">La Plaza Ecommerce</option>
                                 </select>
                             </div>
                         </div>
@@ -96,14 +103,14 @@
                                 <input name="contacto[nombre]" class="form-control" value="{{ old('contacto.nombre') }}">
                             </div>
                             <div class="col-md-4">
-                                <label for="contacto[apellido_paterno]" class="form-label">Primer Apellido</label>
-                                <input name="contacto[apellido_paterno]" class="form-control"
-                                    value="{{ old('contacto.apellido_paterno') }}">
+                                <label for="contacto[apellido_p" class="form-label">Primer Apellido</label>
+                                <input name="contacto[apellido_p]" class="form-control"
+                                    value="{{ old('contacto.apellido_p') }}">
                             </div>
                             <div class="col-md-4">
-                                <label for="contacto[apellido_materno]" class="form-label">Segundo Apellido</label>
-                                <input name="contacto[apellido_materno]" class="form-control"
-                                    value="{{ old('contacto.apellido_materno') }}">
+                                <label for="contacto[apellido_m]" class="form-label">Segundo Apellido</label>
+                                <input name="contacto[apellido_m]" class="form-control"
+                                    value="{{ old('contacto.apellido_m') }}">
                             </div>
                         </div>
 
@@ -121,11 +128,11 @@
                         <div class="row g-3 mt-1">
                             <div class="col-md-3">
                                 <label class="form-label">Teléfono 1</label>
-                                <input name="contacto[telefono]" class="form-control" value="{{ old('contacto.telefono') }}">
+                                <input name="contacto[telefono1]" class="form-control" value="{{ old('contacto.telefono1') }}">
                             </div>
                             <div class="col-md-1">
                                 <label class="form-label">Ext.</label>
-                                <input name="contacto[ext]" class="form-control" value="{{ old('contacto.ext') }}">
+                                <input name="contacto[ext1]" class="form-control" value="{{ old('contacto.ext1') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Teléfono 2</label>
@@ -133,7 +140,7 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="form-label">Ext.</label>
-                                <input name="contacto[ext2]" class="form-control">
+                                <input name="contacto[ext2]" class="form-control" value="{{ old('contacto.ext2') }}">
                             </div>
                         </div>
                     </div>
@@ -179,15 +186,36 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
-                                        <input name="direcciones_entrega[${index}][id_ciudad]" class="form-control">
+                                        <select name="razones[0][direccion][ciudad]" class="form-select">
+                                            <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
+                                            @foreach ($ciudades as $id => $city)
+                                                <option value="{{ $id }}" @selected(old('id_ciudad'))>
+                                                    {{ $city->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
-                                        <input name="direcciones_entrega[${index}][id_estado]" class="form-control">
+                                        <select name="razones[0][direccion][id_estado]" class="form-select">
+                                            <option value="" @selected(old('id_estado'))>— Selecciona —</option>
+                                            @foreach ($estados as $id => $state)
+                                                <option value="{{ $id }}" @selected(old('id_estado'))>
+                                                    {{ $state->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">País</label>
-                                        <input name="direcciones_entrega[${index}][id_pais]" class="form-control" value="México">
+                                        <select name="razones[0][direccion][id_pais]" class="form-select">
+                                            <option value="" @selected(old('id_pais'))>— Selecciona —</option>
+                                            @foreach ($paises as $id => $pais)
+                                                <option value="{{ $id }}" @selected(old('razones.0.direccion.id_pais') == $id)>
+                                                    {{ $pais }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
@@ -224,41 +252,49 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Método de pago</label>
-                                        <select name="razones[0][metodo_pago]" class="form-select">
-                                            <option value="">—</option>
-                                            <option value="PUE">PUE - Pago en una sola exhibición</option>
-                                            <option value="PPD">PPD - Pago en parcialidades o diferido</option>
+                                        <select name="id_metodo_pago" id="id_metodo_pago" class="form-select">
+                                            {{-- placeholder: se marca si old() viene vacío --}}
+                                            <option value="" @selected(old('id_metodo_pago'))>— Selecciona —</option>
+
+                                            @foreach ($metodos_pago as $id => $metodo)
+                                                <option value="{{ $id }}" @selected(old('idvendedor'))>
+                                                    {{ $metodo->nombre }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Forma de pago</label>
                                         <select name="razones[0][forma_pago]" class="form-select">
-                                            <option value="">—</option>
-                                            <option value="01">01 - Efectivo</option>
-                                            <option value="03">03 - Transferencia electrónica</option>
-                                            <option value="04">04 - Tarjeta de crédito</option>
-                                            <option value="28">28 - Tarjeta de débito</option>
-                                            <option value="99">99 - Por definir</option>
+                                            <option value="" @selected(old('id_forma_pago'))>— Selecciona —</option>
+
+                                            @foreach ($formas_pago as $id => $forma)
+                                                <option value="{{ $id }}" @selected(old('idvendedor'))>
+                                                    {{ $forma->nombre }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Uso del CFDI</label>
                                         <select name="razones[0][uso_cfdi]" class="form-select">
-                                            <option value="">—</option>
-                                            <option value="G01">G01 - Adquisición de mercancías</option>
-                                            <option value="G02">G02 - Devoluciones, descuentos o bonificaciones</option>
-                                            <option value="G03">G03 - Gastos en general</option>
-                                            <option value="I01">I01 - Construcciones</option>
+                                            <option value="" @selected(old('id_uso_cfdi'))>— Selecciona —</option>
+                                            @foreach ($usos_cfdi as $id => $uso)
+                                                <option value="{{ $id }}" @selected(old('id_uso_cfdi'))>
+                                                    {{ $uso->nombre }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Régimen fiscal</label>
                                         <select name="razones[0][regimen_fiscal]" class="form-select">
-                                            <option value="">—</option>
-                                            <option value="601">601 - General de Ley Personas Morales</option>
-                                            <option value="603">603 - Personas Morales con Fines no Lucrativos</option>
-                                            <option value="605">605 - Sueldos y Salarios</option>
-                                            <option value="612">612 - Personas Físicas con Actividades Empresariales</option>
+                                            <option value="" @selected(old('id_regimen_fiscal'))>— Selecciona —</option>
+                                            @foreach ($regimen_fiscales as $id => $regimen)
+                                                <option value="{{ $id }}" @selected(old('id_regimen_fiscal'))>
+                                                    {{ $regimen->nombre }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
@@ -295,15 +331,36 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
-                                        <input name="razones[0][direccion][id_ciudad]" class="form-control">
+                                        <select name="razones[0][direccion][ciudad]" class="form-select">
+                                            <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
+                                            @foreach ($ciudades as $id => $city)
+                                                <option value="{{ $id }}" @selected(old('id_ciudad'))>
+                                                    {{ $city->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
-                                        <input name="razones[0][direccion][id_estado]" class="form-control">
+                                        <select name="razones[0][direccion][id_estado]" class="form-select">
+                                            <option value="" @selected(old('id_estado'))>— Selecciona —</option>
+                                            @foreach ($estados as $id => $state)
+                                                <option value="{{ $id }}" @selected(old('id_estado'))>
+                                                    {{ $state->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">País</label>
-                                        <input name="razones[0][direccion][id_pais]" class="form-control" value="México">
+                                        <select name="razones[0][direccion][id_pais]" class="form-select">
+                                            <option value="" @selected(old('id_pais'))>— Selecciona —</option>
+                                            @foreach ($paises as $id => $pais)
+                                                <option value="{{ $id }}" @selected(old('razones.0.direccion.id_pais') == $id)>
+                                                    {{ $pais }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
@@ -350,9 +407,9 @@
                 @csrf
 
                 <!-- Valores por defecto / lógica de negocio -->
-                <input type="hidden" name="ciclo_venta" value="Cotizacion">
-                <input type="hidden" name="estatus" value="Activo">
-                <input type="hidden" name="tipo" value="ERP"><!-- alta desde ERP -->
+                <input type="hidden" name="ciclo_venta" value="cotizacion">
+                <input type="hidden" name="estatus" value="activo">
+                <input type="hidden" name="tipo" value="erp"><!-- alta desde ERP -->
 
                 <!-- ╭━━━━ 1. Cuenta eje ━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
@@ -369,23 +426,23 @@
                                 @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
-                                <label for="idvendedor" class="form-label">Asignado a</label>
+                                <label for="id_vendedor" class="form-label">Asignado a</label>
 
-                                <select name="idvendedor" id="idvendedor" class="form-select" required>
-                                    {{-- placeholder: se marca si old() viene vacío --}}
-                                    <option value="" @selected(old('idvendedor') === null || old('idvendedor') === '') disabled
-                                        hidden>— Selecciona —</option>
+                                <select name="id_vendedor" id="id_vendedor" class="form-select">
+                                    <option value="">— Ejecutiv@ —</option>
 
-                                    {{-- opción “Base General” --}}
-                                    <option value="0" @selected(old('idvendedor') == '0')>Base General</option>
+                                    <option value="" @selected(old('id_vendedor') === '')>
+                                        Base General
+                                    </option>
 
-                                    {{-- resto de vendedores --}}
-                                    @foreach ($vendedores as $id => $vendedor)
-                                        <option value="{{ $id }}" @selected(old('idvendedor') == $id)>
+                                    @foreach ($vendedores as $vendedor)
+                                        <option value="{{ $vendedor->id_usuario }}"
+                                            @selected(old('id_vendedor') == $vendedor->id_usuario)>
                                             {{ $vendedor->username }}
                                         </option>
                                     @endforeach
                                 </select>
+
                             </div>
 
                         </div>
@@ -393,13 +450,12 @@
                             <div class="col-md-4">
                                 <label for="tipo_cliente" class="form-label">Teléfono</label>
                                 <input type="text" name="telefono" id="telefono"
-                                    class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}"
-                                    required>
+                                    class="form-control @error('telefono') is-invalid @enderror" value="{{ old('telefono') }}">
                             </div>
                             <div class="col-md-2">
                                 <label for="fuente_contacto" class="form-label>">Ext.</label>
                                 <input type="text" name="ext" id="ext" class="form-control @error('ext') is-invalid @enderror"
-                                    value="{{ old('ext') }}" required>
+                                    value="{{ old('ext') }}">
                             </div>
                             <div class="col-md-6">
                                 <label for="idvendedor" class="form-label">Tipo de Cuenta</label>
@@ -448,14 +504,14 @@
                                             value="{{ old('contacto.nombre') }}">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="contacto_apellido_paterno" class="form-label">Apellido paterno</label>
-                                        <input name="contacto[apellido_paterno]" id="contacto_apellido_paterno"
-                                            class="form-control" value="{{ old('contacto.apellido_paterno') }}">
+                                        <label for="contacto_apellido_p" class="form-label">Apellido paterno</label>
+                                        <input name="contacto[apellido_p]" id="contacto_apellido_p"
+                                            class="form-control" value="{{ old('contacto.apellido_p') }}">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="contacto_apellido_materno" class="form-label">Apellido materno</label>
-                                        <input name="contacto[apellido_materno]" id="contacto_apellido_materno"
-                                            class="form-control" value="{{ old('contacto.apellido_materno') }}">
+                                        <label for="contacto_apellido_m" class="form-label">Apellido materno</label>
+                                        <input name="contacto[apellido_m]" id="contacto_apellido_m"
+                                            class="form-control" value="{{ old('contacto.apellido_m') }}">
                                     </div>
                                 </div>
 
@@ -524,15 +580,7 @@
                                 <div class="row g-3">
                                     {{-- Catálogos: tiempo de entrega / condición de pago --}}
                                     <div class="col-md-3">
-                                        <label class="form-label" for="entrega_tiempo">Tiempo de entrega</label>
-                                        <select name="direccion_entrega[entrega]" id="entrega_tiempo" class="form-select">
-                                            <option value="">—</option>
-                                            @foreach ($catalogoEntregas as $valor)
-                                                <option value="{{ $valor }}" @selected(old('direccion_entrega.entrega') === $valor)>
-                                                    {{ $valor }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+
                                     </div>
 
                                     <div class="col-md-3">
@@ -540,12 +588,7 @@
                                         <select name="direccion_entrega[condicion_pago]" id="entrega_condicion"
                                             class="form-select">
                                             <option value="">—</option>
-                                            @foreach ($catalogoCondicionesPago as $valor)
-                                                <option value="{{ $valor }}"
-                                                    @selected(old('direccion_entrega.condicion_pago') === $valor)>
-                                                    {{ $valor }}
-                                                </option>
-                                            @endforeach
+
                                         </select>
                                     </div>
                                 </div>
@@ -670,8 +713,8 @@
                         </div>
 
                         <!-- =============================
-                                                                     5. Notas
-                                                                     ============================= -->
+                                                                                             5. Notas
+                                                                                             ============================= -->
                         <div class="card shadow-sm mb-5">
                             <div class="card-header section-card-header">
                                 <h6 class="mb-0">Notas</h6>
