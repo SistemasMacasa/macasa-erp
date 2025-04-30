@@ -195,7 +195,7 @@ class ClienteController extends Controller
                 if (!empty($request->direcciones_entrega)) {
                     foreach ($request->direcciones_entrega as $dir) {
                         if (!empty($dir['calle'])) {
-                            $cliente->direcciones()->create([
+                            Direccion::create([
                                 'tipo' => 'entrega',
                                 'nombre' => $dir['nombre'] ?? null,
                                 'calle' => $dir['calle'] ?? null,
