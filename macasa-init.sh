@@ -6,6 +6,7 @@ DB_NAME="erp_ecommerce_db"
 DB_USER="${DB_USER:-macasa_user}"
 DB_PASS="${DB_PASS:-macasa123}"
 SERVICE_DB="mariadb"
+EXPORT_DIR="$PROYECTO/database"
 
 FORCE_RESTORE=false
 if [[ "${1:-}" == "--force-db" ]]; then
@@ -34,28 +35,24 @@ cyan "🖥️ Verificando Docker Desktop..."
 
 if grep -qi "microsoft" /proc/version; then
   if ! pgrep -f "Docker Desktop.exe" > /dev/null; then
-    echo "🪟 Iniciando Docker Desktop..."
-    powershell.exe -Command "Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'" 2>/dev/null
+    echo "🫿 Iniciando Docker Desktop..."
+    powershell.exe -Command "Start-Process 'C:\Program Files\Docker\Docker\Docker Desktop.exe'" 2>/dev/null || echo "⚠️ No se pudo iniciar Docker Desktop."
+
+    # Esperar a que Docker esté listo ANTES de continuar
+    echo "⌛ Esperando a que Docker Desktop esté listo..."
+    retry=0
+    until docker info &>/dev/null; do
+      sleep 1 || true
+      ((retry++)) || true
+      if [ "$retry" -gt 120 ]; then
+        die "Docker Desktop no inició después de 120 segundos."
+      fi
+    done
+    green "✅ Docker Desktop está listo."
   else
     green "🐋 Docker Desktop ya estaba corriendo."
   fi
 fi
-
-# === Esperar Docker ===
-wait_for_docker() {
-  echo "⌛ Esperando a que Docker esté listo..."
-  local retry=0
-  until docker info &>/dev/null; do
-    sleep 1
-    ((retry++))
-    if [ "$retry" -gt 60 ]; then
-      die "Docker no está listo después de 60 segundos."
-    fi
-  done
-  green "✅ Docker está listo."
-}
-
-wait_for_docker
 
 # === Abrir VS Code ===
 cyan "💻 Abriendo VS Code en $PROYECTO..."
@@ -66,14 +63,14 @@ else
 fi
 
 # === Docker Compose Up ===
-cyan "🧼 Limpiando contenedores antiguos..."
+cyan "📄 Limpiando contenedores antiguos..."
 docker compose down --remove-orphans
 
 cyan "🐳 Levantando contenedores Docker..."
 docker compose up -d --build
 
 # === Restaurar base si corresponde ===
-cyan "🗄️ Verificando si la base de datos necesita restaurarse…"
+cyan "💄 Verificando si la base de datos necesita restaurarse…"
 
 DB_READY() {
   docker compose exec -T "$SERVICE_DB" \
@@ -90,40 +87,32 @@ TABLE_COUNT=$(docker compose exec -T "$SERVICE_DB" \
   mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
   -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME';")
 
-if $FORCE_RESTORE && [ -s "$PROYECTO/database/backup-latest.sql.gz" ]; then
+if $FORCE_RESTORE && [ -s "$EXPORT_DIR/backup-latest.sql.gz" ]; then
   cyan "⚠️  Modo forzado activado: eliminando todas las tablas existentes..."
-  
-  # Borrar todas las tablas
-  docker compose exec -T "$SERVICE_DB" \
-    mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "SET FOREIGN_KEY_CHECKS=0; \
-    SET @tables = NULL; \
-    SELECT GROUP_CONCAT(CONCAT('`', table_name, '`')) INTO @tables \
-    FROM information_schema.tables WHERE table_schema = '$DB_NAME'; \
-    SET @tables = IFNULL(@tables, 'dummy'); \
-    SET @sql = CONCAT('DROP TABLE IF EXISTS ', @tables); \
-    PREPARE stmt FROM @sql; \
-    EXECUTE stmt; \
-    DEALLOCATE PREPARE stmt; \
-    SET FOREIGN_KEY_CHECKS=1;"
 
-  green "✅ Todas las tablas eliminadas."
+  TABLAS=$(docker compose exec -T "$SERVICE_DB" \
+    mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
+    -e "SELECT table_name FROM information_schema.tables WHERE table_schema = '$DB_NAME';" | tr '\n' ',' | sed 's/,\$//')
+
+  if [[ -z "$TABLAS" ]]; then
+    red "❌ No se encontraron tablas para eliminar."
+  else
+    SQL="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $TABLAS; SET FOREIGN_KEY_CHECKS = 1;"
+    echo "🩨 Eliminando tablas: $TABLAS"
+    echo "$SQL" | docker compose exec -T "$SERVICE_DB" \
+      mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
+    green "✔ Tablas eliminadas."
+  fi
+
   cyan "🔄 Restaurando backup-latest.sql.gz…"
-
-  # Copiar el SQL temporalmente al contenedor
-  docker compose exec -T "$SERVICE_DB" bash -c "cat > /tmp/restore.sql" < <(gunzip -c "$PROYECTO/database/backup-latest.sql.gz")
-
-  # Ejecutar el SQL dentro del contenedor
-  docker compose exec -T "$SERVICE_DB" mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < <(docker compose exec -T "$SERVICE_DB" cat /tmp/restore.sql)
-
+  zcat "$EXPORT_DIR/backup-latest.sql.gz" | docker compose exec -i "$SERVICE_DB" \
+    mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
   green "✅ Restauración completada."
 
-elif [ "$TABLE_COUNT" -eq 0 ] && [ -s "$PROYECTO/database/backup-latest.sql.gz" ]; then
+elif [ "$TABLE_COUNT" -eq 0 ] && [ -s "$EXPORT_DIR/backup-latest.sql.gz" ]; then
   cyan "🔄 Restaurando backup-latest.sql.gz…"
-
-  docker compose exec -T "$SERVICE_DB" bash -c "cat > /tmp/restore.sql" < <(gunzip -c "$PROYECTO/database/backup-latest.sql.gz")
-
-  docker compose exec -T "$SERVICE_DB" mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" < <(docker compose exec -T "$SERVICE_DB" cat /tmp/restore.sql)
-
+  zcat "$EXPORT_DIR/backup-latest.sql.gz" | docker compose exec -i "$SERVICE_DB" \
+    mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
   green "✅ Restauración completada."
 else
   echo "📂 La base ya contiene tablas o no existe backup válido; se omite la restauración."

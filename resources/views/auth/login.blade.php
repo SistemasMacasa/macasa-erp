@@ -20,17 +20,14 @@
             <div class="row g-0">
                 <!-- FORMULARIO -->
                 <div class="col-xxl-3 col-lg-4 col-md-5">
-                    <div class="auth-full-page-content d-flex p-sm-5 p-4">
+                    <div class="auth-full-page-content d-flex align-items-center min-vh-100 p-sm-5 p-4">
                         <div class="w-100">
                             <div class="d-flex flex-column h-100">
-                                <div class="mb-4 mb-md-5 text-center">
+                                <div class="mb-5 mb-md-5 text-center">
                                     <a href="{{ url('/') }}" class="d-block auth-logo">
                                         <img src="{{ asset('assets/images/imglogin/logo.png') }}" alt="MACASA"
                                             class="img-fluid" style="max-height: 50px;">
                                     </a>
-
-
-
                                 </div>
 
                                 <div class="auth-content my-auto">

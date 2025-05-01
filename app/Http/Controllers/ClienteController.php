@@ -80,7 +80,7 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->input('tipo') == 'fisica') {
+        if ($request->input('tipo') == 'fisica') { // SI ES FISICA
             $request->validate([
                 'nombre' => 'required|max:100',
                 'apellido' => 'required|max:100',
@@ -111,23 +111,34 @@ class ClienteController extends Controller
         } else // SI ES EMPRESA
         {
             $rules = [
+                //DATOS CUENTA EJE
                 'nombre' => 'required|max:100',
                 'sector' => 'required|max:100',
                 'segmento' => 'required|max:100',
                 'id_vendedor' => 'nullable|integer',
 
-                // Contacto
+                // CONTACTO PRINCIPAL
                 'contacto.nombre' => 'nullable|max:100',
-                'contacto.apellido_paterno' => 'nullable|max:100',
-                'contacto.apellido_materno' => 'nullable|max:100',
+                'contacto.apellido_p' => 'nullable|max:100',
+                'contacto.apellido_m' => 'nullable|max:100',
                 'contacto.email' => 'nullable|email|max:100',
-                'contacto.telefono' => 'nullable|max:100',
-                'contacto.ext' => 'nullable|max:100',
-                'contacto.telefono2' => 'nullable|max:100',
-                'contacto.ext2' => 'nullable|max:100',
                 'contacto.puesto' => 'nullable|max:100',
+                'contacto.telefono1' => 'nullable|max:100',
+                'contacto.ext1' => 'nullable|max:10',
+                'contacto.telefono2' => 'nullable|max:100',
+                'contacto.ext2' => 'nullable|max:10',
 
-                // Direcciones de entrega
+                // DATOS DE ENTREGA
+                // Contacto que recibe la mercancía
+                'direcciones_entrega.*.contacto.nombre' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.apellido_p' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.apellido_m' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.telefono' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext'=> 'nullable|max:10',
+                'direcciones_entrega.*.contacto.email'=> 'nullable|email|max:100',
+
+                // Dirección de entrega
+                'direcciones_entrega.*.nombre'=> 'nullable|max:100',
                 'direcciones_entrega.*.calle' => 'nullable|max:100',
                 'direcciones_entrega.*.num_ext' => 'nullable|max:100',
                 'direcciones_entrega.*.num_int' => 'nullable|max:100',

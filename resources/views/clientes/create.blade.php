@@ -47,9 +47,11 @@
                     <div class="card-header section-card-header d-flex align-items-center justify-content-between">
                         <h5 class="mb-0">Cuenta Empresarial</h5>
                         <div class="d-flex align-items-center">
-                            <label for="nombre" class="form-label me-2 mb-0">Asignado a:</label>
+                            <label for="nombre" class="form-label me-2 mb-0">Asignado a: <span
+                                    class="text-danger">*</span></label>
 
-                            <select name="id_vendedor" id="id_vendedor" class="form-select form-select-sm" style="width:auto;">
+                            <select name="id_vendedor" id="id_vendedor" class="form-select form-select-sm" style="width:auto;"
+                                required>
                                 <option value="">-- Ejecutivo --</option>
 
                                 {{-- Base General = NULL --}}
@@ -61,31 +63,39 @@
                                     </option>
                                 @endforeach
                             </select>
+                            @error('id_vendedor')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="nombre" class="form-label">Nombre de la Empresa</label>
-                                <input name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}">
+                                <label for="nombre" class="form-label">
+                                    Nombre de la Empresa <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="nombre" id="nombre"
+                                    class="form-control @error('nombre') is-invalid  @enderror" value="{{ old('nombre') }}"
+                                    required>
+                                @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-3">
-                                <label for="sector" class="form-label">Sector</label>
-                                <select name="sector" id="sector" class="form-select">
+                                <label for="sector" class="form-label">Sector <span class="text-danger">*</span></label>
+                                <select name="sector" id="sector" class="form-select" required>
                                     <option value="" selected>-- Selecciona -- </option>
                                     <option value="privada">Empresa Privada</option>
                                     <option value="gobierno">Empresa Gobierno</option>
                                 </select>
+                                @error('sector')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-3">
-                                <label for="segmento" class="form-label">Segmento</label>
-                                <select name="segmento" id="segmento" class="form-select">
+                                <label for="segmento" class="form-label">Segmento <span class="text-danger">*</span></label>
+                                <select name="segmento" id="segmento" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
                                     <option value="macasa cuentas especiales">Macasa Cuentas Especiales</option>
                                     <option value="macasa ecommerce">Macasa Ecommerce</option>
                                     <option value="tekne store ecommerce">Tekne Store ECommerce</option>
                                     <option value="la plaza ecommerce">La Plaza Ecommerce</option>
                                 </select>
+                                @error('segmento')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                     </div>
@@ -99,11 +109,14 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label for="contacto[nombre]" class="form-label">Nombre(s)</label>
-                                <input name="contacto[nombre]" class="form-control" value="{{ old('contacto.nombre') }}">
+                                <label for="contacto[nombre]" class="form-label">Nombre(s) <span
+                                        class="text-danger">*</span></label>
+                                <input name="contacto[nombre]" class="form-control" value="{{ old('contacto.nombre') }}"
+                                    required>
+                                @error('contacto.nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-4">
-                                <label for="contacto[apellido_p" class="form-label">Primer Apellido</label>
+                                <label for="contacto[apellido_p]" class="form-label">Primer Apellido</label>
                                 <input name="contacto[apellido_p]" class="form-control"
                                     value="{{ old('contacto.apellido_p') }}">
                             </div>
@@ -120,26 +133,31 @@
                                 <input name="contacto[email]" class="form-control" value="{{ old('contacto.email') }}">
                             </div>
                             <div class="col-md-4">
-                                <label for="contacto[puesto]" class="form-label">Puesto</label>
-                                <input name="contacto[puesto]" class="form-control" value="{{ old('contacto.puesto') }}">
+                                <label for="contacto[puesto]" class="form-label">Puesto <span
+                                        class="text-danger">*</span></label>
+                                <input name="contacto[puesto]" class="form-control" value="{{ old('contacto.puesto') }}"
+                                    required>
+                                @error('contacto.puesto')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
 
                         <div class="row g-3 mt-1">
                             <div class="col-md-3">
-                                <label class="form-label">Teléfono 1</label>
-                                <input name="contacto[telefono1]" class="form-control" value="{{ old('contacto.telefono1') }}">
+                                <label for="contacto[telefono1]" class="form-label">Teléfono 1 <span class="text-danger">*</span></label>
+                                <input name="contacto[telefono1]" class="form-control" value="{{ old('contacto.telefono1') }}"
+                                    required>
+                                @error('contacto.telefono1')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-1">
-                                <label class="form-label">Ext.</label>
+                                <label for="contacto[ext1]" class="form-label">Ext.</label>
                                 <input name="contacto[ext1]" class="form-control" value="{{ old('contacto.ext1') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">Teléfono 2</label>
+                                <label for="contacto[telefono2]" class="form-label">Teléfono 2</label>
                                 <input name="contacto[telefono2]" class="form-control">
                             </div>
                             <div class="col-md-1">
-                                <label class="form-label">Ext.</label>
+                                <label for="contacto[ext2]" class="form-label">Ext.</label>
                                 <input name="contacto[ext2]" class="form-control" value="{{ old('contacto.ext2') }}">
                             </div>
                         </div>
@@ -149,7 +167,7 @@
                 <!-- ╭━━━━ Dirección de ENTREGA (múltiples) ━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
                     <div class="card-header section-card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Direcciones de Entrega</h6>
+                        <h6 class="mb-0">Datos de Entrega</h6>
                         <button type="button" id="agregarDireccionEntrega" class="btn btn-sm btn-outline-primary">
                             <i class="fa fa-plus"></i> Agregar otra
                         </button>
@@ -159,34 +177,109 @@
                         <div id="contenedorDireccionesEntrega">
                             <!-- Bloque inicial (índice 0) -->
                             <div class="entrega-block mb-4 border rounded p-3 bg-light-subtle">
-                                <h6 class="mb-3 text-muted">Dirección 1</h6>
+                                <h6 class="mb-3 text-muted">Datos de Entrega 1</h6>
+                                
+                                <!-- ╭━━━━ Contacto de Entrega ━━━━╮ -->
+                                <h6 class="mb-3">Contacto de Entrega</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="direcciones_entrega[0][contacto][nombre]" class="form-label">
+                                            Nombre(s) <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" name="direcciones_entrega[0][contacto][nombre]"
+                                            id="entrega_contacto_nombre_0"
+                                            class="form-control @error('direcciones_entrega.0.contacto.nombre') is-invalid @enderror"
+                                            value="{{ old('direcciones_entrega.0.contacto.nombre') }}" required>
+                                        @error('direcciones_entrega.0.contacto.nombre')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="direcciones_entrega[0][contacto][apellido_p]" class="form-label">
+                                            Apellido paterno <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" name="direcciones_entrega[0][contacto][apellido_p]"
+                                            id="entrega_contacto_apellido_p_0"
+                                            class="form-control @error('direcciones_entrega.0.contacto.apellido_p') is-invalid @enderror"
+                                            value="{{ old('direcciones_entrega.0.contacto.apellido_p') }}" required>
+                                        @error('direcciones_entrega.0.contacto.apellido_p')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="direcciones_entrega[0][contacto][apellido_m]" class="form-label">
+                                            Apellido materno
+                                        </label>
+                                        <input type="text" name="direcciones_entrega[0][contacto][apellido_m]"
+                                            id="entrega_contacto_apellido_m_0" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.contacto.apellido_m') }}">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-4">
+                                        <label for="direcciones_entrega[0][contacto][telefono]" class="form-label">
+                                            Teléfono <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" name="direcciones_entrega[0][contacto][telefono]"
+                                            id="entrega_contacto_telefono_0"
+                                            class="form-control @error('direcciones_entrega.0.contacto.telefono') is-invalid @enderror"
+                                            value="{{ old('direcciones_entrega.0.contacto.telefono') }}" required>
+                                        @error('direcciones_entrega.0.contacto.telefono')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="direcciones_entrega[0][contacto][ext]" class="form-label">
+                                            Ext.
+                                        </label>
+                                        <input type="text" name="direcciones_entrega[0][contacto][ext]"
+                                            id="entrega_contacto_ext_0" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.contacto.ext') }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="direcciones_entrega[0][contacto][email]" class="form-label">
+                                            Correo electrónico
+                                        </label>
+                                        <input type="email" name="direcciones_entrega[0][contacto][email]"
+                                            id="entrega_contacto_email_0"
+                                            class="form-control @error('direcciones_entrega.0.contacto.email') is-invalid @enderror"
+                                            value="{{ old('direcciones_entrega.0.contacto.email') }}">
+                                        @error('direcciones_entrega.0.contacto.email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <!-- ╰━━━━ Fin Contacto de Entrega ━━━━╯ -->
+                                <hr class="my-4">
+
+                                <h6 class="mb-3">Dirección de Entrega</h6>
                                 <div class="row g-3">
                                     <div class="col-md-6"><label class="form-label">Nombre de la Dirección</label>
-                                        <input name="direcciones_entrega[${index}][nombre]" class="form-control">
+                                        <input name="direcciones_entrega[0][nombre]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label">Calle</label>
-                                        <input name="direcciones_entrega[${index}][calle]" class="form-control">
+                                        <input name="direcciones_entrega[0][calle]" class="form-control">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Num. ext.</label>
-                                        <input name="direcciones_entrega[${index}][num_ext]" class="form-control">
+                                        <input name="direcciones_entrega[0][num_ext]" class="form-control">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Num. int.</label>
-                                        <input name="direcciones_entrega[${index}][num_int]" class="form-control">
+                                        <input name="direcciones_entrega[0][num_int]" class="form-control">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Colonia</label>
-                                        <input name="direcciones_entrega[${index}][colonia]" class="form-control">
+                                        <input name="direcciones_entrega[0][colonia]" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
-                                        <select name="razones[0][direccion][ciudad]" class="form-select">
+                                        <select name="direcciones_entrega[0][id_ciudad]" class="form-select">
                                             <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
                                             @foreach ($ciudades as $id => $city)
                                                 <option value="{{ $id }}" @selected(old('id_ciudad'))>
@@ -197,7 +290,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
-                                        <select name="razones[0][direccion][id_estado]" class="form-select">
+                                        <select name="direcciones_entrega[0][id_estado]" class="form-select">
                                             <option value="" @selected(old('id_estado'))>— Selecciona —</option>
                                             @foreach ($estados as $id => $state)
                                                 <option value="{{ $id }}" @selected(old('id_estado'))>
@@ -208,7 +301,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">País</label>
-                                        <select name="razones[0][direccion][id_pais]" class="form-select">
+                                        <select name="direcciones_entrega[0][id_pais]" class="form-select">
                                             <option value="" @selected(old('id_pais'))>— Selecciona —</option>
                                             @foreach ($paises as $id => $pais)
                                                 <option value="{{ $id }}" @selected(old('razones.0.direccion.id_pais') == $id)>
@@ -219,7 +312,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
-                                        <input name="direcciones_entrega[${index}][cp]" class="form-control">
+                                        <input name="direcciones_entrega[0][cp]" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -505,13 +598,13 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="contacto_apellido_p" class="form-label">Apellido paterno</label>
-                                        <input name="contacto[apellido_p]" id="contacto_apellido_p"
-                                            class="form-control" value="{{ old('contacto.apellido_p') }}">
+                                        <input name="contacto[apellido_p]" id="contacto_apellido_p" class="form-control"
+                                            value="{{ old('contacto.apellido_p') }}">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="contacto_apellido_m" class="form-label">Apellido materno</label>
-                                        <input name="contacto[apellido_m]" id="contacto_apellido_m"
-                                            class="form-control" value="{{ old('contacto.apellido_m') }}">
+                                        <input name="contacto[apellido_m]" id="contacto_apellido_m" class="form-control"
+                                            value="{{ old('contacto.apellido_m') }}">
                                     </div>
                                 </div>
 
@@ -713,8 +806,8 @@
                         </div>
 
                         <!-- =============================
-                                                                                             5. Notas
-                                                                                             ============================= -->
+                                                                                                                     5. Notas
+                                                                                                                     ============================= -->
                         <div class="card shadow-sm mb-5">
                             <div class="card-header section-card-header">
                                 <h6 class="mb-0">Notas</h6>

@@ -4,6 +4,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+//Existen dos tipos de contactos: 1) Contacto de Cuenta Eje 2) Contacto de Dirección de Entrega.
+
+/*
+ Un contacto de cuenta eje tiene id_direccion_entrega = null
+ Si el contacto tiene id_direccion_entrega entonces es un contacto de dirección de entrega
+*/
 class Contacto extends Model
 {
     use HasFactory;
