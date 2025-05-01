@@ -16,16 +16,14 @@ cd "$PROYECTO" || die "No se pudo entrar a $PROYECTO"
 # === 1. Ejecutar macasa-save.sh (dump + commit + push) ===
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
-if   [[ -x "$SCRIPT_DIR/macasa-save.sh" ]]; then
-  SAVE_SCRIPT="$SCRIPT_DIR/macasa-save.sh"
-elif [[ -x "$SCRIPT_DIR/macasa-save"    ]]; then
-  SAVE_SCRIPT="$SCRIPT_DIR/macasa-save"
+if [[ -x "$SCRIPT_DIR/macasa-save" || -x "$SCRIPT_DIR/macasa-save.sh" ]]; then
+  SAVE_SCRIPT="$(find "$SCRIPT_DIR" -name 'macasa-save*' -executable | head -n 1)"
 else
   die "No encontré macasa-save(.sh) en $SCRIPT_DIR o no es ejecutable"
 fi
 
 c "💾 [macasa-end] Ejecutando $(basename "$SAVE_SCRIPT")…"
-"$SAVE_SCRIPT" "$@"   # pasa cualquier mensaje de commit
+"$SAVE_SCRIPT" "$@"  # pasa mensaje de commit si se dio
 
 # === 2. Parar contenedores ===
 c "🧼 Deteniendo contenedores Docker…"

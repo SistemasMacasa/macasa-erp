@@ -24,4 +24,7 @@ yarn-error.log
 # Ignorar todos los .sql en la carpeta database excepto el último respaldo
 /database/*.sql
 !/database/backup-latest.sql
+/database/backup-*.sql.gz
+!/database/backup-main.sql.gz
+
 

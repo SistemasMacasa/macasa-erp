@@ -8,11 +8,6 @@ DB_PASS="${DB_PASS:-macasa123}"
 SERVICE_DB="mariadb"
 EXPORT_DIR="$PROYECTO/database"
 
-FORCE_RESTORE=false
-if [[ "${1:-}" == "--force-db" ]]; then
-  FORCE_RESTORE=true
-fi
-
 cd "$PROYECTO" || { echo "✖ No se pudo entrar a $PROYECTO"; exit 1; }
 
 # === Helpers UI ===
@@ -36,9 +31,8 @@ cyan "🖥️ Verificando Docker Desktop..."
 if grep -qi "microsoft" /proc/version; then
   if ! pgrep -f "Docker Desktop.exe" > /dev/null; then
     echo "🫿 Iniciando Docker Desktop..."
-    powershell.exe -Command "Start-Process 'C:\Program Files\Docker\Docker\Docker Desktop.exe'" 2>/dev/null || echo "⚠️ No se pudo iniciar Docker Desktop."
+    powershell.exe -Command "Start-Process 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'" 2>/dev/null || echo "⚠️ No se pudo iniciar Docker Desktop."
 
-    # Esperar a que Docker esté listo ANTES de continuar
     echo "⌛ Esperando a que Docker Desktop esté listo..."
     retry=0
     until docker info &>/dev/null; do
@@ -69,7 +63,7 @@ docker compose down --remove-orphans
 cyan "🐳 Levantando contenedores Docker..."
 docker compose up -d --build
 
-# === Restaurar base si corresponde ===
+# === Restaurar base desde backup-main.sql.gz ===
 cyan "💄 Verificando si la base de datos necesita restaurarse…"
 
 DB_READY() {
@@ -87,35 +81,28 @@ TABLE_COUNT=$(docker compose exec -T "$SERVICE_DB" \
   mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
   -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME';")
 
-if $FORCE_RESTORE && [ -s "$EXPORT_DIR/backup-latest.sql.gz" ]; then
-  cyan "⚠️  Modo forzado activado: eliminando todas las tablas existentes..."
+if [ -s "$EXPORT_DIR/backup-main.sql.gz" ]; then
+  cyan "🔄 Restaurando backup-main.sql.gz…"
 
-  TABLAS=$(docker compose exec -T "$SERVICE_DB" \
-    mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
-    -e "SELECT table_name FROM information_schema.tables WHERE table_schema = '$DB_NAME';" | tr '\n' ',' | sed 's/,\$//')
+  if [ "$TABLE_COUNT" -gt 0 ]; then
+    TABLAS=$(docker compose exec -T "$SERVICE_DB" \
+      mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
+      -e "SELECT table_name FROM information_schema.tables WHERE table_schema = '$DB_NAME';" | tr '\n' ',' | sed 's/,\$//')
 
-  if [[ -z "$TABLAS" ]]; then
-    red "❌ No se encontraron tablas para eliminar."
-  else
-    SQL="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $TABLAS; SET FOREIGN_KEY_CHECKS = 1;"
-    echo "🩨 Eliminando tablas: $TABLAS"
-    echo "$SQL" | docker compose exec -T "$SERVICE_DB" \
-      mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
-    green "✔ Tablas eliminadas."
+    if [[ -n "$TABLAS" ]]; then
+      SQL="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $TABLAS; SET FOREIGN_KEY_CHECKS = 1;"
+      echo "🩨 Eliminando tablas existentes: $TABLAS"
+      echo "$SQL" | docker compose exec -T "$SERVICE_DB" \
+        mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
+      green "✔ Tablas eliminadas."
+    fi
   fi
 
-  cyan "🔄 Restaurando backup-latest.sql.gz…"
-  zcat "$EXPORT_DIR/backup-latest.sql.gz" | docker compose exec -i "$SERVICE_DB" \
+  zcat "$EXPORT_DIR/backup-main.sql.gz" | docker compose exec -T "$SERVICE_DB" \
     mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
-  green "✅ Restauración completada."
-
-elif [ "$TABLE_COUNT" -eq 0 ] && [ -s "$EXPORT_DIR/backup-latest.sql.gz" ]; then
-  cyan "🔄 Restaurando backup-latest.sql.gz…"
-  zcat "$EXPORT_DIR/backup-latest.sql.gz" | docker compose exec -i "$SERVICE_DB" \
-    mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
-  green "✅ Restauración completada."
+  green "✅ Restauración desde backup-main.sql.gz completada."
 else
-  echo "📂 La base ya contiene tablas o no existe backup válido; se omite la restauración."
+  echo "📂 No se encontró backup-main.sql.gz para restaurar."
 fi
 
 green "✅ [macasa-init] Entorno iniciado exitosamente. ¡Hora de programar! 😎"
