@@ -28,11 +28,12 @@
 
             </div>
 
-            <!-- Aviso temporal para dirección -->
-            <div class="alert alert-warning py-2 px-3 small mb-4">
-                <i class="fa fa-info-circle me-1"></i>
-                Esta pantalla es sólo de demostración. Los datos aún no se envían al sistema.
+            <!-- Aviso: formulario operativo -->
+            <div class="alert alert-success py-2 px-3 small mb-4">
+                <i class="fa fa-check-circle me-1"></i>
+                ¡Listo! Este formulario ya está activo y tus datos se guardarán en el sistema al enviarlos.
             </div>
+
             <!-- ╭━━━━━━━━━━━━━━━━━━ Formulario principal ━━━━━━━━━━━━━━╮ -->
             <form id="clienteForm" action="{{ route('clientes.store') }}" method="POST" autocomplete="off">
                 @csrf
@@ -143,7 +144,8 @@
 
                         <div class="row g-3 mt-1">
                             <div class="col-md-3">
-                                <label for="contacto[telefono1]" class="form-label">Teléfono 1 <span class="text-danger">*</span></label>
+                                <label for="contacto[telefono1]" class="form-label">Teléfono 1 <span
+                                        class="text-danger">*</span></label>
                                 <input name="contacto[telefono1]" class="form-control" value="{{ old('contacto.telefono1') }}"
                                     required>
                                 @error('contacto.telefono1')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -178,7 +180,7 @@
                             <!-- Bloque inicial (índice 0) -->
                             <div class="entrega-block mb-4 border rounded p-3 bg-light-subtle">
                                 <h6 class="mb-3 text-muted">Datos de Entrega 1</h6>
-                                
+
                                 <!-- ╭━━━━ Contacto de Entrega ━━━━╮ -->
                                 <h6 class="mb-3">Contacto de Entrega</h6>
                                 <div class="row g-3">
@@ -196,7 +198,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="direcciones_entrega[0][contacto][apellido_p]" class="form-label">
-                                            Apellido paterno <span class="text-danger">*</span>
+                                            Primer apellido <span class="text-danger">*</span>
                                         </label>
                                         <input type="text" name="direcciones_entrega[0][contacto][apellido_p]"
                                             id="entrega_contacto_apellido_p_0"
@@ -208,7 +210,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="direcciones_entrega[0][contacto][apellido_m]" class="form-label">
-                                            Apellido materno
+                                            Segundo apellido
                                         </label>
                                         <input type="text" name="direcciones_entrega[0][contacto][apellido_m]"
                                             id="entrega_contacto_apellido_m_0" class="form-control"
@@ -254,7 +256,7 @@
 
                                 <h6 class="mb-3">Dirección de Entrega</h6>
                                 <div class="row g-3">
-                                    <div class="col-md-6"><label class="form-label">Nombre de la Dirección</label>
+                                    <div class="col-md-6"><label class="form-label">Razón Social</label>
                                         <input name="direcciones_entrega[0][nombre]" class="form-control">
                                     </div>
                                 </div>
@@ -283,7 +285,7 @@
                                             <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
                                             @foreach ($ciudades as $id => $city)
                                                 <option value="{{ $id }}" @selected(old('id_ciudad'))>
-                                                    {{ $city->nombre }}
+                                                    {{ $city }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -294,7 +296,7 @@
                                             <option value="" @selected(old('id_estado'))>— Selecciona —</option>
                                             @foreach ($estados as $id => $state)
                                                 <option value="{{ $id }}" @selected(old('id_estado'))>
-                                                    {{ $state->nombre }}
+                                                    {{ $state }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -345,61 +347,57 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Método de pago</label>
-                                        <select name="id_metodo_pago" id="id_metodo_pago" class="form-select">
-                                            {{-- placeholder: se marca si old() viene vacío --}}
+                                        <select name="razones[0][id_metodo_pago]" id="id_metodo_pago" class="form-select">
+                                            {{-- placeholder: se marca si old) viene vacío --}}
                                             <option value="" @selected(old('id_metodo_pago'))>— Selecciona —</option>
 
                                             @foreach ($metodos_pago as $id => $metodo)
-                                                <option value="{{ $id }}" @selected(old('idvendedor'))>
-                                                    {{ $metodo->nombre }}
+                                                <option value="{{ $id }}" @selected(old('id_metodo_pago'))>
+                                                    {{ $metodo }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Forma de pago</label>
-                                        <select name="razones[0][forma_pago]" class="form-select">
+                                        <select name="razones[0][id_forma_pago]" class="form-select">
                                             <option value="" @selected(old('id_forma_pago'))>— Selecciona —</option>
 
                                             @foreach ($formas_pago as $id => $forma)
-                                                <option value="{{ $id }}" @selected(old('idvendedor'))>
-                                                    {{ $forma->nombre }}
+                                                <option value="{{ $id }}" @selected(old('id_forma_pago'))>
+                                                    {{ $forma }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Uso del CFDI</label>
-                                        <select name="razones[0][uso_cfdi]" class="form-select">
+                                        <select name="razones[0][id_uso_cfdi]" class="form-select">
                                             <option value="" @selected(old('id_uso_cfdi'))>— Selecciona —</option>
                                             @foreach ($usos_cfdi as $id => $uso)
                                                 <option value="{{ $id }}" @selected(old('id_uso_cfdi'))>
-                                                    {{ $uso->nombre }}
+                                                    {{ $uso }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Régimen fiscal</label>
-                                        <select name="razones[0][regimen_fiscal]" class="form-select">
+                                        <select name="razones[0][id_regimen_fiscal]" class="form-select">
                                             <option value="" @selected(old('id_regimen_fiscal'))>— Selecciona —</option>
                                             @foreach ($regimen_fiscales as $id => $regimen)
                                                 <option value="{{ $id }}" @selected(old('id_regimen_fiscal'))>
-                                                    {{ $regimen->nombre }}
+                                                    {{ $regimen }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Límite de crédito</label>
-                                        <input name="razones[0][limite_credito]" class="form-control">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Días de crédito</label>
-                                        <input name="razones[0][dias_credito]" class="form-control">
-                                    </div>
                                 </div>
-
+                                <div class="row g-3 mt-1">
+                                <div class="col-md-2">
+                                        <label class="form-label">C.P.</label>
+                                        <input name="razones[0][direccion][cp]" class="form-control">
+                                    </div>
                                 <hr class="my-4">
 
                                 <!-- Dirección de facturación -->
@@ -424,11 +422,11 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
-                                        <select name="razones[0][direccion][ciudad]" class="form-select">
+                                        <select name="razones[0][direccion][id_ciudad]" class="form-select">
                                             <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
                                             @foreach ($ciudades as $id => $city)
                                                 <option value="{{ $id }}" @selected(old('id_ciudad'))>
-                                                    {{ $city->nombre }}
+                                                    {{ $city }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -439,7 +437,7 @@
                                             <option value="" @selected(old('id_estado'))>— Selecciona —</option>
                                             @foreach ($estados as $id => $state)
                                                 <option value="{{ $id }}" @selected(old('id_estado'))>
-                                                    {{ $state->nombre }}
+                                                    {{ $state }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -454,10 +452,6 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">C.P.</label>
-                                        <input name="razones[0][direccion][cp]" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -806,8 +800,8 @@
                         </div>
 
                         <!-- =============================
-                                                                                                                     5. Notas
-                                                                                                                     ============================= -->
+                                                                                                                             5. Notas
+                                                                                                                             ============================= -->
                         <div class="card shadow-sm mb-5">
                             <div class="card-header section-card-header">
                                 <h6 class="mb-0">Notas</h6>

@@ -122,7 +122,7 @@
                             <a href="{{ route('clientes.create', ['tipo' => 'moral']) }}" class="tipo-opcion-card">
                                 <div class="opcion-card-body">
                                     <strong>Cuenta Empresarial</strong>
-                                    <p class="mb-0 text-muted small">Para empresas privadas o gubernamentales</p>
+                                    <p class="mb-0 text-muted small">Para empresas privadas e instituciones de gobierno	</p>
                                 </div>
                             </a>
                         </div>
@@ -130,7 +130,7 @@
                             <a href="{{ route('clientes.create', ['tipo' => 'fisica']) }}" class="tipo-opcion-card">
                                 <div class="opcion-card-body">
                                     <strong>Cuenta Personal</strong>
-                                    <p class="mb-0 text-muted small">Para personas físicas con actividad empresarial</p>
+                                    <p class="mb-0 text-muted small">Para personas físicas y profesionales independientes</p>
                                 </div>
                             </a>
                         </div>

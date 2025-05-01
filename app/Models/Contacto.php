@@ -14,16 +14,24 @@ class Contacto extends Model
 {
     use HasFactory;
 
-    protected $table        = 'contactos';
-    protected $primaryKey   = 'id_contacto';
-    public    $incrementing = true;
-    protected $keyType      = 'int';
-    public    $timestamps   = false;
+    protected $table = 'contactos';
+    protected $primaryKey = 'id_contacto';
+    public $incrementing = true;
+    protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'id_cliente',
-        'nombre','apellido_p','apellido_m',
-        'email','telefono1','ext1','telefono2','ext2','puesto',
+        'id_direccion_entrega',
+        'nombre',
+        'apellido_p',
+        'apellido_m',
+        'email',
+        'telefono1',
+        'ext1',
+        'telefono2',
+        'ext2',
+        'puesto',
     ];
 
     public function cliente()
@@ -34,5 +42,9 @@ class Contacto extends Model
     public function getNombreCompletoAttribute(): string
     {
         return trim("{$this->nombre} {$this->apellido_p} {$this->apellido_m}");
+    }
+    public function direccionEntrega()
+    {
+        return $this->belongsTo(Direccion::class, 'id_direccion_entrega', 'id_direccion');
     }
 }

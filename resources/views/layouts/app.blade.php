@@ -200,7 +200,7 @@
             let index = 1;
 
             btnAgregar.addEventListener('click', function () {
-                if (index >= 10) return;
+                if (index >= 15) return;
 
                 const nuevo = document.createElement('div');
                 nuevo.className = "entrega-block mb-4 border rounded p-3 bg-light-subtle";
@@ -211,68 +211,68 @@
                 <h6 class="mb-3">Contacto de Entrega</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label for="direccion_entrega[${index + 1}][contacto][nombre]" class="form-label">
+                            <label for="direccion_entrega[${index}][contacto][nombre]" class="form-label">
                                 Nombre(s) <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="direccion_entrega[${index + 1}][contacto][nombre]"
-                                id="entrega_contacto_nombre_${index + 1}"
-                                class="form-control @error('direccion_entrega.${index + 1}.contacto.nombre') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index + 1}.contacto.nombre') }}" required>
-                            @error('direccion_entrega.${index + 1}.contacto.nombre')
+                            <input type="text" name="direccion_entrega[${index}][contacto][nombre]"
+                                id="entrega_contacto_nombre_${index}"
+                                class="form-control @error('direccion_entrega.${index}.contacto.nombre') is-invalid @enderror"
+                                value="{{ old('direccion_entrega.${index}.contacto.nombre') }}" required>
+                            @error('direccion_entrega.${index}.contacto.nombre')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="direccion_entrega[${index + 1}][contacto][apellido_p]" class="form-label">
+                            <label for="direccion_entrega[${index}][contacto][apellido_p]" class="form-label">
                                 Primer Apellido <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="direccion_entrega[${index + 1}][contacto][apellido_p]"
-                                id="entrega_contacto_apellido_p_${index + 1}"
-                                class="form-control @error('direccion_entrega.${index + 1}.contacto.apellido_p') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index + 1}.contacto.apellido_p') }}" required>
-                            @error('direccion_entrega.${index + 1}.contacto.apellido_p')
+                            <input type="text" name="direccion_entrega[${index}][contacto][apellido_p]"
+                                id="entrega_contacto_apellido_p_${index}"
+                                class="form-control @error('direccion_entrega.${index}.contacto.apellido_p') is-invalid @enderror"
+                                value="{{ old('direccion_entrega.${index}.contacto.apellido_p') }}" required>
+                            @error('direccion_entrega.${index}.contacto.apellido_p')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="direccion_entrega[${index + 1}][contacto][apellido_m]" class="form-label">
+                            <label for="direccion_entrega[${index}][contacto][apellido_m]" class="form-label">
                                 Apellido materno
                             </label>
-                            <input type="text" name="direccion_entrega[${index + 1}][contacto][apellido_m]"
-                                id="entrega_contacto_apellido_m_${index + 1}" class="form-control"
-                                value="{{ old('direccion_entrega.${index + 1}.contacto.apellido_m') }}">
+                            <input type="text" name="direccion_entrega[${index}][contacto][apellido_m]"
+                                id="entrega_contacto_apellido_m_${index}" class="form-control"
+                                value="{{ old('direccion_entrega.${index}.contacto.apellido_m') }}">
                         </div>
                     </div>
                     <div class="row g-3 mt-1">
                         <div class="col-md-4">
-                            <label for="direccion_entrega[${index + 1}][contacto][telefono]" class="form-label">
+                            <label for="direccion_entrega[${index}][contacto][telefono]" class="form-label">
                                 Teléfono <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="direccion_entrega[${index + 1}][contacto][telefono]"
-                                id="entrega_contacto_telefono_${index + 1}"
-                                class="form-control @error('direccion_entrega.${index + 1}.contacto.telefono') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index + 1}.contacto.telefono') }}" required>
-                            @error('direccion_entrega.${index + 1}.contacto.telefono')
+                            <input type="text" name="direccion_entrega[${index}][contacto][telefono]"
+                                id="entrega_contacto_telefono_${index}"
+                                class="form-control @error('direccion_entrega.${index}.contacto.telefono') is-invalid @enderror"
+                                value="{{ old('direccion_entrega.${index}.contacto.telefono') }}" required>
+                            @error('direccion_entrega.${index}.contacto.telefono')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-2">
-                            <label for="direccion_entrega[${index + 1}][contacto][ext]" class="form-label">
+                            <label for="direccion_entrega[${index}][contacto][ext]" class="form-label">
                                 Ext.
                             </label>
-                            <input type="text" name="direccion_entrega[${index + 1}][contacto][ext]"
-                                id="entrega_contacto_ext_${index + 1}" class="form-control"
-                                value="{{ old('direccion_entrega.${index + 1}.contacto.ext') }}">
+                            <input type="text" name="direccion_entrega[${index}][contacto][ext]"
+                                id="entrega_contacto_ext_${index}" class="form-control"
+                                value="{{ old('direccion_entrega.${index}.contacto.ext') }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="direccion_entrega[${index + 1}][contacto][email]" class="form-label">
+                            <label for="direccion_entrega[${index}][contacto][email]" class="form-label">
                                 Correo electrónico
                             </label>
-                            <input type="email" name="direccion_entrega[${index + 1}][contacto][email]"
-                                id="entrega_contacto_email_${index + 1}"
-                                class="form-control @error('direccion_entrega.${index + 1}.contacto.email') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index + 1}.contacto.email') }}">
-                            @error('direccion_entrega.${index + 1}.contacto.email')
+                            <input type="email" name="direccion_entrega[${index}][contacto][email]"
+                                id="entrega_contacto_email_${index}"
+                                class="form-control @error('direccion_entrega.${index}.contacto.email') is-invalid @enderror"
+                                value="{{ old('direccion_entrega.${index}.contacto.email') }}">
+                            @error('direccion_entrega.${index}.contacto.email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

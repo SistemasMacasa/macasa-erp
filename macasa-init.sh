@@ -87,9 +87,12 @@ if [ -s "$EXPORT_DIR/backup-main.sql.gz" ]; then
   if [ "$TABLE_COUNT" -gt 0 ]; then
     TABLAS=$(docker compose exec -T "$SERVICE_DB" \
       mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
-      -e "SELECT table_name FROM information_schema.tables WHERE table_schema = '$DB_NAME';" | tr '\n' ',' | sed 's/,\$//')
+      -e "SELECT table_name FROM information_schema.tables WHERE table_schema = '$DB_NAME';" \
+      | tr '\n' ',' | sed 's/,\$//')
 
-    if [[ -n "$TABLAS" ]]; then
+    if [[ -z "$TABLAS" || "$TABLAS" =~ ^,*$ ]]; then
+      red "❌ No se encontraron tablas válidas para eliminar."
+    else
       SQL="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $TABLAS; SET FOREIGN_KEY_CHECKS = 1;"
       echo "🩨 Eliminando tablas existentes: $TABLAS"
       echo "$SQL" | docker compose exec -T "$SERVICE_DB" \
@@ -97,6 +100,7 @@ if [ -s "$EXPORT_DIR/backup-main.sql.gz" ]; then
       green "✔ Tablas eliminadas."
     fi
   fi
+
 
   zcat "$EXPORT_DIR/backup-main.sql.gz" | docker compose exec -T "$SERVICE_DB" \
     mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
