@@ -1,17 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# === CONFIG ===============================================================
+# === CONFIG ===
 PROYECTO="${HOME}/macasa-erp"
 SERVICE_DB="mariadb"
-DB_NAME="erp_ecommerce_db"
-DB_USER="${DB_USER:-macasa_user}"
-DB_PASS="${DB_PASS:-macasa123}"
 RED_EXTERNA="macasa-red-docker"
-BACKUP_DIR="${PROYECTO}/database"
-BACKUP_FILE="${BACKUP_DIR}/backup-latest.sql.gz"
 
-# === UI helpers ===========================================================
+# === UI helpers ===
 cyan()  { printf "\e[1;36m▶ %s\e[0m\n" "$*"; }
 green() { printf "\e[1;32m✔ %s\e[0m\n" "$*"; }
 red()   { printf "\e[1;31m✖ %s\e[0m\n" "$*" >&2; }
@@ -22,72 +17,77 @@ cd "$PROYECTO" || die "No se pudo entrar a $PROYECTO"
 ############################################################################
 cyan "💥  [macasa-reset] Desatando la GENKIDAMA sobre Docker…"
 
-### 1. Derribo controlado de stack
+# 1. Detener contenedores
 cyan "🛑 Deteniendo contenedores del proyecto…"
 docker compose down --remove-orphans || true
 
+cyan "🧊 Cerrando aplicaciones de Windows…"
+if grep -qi "microsoft" /proc/version; then
+  powershell.exe -Command "Start-Job { Stop-Process -Name 'Docker Desktop','Code','GitHubDesktop' -Force -ErrorAction SilentlyContinue }" 2>/dev/null || true
+  sleep 1
+fi
+
+# 2. Limpiar contenedores, volúmenes y redes
 cyan "🗑️  Eliminando contenedores sueltos…"
 docker ps -aq | xargs -r docker rm -f || true
 
-### 2. Limpiar volúmenes y redes huérfanas
-cyan "🧹 Borrando volumen de MariaDB…"
+cyan "🧹 Borrando volumen de MariaDB y redes huérfanas…"
 docker volume rm -f mariadb_data 2>/dev/null || true
 docker volume prune -f
 docker network prune -f
 
-### 3. Garantizar que la red externa exista
+# 3. Crear red externa si no existe
 cyan "🌐 Verificando red externa '${RED_EXTERNA}'…"
 docker network inspect "$RED_EXTERNA" &>/dev/null || {
   docker network create "$RED_EXTERNA"
   green "Red '${RED_EXTERNA}' creada."
 }
 
-### 4. Levantar el stack de cero
+# 4. Levantar el stack de nuevo
+cyan "⌛ Esperando a que Docker esté listo…"
+retry=0
+until docker info &>/dev/null; do
+  sleep 1
+  ((retry++))
+  if [ "$retry" -gt 120 ]; then
+    die "Docker no está listo después de 120 segundos."
+  fi
+done
+green "🐋 Docker Desktop está listo."
+
+
 cyan "🔨 Reconstruyendo contenedores…"
 docker compose up -d --build
 
-### 5. Esperar a MariaDB
-cyan "⌛ Esperando a que '$DB_USER' pueda iniciar sesión…"
+# 5. Esperar a MariaDB
+cyan "⌛ Esperando a que MariaDB responda…"
 until docker compose exec -T "$SERVICE_DB" \
-        mysql -u"$DB_USER" -p"$DB_PASS" -e "SELECT 1" &>/dev/null; do
+        mysqladmin ping -p"macasa123" --silent &>/dev/null; do
   sleep 2
 done
-green "MariaDB lista y $DB_USER activo."
+green "MariaDB lista."
 
-### 6. Restaurar backup (si existe y la BD está vacía)
-TABLAS=$(docker compose exec -T "$SERVICE_DB" \
-  mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
-  -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME';")
-
-if [ "$TABLAS" -eq 0 ] && [ -s "$BACKUP_FILE" ]; then
-  cyan "🧠 Restaurando backup-latest.sql.gz…"
-  gunzip -c "$BACKUP_FILE" | \
-    docker compose exec -T "$SERVICE_DB" \
-      mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
-  green "Base restaurada."
+# 6. Restaurar backup-main.sql.gz si existe (a menos que --menos-la-base esté activo)
+if [[ "${1:-}" != "--menos-la-base" && -s "$PROYECTO/database/backup-main.sql.gz" ]]; then
+  cyan "🧠 Restaurando backup-main.sql.gz…"
+  zcat "$PROYECTO/database/backup-main.sql.gz" | docker compose exec -T "$SERVICE_DB" \
+    mysql -umacasa_user -pmacasa123 erp_ecommerce_db
+  green "✔ Base restaurada."
+elif [[ "${1:-}" == "--menos-la-base" ]]; then
+  cyan "⏭️  Restauración de base de datos omitida (--menos-la-base)."
 else
-  cyan "⚠️  Sin backup válido o la base ya tiene tablas."
+  red "⚠️ No se encontró backup-main.sql.gz para restaurar la base."
 fi
 
-### 7. Usuario “ancla” de emergencia
-cyan "🧙 Creando usuario ancla (si falta)…"
-docker compose exec -T erp \
-  php artisan tinker --execute \
-  "App\\Models\\Usuario::firstOrCreate(
-      ['email'=>'sistemas@macasahs.com.mx'],
-      ['name'=>'ancla','password'=>bcrypt('Macasa2019$'),'es_admin'=>1]
-  );"
-
-# 1) Ejecutar migraciones faltantes
-cyan "🔧 Sincronizando esquema (migraciones)…"
-if docker compose exec -T erp php artisan migrate --force --no-interaction; then
-  green "Migraciones al día."
+# 6. Notificación de integridad final
+if [[ "${1:-}" == "--menos-la-base" ]]; then
+  echo -e "\e[1;33m⚠️  La base de datos NO fue restaurada. Continúas con los datos existentes.\e[0m"
+  green "✔ Proyecto reseteado exitosamente."
 else
-  warn "Migraciones con error; revisa manualmente."
+green "✔ Proyecto reseteado exitosamente."
 fi
 
-# 2) (Opcional) seed inicial de tablas críticas
-# docker compose exec -T erp php artisan db:seed --class=InitialSeeder
-
-############################################################################
-green "🌅 GENKIDAMA completada: entorno limpio, base restaurada y listo en http://localhost"
+# 7. Migraciones (comentadas por ahora)
+# cyan "🔧 Ejecutando migraciones…"
+# docker compose exec -T erp php artisan migrate --force --no-interaction && \
+#   green "Migraciones al día."
