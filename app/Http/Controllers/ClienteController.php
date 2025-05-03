@@ -126,15 +126,29 @@ class ClienteController extends Controller
                 'contacto.ext1' => 'nullable|max:10',
                 'contacto.telefono2' => 'nullable|max:100',
                 'contacto.ext2' => 'nullable|max:10',
+                'contacto.telefono3' => 'nullable|max:100',
+                'contacto.ext3' => 'nullable|max:10',
+                'contacto.telefono4' => 'nullable|max:100',
+                'contacto.ext4' => 'nullable|max:10',
+                'contacto.telefono5' => 'nullable|max:100',
+                'contacto.ext5' => 'nullable|max:10',
 
                 // DATOS DE ENTREGA
                 // Contacto que recibe la mercancía
                 'direcciones_entrega.*.contacto.nombre' => 'nullable|max:100',
                 'direcciones_entrega.*.contacto.apellido_p' => 'nullable|max:100',
                 'direcciones_entrega.*.contacto.apellido_m' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.telefono' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.ext' => 'nullable|max:10',
                 'direcciones_entrega.*.contacto.email' => 'nullable|email|max:100',
+                'direcciones_entrega.*.contacto.telefono1' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext1' => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono2' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext2' => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono3' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext3' => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono4' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext4' => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono5' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext5' => 'nullable|max:10',
 
                 // Dirección de entrega
                 'direcciones_entrega.*.nombre' => 'nullable|max:100',
@@ -199,6 +213,12 @@ class ClienteController extends Controller
                         'ext1'         => $contacto['ext1'] ?? null,
                         'telefono2'    => $contacto['telefono2'] ?? null,
                         'ext2'         => $contacto['ext2'] ?? null,
+                        'telefono3'    => $contacto['telefono3'] ?? null,
+                        'ext3'         => $contacto['ext3'] ?? null,
+                        'telefono4'    => $contacto['telefono4'] ?? null,
+                        'ext4'         => $contacto['ext4'] ?? null,
+                        'telefono5'    => $contacto['telefono5'] ?? null,
+                        'ext5'         => $contacto['ext5'] ?? null,
                     ]);
                 }
 
@@ -237,8 +257,16 @@ class ClienteController extends Controller
                                 'apellido_p'  => $dir['contacto']['apellido_p'] ?? null,
                                 'apellido_m'  => $dir['contacto']['apellido_m'] ?? null,
                                 'email'       => $dir['contacto']['email'] ?? null,
-                                'telefono1'   => $dir['contacto']['telefono'] ?? null,
-                                'ext1'        => $dir['contacto']['ext'] ?? null,
+                                'telefono1'   => $dir['contacto']['telefono1'] ?? null,
+                                'ext1'        => $dir['contacto']['ext1'] ?? null,
+                                'telefono2'   => $dir['contacto']['telefono2'] ?? null,
+                                'ext2'        => $dir['contacto']['ext2'] ?? null,
+                                'telefono3'   => $dir['contacto']['telefono3'] ?? null,
+                                'ext3'        => $dir['contacto']['ext3'] ?? null,
+                                'telefono4'   => $dir['contacto']['telefono4'] ?? null,
+                                'ext4'        => $dir['contacto']['ext4'] ?? null,
+                                'telefono5'   => $dir['contacto']['telefono5'] ?? null,
+                                'ext5'        => $dir['contacto']['ext5'] ?? null,
                                 'id_direccion_entrega' => $direccionEntrega->id_direccion,
                             ]);
                         }

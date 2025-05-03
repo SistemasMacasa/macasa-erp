@@ -88,7 +88,8 @@ if [ -s "$EXPORT_DIR/backup-main.sql.gz" ]; then
     TABLAS=$(docker compose exec -T "$SERVICE_DB" \
       mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
       -e "SELECT table_name FROM information_schema.tables WHERE table_schema = '$DB_NAME';" \
-      | tr '\n' ',' | sed 's/,\$//')
+      | paste -sd, -)
+
 
     if [[ -z "$TABLAS" || "$TABLAS" =~ ^,*$ ]]; then
       red "❌ No se encontraron tablas válidas para eliminar."

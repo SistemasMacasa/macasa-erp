@@ -31,6 +31,12 @@ class Contacto extends Model
         'ext1',
         'telefono2',
         'ext2',
+        'telefono3',
+        'ext3',
+        'telefono4',
+        'ext4',
+        'telefono5',
+        'ext5',
         'puesto',
     ];
 

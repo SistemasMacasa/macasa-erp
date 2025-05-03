@@ -70,6 +70,23 @@ green "MariaDB lista."
 # 6. Restaurar backup-main.sql.gz si existe (a menos que --menos-la-base esté activo)
 if [[ "${1:-}" != "--menos-la-base" && -s "$PROYECTO/database/backup-main.sql.gz" ]]; then
   cyan "🧠 Restaurando backup-main.sql.gz…"
+
+  TABLAS=$(docker compose exec -T "$SERVICE_DB" \
+    mysql -N -s -u"macasa_user" -p"macasa123" \
+    -e "SELECT table_name FROM information_schema.tables WHERE table_schema = 'erp_ecommerce_db';" \
+    | tr '
+' ',' | sed 's/,\$//')
+
+  if [[ -z "$TABLAS" || "$TABLAS" =~ ^,*$ ]]; then
+    red "❌ No se encontraron tablas válidas para eliminar."
+  else
+    SQL="SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS $TABLAS; SET FOREIGN_KEY_CHECKS = 1;"
+    echo "🩨 Eliminando tablas existentes: $TABLAS"
+    echo "$SQL" | docker compose exec -T "$SERVICE_DB" \
+      mysql -umacasa_user -pmacasa123 erp_ecommerce_db
+    green "✔ Tablas eliminadas."
+  fi
+
   zcat "$PROYECTO/database/backup-main.sql.gz" | docker compose exec -T "$SERVICE_DB" \
     mysql -umacasa_user -pmacasa123 erp_ecommerce_db
   green "✔ Base restaurada."
@@ -78,13 +95,21 @@ elif [[ "${1:-}" == "--menos-la-base" ]]; then
 else
   red "⚠️ No se encontró backup-main.sql.gz para restaurar la base."
 fi
+elif [[ "${1:-}" == "--menos-la-base" ]]; then
+  cyan "⏭️  Restauración de base de datos omitida (--menos-la-base)."
+else
+  red "⚠️ No se encontró backup-main.sql.gz para restaurar la base."
+fi
 
-# 6. Notificación de integridad final
+# 6. Usuario ancla
+cyan "🧙 Creando usuario ancla (si falta)…"
+docker compose exec -T erp \
+  php artisan tinker --execute \
+  "App\\Models\\Usuario::firstOrCreate(\n      ['email'=>'sistemas@macasahs.com.mx'],\n      ['username'=>'sistemas','password'=>bcrypt('Macasa2019\$'),'es_admin'=>1]\n  );"
+
+# 7. Notificación de integridad final
 if [[ "${1:-}" == "--menos-la-base" ]]; then
   echo -e "\e[1;33m⚠️  La base de datos NO fue restaurada. Continúas con los datos existentes.\e[0m"
-  green "✔ Proyecto reseteado exitosamente."
-else
-green "✔ Proyecto reseteado exitosamente."
 fi
 
 # 7. Migraciones (comentadas por ahora)

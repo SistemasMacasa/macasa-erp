@@ -31,8 +31,8 @@ class UsuarioController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'cargo' => $request->cargo,
-            'tipo' => 'ERP',
-            'estatus' => 'Activo',
+            'tipo' => 'erp',
+            'estatus' => 'activo',
             'es_admin' => $request->has('es_admin') ? 1 : 0,
             'fecha_alta' => now() // alternativa moderna a date()
         ];

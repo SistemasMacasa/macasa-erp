@@ -22,7 +22,8 @@ class AuthController extends Controller
 
         // Validamos que sea un usuario interno para iniciar sesión en el ERP
         $usuario = Usuario::where('username', $request->username)
-            ->where('tipo', 'ERP')
+            ->where('tipo', 'erp')
+            ->where('estatus', 'activo')
             ->whereNull('id_cliente')
             ->first();
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id('id_usuario');
             $table->string('username')->unique();
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->string('password');
             $table->string('cargo')->nullable();
             $table->string('tipo')->nullable(); // erp, ecommerce, otro

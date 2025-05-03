@@ -120,6 +120,7 @@
             }
         });
     </script>
+
     <script>
         //Quitar mensaje de éxito después de 5 segundos
         // Se utiliza setTimeout para eliminar el mensaje después de 5 segundos
@@ -132,6 +133,7 @@
             }
         }, 5000);
     </script>
+
     <script>
         $('#vertical-menu-btn').on('click', function (t) {
             t.preventDefault();
@@ -145,7 +147,6 @@
                 localStorage.setItem('sidebarSize', newSize);
             }
         });
-
     </script>
 
     <script>
@@ -181,169 +182,11 @@
             });
         });
     </script>
-    <script>
-        /*   alterna todos los checks de clientes.index   */
-        document.addEventListener('DOMContentLoaded', () => {
-            const master = document.getElementById('check-all');
-            master?.addEventListener('change', () => {
-                document
-                    .querySelectorAll('.chk-row')
-                    .forEach(chk => chk.checked = master.checked);
-            });
-        });
-    </script>
-    <script>
-        //Agregar direcciones de entrega al formulario de nueva cuenta
-        document.addEventListener('DOMContentLoaded', function () {
-            const btnAgregar = document.getElementById('agregarDireccionEntrega');
-            const contenedor = document.getElementById('contenedorDireccionesEntrega');
-            let index = 1;
 
-            btnAgregar.addEventListener('click', function () {
-                if (index >= 15) return;
 
-                const nuevo = document.createElement('div');
-                nuevo.className = "entrega-block mb-4 border rounded p-3 bg-light-subtle";
-                nuevo.innerHTML = `
-                <h6 class="mb-3 text-muted">Datos de Entrega ${index + 1}</h6>
-                
-                    <!-- ╭━━━━ Contacto de Entrega ━━━━╮ -->
-                <h6 class="mb-3">Contacto de Entrega</h6>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label for="direccion_entrega[${index}][contacto][nombre]" class="form-label">
-                                Nombre(s) <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="direccion_entrega[${index}][contacto][nombre]"
-                                id="entrega_contacto_nombre_${index}"
-                                class="form-control @error('direccion_entrega.${index}.contacto.nombre') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index}.contacto.nombre') }}" required>
-                            @error('direccion_entrega.${index}.contacto.nombre')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-4">
-                            <label for="direccion_entrega[${index}][contacto][apellido_p]" class="form-label">
-                                Primer Apellido <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="direccion_entrega[${index}][contacto][apellido_p]"
-                                id="entrega_contacto_apellido_p_${index}"
-                                class="form-control @error('direccion_entrega.${index}.contacto.apellido_p') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index}.contacto.apellido_p') }}" required>
-                            @error('direccion_entrega.${index}.contacto.apellido_p')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-4">
-                            <label for="direccion_entrega[${index}][contacto][apellido_m]" class="form-label">
-                                Apellido materno
-                            </label>
-                            <input type="text" name="direccion_entrega[${index}][contacto][apellido_m]"
-                                id="entrega_contacto_apellido_m_${index}" class="form-control"
-                                value="{{ old('direccion_entrega.${index}.contacto.apellido_m') }}">
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-4">
-                            <label for="direccion_entrega[${index}][contacto][telefono]" class="form-label">
-                                Teléfono <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="direccion_entrega[${index}][contacto][telefono]"
-                                id="entrega_contacto_telefono_${index}"
-                                class="form-control @error('direccion_entrega.${index}.contacto.telefono') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index}.contacto.telefono') }}" required>
-                            @error('direccion_entrega.${index}.contacto.telefono')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-2">
-                            <label for="direccion_entrega[${index}][contacto][ext]" class="form-label">
-                                Ext.
-                            </label>
-                            <input type="text" name="direccion_entrega[${index}][contacto][ext]"
-                                id="entrega_contacto_ext_${index}" class="form-control"
-                                value="{{ old('direccion_entrega.${index}.contacto.ext') }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="direccion_entrega[${index}][contacto][email]" class="form-label">
-                                Correo electrónico
-                            </label>
-                            <input type="email" name="direccion_entrega[${index}][contacto][email]"
-                                id="entrega_contacto_email_${index}"
-                                class="form-control @error('direccion_entrega.${index}.contacto.email') is-invalid @enderror"
-                                value="{{ old('direccion_entrega.${index}.contacto.email') }}">
-                            @error('direccion_entrega.${index}.contacto.email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <!-- ╰━━━━ Fin Contacto de Entrega ━━━━╯ -->
-                    
-                    <hr class="my-4">
-                    <!-- ╭━━━━ Contacto de Entrega ━━━━╮ -->
-                    <h6 class="mb-3">Dirección de Entrega</h6>
-                    <div class="row g-3">
-                        <div class="col-md-6"><label class="form-label">Nombre de la Dirección</label>
-                            <input name="direcciones_entrega[${index}][nombre]" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-4"><label class="form-label">Calle</label>
-                            <input name="direcciones_entrega[${index}][calle]" class="form-control">
-                        </div>
-                        <div class="col-md-2"><label class="form-label">Num. ext.</label>
-                            <input name="direcciones_entrega[${index}][num_ext]" class="form-control">
-                        </div>
-                        <div class="col-md-2"><label class="form-label">Num. int.</label>
-                            <input name="direcciones_entrega[${index}][num_int]" class="form-control">
-                        </div>
-                        <div class="col-md-4"><label class="form-label">Colonia</label>
-                            <input name="direcciones_entrega[${index}][colonia]" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-4"><label class="form-label">Ciudad / Municipio</label>
-                            <input name="direcciones_entrega[${index}][ciudad]" class="form-control">
-                        </div>
-                        <div class="col-md-4"><label class="form-label">Estado</label>
-                            <input name="direcciones_entrega[${index}][estado]" class="form-control">
-                        </div>
-                        <div class="col-md-2"><label class="form-label">País</label>
-                            <input name="direcciones_entrega[${index}][pais]" class="form-control" value="México">
-                        </div>
-                        <div class="col-md-2"><label class="form-label">C.P.</label>
-                            <input name="direcciones_entrega[${index}][cp]" class="form-control">
-                        </div>
-                    </div>
-            `;
+    
 
-                contenedor.appendChild(nuevo);
-                index++;
-            });
-        });
-    </script>
-    <script>
-        //Agregar datos de facturación al formulario de nueva cuenta
-        // Solo se permite agregar hasta 10 bloques de facturación
-        document.addEventListener('DOMContentLoaded', function () {
-            const btnAgregar = document.getElementById('agregarFacturacion');
-            const contenedor = document.getElementById('contenedorFacturacion');
-            let index = 1;
 
-            btnAgregar.addEventListener('click', function () {
-                if (index >= 10) return;
-
-                const bloque = contenedor.querySelector('.facturacion-block').cloneNode(true);
-                bloque.querySelector('h6').innerText = `Razón Social ${index + 1}`;
-
-                // Reemplazar todos los índices [0] por [index]
-                bloque.innerHTML = bloque.innerHTML.replace(/\[0\]/g, `[${index}]`);
-                contenedor.appendChild(bloque);
-
-                index++;
-            });
-        });
-    </script>
     @stack('scripts')
 </body>
 

@@ -154,15 +154,15 @@
                                 <label for="contacto[ext1]" class="form-label">Ext.</label>
                                 <input name="contacto[ext1]" class="form-control" value="{{ old('contacto.ext1') }}">
                             </div>
-                            <div class="col-md-3">
-                                <label for="contacto[telefono2]" class="form-label">Teléfono 2</label>
-                                <input name="contacto[telefono2]" class="form-control">
-                            </div>
-                            <div class="col-md-1">
-                                <label for="contacto[ext2]" class="form-label">Ext.</label>
-                                <input name="contacto[ext2]" class="form-control" value="{{ old('contacto.ext2') }}">
-                            </div>
                         </div>
+                        <!-- CONTENEDOR PARA LOS TELÉFONOS ADICIONALES -->
+                        <div id="telefonosContacto"></div>
+
+                        <!-- BOTÓN PARA AGREGAR TELÉFONO -->
+                        <button type="button" id="agregarTelefono" class="btn btn-sm btn-outline-primary mt-3">
+                            <i class="fa fa-plus"></i> Agregar teléfono
+                        </button>
+
                     </div>
                 </div>
 
@@ -178,12 +178,13 @@
                     <div class="card-body">
                         <div id="contenedorDireccionesEntrega">
                             <!-- Bloque inicial (índice 0) -->
-                            <div class="entrega-block mb-4 border rounded p-3 bg-light-subtle">
+                            <div class="entrega-block mb-4 border rounded p-3 bg-light-subtle" data-index="0">
                                 <h6 class="mb-3 text-muted">Datos de Entrega 1</h6>
 
                                 <!-- ╭━━━━ Contacto de Entrega ━━━━╮ -->
                                 <h6 class="mb-3">Contacto de Entrega</h6>
-                                <div class="row g-3">
+
+                                <div class="row g-3 mt-1 telefono-contacto-wr">
                                     <div class="col-md-4">
                                         <label for="direcciones_entrega[0][contacto][nombre]" class="form-label">
                                             Nombre(s) <span class="text-danger">*</span>
@@ -218,26 +219,6 @@
                                     </div>
                                 </div>
                                 <div class="row g-3 mt-1">
-                                    <div class="col-md-4">
-                                        <label for="direcciones_entrega[0][contacto][telefono]" class="form-label">
-                                            Teléfono <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text" name="direcciones_entrega[0][contacto][telefono]"
-                                            id="entrega_contacto_telefono_0"
-                                            class="form-control @error('direcciones_entrega.0.contacto.telefono') is-invalid @enderror"
-                                            value="{{ old('direcciones_entrega.0.contacto.telefono') }}" required>
-                                        @error('direcciones_entrega.0.contacto.telefono')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="direcciones_entrega[0][contacto][ext]" class="form-label">
-                                            Ext.
-                                        </label>
-                                        <input type="text" name="direcciones_entrega[0][contacto][ext]"
-                                            id="entrega_contacto_ext_0" class="form-control"
-                                            value="{{ old('direcciones_entrega.0.contacto.ext') }}">
-                                    </div>
                                     <div class="col-md-6">
                                         <label for="direcciones_entrega[0][contacto][email]" class="form-label">
                                             Correo electrónico
@@ -251,40 +232,73 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="row g-3 mt-1 telefono-contacto-wrapper">
+                                    <div class="col-md-4">
+                                        <label class="form-label">
+                                            Teléfono 1 <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" name="direcciones_entrega[0][contacto][telefono1]"
+                                            class="form-control @error('direcciones_entrega.0.contacto.telefono1') is-invalid @enderror"
+                                            value="{{ old('direcciones_entrega.0.contacto.telefono1') }}" required>
+                                        @error('direcciones_entrega.0.contacto.telefono1')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Ext.</label>
+                                        <input type="text" name="direcciones_entrega[0][contacto][ext1]" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.contacto.ext1') }}">
+                                    </div>
+                                </div>
+
+                                <!-- CONTENEDOR PARA TELÉFONOS 2–5 -->
+                                <div class="telefonos-extra"></div>
+
+                                <!-- BOTÓN “+” PARA AGREGAR TELÉFONO (hasta 5) -->
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-contacto">
+                                    <i class="fa fa-plus"></i> Agregar teléfono
+                                </button>
                                 <!-- ╰━━━━ Fin Contacto de Entrega ━━━━╯ -->
+
                                 <hr class="my-4">
 
                                 <h6 class="mb-3">Dirección de Entrega</h6>
                                 <div class="row g-3">
-                                    <div class="col-md-6"><label class="form-label">Razón Social</label>
-                                        <input name="direcciones_entrega[0][nombre]" class="form-control">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Razón Social</label>
+                                        <input name="direcciones_entrega[0][nombre]" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.nombre') }}">
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label">Calle</label>
-                                        <input name="direcciones_entrega[0][calle]" class="form-control">
+                                        <input name="direcciones_entrega[0][calle]" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.calle') }}">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Num. ext.</label>
-                                        <input name="direcciones_entrega[0][num_ext]" class="form-control">
+                                        <input name="direcciones_entrega[0][num_ext]" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.num_ext') }}">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Num. int.</label>
-                                        <input name="direcciones_entrega[0][num_int]" class="form-control">
+                                        <input name="direcciones_entrega[0][num_int]" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.num_int') }}">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Colonia</label>
-                                        <input name="direcciones_entrega[0][colonia]" class="form-control">
+                                        <input name="direcciones_entrega[0][colonia]" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.colonia') }}">
                                     </div>
                                 </div>
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
                                         <select name="direcciones_entrega[0][id_ciudad]" class="form-select">
-                                            <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
+                                            <option value="">— Selecciona —</option>
                                             @foreach ($ciudades as $id => $city)
-                                                <option value="{{ $id }}" @selected(old('id_ciudad'))>
+                                                <option value="{{ $id }}" @selected(old('direcciones_entrega.0.id_ciudad') == $id)>
                                                     {{ $city }}
                                                 </option>
                                             @endforeach
@@ -293,9 +307,9 @@
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
                                         <select name="direcciones_entrega[0][id_estado]" class="form-select">
-                                            <option value="" @selected(old('id_estado'))>— Selecciona —</option>
+                                            <option value="">— Selecciona —</option>
                                             @foreach ($estados as $id => $state)
-                                                <option value="{{ $id }}" @selected(old('id_estado'))>
+                                                <option value="{{ $id }}" @selected(old('direcciones_entrega.0.id_estado') == $id)>
                                                     {{ $state }}
                                                 </option>
                                             @endforeach
@@ -304,9 +318,9 @@
                                     <div class="col-md-2">
                                         <label class="form-label">País</label>
                                         <select name="direcciones_entrega[0][id_pais]" class="form-select">
-                                            <option value="" @selected(old('id_pais'))>— Selecciona —</option>
+                                            <option value="">— Selecciona —</option>
                                             @foreach ($paises as $id => $pais)
-                                                <option value="{{ $id }}" @selected(old('razones.0.direccion.id_pais') == $id)>
+                                                <option value="{{ $id }}" @selected(old('direcciones_entrega.0.id_pais') == $id)>
                                                     {{ $pais }}
                                                 </option>
                                             @endforeach
@@ -314,13 +328,15 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
-                                        <input name="direcciones_entrega[0][cp]" class="form-control">
+                                        <input name="direcciones_entrega[0][cp]" class="form-control"
+                                            value="{{ old('direcciones_entrega.0.cp') }}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- ╰━━━━ Fin Dirección de ENTREGA ━━━━╯ -->
 
                 <!-- ╭━━━━ Datos de Facturación (razón social + dirección) ━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
@@ -394,74 +410,355 @@
                                     </div>
                                 </div>
                                 <div class="row g-3 mt-1">
-                                <div class="col-md-2">
+                                    <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
                                         <input name="razones[0][direccion][cp]" class="form-control">
                                     </div>
-                                <hr class="my-4">
+                                    <hr class="my-4">
 
-                                <!-- Dirección de facturación -->
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label">Calle</label>
-                                        <input name="razones[0][direccion][calle]" class="form-control">
+                                    <!-- Dirección de facturación -->
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Calle</label>
+                                            <input name="razones[0][direccion][calle]" class="form-control">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Num. ext.</label>
+                                            <input name="razones[0][direccion][num_ext]" class="form-control">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Num. int.</label>
+                                            <input name="razones[0][direccion][num_int]" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Colonia</label>
+                                            <input name="razones[0][direccion][colonia]" class="form-control">
+                                        </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">Num. ext.</label>
-                                        <input name="razones[0][direccion][num_ext]" class="form-control">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">Num. int.</label>
-                                        <input name="razones[0][direccion][num_int]" class="form-control">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Colonia</label>
-                                        <input name="razones[0][direccion][colonia]" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-md-4">
-                                        <label class="form-label">Ciudad / Municipio</label>
-                                        <select name="razones[0][direccion][id_ciudad]" class="form-select">
-                                            <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
-                                            @foreach ($ciudades as $id => $city)
-                                                <option value="{{ $id }}" @selected(old('id_ciudad'))>
-                                                    {{ $city }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Estado</label>
-                                        <select name="razones[0][direccion][id_estado]" class="form-select">
-                                            <option value="" @selected(old('id_estado'))>— Selecciona —</option>
-                                            @foreach ($estados as $id => $state)
-                                                <option value="{{ $id }}" @selected(old('id_estado'))>
-                                                    {{ $state }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">País</label>
-                                        <select name="razones[0][direccion][id_pais]" class="form-select">
-                                            <option value="" @selected(old('id_pais'))>— Selecciona —</option>
-                                            @foreach ($paises as $id => $pais)
-                                                <option value="{{ $id }}" @selected(old('razones.0.direccion.id_pais') == $id)>
-                                                    {{ $pais }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <div class="row g-3 mt-1">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Ciudad / Municipio</label>
+                                            <select name="razones[0][direccion][id_ciudad]" class="form-select">
+                                                <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
+                                                @foreach ($ciudades as $id => $city)
+                                                    <option value="{{ $id }}" @selected(old('id_ciudad'))>
+                                                        {{ $city }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Estado</label>
+                                            <select name="razones[0][direccion][id_estado]" class="form-select">
+                                                <option value="" @selected(old('id_estado'))>— Selecciona —</option>
+                                                @foreach ($estados as $id => $state)
+                                                    <option value="{{ $id }}" @selected(old('id_estado'))>
+                                                        {{ $state }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">País</label>
+                                            <select name="razones[0][direccion][id_pais]" class="form-select">
+                                                <option value="" @selected(old('id_pais'))>— Selecciona —</option>
+                                                @foreach ($paises as $id => $pais)
+                                                    <option value="{{ $id }}" @selected(old('razones.0.direccion.id_pais') == $id)>
+                                                        {{ $pais }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
             </form>
         </div>
+
+        <script>
+            //Agregar teléfonos de contacto al formulario de nueva cuenta
+            // Solo se permite agregar hasta 5 teléfonos
+            document.addEventListener('DOMContentLoaded', function () {
+                const maxPhones = 5;
+                const wrapper = document.getElementById('telefonosContacto');
+                const btn = document.getElementById('agregarTelefono');
+
+                btn.addEventListener('click', () => {
+                    // Cuenta cuántos inputs de teléfono ya existen
+                    const existing = document.querySelectorAll('input[name^="contacto[telefono"]').length;
+                    if (existing >= maxPhones) return;
+
+                    const next = existing + 1;
+                    // Crea el bloque de fila para teléfono N
+                    const row = document.createElement('div');
+                    row.className = 'row g-3 mt-1 telefono-block';
+                    row.innerHTML = `
+                        <div class="col-md-3">
+                            <label class="form-label">Teléfono ${next}</label>
+                            <input
+                            name="contacto[telefono${next}]"
+                            class="form-control"
+                            >
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Ext.</label>
+                            <input
+                            name="contacto[ext${next}]"
+                            class="form-control"
+                            >
+                        </div>
+                        `;
+                    wrapper.appendChild(row);
+                });
+            });
+        </script>
+
+        <script>
+        // Manejo dinámico de bloques de entrega y teléfonos (hasta 15 bloques de entrega, cada uno con hasta 5 teléfonos)
+        document.addEventListener('DOMContentLoaded', () => {
+            const MAX_BLOCKS = 15;
+            const MAX_PHONES = 5;
+
+            const contenedor = document.getElementById('contenedorDireccionesEntrega');
+            const btnAgregar = document.getElementById('agregarDireccionEntrega');
+            let bloqueIndex = 1;
+
+            // 1) Delegación de "Agregar teléfono" en cualquier bloque
+            contenedor.addEventListener('click', (e) => {
+                const btnPhone = e.target.closest('.agregar-telefono-contacto');
+                if (!btnPhone) return;
+
+                const block = btnPhone.closest('.entrega-block');
+                const idx = block.dataset.index;
+                const wrapper = block.querySelector('.telefonos-extra');
+                if (!wrapper) return;
+
+                const existentes = block.querySelectorAll(
+                    `input[name^="direcciones_entrega[${idx}][contacto][telefono"]`
+                ).length;
+                if (existentes >= MAX_PHONES) return;
+
+                const next = existentes + 1;
+                const row = document.createElement('div');
+                row.className = 'row g-3 mt-1 telefono-block';
+                row.innerHTML = `
+                    <div class="col-md-4">
+                        <label class="form-label">Teléfono ${next}</label>
+                        <input
+                        type="text"
+                        name="direcciones_entrega[${idx}][contacto][telefono${next}]"
+                        class="form-control"
+                        >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Ext.</label>
+                        <input
+                        type="text"
+                        name="direcciones_entrega[${idx}][contacto][ext${next}]"
+                        class="form-control"
+                        >
+                    </div>
+                `;
+                wrapper.appendChild(row);
+            });
+
+            // 2) Botón "Agregar otra" genera un bloque completo de entrega
+            btnAgregar.addEventListener('click', () => {
+                if (bloqueIndex >= MAX_BLOCKS) return;
+
+                const idx = bloqueIndex;
+                const nuevo = document.createElement('div');
+                nuevo.className = 'entrega-block mb-4 border rounded p-3 bg-light-subtle';
+                nuevo.dataset.index = idx;
+
+                nuevo.innerHTML = `
+                    <h6 class="mb-3 text-muted">Datos de Entrega ${idx + 1}</h6>
+
+                    <!-- Contacto de Entrega -->
+                    <h6 class="mb-3">Contacto de Entrega</h6>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-4">
+                        <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
+                        <input
+                            type="text"
+                            name="direcciones_entrega[${idx}][contacto][nombre]"
+                            class="form-control"
+                            required
+                        >
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label">Apellido Paterno <span class="text-danger">*</span></label>
+                        <input
+                            type="text"
+                            name="direcciones_entrega[${idx}][contacto][apellido_p]"
+                            class="form-control"
+                            required
+                        >
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label">Apellido Materno</label>
+                        <input
+                            type="text"
+                            name="direcciones_entrega[${idx}][contacto][apellido_m]"
+                            class="form-control"
+                        >
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input
+                            type="email"
+                            name="direcciones_entrega[${idx}][contacto][email]"
+                            class="form-control"
+                        >
+                        </div>
+                    </div>
+                    <!-- Teléfono 1 + Ext 1 -->
+                    <div class="row g-3 mt-1 telefono-contacto-wrapper">
+                        <div class="col-md-4">
+                        <label class="form-label">Teléfono 1 <span class="text-danger">*</span></label>
+                        <input
+                            type="text"
+                            name="direcciones_entrega[${idx}][contacto][telefono1]"
+                            class="form-control"
+                            required
+                        >
+                        </div>
+                        <div class="col-md-2">
+                        <label class="form-label">Ext.</label>
+                        <input
+                            type="text"
+                            name="direcciones_entrega[${idx}][contacto][ext1]"
+                            class="form-control"
+                        >
+                        </div>
+                    </div>
+
+                    <!-- Contenedor para teléfonos 2–5 -->
+                    <div class="telefonos-extra"></div>
+
+                    <!-- Botón para agregar más teléfonos -->
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-contacto"
+                    >
+                        <i class="fa fa-plus"></i> Agregar teléfono
+                    </button>
+
+                    <hr class="my-4">
+
+                    <!-- Dirección de Entrega -->
+                    <h6 class="mb-3">Dirección de Entrega</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                        <label class="form-label">Razón Social</label>
+                        <input
+                            name="direcciones_entrega[${idx}][nombre]"
+                            class="form-control"
+                        >
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                        <label class="form-label">Calle</label>
+                        <input
+                            name="direcciones_entrega[${idx}][calle]"
+                            class="form-control"
+                        >
+                        </div>
+                        <div class="col-md-2">
+                        <label class="form-label">Num. ext.</label>
+                        <input
+                            name="direcciones_entrega[${idx}][num_ext]"
+                            class="form-control"
+                        >
+                        </div>
+                        <div class="col-md-2">
+                        <label class="form-label">Num. int.</label>
+                        <input
+                            name="direcciones_entrega[${idx}][num_int]"
+                            class="form-control"
+                        >
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label">Colonia</label>
+                        <input
+                            name="direcciones_entrega[${idx}][colonia]"
+                            class="form-control"
+                        >
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-4">
+                        <label class="form-label">Ciudad / Municipio</label>
+                        <select name="direcciones_entrega[${idx}][id_ciudad]" class="form-select">
+                            <option value="">— Selecciona —</option>
+                            @foreach($ciudades as $id => $city)
+                                <option value="{{ $id }}">{{ $city }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label">Estado</label>
+                        <select name="direcciones_entrega[${idx}][id_estado]" class="form-select">
+                            <option value="">— Selecciona —</option>
+                            @foreach($estados as $id => $state)
+                                <option value="{{ $id }}">{{ $state }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="col-md-2">
+                        <label class="form-label">País</label>
+                        <select name="direcciones_entrega[${idx}][id_pais]" class="form-select">
+                            <option value="">— Selecciona —</option>
+                            @foreach($paises as $id => $pais)
+                                <option value="{{ $id }}">{{ $pais }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="col-md-2">
+                        <label class="form-label">C.P.</label>
+                        <input
+                            name="direcciones_entrega[${idx}][cp]"
+                            class="form-control"
+                        >
+                        </div>
+                    </div>
+                `;
+
+                contenedor.appendChild(nuevo);
+                bloqueIndex++;
+            });
+        });
+        </script>
+
+        <script>
+            //Agregar datos de facturación al formulario de nueva cuenta
+            // Solo se permite agregar hasta 10 bloques de facturación
+            document.addEventListener('DOMContentLoaded', function () {
+                const btnAgregar = document.getElementById('agregarFacturacion');
+                const contenedor = document.getElementById('contenedorFacturacion');
+                let index = 1;
+
+                btnAgregar.addEventListener('click', function () {
+                    if (index >= 10) return;
+
+                    const bloque = contenedor.querySelector('.facturacion-block').cloneNode(true);
+                    bloque.querySelector('h6').innerText = `Razón Social ${index + 1}`;
+
+                    // Reemplazar todos los índices [0] por [index]
+                    bloque.innerHTML = bloque.innerHTML.replace(/\[0\]/g, `[${index}]`);
+                    contenedor.appendChild(bloque);
+
+                    index++;
+                });
+            });
+        </script>
         <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━ TerminaFormulario para Personas Morales ━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
     @elseif ($tipo === 'fisica')
@@ -800,8 +1097,8 @@
                         </div>
 
                         <!-- =============================
-                                                                                                                             5. Notas
-                                                                                                                             ============================= -->
+                                                                                                                                                                                     5. Notas
+                                                                                                                                                                                     ============================= -->
                         <div class="card shadow-sm mb-5">
                             <div class="card-header section-card-header">
                                 <h6 class="mb-0">Notas</h6>
