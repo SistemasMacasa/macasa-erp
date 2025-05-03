@@ -102,69 +102,79 @@
                     </div>
                 </div>
 
-                <!-- ╭━━━━━━━━━━ Contacto Principal ━━━━━━━━━━╮ -->
+                <!-- ╭━━━━━━━━━━ Múltiples Contactos Principales ━━━━━━━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
-                    <div class="card-header section-card-header">
-                        <h6 class="mb-0">Contacto</h6>
+                    <div class="card-header section-card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Contactos Principales</h6>
+                        <button type="button" id="agregarContactoPrincipal" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-plus"></i> Agregar Contacto
+                        </button>
                     </div>
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="contacto[nombre]" class="form-label">Nombre(s) <span
-                                        class="text-danger">*</span></label>
-                                <input name="contacto[nombre]" class="form-control" value="{{ old('contacto.nombre') }}"
-                                    required>
-                                @error('contacto.nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-                            <div class="col-md-4">
-                                <label for="contacto[apellido_p]" class="form-label">Primer Apellido</label>
-                                <input name="contacto[apellido_p]" class="form-control"
-                                    value="{{ old('contacto.apellido_p') }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="contacto[apellido_m]" class="form-label">Segundo Apellido</label>
-                                <input name="contacto[apellido_m]" class="form-control"
-                                    value="{{ old('contacto.apellido_m') }}">
+                        <div id="contenedorContactos">
+                            <!-- Bloque inicial (índice 0) -->
+                            <div class="contacto-block mb-4 border rounded p-3" data-index="0">
+                                <h6 class="mb-3 text-muted">Contacto 1</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
+                                        <input name="contacto[0][nombre]" class="form-control"
+                                            value="{{ old('contacto.0.nombre') }}" required>
+                                        @error('contacto.0.nombre')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Primer Apellido</label>
+                                        <input name="contacto[0][apellido_p]" class="form-control"
+                                            value="{{ old('contacto.0.apellido_p') }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Segundo Apellido</label>
+                                        <input name="contacto[0][apellido_m]" class="form-control"
+                                            value="{{ old('contacto.0.apellido_m') }}">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Correo Electrónico</label>
+                                        <input type="email" name="contacto[0][email]" class="form-control"
+                                            value="{{ old('contacto.0.email') }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Puesto <span class="text-danger">*</span></label>
+                                        <input name="contacto[0][puesto]" class="form-control"
+                                            value="{{ old('contacto.0.puesto') }}" required>
+                                        @error('contacto.0.puesto')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-1 telefono-principal-wrapper">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Teléfono 1 <span class="text-danger">*</span></label>
+                                        <input name="contacto[0][telefono1]" class="form-control"
+                                            value="{{ old('contacto.0.telefono1') }}" required>
+                                        @error('contacto.0.telefono1')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-label">Ext.</label>
+                                        <input name="contacto[0][ext1]" class="form-control"
+                                            value="{{ old('contacto.0.ext1') }}">
+                                    </div>
+                                </div>
+                                <!-- aquí irán teléfonos 2–5 -->
+                                <div class="telefonos-principal-extra"></div>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-principal">
+                                    <i class="fa fa-plus"></i> Agregar teléfono
+                                </button>
                             </div>
                         </div>
-
-                        <div class="row g-3 mt-1">
-                            <div class="col-md-4">
-                                <label for="contacto[email]" class="form-label">Correo Electrónico</label>
-                                <input name="contacto[email]" class="form-control" value="{{ old('contacto.email') }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="contacto[puesto]" class="form-label">Puesto <span
-                                        class="text-danger">*</span></label>
-                                <input name="contacto[puesto]" class="form-control" value="{{ old('contacto.puesto') }}"
-                                    required>
-                                @error('contacto.puesto')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-                        </div>
-
-                        <div class="row g-3 mt-1">
-                            <div class="col-md-3">
-                                <label for="contacto[telefono1]" class="form-label">Teléfono 1 <span
-                                        class="text-danger">*</span></label>
-                                <input name="contacto[telefono1]" class="form-control" value="{{ old('contacto.telefono1') }}"
-                                    required>
-                                @error('contacto.telefono1')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-                            <div class="col-md-1">
-                                <label for="contacto[ext1]" class="form-label">Ext.</label>
-                                <input name="contacto[ext1]" class="form-control" value="{{ old('contacto.ext1') }}">
-                            </div>
-                        </div>
-                        <!-- CONTENEDOR PARA LOS TELÉFONOS ADICIONALES -->
-                        <div id="telefonosContacto"></div>
-
-                        <!-- BOTÓN PARA AGREGAR TELÉFONO -->
-                        <button type="button" id="agregarTelefono" class="btn btn-sm btn-outline-primary mt-3">
-                            <i class="fa fa-plus"></i> Agregar teléfono
-                        </button>
-
                     </div>
                 </div>
+                <!-- ╰━━━━━━━━━━━━━━━ Fin Contactos Principales ━━━━━━━━━━━━━━━╯ -->
 
                 <!-- ╭━━━━ Dirección de ENTREGA (múltiples) ━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
@@ -187,24 +197,24 @@
                                 <div class="row g-3 mt-1 telefono-contacto-wr">
                                     <div class="col-md-4">
                                         <label for="direcciones_entrega[0][contacto][nombre]" class="form-label">
-                                            Nombre(s) <span class="text-danger">*</span>
+                                            Nombre(s)
                                         </label>
                                         <input type="text" name="direcciones_entrega[0][contacto][nombre]"
                                             id="entrega_contacto_nombre_0"
                                             class="form-control @error('direcciones_entrega.0.contacto.nombre') is-invalid @enderror"
-                                            value="{{ old('direcciones_entrega.0.contacto.nombre') }}" required>
+                                            value="{{ old('direcciones_entrega.0.contacto.nombre') }}">
                                         @error('direcciones_entrega.0.contacto.nombre')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-4">
                                         <label for="direcciones_entrega[0][contacto][apellido_p]" class="form-label">
-                                            Primer apellido <span class="text-danger">*</span>
+                                            Primer apellido
                                         </label>
                                         <input type="text" name="direcciones_entrega[0][contacto][apellido_p]"
                                             id="entrega_contacto_apellido_p_0"
                                             class="form-control @error('direcciones_entrega.0.contacto.apellido_p') is-invalid @enderror"
-                                            value="{{ old('direcciones_entrega.0.contacto.apellido_p') }}" required>
+                                            value="{{ old('direcciones_entrega.0.contacto.apellido_p') }}">
                                         @error('direcciones_entrega.0.contacto.apellido_p')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -235,11 +245,11 @@
                                 <div class="row g-3 mt-1 telefono-contacto-wrapper">
                                     <div class="col-md-4">
                                         <label class="form-label">
-                                            Teléfono 1 <span class="text-danger">*</span>
+                                            Teléfono 1
                                         </label>
                                         <input type="text" name="direcciones_entrega[0][contacto][telefono1]"
                                             class="form-control @error('direcciones_entrega.0.contacto.telefono1') is-invalid @enderror"
-                                            value="{{ old('direcciones_entrega.0.contacto.telefono1') }}" required>
+                                            value="{{ old('direcciones_entrega.0.contacto.telefono1') }}">
                                         @error('direcciones_entrega.0.contacto.telefono1')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -480,6 +490,134 @@
         </div>
 
         <script>
+            //Multiples contactos principales
+            document.addEventListener('DOMContentLoaded', () => {
+                const MAX_CONTACTS = 10;
+                const MAX_PHONES = 5;
+
+                const cont = document.getElementById('contenedorContactos');
+                const btnAdd = document.getElementById('agregarContactoPrincipal');
+                let contactIndex = 1;
+
+                // 1) Delegación: añadir teléfono dentro de cualquier contacto-block
+                cont.addEventListener('click', e => {
+                    const btn = e.target.closest('.agregar-telefono-principal');
+                    if (!btn) return;
+
+                    const block = btn.closest('.contacto-block');
+                    const idx = block.dataset.index;
+                    const wrap = block.querySelector('.telefonos-principal-extra');
+                    if (!wrap) return;
+
+                    const count = block.querySelectorAll(
+                        `input[name^="contacto[${idx}][telefono"]`
+                    ).length;
+                    if (count >= MAX_PHONES) return;
+
+                    const next = count + 1;
+                    const row = document.createElement('div');
+                    row.className = 'row g-3 mt-1 telefono-block';
+                    row.innerHTML = `
+                        <div class="col-md-3">
+                            <label class="form-label">Teléfono ${next}</label>
+                            <input
+                            name="contacto[${idx}][telefono${next}]"
+                            class="form-control"
+                            >
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Ext.</label>
+                            <input
+                            name="contacto[${idx}][ext${next}]"
+                            class="form-control"
+                            >
+                        </div>`;
+                    wrap.appendChild(row);
+                });
+
+                // 2) Botón “Agregar Contacto” genera un bloque completo
+                btnAdd.addEventListener('click', () => 
+                {
+                    if (contactIndex >= MAX_CONTACTS) return;
+
+                    const idx = contactIndex;
+                    const div = document.createElement('div');
+                    div.className = 'contacto-block mb-4 border rounded p-3';
+                    div.dataset.index = idx;
+                    div.innerHTML = `
+                        <h6 class="mb-3 text-muted">Contacto ${idx + 1}</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                            <label class="form-label">Nombre(s)</label>
+                            <input
+                                name="contacto[${idx}][nombre]"
+                                class="form-control"
+                                
+                            >
+                            </div>
+                            <div class="col-md-4">
+                            <label class="form-label">Primer Apellido</label>
+                            <input
+                                name="contacto[${idx}][apellido_p]"
+                                class="form-control"
+                            >
+                            </div>
+                            <div class="col-md-4">
+                            <label class="form-label">Segundo Apellido</label>
+                            <input
+                                name="contacto[${idx}][apellido_m]"
+                                class="form-control"
+                            >
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-1">
+                            <div class="col-md-4">
+                            <label class="form-label">Correo Electrónico</label>
+                            <input
+                                type="email"
+                                name="contacto[${idx}][email]"
+                                class="form-control"
+                            >
+                            </div>
+                            <div class="col-md-4">
+                            <label class="form-label">Puesto</label>
+                            <input
+                                name="contacto[${idx}][puesto]"
+                                class="form-control"
+                            >
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-1 telefono-principal-wrapper">
+                            <div class="col-md-3">
+                            <label class="form-label">Teléfono 1</label>
+                            <input
+                                name="contacto[${idx}][telefono1]"
+                                class="form-control"
+                            >
+                            </div>
+                            <div class="col-md-1">
+                            <label class="form-label">Ext.</label>
+                            <input
+                                name="contacto[${idx}][ext1]"
+                                class="form-control"
+                            >
+                            </div>
+                        </div>
+                        <div class="telefonos-principal-extra"></div>
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-principal"
+                        >
+                            <i class="fa fa-plus"></i> Agregar teléfono
+                        </button>
+                    `;
+                    cont.appendChild(div);
+                    contactIndex++;
+                });
+            });
+        </script>
+
+        <script>
             //Agregar teléfonos de contacto al formulario de nueva cuenta
             // Solo se permite agregar hasta 5 teléfonos
             document.addEventListener('DOMContentLoaded', function () {
@@ -497,244 +635,241 @@
                     const row = document.createElement('div');
                     row.className = 'row g-3 mt-1 telefono-block';
                     row.innerHTML = `
-                        <div class="col-md-3">
-                            <label class="form-label">Teléfono ${next}</label>
-                            <input
-                            name="contacto[telefono${next}]"
-                            class="form-control"
-                            >
-                        </div>
-                        <div class="col-md-1">
-                            <label class="form-label">Ext.</label>
-                            <input
-                            name="contacto[ext${next}]"
-                            class="form-control"
-                            >
-                        </div>
-                        `;
+                                <div class="col-md-3">
+                                    <label class="form-label">Teléfono ${next}</label>
+                                    <input
+                                    name="contacto[telefono${next}]"
+                                    class="form-control"
+                                    >
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label">Ext.</label>
+                                    <input
+                                    name="contacto[ext${next}]"
+                                    class="form-control"
+                                    >
+                                </div>
+                                `;
                     wrapper.appendChild(row);
                 });
             });
         </script>
 
         <script>
-        // Manejo dinámico de bloques de entrega y teléfonos (hasta 15 bloques de entrega, cada uno con hasta 5 teléfonos)
-        document.addEventListener('DOMContentLoaded', () => {
-            const MAX_BLOCKS = 15;
-            const MAX_PHONES = 5;
+            // Manejo dinámico de bloques de entrega y teléfonos (hasta 15 bloques de entrega, cada uno con hasta 5 teléfonos)
+            document.addEventListener('DOMContentLoaded', () => {
+                const MAX_BLOCKS = 15;
+                const MAX_PHONES = 5;
 
-            const contenedor = document.getElementById('contenedorDireccionesEntrega');
-            const btnAgregar = document.getElementById('agregarDireccionEntrega');
-            let bloqueIndex = 1;
+                const contenedor = document.getElementById('contenedorDireccionesEntrega');
+                const btnAgregar = document.getElementById('agregarDireccionEntrega');
+                let bloqueIndex = 1;
 
-            // 1) Delegación de "Agregar teléfono" en cualquier bloque
-            contenedor.addEventListener('click', (e) => {
-                const btnPhone = e.target.closest('.agregar-telefono-contacto');
-                if (!btnPhone) return;
+                // 1) Delegación de "Agregar teléfono" en cualquier bloque
+                contenedor.addEventListener('click', (e) => {
+                    const btnPhone = e.target.closest('.agregar-telefono-contacto');
+                    if (!btnPhone) return;
 
-                const block = btnPhone.closest('.entrega-block');
-                const idx = block.dataset.index;
-                const wrapper = block.querySelector('.telefonos-extra');
-                if (!wrapper) return;
+                    const block = btnPhone.closest('.entrega-block');
+                    const idx = block.dataset.index;
+                    const wrapper = block.querySelector('.telefonos-extra');
+                    if (!wrapper) return;
 
-                const existentes = block.querySelectorAll(
-                    `input[name^="direcciones_entrega[${idx}][contacto][telefono"]`
-                ).length;
-                if (existentes >= MAX_PHONES) return;
+                    const existentes = block.querySelectorAll(
+                        `input[name^="direcciones_entrega[${idx}][contacto][telefono"]`
+                    ).length;
+                    if (existentes >= MAX_PHONES) return;
 
-                const next = existentes + 1;
-                const row = document.createElement('div');
-                row.className = 'row g-3 mt-1 telefono-block';
-                row.innerHTML = `
-                    <div class="col-md-4">
-                        <label class="form-label">Teléfono ${next}</label>
-                        <input
-                        type="text"
-                        name="direcciones_entrega[${idx}][contacto][telefono${next}]"
-                        class="form-control"
-                        >
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Ext.</label>
-                        <input
-                        type="text"
-                        name="direcciones_entrega[${idx}][contacto][ext${next}]"
-                        class="form-control"
-                        >
-                    </div>
-                `;
-                wrapper.appendChild(row);
+                    const next = existentes + 1;
+                    const row = document.createElement('div');
+                    row.className = 'row g-3 mt-1 telefono-block';
+                    row.innerHTML = `
+                            <div class="col-md-4">
+                                <label class="form-label">Teléfono ${next}</label>
+                                <input
+                                type="text"
+                                name="direcciones_entrega[${idx}][contacto][telefono${next}]"
+                                class="form-control"
+                                >
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Ext.</label>
+                                <input
+                                type="text"
+                                name="direcciones_entrega[${idx}][contacto][ext${next}]"
+                                class="form-control"
+                                >
+                            </div>
+                        `;
+                    wrapper.appendChild(row);
+                });
+
+                // 2) Botón "Agregar otra" genera un bloque completo de entrega
+                btnAgregar.addEventListener('click', () => {
+                    if (bloqueIndex >= MAX_BLOCKS) return;
+
+                    const idx = bloqueIndex;
+                    const nuevo = document.createElement('div');
+                    nuevo.className = 'entrega-block mb-4 border rounded p-3 bg-light-subtle';
+                    nuevo.dataset.index = idx;
+
+                    nuevo.innerHTML = `
+                            <h6 class="mb-3 text-muted">Datos de Entrega ${idx + 1}</h6>
+
+                            <!-- Contacto de Entrega -->
+                            <h6 class="mb-3">Contacto de Entrega</h6>
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-4">
+                                <label class="form-label">Nombre(s)</label>
+                                <input
+                                    type="text"
+                                    name="direcciones_entrega[${idx}][contacto][nombre]"
+                                    class="form-control"
+                                >
+                                </div>
+                                <div class="col-md-4">
+                                <label class="form-label">Apellido Paterno</label>
+                                <input
+                                    type="text"
+                                    name="direcciones_entrega[${idx}][contacto][apellido_p]"
+                                    class="form-control"
+                                >
+                                </div>
+                                <div class="col-md-4">
+                                <label class="form-label">Apellido Materno</label>
+                                <input
+                                    type="text"
+                                    name="direcciones_entrega[${idx}][contacto][apellido_m]"
+                                    class="form-control"
+                                >
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-6">
+                                <label class="form-label">Correo Electrónico</label>
+                                <input
+                                    type="email"
+                                    name="direcciones_entrega[${idx}][contacto][email]"
+                                    class="form-control"
+                                >
+                                </div>
+                            </div>
+                            <!-- Teléfono 1 + Ext 1 -->
+                            <div class="row g-3 mt-1 telefono-contacto-wrapper">
+                                <div class="col-md-4">
+                                <label class="form-label">Teléfono 1</label>
+                                <input
+                                    type="text"
+                                    name="direcciones_entrega[${idx}][contacto][telefono1]"
+                                    class="form-control"
+                                >
+                                </div>
+                                <div class="col-md-2">
+                                <label class="form-label">Ext.</label>
+                                <input
+                                    type="text"
+                                    name="direcciones_entrega[${idx}][contacto][ext1]"
+                                    class="form-control"
+                                >
+                                </div>
+                            </div>
+
+                            <!-- Contenedor para teléfonos 2–5 -->
+                            <div class="telefonos-extra"></div>
+
+                            <!-- Botón para agregar más teléfonos -->
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-contacto"
+                            >
+                                <i class="fa fa-plus"></i> Agregar teléfono
+                            </button>
+
+                            <hr class="my-4">
+
+                            <!-- Dirección de Entrega -->
+                            <h6 class="mb-3">Dirección de Entrega</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                <label class="form-label">Razón Social</label>
+                                <input
+                                    name="direcciones_entrega[${idx}][nombre]"
+                                    class="form-control"
+                                >
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                <label class="form-label">Calle</label>
+                                <input
+                                    name="direcciones_entrega[${idx}][calle]"
+                                    class="form-control"
+                                >
+                                </div>
+                                <div class="col-md-2">
+                                <label class="form-label">Num. ext.</label>
+                                <input
+                                    name="direcciones_entrega[${idx}][num_ext]"
+                                    class="form-control"
+                                >
+                                </div>
+                                <div class="col-md-2">
+                                <label class="form-label">Num. int.</label>
+                                <input
+                                    name="direcciones_entrega[${idx}][num_int]"
+                                    class="form-control"
+                                >
+                                </div>
+                                <div class="col-md-4">
+                                <label class="form-label">Colonia</label>
+                                <input
+                                    name="direcciones_entrega[${idx}][colonia]"
+                                    class="form-control"
+                                >
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-4">
+                                <label class="form-label">Ciudad / Municipio</label>
+                                <select name="direcciones_entrega[${idx}][id_ciudad]" class="form-select">
+                                    <option value="">— Selecciona —</option>
+                                    @foreach($ciudades as $id => $city)
+                                        <option value="{{ $id }}">{{ $city }}</option>
+                                    @endforeach
+                                </select>
+                                </div>
+                                <div class="col-md-4">
+                                <label class="form-label">Estado</label>
+                                <select name="direcciones_entrega[${idx}][id_estado]" class="form-select">
+                                    <option value="">— Selecciona —</option>
+                                    @foreach($estados as $id => $state)
+                                        <option value="{{ $id }}">{{ $state }}</option>
+                                    @endforeach
+                                </select>
+                                </div>
+                                <div class="col-md-2">
+                                <label class="form-label">País</label>
+                                <select name="direcciones_entrega[${idx}][id_pais]" class="form-select">
+                                    <option value="">— Selecciona —</option>
+                                    @foreach($paises as $id => $pais)
+                                        <option value="{{ $id }}">{{ $pais }}</option>
+                                    @endforeach
+                                </select>
+                                </div>
+                                <div class="col-md-2">
+                                <label class="form-label">C.P.</label>
+                                <input
+                                    name="direcciones_entrega[${idx}][cp]"
+                                    class="form-control"
+                                >
+                                </div>
+                            </div>
+                        `;
+
+                    contenedor.appendChild(nuevo);
+                    bloqueIndex++;
+                });
             });
-
-            // 2) Botón "Agregar otra" genera un bloque completo de entrega
-            btnAgregar.addEventListener('click', () => {
-                if (bloqueIndex >= MAX_BLOCKS) return;
-
-                const idx = bloqueIndex;
-                const nuevo = document.createElement('div');
-                nuevo.className = 'entrega-block mb-4 border rounded p-3 bg-light-subtle';
-                nuevo.dataset.index = idx;
-
-                nuevo.innerHTML = `
-                    <h6 class="mb-3 text-muted">Datos de Entrega ${idx + 1}</h6>
-
-                    <!-- Contacto de Entrega -->
-                    <h6 class="mb-3">Contacto de Entrega</h6>
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-4">
-                        <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
-                        <input
-                            type="text"
-                            name="direcciones_entrega[${idx}][contacto][nombre]"
-                            class="form-control"
-                            required
-                        >
-                        </div>
-                        <div class="col-md-4">
-                        <label class="form-label">Apellido Paterno <span class="text-danger">*</span></label>
-                        <input
-                            type="text"
-                            name="direcciones_entrega[${idx}][contacto][apellido_p]"
-                            class="form-control"
-                            required
-                        >
-                        </div>
-                        <div class="col-md-4">
-                        <label class="form-label">Apellido Materno</label>
-                        <input
-                            type="text"
-                            name="direcciones_entrega[${idx}][contacto][apellido_m]"
-                            class="form-control"
-                        >
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-6">
-                        <label class="form-label">Correo Electrónico</label>
-                        <input
-                            type="email"
-                            name="direcciones_entrega[${idx}][contacto][email]"
-                            class="form-control"
-                        >
-                        </div>
-                    </div>
-                    <!-- Teléfono 1 + Ext 1 -->
-                    <div class="row g-3 mt-1 telefono-contacto-wrapper">
-                        <div class="col-md-4">
-                        <label class="form-label">Teléfono 1 <span class="text-danger">*</span></label>
-                        <input
-                            type="text"
-                            name="direcciones_entrega[${idx}][contacto][telefono1]"
-                            class="form-control"
-                            required
-                        >
-                        </div>
-                        <div class="col-md-2">
-                        <label class="form-label">Ext.</label>
-                        <input
-                            type="text"
-                            name="direcciones_entrega[${idx}][contacto][ext1]"
-                            class="form-control"
-                        >
-                        </div>
-                    </div>
-
-                    <!-- Contenedor para teléfonos 2–5 -->
-                    <div class="telefonos-extra"></div>
-
-                    <!-- Botón para agregar más teléfonos -->
-                    <button
-                        type="button"
-                        class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-contacto"
-                    >
-                        <i class="fa fa-plus"></i> Agregar teléfono
-                    </button>
-
-                    <hr class="my-4">
-
-                    <!-- Dirección de Entrega -->
-                    <h6 class="mb-3">Dirección de Entrega</h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                        <label class="form-label">Razón Social</label>
-                        <input
-                            name="direcciones_entrega[${idx}][nombre]"
-                            class="form-control"
-                        >
-                        </div>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                        <label class="form-label">Calle</label>
-                        <input
-                            name="direcciones_entrega[${idx}][calle]"
-                            class="form-control"
-                        >
-                        </div>
-                        <div class="col-md-2">
-                        <label class="form-label">Num. ext.</label>
-                        <input
-                            name="direcciones_entrega[${idx}][num_ext]"
-                            class="form-control"
-                        >
-                        </div>
-                        <div class="col-md-2">
-                        <label class="form-label">Num. int.</label>
-                        <input
-                            name="direcciones_entrega[${idx}][num_int]"
-                            class="form-control"
-                        >
-                        </div>
-                        <div class="col-md-4">
-                        <label class="form-label">Colonia</label>
-                        <input
-                            name="direcciones_entrega[${idx}][colonia]"
-                            class="form-control"
-                        >
-                        </div>
-                    </div>
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-4">
-                        <label class="form-label">Ciudad / Municipio</label>
-                        <select name="direcciones_entrega[${idx}][id_ciudad]" class="form-select">
-                            <option value="">— Selecciona —</option>
-                            @foreach($ciudades as $id => $city)
-                                <option value="{{ $id }}">{{ $city }}</option>
-                            @endforeach
-                        </select>
-                        </div>
-                        <div class="col-md-4">
-                        <label class="form-label">Estado</label>
-                        <select name="direcciones_entrega[${idx}][id_estado]" class="form-select">
-                            <option value="">— Selecciona —</option>
-                            @foreach($estados as $id => $state)
-                                <option value="{{ $id }}">{{ $state }}</option>
-                            @endforeach
-                        </select>
-                        </div>
-                        <div class="col-md-2">
-                        <label class="form-label">País</label>
-                        <select name="direcciones_entrega[${idx}][id_pais]" class="form-select">
-                            <option value="">— Selecciona —</option>
-                            @foreach($paises as $id => $pais)
-                                <option value="{{ $id }}">{{ $pais }}</option>
-                            @endforeach
-                        </select>
-                        </div>
-                        <div class="col-md-2">
-                        <label class="form-label">C.P.</label>
-                        <input
-                            name="direcciones_entrega[${idx}][cp]"
-                            class="form-control"
-                        >
-                        </div>
-                    </div>
-                `;
-
-                contenedor.appendChild(nuevo);
-                bloqueIndex++;
-            });
-        });
         </script>
 
         <script>
@@ -1097,8 +1232,8 @@
                         </div>
 
                         <!-- =============================
-                                                                                                                                                                                     5. Notas
-                                                                                                                                                                                     ============================= -->
+                                                                                                                                                                                             5. Notas
+                                                                                                                                                                                             ============================= -->
                         <div class="card shadow-sm mb-5">
                             <div class="card-header section-card-header">
                                 <h6 class="mb-0">Notas</h6>

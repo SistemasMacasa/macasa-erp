@@ -81,27 +81,27 @@ class ClienteController extends Controller
     {
         if ($request->input('tipo') == 'fisica') { // SI ES FISICA
             $request->validate([
-                'nombre' => 'required|max:100',
-                'apellido' => 'required|max:100',
-                'rfc' => 'required|max:13',
-                'curp' => 'required|max:18',
-                'razon_social' => 'nullable|max:100',
+                'nombre'        => 'required|max:100',
+                'apellido'      => 'required|max:100',
+                'rfc'           => 'required|max:13',
+                'curp'          => 'required|max:18',
+                'razon_social'  => 'nullable|max:100',
                 'nombre_comercial' => 'nullable|max:100'
             ]);
 
             try {
                 $cliente = Cliente::create([
-                    'nombre' => $request->input('nombre'),
-                    'apellido' => $request->input('apellido'),
-                    'rfc' => $request->input('rfc'),
-                    'curp' => $request->input('curp'),
-                    'razon_social' => $request->input('razon_social'),
-                    'nombre_comercial' => $request->input('nombre_comercial'),
-                    'sector' => $request->input('sector'),
-                    'segmento' => $request->input('segmento'),
-                    'tipo' => $request->input('tipo'),
-                    'estatus' => $request->input('estatus'),
-                    'id_vendedor' => $request->input('id_vendedor')
+                    'nombre'            => $request->input('nombre'),
+                    'apellido'          => $request->input('apellido'),
+                    'rfc'               => $request->input('rfc'),
+                    'curp'              => $request->input('curp'),
+                    'razon_social'      => $request->input('razon_social'),
+                    'nombre_comercial'  => $request->input('nombre_comercial'),
+                    'sector'            => $request->input('sector'),
+                    'segmento'          => $request->input('segmento'),
+                    'tipo'              => $request->input('tipo'),
+                    'estatus'           => $request->input('estatus'),
+                    'id_vendedor'       => $request->input('id_vendedor')
                 ]);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()]);
@@ -111,73 +111,73 @@ class ClienteController extends Controller
         {
             $rules = [
                 //DATOS CUENTA EJE
-                'nombre' => 'required|max:100',
-                'sector' => 'required|max:100',
-                'segmento' => 'required|max:100',
-                'id_vendedor' => 'nullable|integer',
+                'nombre'        => 'required|max:100',
+                'sector'        => 'required|max:100',
+                'segmento'      => 'required|max:100',
+                'id_vendedor'   => 'nullable|integer',
 
                 // CONTACTO PRINCIPAL
-                'contacto.nombre' => 'nullable|max:100',
-                'contacto.apellido_p' => 'nullable|max:100',
-                'contacto.apellido_m' => 'nullable|max:100',
-                'contacto.email' => 'nullable|email|max:100',
-                'contacto.puesto' => 'nullable|max:100',
-                'contacto.telefono1' => 'nullable|max:100',
-                'contacto.ext1' => 'nullable|max:10',
-                'contacto.telefono2' => 'nullable|max:100',
-                'contacto.ext2' => 'nullable|max:10',
-                'contacto.telefono3' => 'nullable|max:100',
-                'contacto.ext3' => 'nullable|max:10',
-                'contacto.telefono4' => 'nullable|max:100',
-                'contacto.ext4' => 'nullable|max:10',
-                'contacto.telefono5' => 'nullable|max:100',
-                'contacto.ext5' => 'nullable|max:10',
+                'contacto.*.nombre'     => 'nullable|max:100',
+                'contacto.*.apellido_p' => 'nullable|max:100',
+                'contacto.*.apellido_m' => 'nullable|max:100',
+                'contacto.*.email'      => 'nullable|email|max:100',
+                'contacto.*.puesto'     => 'nullable|max:100',
+                'contacto.*.telefono1'  => 'nullable|max:100',
+                'contacto.*.ext1'       => 'nullable|max:10',
+                'contacto.*.telefono2'  => 'nullable|max:100',
+                'contacto.*.ext2'       => 'nullable|max:10',
+                'contacto.*.telefono3'  => 'nullable|max:100',
+                'contacto.*.ext3'       => 'nullable|max:10',
+                'contacto.*.telefono4'  => 'nullable|max:100',
+                'contacto.*.ext4'       => 'nullable|max:10',
+                'contacto.*.telefono5'  => 'nullable|max:100',
+                'contacto.*.ext5'       => 'nullable|max:10',
 
                 // DATOS DE ENTREGA
                 // Contacto que recibe la mercancía
-                'direcciones_entrega.*.contacto.nombre' => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.nombre'     => 'nullable|max:100',
                 'direcciones_entrega.*.contacto.apellido_p' => 'nullable|max:100',
                 'direcciones_entrega.*.contacto.apellido_m' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.email' => 'nullable|email|max:100',
-                'direcciones_entrega.*.contacto.telefono1' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.ext1' => 'nullable|max:10',
-                'direcciones_entrega.*.contacto.telefono2' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.ext2' => 'nullable|max:10',
-                'direcciones_entrega.*.contacto.telefono3' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.ext3' => 'nullable|max:10',
-                'direcciones_entrega.*.contacto.telefono4' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.ext4' => 'nullable|max:10',
-                'direcciones_entrega.*.contacto.telefono5' => 'nullable|max:100',
-                'direcciones_entrega.*.contacto.ext5' => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.email'      => 'nullable|email|max:100',
+                'direcciones_entrega.*.contacto.telefono1'  => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext1'       => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono2'  => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext2'       => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono3'  => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext3'       => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono4'  => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext4'       => 'nullable|max:10',
+                'direcciones_entrega.*.contacto.telefono5'  => 'nullable|max:100',
+                'direcciones_entrega.*.contacto.ext5'       => 'nullable|max:10',
 
                 // Dirección de entrega
-                'direcciones_entrega.*.nombre' => 'nullable|max:100',
-                'direcciones_entrega.*.calle' => 'nullable|max:100',
-                'direcciones_entrega.*.num_ext' => 'nullable|max:100',
-                'direcciones_entrega.*.num_int' => 'nullable|max:100',
-                'direcciones_entrega.*.colonia' => 'nullable|max:100',
-                'direcciones_entrega.*.id_ciudad' => 'nullable|max:100',
-                'direcciones_entrega.*.id_estado' => 'nullable|max:100',
-                'direcciones_entrega.*.id_pais' => 'nullable|max:100',
-                'direcciones_entrega.*.cp' => 'nullable|max:100',
+                'direcciones_entrega.*.nombre'      => 'nullable|max:100',
+                'direcciones_entrega.*.calle'       => 'nullable|max:100',
+                'direcciones_entrega.*.num_ext'     => 'nullable|max:100',
+                'direcciones_entrega.*.num_int'     => 'nullable|max:100',
+                'direcciones_entrega.*.colonia'     => 'nullable|max:100',
+                'direcciones_entrega.*.id_ciudad'   => 'nullable|max:100',
+                'direcciones_entrega.*.id_estado'   => 'nullable|max:100',
+                'direcciones_entrega.*.id_pais'     => 'nullable|max:100',
+                'direcciones_entrega.*.cp'          => 'nullable|max:100',
 
                 // Razones sociales
-                'razones.*.nombre' => 'nullable|max:100',
-                'razones.*.rfc' => 'nullable|max:13',
-                'razones.*.id_metodo_pago' => 'nullable|integer',
-                'razones.*.id_forma_pago' => 'nullable|max:100',
-                'razones.*.id_uso_cfdi' => 'nullable|max:100',
+                'razones.*.nombre'          => 'nullable|max:100',
+                'razones.*.rfc'             => 'nullable|max:13',
+                'razones.*.id_metodo_pago'  => 'nullable|integer',
+                'razones.*.id_forma_pago'   => 'nullable|max:100',
+                'razones.*.id_uso_cfdi'     => 'nullable|max:100',
                 'razones.*.id_regimen_fiscal' => 'nullable|max:100',
 
                 // Dirección dentro de razón social
-                'razones.*.direccion.calle' => 'nullable|max:100',
-                'razones.*.direccion.num_ext' => 'nullable|max:100',
-                'razones.*.direccion.num_int' => 'nullable|max:100',
-                'razones.*.direccion.colonia' => 'nullable|max:100',
+                'razones.*.direccion.calle'     => 'nullable|max:100',
+                'razones.*.direccion.num_ext'   => 'nullable|max:100',
+                'razones.*.direccion.num_int'   => 'nullable|max:100',
+                'razones.*.direccion.colonia'   => 'nullable|max:100',
                 'razones.*.direccion.id_ciudad' => 'nullable|max:100',
                 'razones.*.direccion.id_estado' => 'nullable|max:100',
-                'razones.*.direccion.id_pais' => 'nullable|max:100',
-                'razones.*.direccion.cp' => 'nullable|max:100',
+                'razones.*.direccion.id_pais'   => 'nullable|max:100',
+                'razones.*.direccion.cp'        => 'nullable|max:100',
             ];
             $request->validate($rules);
 
@@ -198,28 +198,35 @@ class ClienteController extends Controller
                 ]);
 
                 // Crear contacto principal (oblogatorio)
-                if (!empty($request->contacto['nombre'])) {
+                $contactos = $request->input('contacto', []);  // trae un array de arrays: [ 0 => [...], 1 => [...], ... ]
+                if (count($contactos) > 0) {
+                    foreach ($contactos as $cont) {
+                        // Saltamos cualquier ficha vacía (sin nombre)
+                        if (empty($cont['nombre'])) {
+                            continue;
+                        }
 
-                    $contacto = $request->contacto;   // array con todos los campos
-
-                    Contacto::create([
-                        'id_cliente'   => $cliente->id_cliente,
-                        'nombre'       => $contacto['nombre'] ?? null,
-                        'apellido_p'   => $contacto['apellido_p'] ?? null,
-                        'apellido_m'   => $contacto['apellido_m'] ?? null,
-                        'email'        => $contacto['email'] ?? null,
-                        'puesto'       => $contacto['puesto'] ?? null,
-                        'telefono1'    => $contacto['telefono1'] ?? null,
-                        'ext1'         => $contacto['ext1'] ?? null,
-                        'telefono2'    => $contacto['telefono2'] ?? null,
-                        'ext2'         => $contacto['ext2'] ?? null,
-                        'telefono3'    => $contacto['telefono3'] ?? null,
-                        'ext3'         => $contacto['ext3'] ?? null,
-                        'telefono4'    => $contacto['telefono4'] ?? null,
-                        'ext4'         => $contacto['ext4'] ?? null,
-                        'telefono5'    => $contacto['telefono5'] ?? null,
-                        'ext5'         => $contacto['ext5'] ?? null,
-                    ]);
+                        // Creamos el registro
+                        Contacto::create([
+                            'id_cliente' => $cliente->id_cliente,
+                            'nombre'     => $cont['nombre']    ?? null,
+                            'apellido_p' => $cont['apellido_p']?? null,
+                            'apellido_m' => $cont['apellido_m']?? null,
+                            'email'      => $cont['email']     ?? null,
+                            'puesto'     => $cont['puesto']    ?? null,
+                            // teléfonos/extensiones 1–5
+                            'telefono1' => $cont['telefono1'] ?? null,
+                            'ext1'      => $cont['ext1']      ?? null,
+                            'telefono2' => $cont['telefono2'] ?? null,
+                            'ext2'      => $cont['ext2']      ?? null,
+                            'telefono3' => $cont['telefono3'] ?? null,
+                            'ext3'      => $cont['ext3']      ?? null,
+                            'telefono4' => $cont['telefono4'] ?? null,
+                            'ext4'      => $cont['ext4']      ?? null,
+                            'telefono5' => $cont['telefono5'] ?? null,
+                            'ext5'      => $cont['ext5']      ?? null,
+                        ]);
+                    }
                 }
 
                 //GUARDAR DATOS DE ENTREGA - CONTACTO + DIRECCION (opcional)
