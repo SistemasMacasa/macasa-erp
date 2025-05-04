@@ -298,14 +298,17 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Colonia</label>
-                                        <input name="direcciones_entrega[0][colonia]" class="form-control"
-                                            value="{{ old('direcciones_entrega.0.colonia') }}">
+                                        <select name="direcciones_entrega[0][colonia]" class="form-select colonia-select"
+                                            disabled>
+                                            <option value="">— Selecciona CP primero —</option>
+                                        </select>
                                     </div>
+
                                 </div>
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Ciudad / Municipio</label>
-                                        <select name="direcciones_entrega[0][id_ciudad]" class="form-select">
+                                        <select name="direcciones_entrega[0][id_ciudad]" class="form-select municipio-field">
                                             <option value="">— Selecciona —</option>
                                             @foreach ($ciudades as $id => $city)
                                                 <option value="{{ $id }}" @selected(old('direcciones_entrega.0.id_ciudad') == $id)>
@@ -316,7 +319,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
-                                        <select name="direcciones_entrega[0][id_estado]" class="form-select">
+                                        <select name="direcciones_entrega[0][id_estado]" class="form-select estado-field">
                                             <option value="">— Selecciona —</option>
                                             @foreach ($estados as $id => $state)
                                                 <option value="{{ $id }}" @selected(old('direcciones_entrega.0.id_estado') == $id)>
@@ -338,8 +341,8 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
-                                        <input name="direcciones_entrega[0][cp]" class="form-control"
-                                            value="{{ old('direcciones_entrega.0.cp') }}">
+                                        <input name="direcciones_entrega[0][cp]" class="form-control cp-field" maxlength="5">
+
                                     </div>
                                 </div>
                             </div>
@@ -422,7 +425,7 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-2">
                                         <label class="form-label">C.P.</label>
-                                        <input name="razones[0][direccion][cp]" class="form-control">
+                                        <input name="direcciones_entrega[0][cp]" class="form-control cp-field" maxlength="5">
                                     </div>
                                     <hr class="my-4">
 
@@ -448,7 +451,7 @@
                                     <div class="row g-3 mt-1">
                                         <div class="col-md-4">
                                             <label class="form-label">Ciudad / Municipio</label>
-                                            <select name="razones[0][direccion][id_ciudad]" class="form-select">
+                                            <select name="razones[0][direccion][id_ciudad]" class="form-select municipio-field">
                                                 <option value="" @selected(old('id_ciudad'))>— Selecciona —</option>
                                                 @foreach ($ciudades as $id => $city)
                                                     <option value="{{ $id }}" @selected(old('id_ciudad'))>
@@ -459,13 +462,8 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Estado</label>
-                                            <select name="razones[0][direccion][id_estado]" class="form-select">
+                                            <select name="razones[0][direccion][id_estado]" class="form-select estado-field">
                                                 <option value="" @selected(old('id_estado'))>— Selecciona —</option>
-                                                @foreach ($estados as $id => $state)
-                                                    <option value="{{ $id }}" @selected(old('id_estado'))>
-                                                        {{ $state }}
-                                                    </option>
-                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="col-md-2">
@@ -518,26 +516,25 @@
                     const row = document.createElement('div');
                     row.className = 'row g-3 mt-1 telefono-block';
                     row.innerHTML = `
-                        <div class="col-md-3">
-                            <label class="form-label">Teléfono ${next}</label>
-                            <input
-                            name="contacto[${idx}][telefono${next}]"
-                            class="form-control"
-                            >
-                        </div>
-                        <div class="col-md-1">
-                            <label class="form-label">Ext.</label>
-                            <input
-                            name="contacto[${idx}][ext${next}]"
-                            class="form-control"
-                            >
-                        </div>`;
+                                                                                <div class="col-md-3">
+                                                                                    <label class="form-label">Teléfono ${next}</label>
+                                                                                    <input
+                                                                                    name="contacto[${idx}][telefono${next}]"
+                                                                                    class="form-control"
+                                                                                    >
+                                                                                </div>
+                                                                                <div class="col-md-1">
+                                                                                    <label class="form-label">Ext.</label>
+                                                                                    <input
+                                                                                    name="contacto[${idx}][ext${next}]"
+                                                                                    class="form-control"
+                                                                                    >
+                                                                                </div>`;
                     wrap.appendChild(row);
                 });
 
                 // 2) Botón “Agregar Contacto” genera un bloque completo
-                btnAdd.addEventListener('click', () => 
-                {
+                btnAdd.addEventListener('click', () => {
                     if (contactIndex >= MAX_CONTACTS) return;
 
                     const idx = contactIndex;
@@ -545,72 +542,72 @@
                     div.className = 'contacto-block mb-4 border rounded p-3';
                     div.dataset.index = idx;
                     div.innerHTML = `
-                        <h6 class="mb-3 text-muted">Contacto ${idx + 1}</h6>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                            <label class="form-label">Nombre(s)</label>
-                            <input
-                                name="contacto[${idx}][nombre]"
-                                class="form-control"
-                                
-                            >
-                            </div>
-                            <div class="col-md-4">
-                            <label class="form-label">Primer Apellido</label>
-                            <input
-                                name="contacto[${idx}][apellido_p]"
-                                class="form-control"
-                            >
-                            </div>
-                            <div class="col-md-4">
-                            <label class="form-label">Segundo Apellido</label>
-                            <input
-                                name="contacto[${idx}][apellido_m]"
-                                class="form-control"
-                            >
-                            </div>
-                        </div>
-                        <div class="row g-3 mt-1">
-                            <div class="col-md-4">
-                            <label class="form-label">Correo Electrónico</label>
-                            <input
-                                type="email"
-                                name="contacto[${idx}][email]"
-                                class="form-control"
-                            >
-                            </div>
-                            <div class="col-md-4">
-                            <label class="form-label">Puesto</label>
-                            <input
-                                name="contacto[${idx}][puesto]"
-                                class="form-control"
-                            >
-                            </div>
-                        </div>
-                        <div class="row g-3 mt-1 telefono-principal-wrapper">
-                            <div class="col-md-3">
-                            <label class="form-label">Teléfono 1</label>
-                            <input
-                                name="contacto[${idx}][telefono1]"
-                                class="form-control"
-                            >
-                            </div>
-                            <div class="col-md-1">
-                            <label class="form-label">Ext.</label>
-                            <input
-                                name="contacto[${idx}][ext1]"
-                                class="form-control"
-                            >
-                            </div>
-                        </div>
-                        <div class="telefonos-principal-extra"></div>
-                        <button
-                            type="button"
-                            class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-principal"
-                        >
-                            <i class="fa fa-plus"></i> Agregar teléfono
-                        </button>
-                    `;
+                                                                                <h6 class="mb-3 text-muted">Contacto ${idx + 1}</h6>
+                                                                                <div class="row g-3">
+                                                                                    <div class="col-md-4">
+                                                                                    <label class="form-label">Nombre(s)</label>
+                                                                                    <input
+                                                                                        name="contacto[${idx}][nombre]"
+                                                                                        class="form-control"
+
+                                                                                    >
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                    <label class="form-label">Primer Apellido</label>
+                                                                                    <input
+                                                                                        name="contacto[${idx}][apellido_p]"
+                                                                                        class="form-control"
+                                                                                    >
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                    <label class="form-label">Segundo Apellido</label>
+                                                                                    <input
+                                                                                        name="contacto[${idx}][apellido_m]"
+                                                                                        class="form-control"
+                                                                                    >
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row g-3 mt-1">
+                                                                                    <div class="col-md-4">
+                                                                                    <label class="form-label">Correo Electrónico</label>
+                                                                                    <input
+                                                                                        type="email"
+                                                                                        name="contacto[${idx}][email]"
+                                                                                        class="form-control"
+                                                                                    >
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                    <label class="form-label">Puesto</label>
+                                                                                    <input
+                                                                                        name="contacto[${idx}][puesto]"
+                                                                                        class="form-control"
+                                                                                    >
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row g-3 mt-1 telefono-principal-wrapper">
+                                                                                    <div class="col-md-3">
+                                                                                    <label class="form-label">Teléfono 1</label>
+                                                                                    <input
+                                                                                        name="contacto[${idx}][telefono1]"
+                                                                                        class="form-control"
+                                                                                    >
+                                                                                    </div>
+                                                                                    <div class="col-md-1">
+                                                                                    <label class="form-label">Ext.</label>
+                                                                                    <input
+                                                                                        name="contacto[${idx}][ext1]"
+                                                                                        class="form-control"
+                                                                                    >
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="telefonos-principal-extra"></div>
+                                                                                <button
+                                                                                    type="button"
+                                                                                    class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-principal"
+                                                                                >
+                                                                                    <i class="fa fa-plus"></i> Agregar teléfono
+                                                                                </button>
+                                                                            `;
                     cont.appendChild(div);
                     contactIndex++;
                 });
@@ -635,21 +632,21 @@
                     const row = document.createElement('div');
                     row.className = 'row g-3 mt-1 telefono-block';
                     row.innerHTML = `
-                                <div class="col-md-3">
-                                    <label class="form-label">Teléfono ${next}</label>
-                                    <input
-                                    name="contacto[telefono${next}]"
-                                    class="form-control"
-                                    >
-                                </div>
-                                <div class="col-md-1">
-                                    <label class="form-label">Ext.</label>
-                                    <input
-                                    name="contacto[ext${next}]"
-                                    class="form-control"
-                                    >
-                                </div>
-                                `;
+                                                                                        <div class="col-md-3">
+                                                                                            <label class="form-label">Teléfono ${next}</label>
+                                                                                            <input
+                                                                                            name="contacto[telefono${next}]"
+                                                                                            class="form-control"
+                                                                                            >
+                                                                                        </div>
+                                                                                        <div class="col-md-1">
+                                                                                            <label class="form-label">Ext.</label>
+                                                                                            <input
+                                                                                            name="contacto[ext${next}]"
+                                                                                            class="form-control"
+                                                                                            >
+                                                                                        </div>
+                                                                                        `;
                     wrapper.appendChild(row);
                 });
             });
@@ -684,23 +681,23 @@
                     const row = document.createElement('div');
                     row.className = 'row g-3 mt-1 telefono-block';
                     row.innerHTML = `
-                            <div class="col-md-4">
-                                <label class="form-label">Teléfono ${next}</label>
-                                <input
-                                type="text"
-                                name="direcciones_entrega[${idx}][contacto][telefono${next}]"
-                                class="form-control"
-                                >
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">Ext.</label>
-                                <input
-                                type="text"
-                                name="direcciones_entrega[${idx}][contacto][ext${next}]"
-                                class="form-control"
-                                >
-                            </div>
-                        `;
+                                                                                    <div class="col-md-4">
+                                                                                        <label class="form-label">Teléfono ${next}</label>
+                                                                                        <input
+                                                                                        type="text"
+                                                                                        name="direcciones_entrega[${idx}][contacto][telefono${next}]"
+                                                                                        class="form-control"
+                                                                                        >
+                                                                                    </div>
+                                                                                    <div class="col-md-2">
+                                                                                        <label class="form-label">Ext.</label>
+                                                                                        <input
+                                                                                        type="text"
+                                                                                        name="direcciones_entrega[${idx}][contacto][ext${next}]"
+                                                                                        class="form-control"
+                                                                                        >
+                                                                                    </div>
+                                                                                `;
                     wrapper.appendChild(row);
                 });
 
@@ -714,157 +711,155 @@
                     nuevo.dataset.index = idx;
 
                     nuevo.innerHTML = `
-                            <h6 class="mb-3 text-muted">Datos de Entrega ${idx + 1}</h6>
+                                                                                    <h6 class="mb-3 text-muted">Datos de Entrega ${idx + 1}</h6>
 
-                            <!-- Contacto de Entrega -->
-                            <h6 class="mb-3">Contacto de Entrega</h6>
-                            <div class="row g-3 mt-1">
-                                <div class="col-md-4">
-                                <label class="form-label">Nombre(s)</label>
-                                <input
-                                    type="text"
-                                    name="direcciones_entrega[${idx}][contacto][nombre]"
-                                    class="form-control"
-                                >
-                                </div>
-                                <div class="col-md-4">
-                                <label class="form-label">Apellido Paterno</label>
-                                <input
-                                    type="text"
-                                    name="direcciones_entrega[${idx}][contacto][apellido_p]"
-                                    class="form-control"
-                                >
-                                </div>
-                                <div class="col-md-4">
-                                <label class="form-label">Apellido Materno</label>
-                                <input
-                                    type="text"
-                                    name="direcciones_entrega[${idx}][contacto][apellido_m]"
-                                    class="form-control"
-                                >
-                                </div>
-                            </div>
-                            <div class="row g-3 mt-1">
-                                <div class="col-md-6">
-                                <label class="form-label">Correo Electrónico</label>
-                                <input
-                                    type="email"
-                                    name="direcciones_entrega[${idx}][contacto][email]"
-                                    class="form-control"
-                                >
-                                </div>
-                            </div>
-                            <!-- Teléfono 1 + Ext 1 -->
-                            <div class="row g-3 mt-1 telefono-contacto-wrapper">
-                                <div class="col-md-4">
-                                <label class="form-label">Teléfono 1</label>
-                                <input
-                                    type="text"
-                                    name="direcciones_entrega[${idx}][contacto][telefono1]"
-                                    class="form-control"
-                                >
-                                </div>
-                                <div class="col-md-2">
-                                <label class="form-label">Ext.</label>
-                                <input
-                                    type="text"
-                                    name="direcciones_entrega[${idx}][contacto][ext1]"
-                                    class="form-control"
-                                >
-                                </div>
-                            </div>
+                                                                                    <!-- Contacto de Entrega -->
+                                                                                    <h6 class="mb-3">Contacto de Entrega</h6>
+                                                                                    <div class="row g-3 mt-1">
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Nombre(s)</label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="direcciones_entrega[${idx}][contacto][nombre]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Apellido Paterno</label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="direcciones_entrega[${idx}][contacto][apellido_p]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Apellido Materno</label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="direcciones_entrega[${idx}][contacto][apellido_m]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row g-3 mt-1">
+                                                                                        <div class="col-md-6">
+                                                                                        <label class="form-label">Correo Electrónico</label>
+                                                                                        <input
+                                                                                            type="email"
+                                                                                            name="direcciones_entrega[${idx}][contacto][email]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- Teléfono 1 + Ext 1 -->
+                                                                                    <div class="row g-3 mt-1 telefono-contacto-wrapper">
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Teléfono 1</label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="direcciones_entrega[${idx}][contacto][telefono1]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                        <div class="col-md-2">
+                                                                                        <label class="form-label">Ext.</label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            name="direcciones_entrega[${idx}][contacto][ext1]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                    </div>
 
-                            <!-- Contenedor para teléfonos 2–5 -->
-                            <div class="telefonos-extra"></div>
+                                                                                    <!-- Contenedor para teléfonos 2–5 -->
+                                                                                    <div class="telefonos-extra"></div>
 
-                            <!-- Botón para agregar más teléfonos -->
-                            <button
-                                type="button"
-                                class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-contacto"
-                            >
-                                <i class="fa fa-plus"></i> Agregar teléfono
-                            </button>
+                                                                                    <!-- Botón para agregar más teléfonos -->
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        class="btn btn-sm btn-outline-primary mt-3 agregar-telefono-contacto"
+                                                                                    >
+                                                                                        <i class="fa fa-plus"></i> Agregar teléfono
+                                                                                    </button>
 
-                            <hr class="my-4">
+                                                                                    <hr class="my-4">
 
-                            <!-- Dirección de Entrega -->
-                            <h6 class="mb-3">Dirección de Entrega</h6>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                <label class="form-label">Razón Social</label>
-                                <input
-                                    name="direcciones_entrega[${idx}][nombre]"
-                                    class="form-control"
-                                >
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                <label class="form-label">Calle</label>
-                                <input
-                                    name="direcciones_entrega[${idx}][calle]"
-                                    class="form-control"
-                                >
-                                </div>
-                                <div class="col-md-2">
-                                <label class="form-label">Num. ext.</label>
-                                <input
-                                    name="direcciones_entrega[${idx}][num_ext]"
-                                    class="form-control"
-                                >
-                                </div>
-                                <div class="col-md-2">
-                                <label class="form-label">Num. int.</label>
-                                <input
-                                    name="direcciones_entrega[${idx}][num_int]"
-                                    class="form-control"
-                                >
-                                </div>
-                                <div class="col-md-4">
-                                <label class="form-label">Colonia</label>
-                                <input
-                                    name="direcciones_entrega[${idx}][colonia]"
-                                    class="form-control"
-                                >
-                                </div>
-                            </div>
-                            <div class="row g-3 mt-1">
-                                <div class="col-md-4">
-                                <label class="form-label">Ciudad / Municipio</label>
-                                <select name="direcciones_entrega[${idx}][id_ciudad]" class="form-select">
-                                    <option value="">— Selecciona —</option>
-                                    @foreach($ciudades as $id => $city)
-                                        <option value="{{ $id }}">{{ $city }}</option>
-                                    @endforeach
-                                </select>
-                                </div>
-                                <div class="col-md-4">
-                                <label class="form-label">Estado</label>
-                                <select name="direcciones_entrega[${idx}][id_estado]" class="form-select">
-                                    <option value="">— Selecciona —</option>
-                                    @foreach($estados as $id => $state)
-                                        <option value="{{ $id }}">{{ $state }}</option>
-                                    @endforeach
-                                </select>
-                                </div>
-                                <div class="col-md-2">
-                                <label class="form-label">País</label>
-                                <select name="direcciones_entrega[${idx}][id_pais]" class="form-select">
-                                    <option value="">— Selecciona —</option>
-                                    @foreach($paises as $id => $pais)
-                                        <option value="{{ $id }}">{{ $pais }}</option>
-                                    @endforeach
-                                </select>
-                                </div>
-                                <div class="col-md-2">
-                                <label class="form-label">C.P.</label>
-                                <input
-                                    name="direcciones_entrega[${idx}][cp]"
-                                    class="form-control"
-                                >
-                                </div>
-                            </div>
-                        `;
+                                                                                    <!-- Dirección de Entrega -->
+                                                                                    <h6 class="mb-3">Dirección de Entrega</h6>
+                                                                                    <div class="row g-3">
+                                                                                        <div class="col-md-6">
+                                                                                        <label class="form-label">Razón Social</label>
+                                                                                        <input
+                                                                                            name="direcciones_entrega[${idx}][nombre]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row g-3">
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Calle</label>
+                                                                                        <input
+                                                                                            name="direcciones_entrega[${idx}][calle]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                        <div class="col-md-2">
+                                                                                        <label class="form-label">Num. ext.</label>
+                                                                                        <input
+                                                                                            name="direcciones_entrega[${idx}][num_ext]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                        <div class="col-md-2">
+                                                                                        <label class="form-label">Num. int.</label>
+                                                                                        <input
+                                                                                            name="direcciones_entrega[${idx}][num_int]"
+                                                                                            class="form-control"
+                                                                                        >
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Colonia</label>
+                                                                                        <select name="direcciones_entrega[${idx}][colonia]"
+                                                                                                class="form-select colonia-select" disabled>
+                                                                                            <option value="">— Selecciona CP primero —</option>
+                                                                                        </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row g-3 mt-1">
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Ciudad / Municipio</label>
+                                                                                        <select name="direcciones_entrega[${idx}][id_ciudad]" class="form-select municipio-field">
+                                                                                            <option value="">— Selecciona —</option>
+                                                                                            @foreach($ciudades as $id => $city)
+                                                                                                <option value="{{ $id }}">{{ $city }}</option>
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                        <label class="form-label">Estado</label>
+                                                                                        <select name="direcciones_entrega[${idx}][id_estado]" class="form-select estado-field">
+                                                                                            <option value="">— Selecciona —</option>
+                                                                                            @foreach($estados as $id => $state)
+                                                                                                <option value="{{ $id }}">{{ $state }}</option>
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                        </div>
+                                                                                        <div class="col-md-2">
+                                                                                        <label class="form-label">País</label>
+                                                                                        <select name="direcciones_entrega[${idx}][id_pais]" class="form-select">
+                                                                                            <option value="">— Selecciona —</option>
+                                                                                            @foreach($paises as $id => $pais)
+                                                                                                <option value="{{ $id }}">{{ $pais }}</option>
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                        </div>
+                                                                                        <div class="col-md-2">
+                                                                                            <label class="form-label">C.P.</label>
+                                                                                            <input name="direcciones_entrega[${idx}][cp]" class="form-control cp-field" maxlength="5">
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                `;
 
                     contenedor.appendChild(nuevo);
                     bloqueIndex++;
@@ -894,6 +889,91 @@
                 });
             });
         </script>
+
+        <script>
+            (() => {
+                /* ──────────────────── utilidades ──────────────────── */
+                const delay = (fn, ms = 400) => {           // debounce
+                    let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+                };
+
+                /** Selecciona por texto (case-insensitive).  
+                    Si no existe la opción, la crea y la marca. */
+                function seleccionarPorTexto(select, texto) {
+                    if (!select) return;
+
+                    // 1. busca coincidencia exacta (ignorando mayúsculas / tildes sencillas)
+                    let opt = [...select.options].find(o =>
+                        o.text.trim().toLowerCase() === texto.trim().toLowerCase()
+                    );
+
+                    // 2. si no, busca que value == texto (por si envías la clave numérica)
+                    if (!opt) opt = [...select.options].find(o => o.value === texto);
+
+                    // 3. si sigue sin haber coincidencia, crea opción temporal
+                    if (!opt) {
+                        opt = new Option(texto, texto, true, true); // selected = true
+                        select.prepend(opt);
+                    }
+
+                    select.value = opt.value;
+                }
+
+                /** Deja el bloque “vacío” cuando el CP es inválido */
+                function limpiar(bloque) {
+                    bloque.querySelectorAll('.estado-field, .municipio-field').forEach(s => s.value = '');
+                    const sel = bloque.querySelector('.colonia-select');
+                    if (sel) {
+                        sel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+                        sel.disabled = true;
+                    }
+                }
+
+                /* ──────────────────── listener principal ──────────────────── */
+                document.addEventListener('input', delay(async e => {
+                    const cpInput = e.target.closest('.cp-field');
+                    if (!cpInput) return;
+
+                    const cp = cpInput.value.trim();
+                    const bloque = cpInput.closest('.entrega-block,.facturacion-block') ?? cpInput.parentNode;
+
+                    if (!/^\d{5}$/.test(cp)) { limpiar(bloque); return; }
+
+                    try {
+                        const r = await fetch(`/api/cp/${cp}`);
+                        if (!r.ok) throw new Error(`CP ${cp} sin datos`);
+                        const data = await r.json();
+
+                        // select correspondientes dentro del mismo bloque
+                        const estadoSel = bloque.querySelector('.estado-field');
+                        const municSel = bloque.querySelector('.municipio-field');
+                        const coloniaSel = bloque.querySelector('.colonia-select');
+
+                        // Estado y Municipio
+                        seleccionarPorTexto(estadoSel, data.head.estado);
+                        seleccionarPorTexto(municSel, data.head.municipio);
+
+                        // Colonias
+                        if (coloniaSel) {
+                            coloniaSel.innerHTML = '';
+                            data.colonias.forEach(c =>
+                                coloniaSel.add(new Option(`${c.colonia} (${c.tipo})`, c.colonia))
+                            );
+                            coloniaSel.disabled = false;
+                        }
+
+                        console.log('🔄 Autocompletado',
+                            { estado: estadoSel?.value, municipio: municSel?.value, colonias: coloniaSel?.length });
+
+                    } catch (err) {
+                        console.error(err);
+                        limpiar(bloque);
+                    }
+                }));
+            })();
+        </script>
+
+
         <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━ TerminaFormulario para Personas Morales ━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
     @elseif ($tipo === 'fisica')
@@ -1148,7 +1228,7 @@
 
                                     <div class="col-md-4">
                                         <label class="form-label" for="entrega_colonia">Colonia</label>
-                                        <input name="direccion_entrega[colonia]" id="entrega_colonia" class="form-control"
+                                        <input name="direccion_entrega[colonia]" id="entrega_colonia" class="form-control col"
                                             value="{{ old('direccion_entrega.colonia') }}">
                                     </div>
                                 </div>
@@ -1156,20 +1236,19 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label" for="entrega_ciudad">Ciudad</label>
-                                        <input name="direccion_entrega[ciudad]" id="entrega_ciudad" class="form-control"
-                                            value="{{ old('direccion_entrega.ciudad') }}">
+                                        <input name="direccion_entrega[ciudad]" id="entrega_ciudad"
+                                            class="form-control municipio-field" value="{{ old('direccion_entrega.ciudad') }}">
                                     </div>
 
                                     <div class="col-md-4">
                                         <label class="form-label" for="entrega_estado">Estado</label>
-                                        <input name="direccion_entrega[estado]" id="entrega_estado" class="form-control"
-                                            value="{{ old('direccion_entrega.estado') }}">
+                                        <input name="direccion_entrega[estado]" id="entrega_estado"
+                                            class="form-control estado-field" value="{{ old('direccion_entrega.estado') }}">
                                     </div>
 
                                     <div class="col-md-2">
                                         <label class="form-label" for="entrega_cp">C.P.</label>
-                                        <input name="direccion_entrega[cp]" id="entrega_cp" class="form-control"
-                                            value="{{ old('direccion_entrega.cp') }}">
+                                        <input name="direcciones_entrega[0][cp]" class="form-control cp-field" maxlength="5">
                                     </div>
                                 </div>
                             </div>
@@ -1212,28 +1291,27 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label" for="fact_ciudad">Ciudad</label>
-                                        <input name="direccion_factura[ciudad]" id="fact_ciudad" class="form-control"
-                                            value="{{ old('direccion_factura.ciudad') }}">
+                                        <input name="direccion_factura[ciudad]" id="fact_ciudad"
+                                            class="form-control municipio-field" value="{{ old('direccion_factura.ciudad') }}">
                                     </div>
 
                                     <div class="col-md-4">
                                         <label class="form-label" for="fact_estado">Estado</label>
-                                        <input name="direccion_factura[estado]" id="fact_estado" class="form-control"
-                                            value="{{ old('direccion_factura.estado') }}">
+                                        <input name="direccion_factura[estado]" id="fact_estado"
+                                            class="form-control estado-field" value="{{ old('direccion_factura.estado') }}">
                                     </div>
 
                                     <div class="col-md-2">
                                         <label class="form-label" for="fact_cp">C.P.</label>
-                                        <input name="direccion_factura[cp]" id="fact_cp" class="form-control"
-                                            value="{{ old('direccion_factura.cp') }}">
+                                        <input name="direcciones_entrega[0][cp]" class="form-control cp-field" maxlength="5">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- =============================
-                                                                                                                                                                                             5. Notas
-                                                                                                                                                                                             ============================= -->
+                                                                                                                                                                                                                                                     5. Notas
+                                                                                                                                                                                                                                                     ============================= -->
                         <div class="card shadow-sm mb-5">
                             <div class="card-header section-card-header">
                                 <h6 class="mb-0">Notas</h6>
