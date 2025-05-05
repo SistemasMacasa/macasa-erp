@@ -173,8 +173,8 @@ fi
 
 [[ $LARAVEL_OK -eq 1 ]] || FAIL=1
 # 5. ¿Tabla sessions?
-docker compose exec -T "$APP_CONTAINER" \
-  mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
+docker compose exec -T "$SERVICE_DB" \
+  mysql -N -s -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" \
   -e "SHOW TABLES LIKE 'sessions';" | grep -q sessions \
   && ok "Tabla sessions presente" \
   || warn "Falta tabla sessions (¿ejecutaste migraciones?)"
