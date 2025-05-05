@@ -1,4 +1,15 @@
+version: "3.9"
+
+x-user: &default-user
+  # --- UID y GID del usuario host --------------------------
+  user: "${UID:-1000}:${GID:-1000}"
+  environment:
+    # Algunos scripts de Composer / NPM usan estas vars
+    PUID: "${UID:-1000}"
+    PGID: "${GID:-1000}"
+
 services:
+  # ──────────────────────────────── PHP / FPM ─────────────
   erp:
     build:
       context: .
@@ -7,11 +18,13 @@ services:
     restart: always
     volumes:
       - ./:/var/www/html:cached
-    networks:
-      - macasa-red-docker
+    <<: *default-user          # 👈  corre con tu UID/GID
     depends_on:
       - mariadb
+    networks:
+      - macasa-red-docker
 
+  # ──────────────────────────────── Nginx ─────────────────
   nginx:
     image: nginx:latest
     container_name: macasa_nginx
@@ -26,6 +39,7 @@ services:
     networks:
       - macasa-red-docker
 
+  # ──────────────────────────────── MariaDB ───────────────
   mariadb:
     image: mariadb:10.6
     container_name: macasa_mariadb
@@ -48,4 +62,4 @@ networks:
 
 volumes:
   mariadb_data:
-    name: mariadb_data  # <- Esto fuerza a Docker a NO renombrarlo
+    name: mariadb_data

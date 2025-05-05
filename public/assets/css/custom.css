@@ -24,7 +24,7 @@ body[data-sidebar-size="lg"] .logo-sm {
     display: none;
 }
 body[data-sidebar-size="lg"] .logo-lg img {
-    width: 126px; /* Ajusta como quieras */
+    width: 170px; /* Ajusta como quieras */
     height: auto;
 }
 
@@ -327,6 +327,188 @@ body[data-sidebar="dark"] .opcion-card-body p {
     color: #b2b8c6;
 }
 
-
-
 /* ─────────────── Termina Estilos del modal/popup Nueva Cuenta ─────────────────── */
+
+
+/* Reduce padding de cabecera y cuerpo */
+.contenedorContactos .contacto-block .card-header {
+    padding: .5rem .75rem;
+    font-size: .95rem;
+  }
+  
+  .contenedorContactos .contacto-block .card-body {
+    padding: .75rem;
+  }
+  
+  /* Ajusta el gutter interno de filas dentro de la ficha */
+  .contenedorContactos .contacto-block .row.g-2 {
+    --bs-gutter-x: .5rem;
+    --bs-gutter-y: .5rem;
+  }
+  
+  /* Campos un poco más compactos */
+  .contenedorContactos .contacto-block .form-control,
+  .contenedorContactos .contacto-block .form-select {
+    padding: .375rem .75rem;
+    font-size: .9rem;
+  }
+/* Encabezados de sección en flujo vertical */
+.section-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem 1rem;
+  }
+  .section-card-header #agregarContacto {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+  }
+  
+  
+  
+  /* –– HEADER: columna y gap –– */
+.card-header.section-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .5rem;            /* separación entre título y botón */
+    padding: .75rem 1rem;  /* o el padding que uses normalmente */
+  }
+  
+  /* –– BOTÓN “Agregar Contacto” –– */
+  .card-header.section-card-header #agregarContacto {
+    margin: 0;                   /* ya no lo empujamos */
+    padding: .25rem .75rem;      /* versión compacta */
+    font-size: .875rem;          /* un poco más pequeño */
+    align-self: flex-start;      /* asegúrate de que quede a la izquierda */
+    border-radius: .375rem;      /* igual que otros botones sm */
+  }
+  
+
+  /* — Hacer más angosto el card de “Cuenta Empresarial” — */
+.section-card-cuenta-empresarial {
+    width: 100%;
+    max-width: 900px;    /* ajusta este valor a lo que te guste */
+    margin-bottom: 1.5rem; /* espacio debajo */
+    margin-left: auto;   /* centrado */
+    margin-right: auto;  /* centrado */
+  }
+  
+  /* Si quieres un ancho distinto en pantallas grandes: */
+  @media (min-width: 992px) {
+    .section-card-cuenta-empresarial {
+      max-width: 800px;
+    }
+  }
+  
+.tile-agregar-contacto {
+    border: 2px dashed rgba(var(--bs-primary-rgb), 0.6);
+    color: var(--bs-primary);
+    transition: transform .2s ease,
+                box-shadow .2s ease,
+                background-color .2s ease,
+                border-color .2s ease,
+                color .2s ease;
+    background-color: transparent !important;
+}
+
+.tile-agregar-contacto p {
+    margin: .5rem 0 0;
+    font-size: .9rem;
+}
+
+/* Hover en Light Mode */
+.tile-agregar-contacto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
+
+/* Afectar también icono y texto */
+.tile-agregar-contacto:hover i,
+.tile-agregar-contacto:hover p {
+    color: var(--bs-primary);
+}
+
+/* — ESTILOS EN Light Mode — */
+body:not([data-sidebar="dark"]) .tile-agregar-contacto {
+    border: 2px dashed rgba(var(--bs-primary-rgb), 0.6);
+    color: var(--bs-primary);
+}
+
+body:not([data-sidebar="dark"]) .tile-agregar-contacto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
+
+body:not([data-sidebar="dark"]) .tile-agregar-contacto:hover i,
+body:not([data-sidebar="dark"]) .tile-agregar-contacto:hover p {
+    color: var(--bs-primary);
+}
+
+/* Hover en Dark Mode */
+body[data-sidebar="dark"] .tile-agregar-contacto {
+    border: 2px dashed rgba(var(--bs-white-rgb), 0.4);
+    color: var(--bs-white);
+}
+
+body[data-sidebar="dark"] .tile-agregar-contacto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    background-color: rgba(var(--bs-white-rgb), 0.05);
+    border-color: var(--bs-white);
+    color: var(--bs-white);
+}
+
+body[data-sidebar="dark"] .tile-agregar-contacto:hover i,
+body[data-sidebar="dark"] .tile-agregar-contacto:hover p {
+    color: var(--bs-white);
+}
+
+
+/* Tile “Agregar Entrega” (mismo estilo que tile-agregar-contacto) */
+.tile-agregar-entrega {
+    background-color: transparent !important;
+    border: 2px dashed #5156BE;
+    color: #5156BE;
+    transition: transform .2s ease,
+                box-shadow .2s ease,
+                background-color .2s ease,
+                border-color .2s ease,
+                color .2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+  }
+  
+  /* Hover Light */
+  .tile-agregar-entrega:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background-color: rgba(81,86,190,0.1);
+    border-color: #5156BE;
+    color: #5156BE;
+  }
+  
+  /* Dark override */
+  @media (prefers-color-scheme: dark) {
+    .tile-agregar-entrega {
+      border: 2px dashed #FFFFFF;
+      color: #FFFFFF;
+    }
+    .tile-agregar-entrega:hover {
+      box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+      background-color: rgba(255,255,255,0.05);
+      border-color: #FFFFFF;
+      color: #FFFFFF;
+    }
+  }
+  
