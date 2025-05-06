@@ -1,5 +1,3 @@
-version: "3.9"
-
 x-user: &default-user
   # --- UID y GID del usuario host --------------------------
   user: "${UID:-1000}:${GID:-1000}"

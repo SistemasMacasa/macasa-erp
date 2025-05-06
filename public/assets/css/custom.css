@@ -401,114 +401,76 @@ body[data-sidebar="dark"] .opcion-card-body p {
     }
   }
   
-.tile-agregar-contacto {
-    border: 2px dashed rgba(var(--bs-primary-rgb), 0.6);
-    color: var(--bs-primary);
-    transition: transform .2s ease,
-                box-shadow .2s ease,
-                background-color .2s ease,
-                border-color .2s ease,
-                color .2s ease;
-    background-color: transparent !important;
+  /* Base común para ambos tiles */
+.tile-agregar-contacto,
+.tile-agregar-entrega,
+.tile-agregar-facturacion {
+  background-color: transparent !important;
+  border: 2px dashed rgba(var(--bs-primary-rgb), 0.6);
+  color: var(--bs-primary);
+  transition: transform .2s ease,
+              box-shadow .2s ease,
+              background-color .2s ease,
+              border-color .2s ease,
+              color .2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
 }
 
-.tile-agregar-contacto p {
-    margin: .5rem 0 0;
-    font-size: .9rem;
+/* Ajuste de icono y texto interno */
+.tile-agregar-contacto p,
+.tile-agregar-entrega p,
+.tile-agregar-facturacion p {
+  margin: .5rem 0 0;
+  font-size: .9rem;
 }
 
-/* Hover en Light Mode */
-.tile-agregar-contacto:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    background-color: rgba(var(--bs-primary-rgb), 0.1);
-    border-color: var(--bs-primary);
-    color: var(--bs-primary);
+/* Hover Light Mode */
+.tile-agregar-contacto:hover,
+.tile-agregar-entrega:hover,
+.tile-agregar-facturacion:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  border-color: var(--bs-primary);
+  color: var(--bs-primary);
 }
-
-/* Afectar también icono y texto */
 .tile-agregar-contacto:hover i,
-.tile-agregar-contacto:hover p {
-    color: var(--bs-primary);
+.tile-agregar-contacto:hover p,
+.tile-agregar-entrega:hover i,
+.tile-agregar-entrega:hover p,
+.tile-agregar-facturacion:hover i,
+.tile-agregar-facturacion:hover p {
+  color: var(--bs-primary);
 }
 
-/* — ESTILOS EN Light Mode — */
-body:not([data-sidebar="dark"]) .tile-agregar-contacto {
-    border: 2px dashed rgba(var(--bs-primary-rgb), 0.6);
-    color: var(--bs-primary);
+/* Dark Sidebar Mode override */
+body[data-sidebar="dark"] .tile-agregar-contacto,
+body[data-sidebar="dark"] .tile-agregar-entrega,
+body[data-sidebar="dark"] .tile-agregar-facturacion {
+  border: 2px dashed rgba(var(--bs-white-rgb), 0.4);
+  color: var(--bs-white);
 }
-
-body:not([data-sidebar="dark"]) .tile-agregar-contacto:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    background-color: rgba(var(--bs-primary-rgb), 0.1);
-    border-color: var(--bs-primary);
-    color: var(--bs-primary);
+body[data-sidebar="dark"] .tile-agregar-contacto:hover,
+body[data-sidebar="dark"] .tile-agregar-entrega:hover,
+body[data-sidebar="dark"] .tile-agregar-facturacion:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+  background-color: rgba(var(--bs-white-rgb), 0.05);
+  border-color: var(--bs-white);
+  color: var(--bs-white);
 }
-
-body:not([data-sidebar="dark"]) .tile-agregar-contacto:hover i,
-body:not([data-sidebar="dark"]) .tile-agregar-contacto:hover p {
-    color: var(--bs-primary);
-}
-
-/* Hover en Dark Mode */
-body[data-sidebar="dark"] .tile-agregar-contacto {
-    border: 2px dashed rgba(var(--bs-white-rgb), 0.4);
-    color: var(--bs-white);
-}
-
-body[data-sidebar="dark"] .tile-agregar-contacto:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    background-color: rgba(var(--bs-white-rgb), 0.05);
-    border-color: var(--bs-white);
-    color: var(--bs-white);
-}
-
 body[data-sidebar="dark"] .tile-agregar-contacto:hover i,
-body[data-sidebar="dark"] .tile-agregar-contacto:hover p {
-    color: var(--bs-white);
+body[data-sidebar="dark"] .tile-agregar-contacto:hover p,
+body[data-sidebar="dark"] .tile-agregar-entrega:hover i,
+body[data-sidebar="dark"] .tile-agregar-entrega:hover p,
+body[data-sidebar="dark"] .tile-agregar-facturacion:hover i,
+body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
+  color: var(--bs-white);
 }
 
-
-/* Tile “Agregar Entrega” (mismo estilo que tile-agregar-contacto) */
-.tile-agregar-entrega {
-    background-color: transparent !important;
-    border: 2px dashed #5156BE;
-    color: #5156BE;
-    transition: transform .2s ease,
-                box-shadow .2s ease,
-                background-color .2s ease,
-                border-color .2s ease,
-                color .2s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 100%;
-  }
-  
-  /* Hover Light */
-  .tile-agregar-entrega:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    background-color: rgba(81,86,190,0.1);
-    border-color: #5156BE;
-    color: #5156BE;
-  }
-  
-  /* Dark override */
-  @media (prefers-color-scheme: dark) {
-    .tile-agregar-entrega {
-      border: 2px dashed #FFFFFF;
-      color: #FFFFFF;
-    }
-    .tile-agregar-entrega:hover {
-      box-shadow: 0 4px 12px rgba(255,255,255,0.1);
-      background-color: rgba(255,255,255,0.05);
-      border-color: #FFFFFF;
-      color: #FFFFFF;
-    }
-  }
   

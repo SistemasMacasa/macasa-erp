@@ -115,7 +115,7 @@
                         <div class="row g-3 contenedorContactos" id="contenedorContactos">
 
                             <!-- FICHA DE CONTACTO (índice 0 en este ejemplo) -->
-                            <div class="col-12 col-sm-6 col-md-3 mb-4 contacto-block" data-index="0">
+                            <div class="col-12 col-sm-6 col-md-4 mb-4 contacto-block" data-index="0">
                                 <div class="card h-100">
                                     <div class="card-header position-relative">
                                         <span>Contacto 1</span>
@@ -140,12 +140,12 @@
                                                 <input type="text" class="form-control" name="contacto[0][apellido_m]">
                                             </div>
                                             <!-- Correo Electrónico -->
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-12">
                                                 <label for="contacto[0][email]" class="form-label">Correo Electrónico</label>
                                                 <input type="email" class="form-control" name="contacto[0][email]">
                                             </div>
                                             <!-- Puesto -->
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-12">
                                                 <label for="contacto[0][puesto]" class="form-label">Puesto *</label>
                                                 <input type="text" class="form-control" name="contacto[0][puesto]" required>
                                             </div>
@@ -173,7 +173,7 @@
                             </div>
 
                             <!-- Tu “tile” dentro del grid -->
-                            <div class="col-12 col-sm-6 col-md-3 mb-4">
+                            <div class="col-12 col-sm-6 col-md-4 mb-4">
                                 <div class="card tile-agregar-contacto h-100 d-flex align-items-center justify-content-center">
                                     <i class="fa fa-plus fa-2x"></i>
                                     <p class="mt-2">Agregar Contacto</p>
@@ -190,21 +190,18 @@
                 <!-- ╭━━━━━━━━━━ Datos de Entrega ━━━━━━━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
                     <div class="card-header section-card-header">
-                        <h6 class="mb-0">Datos de Entrega</h6>
-                        <button type="button" id="agregarEntrega" class="btn btn-sm btn-outline-primary">
-                            <i class="fa fa-plus me-1"></i> Agregar otra
-                        </button>
+                        <h6>Datos de Entrega</h6>
                     </div>
                     <div class="card-body section-card-body">
                         <div class="row g-3 contenedorEntregas" id="contenedorEntregas">
 
                             <!-- FICHA INICIAL de Datos de Entrega (índice 0) -->
-                            <div class="col-12 col-md-4 mb-4 entrega-block border rounded p-3 bg-light-subtle" data-index="0">
-                            <!-- Encabezado -->
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h6 class="mb-0 text-muted">Datos de Entrega 1</h6>
-                                <button type="button" class="btn-close eliminar-entrega" aria-label="Eliminar"></button>
-                            </div>
+                            <div class="col-12 col-md-6 mb-4 entrega-block border rounded p-3 bg-light-subtle" data-index="0">
+                                <!-- Encabezado -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="mb-0 text-muted">Datos de Entrega 1</h6>
+                                    <button type="button" class="btn-close eliminar-entrega" aria-label="Eliminar"></button>
+                                </div>
 
                                 <!-- ╭━━━━ Contacto de Entrega ━━━━╮ -->
                                 <h6 class="mb-3">Contacto de Entrega</h6>
@@ -221,7 +218,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label for="direcciones_entrega[0][contacto][apellido_p]" class="form-label">Primer
                                             apellido</label>
                                         <input type="text" name="direcciones_entrega[0][contacto][apellido_p]"
@@ -232,7 +229,7 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label for="direcciones_entrega[0][contacto][apellido_m]" class="form-label">Segundo
                                             apellido</label>
                                         <input type="text" name="direcciones_entrega[0][contacto][apellido_m]"
@@ -242,7 +239,7 @@
                                 </div>
 
                                 <div class="row g-3 mt-1">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="direcciones_entrega[0][contacto][email]" class="form-label">Correo
                                             electrónico</label>
                                         <input type="email" name="direcciones_entrega[0][contacto][email]"
@@ -256,7 +253,7 @@
                                 </div>
 
                                 <div class="row g-3 mt-1">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label class="form-label">Teléfono 1</label>
                                         <input type="text" name="direcciones_entrega[0][contacto][telefono1]"
                                             class="form-control @error('direcciones_entrega.0.contacto.telefono1') is-invalid @enderror"
@@ -265,7 +262,7 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-6">
                                         <label class="form-label">Ext.</label>
                                         <input type="text" name="direcciones_entrega[0][contacto][ext1]" class="form-control"
                                             value="{{ old('direcciones_entrega.0.contacto.ext1') }}">
@@ -287,46 +284,48 @@
                                 <!-- Dirección de Entrega -->
                                 <h6 class="mb-3">Dirección de Entrega</h6>
                                 <div class="row g-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label class="form-label">Razón Social</label>
                                         <input type="text" name="direcciones_entrega[0][nombre]" class="form-control"
                                             value="{{ old('direcciones_entrega.0.nombre') }}">
                                     </div>
                                 </div>
 
-                                <div class="row g-3">
-                                    <div class="col-md-4">
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
                                         <label class="form-label">Calle</label>
                                         <input type="text" name="direcciones_entrega[0][calle]" class="form-control"
                                             value="{{ old('direcciones_entrega.0.calle') }}">
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label class="form-label">Num. ext.</label>
                                         <input type="text" name="direcciones_entrega[0][num_ext]" class="form-control"
                                             value="{{ old('direcciones_entrega.0.num_ext') }}">
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <label class="form-label">Num. int.</label>
                                         <input type="text" name="direcciones_entrega[0][num_int]" class="form-control"
                                             value="{{ old('direcciones_entrega.0.num_int') }}">
                                     </div>
-                                    <div class="col-md-4">
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
                                         <label class="form-label">Colonia</label>
                                         <select name="direcciones_entrega[0][colonia]" class="form-select colonia-select"
                                             disabled>
                                             <option value="">— Selecciona CP primero —</option>
                                         </select>
                                     </div>
-                                </div>
-
-                                <div class="row g-3 mt-1">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label class="form-label">Ciudad / Municipio</label>
                                         <select name="direcciones_entrega[0][id_ciudad]" class="form-select municipio-field"
                                             disabled>
                                             <option value="">— Selecciona CP primero—</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="row g-3 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label">Estado</label>
                                         <select name="direcciones_entrega[0][id_estado]" class="form-select estado-field"
@@ -339,25 +338,25 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                   <div class="col-md-4">
                                         <label class="form-label">País</label>
                                         <select name="direcciones_entrega[0][id_pais]" class="form-select" disabled>
                                             <option value="">México</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <label class="form-label">C.P.</label>
                                         <input type="text" name="direcciones_entrega[0][cp]" class="form-control cp-field"
                                             maxlength="5" value="{{ old('direcciones_entrega.0.cp') }}">
                                     </div>
-                                </div>
+                                </div>  
                             </div>
 
 
-                            <div class="col-12 col-md-4 mb-4">
+                            <div class="col-12 col-md-6 mb-2">
                                 <div class="card tile-agregar-entrega h-100 d-flex align-items-center justify-content-center">
                                     <i class="fa fa-plus fa-2x"></i>
-                                    <p class="mt-2">Agregar Entrega</p>
+                                    <p class="mt-2">Agregar Datos de Entrega</p>
                                 </div>
                             </div>
 
@@ -368,130 +367,136 @@
 
                 <!-- ╭━━━━ Datos de Facturación (razón social + dirección) ━━━━╮ -->
                 <div class="card shadow-sm mb-4 section-card">
-                    <div class="card-header section-card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Datos de Facturación</h6>
-                        <button type="button" id="agregarFacturacion" class="btn btn-sm btn-outline-primary">
-                            <i class="fa fa-plus"></i> Agregar razón social
-                        </button>
+                    <div class="card-header section-card-header">
+                        <h6>Datos de Facturación</h6>
                     </div>
+                    <div class="card-body section-card-body">
+                        <div class="row g-3 contenedorFacturacion" id="contenedorFacturacion">
 
-                    <div class="card-body">
-                        <div id="contenedorFacturacion">
-                            <!-- Bloque inicial (índice 0) -->
-                            <div class="facturacion-block mb-4 border rounded p-3 bg-light-subtle">
-                                <h6 class="mb-3 text-muted">Razón Social 1</h6>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Razón social</label>
-                                        <input name="razones[0][nombre]" class="form-control">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">RFC</label>
-                                        <input name="razones[0][rfc]" class="form-control">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Método de pago</label>
-                                        <select name="razones[0][id_metodo_pago]" id="id_metodo_pago" class="form-select">
-                                            {{-- placeholder: se marca si old) viene vacío --}}
-                                            <option value="" @selected(old('id_metodo_pago'))>— Selecciona —</option>
+                        <!-- Bloque inicial (índice 0) -->
+                        <div class="col-12 col-md-6 mb-4 facturacion-block border rounded p-3 bg-light-subtle"
+                            data-index="0">
+                            <!-- Encabezado de ficha -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 text-muted">Razón Social 1</h6>
+                            <button type="button" class="btn-close eliminar-facturacion" aria-label="Eliminar"></button>
+                            </div>
 
-                                            @foreach ($metodos_pago as $id => $metodo)
-                                                <option value="{{ $id }}" @selected(old('id_metodo_pago'))>
-                                                    {{ $metodo }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Forma de pago</label>
-                                        <select name="razones[0][id_forma_pago]" class="form-select">
-                                            <option value="" @selected(old('id_forma_pago'))>— Selecciona —</option>
+                            <!-- Datos básicos -->
+                            <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Razón social</label>
+                                <input type="text" name="razones[0][nombre]" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">RFC</label>
+                                <input type="text" name="razones[0][rfc]" class="form-control">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Método de pago</label>
+                                <select name="razones[0][id_metodo_pago]" class="form-select">
+                                <option value="">— Selecciona —</option>
+                                @foreach ($metodos_pago as $id => $metodo)
+                                    <option value="{{ $id }}" @selected(old('id_metodo_pago'))>
+                                        {{ $metodo }}
+                                    </option>
+                                @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Forma de pago</label>
+                                <select name="razones[0][id_forma_pago]" class="form-select">
+                                <option value="">— Selecciona —</option>
+                                @foreach ($formas_pago as $id => $forma)
+                                    <option value="{{ $id }}" @selected(old('id_forma_pago'))>
+                                        {{ $forma }}
+                                    </option>
+                                @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Uso del CFDI</label>
+                                <select name="razones[0][id_uso_cfdi]" class="form-select">
+                                <option value="">— Selecciona —</option>
+                                @foreach ($usos_cfdi as $id => $uso)
+                                    <option value="{{ $id }}" @selected(old('id_uso_cfdi'))>
+                                        {{ $uso }}
+                                    </option>
+                                @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Régimen fiscal</label>
+                                <select name="razones[0][id_regimen_fiscal]" class="form-select">
+                                <option value="">— Selecciona —</option>
+                                @foreach ($regimen_fiscales as $id => $regimen)
+                                    <option value="{{ $id }}" @selected(old('id_regimen_fiscal'))>
+                                        {{ $regimen }}
+                                    </option>
+                                @endforeach
+                                </select>
+                            </div>
+                            </div>
 
-                                            @foreach ($formas_pago as $id => $forma)
-                                                <option value="{{ $id }}" @selected(old('id_forma_pago'))>
-                                                    {{ $forma }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Uso del CFDI</label>
-                                        <select name="razones[0][id_uso_cfdi]" class="form-select">
-                                            <option value="" @selected(old('id_uso_cfdi'))>— Selecciona —</option>
-                                            @foreach ($usos_cfdi as $id => $uso)
-                                                <option value="{{ $id }}" @selected(old('id_uso_cfdi'))>
-                                                    {{ $uso }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Régimen fiscal</label>
-                                        <select name="razones[0][id_regimen_fiscal]" class="form-select">
-                                            <option value="" @selected(old('id_regimen_fiscal'))>— Selecciona —</option>
-                                            @foreach ($regimen_fiscales as $id => $regimen)
-                                                <option value="{{ $id }}" @selected(old('id_regimen_fiscal'))>
-                                                    {{ $regimen }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-md-2">
-                                        <label class="form-label">C.P.</label>
-                                        <input name="direcciones_entrega[0][cp]" class="form-control cp-field" maxlength="5">
-                                    </div>
-                                    <hr class="my-4">
+                            <hr class="my-4">
 
-                                    <!-- Dirección de facturación -->
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label">Calle</label>
-                                            <input name="razones[0][direccion][calle]" class="form-control">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">Num. ext.</label>
-                                            <input name="razones[0][direccion][num_ext]" class="form-control">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">Num. int.</label>
-                                            <input name="razones[0][direccion][num_int]" class="form-control">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Colonia</label>
-                                            <select name="razones[direccion][colonia]" class="form-select colonia-select"
-                                                disabled>
-                                                <option value="">— Selecciona CP primero —</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 mt-1">
-                                        <div class="col-md-4">
-                                            <label class="form-label">Ciudad / Municipio</label>
-                                            <select name="razones[0][direccion][id_ciudad]" class="form-select municipio-field"
-                                                disabled>
-                                                <option value="" @selected(old('id_ciudad'))>— Selecciona CP primero —</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Estado</label>
-                                            <select name="razones[0][direccion][id_estado]" class="form-select estado-field"
-                                                disabled>
-                                                <option value="" @selected(old('id_estado'))>— Selecciona —</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">País</label>
-                                            <select name="razones[0][direccion][id_pais]" class="form-select" disabled>
-                                                <option value="" @selected(old('id_pais'))>México</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                            <!-- Dirección de facturación -->
+                            <div class="row g-3 mb-3">
+                            <div class="col-3">
+                                <label class="form-label">C.P.</label>
+                                <input type="text"
+                                    name="razones[0][cp]"
+                                    class="form-control cp-field"
+                                    maxlength="5">
+                            </div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label">Calle</label>
+                                <input type="text" name="razones[0][direccion][calle]" class="form-control">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label">Num. ext.</label>
+                                <input type="text" name="razones[0][direccion][num_ext]" class="form-control">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label">Num. int.</label>
+                                <input type="text" name="razones[0][direccion][num_int]" class="form-control">
+                            </div>
+                            </div>
+                            <div class="row g-3">
+                            <div class="col-4">
+                                <label class="form-label">Colonia</label>
+                                <select name="razones[0][direccion][colonia]" class="form-select colonia-select" disabled>
+                                <option>— Selecciona CP primero —</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Ciudad / Municipio</label>
+                                <select name="razones[0][direccion][id_ciudad]" class="form-select municipio-field" disabled>
+                                <option>— Selecciona CP primero —</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Estado</label>
+                                <select name="razones[0][direccion][id_estado]" class="form-select estado-field" disabled>
+                                <option>— Selecciona CP primero —</option>
+                                </select>
+                            </div>
                             </div>
                         </div>
+
+                        <!-- Tile “Agregar razón social” -->
+                        <div class="col-12 col-md-6 mb-4">
+                            <div class="card tile-agregar-facturacion h-100 d-flex align-items-center justify-content-center">
+                            <i class="fa fa-plus fa-2x"></i>
+                            <p class="mt-2">Agregar razón social</p>
+                            </div>
+                        </div>
+
+                        </div>
                     </div>
+                </div>
 
 
             </form>
@@ -510,7 +515,7 @@
                 // Helper: crea la ficha completa para el índice dado
                 function createContactoBlock(idx) {
                     const wrapper = document.createElement('div');
-                    wrapper.className = 'col-12 col-sm-6 col-md-3 mb-4 contacto-block';
+                    wrapper.className = 'col-12 col-sm-6 col-md-4 mb-4 contacto-block';
                     wrapper.dataset.index = idx;
                     wrapper.innerHTML = `
                     <div class="card h-100">
@@ -541,13 +546,13 @@
                                     name="contacto[${idx}][apellido2]"
                                     class="form-control">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                             <label class="form-label">Correo Electrónico</label>
                             <input type="email"
                                     name="contacto[${idx}][email]"
                                     class="form-control">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                             <label class="form-label">Puesto *</label>
                             <input type="text"
                                     name="contacto[${idx}][puesto]"
@@ -586,7 +591,7 @@
                         if (contactIndex >= MAX_CONTACTS) return;
                         const newBlock = createContactoBlock(contactIndex);
                         // Insertar antes del propio tile
-                        const tileCol = tile.closest('.col-12, .col-sm-6, .col-md-3');
+                        const tileCol = tile.closest('.col-12, .col-sm-6, .col-md-4');
                         contenedor.insertBefore(newBlock, tileCol);
                         contactIndex++;
                         return;
@@ -635,6 +640,7 @@
         </script>
 
         <script>
+            //Agregar ficha datos de entrega al formulario de nueva cuenta
             document.addEventListener('DOMContentLoaded', () => {
                 const MAX_ENTREGAS = 10;
                 const contenedorE = document.getElementById('contenedorEntregas');
@@ -647,7 +653,7 @@
                 
                 function createEntregaBlock(idx) {
                     const wrapper = document.createElement('div');
-                    wrapper.className = 'col-12 col-md-4 mb-4 entrega-block border rounded p-3 bg-light-subtle';
+                    wrapper.className = 'col-12 col-md-6 mb-4 entrega-block border rounded p-3 bg-light-subtle';
                     wrapper.dataset.index = idx;
                     wrapper.innerHTML = `
                         <!-- Encabezado -->
@@ -785,7 +791,7 @@
                     if (e.target.closest('.tile-agregar-entrega')) {
                         if (entregaIndex >= MAX_ENTREGAS) return;
                         const newBlock = createEntregaBlock(entregaIndex);
-                        const tileCol = e.target.closest('.col-12, .col-md-4');
+                        const tileCol = e.target.closest('.col-12, .col-md-6');
                         contenedorE.insertBefore(newBlock, tileCol);
                         entregaIndex++;
                         return;
@@ -802,7 +808,7 @@
                         const btn = e.target.closest('.agregar-telefono-entrega');
                         const idx = btn.dataset.index;
                         const wrap = document.querySelector(`.telefonos-extra-${idx}`);
-                        const exist = wrap.querySelectorAll(`input[name^="entrega[${idx}][telefono"]`);
+                        const exist = wrap.querySelectorAll(`input[name^="direcciones_entrega[${idx}][telefono"]`);
                         if (exist.length >= 5) return;
                         const num = exist.length + 1;
                         const row = document.createElement('div');
@@ -811,13 +817,13 @@
                         <div class="col-sm-6">
                         <label class="form-label">Teléfono ${num}</label>
                         <input type="text"
-                                name="entrega[${idx}][telefono${num}]"
+                                name="direcciones_entrega[${idx}][telefono${num}]"
                                 class="form-control">
                         </div>
                         <div class="col-sm-6">
                         <label class="form-label">Ext.</label>
                         <input type="text"
-                                name="entrega[${idx}][ext${num}]"
+                                name="direcciones_entrega[${idx}][ext${num}]"
                                 class="form-control">
                         </div>`;
                         wrap.appendChild(row);
@@ -844,14 +850,14 @@
                     const row = document.createElement('div');
                     row.className = 'row g-3 mt-1 telefono-block';
                     row.innerHTML = `
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <label class="form-label">Teléfono ${next}</label>
                                     <input
                                     name="contacto[telefono${next}]"
                                     class="form-control"
                                     >
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-6">
                                     <label class="form-label">Ext.</label>
                                     <input
                                     name="contacto[ext${next}]"
@@ -864,29 +870,127 @@
             });
         </script>
 
-
         <script>
-            //Agregar datos de facturación al formulario de nueva cuenta
-            // Solo se permite agregar hasta 10 bloques de facturación
-            document.addEventListener('DOMContentLoaded', function () {
-                const btnAgregar = document.getElementById('agregarFacturacion');
-                const contenedor = document.getElementById('contenedorFacturacion');
-                let index = 1;
+            //Tile para datos de facturación
+            document.addEventListener('DOMContentLoaded', () => {
+            const MAX_FACT = 5;
+            const contF    = document.getElementById('contenedorFacturacion');
+            const btnF     = document.getElementById('agregarFacturacion');
+            let factIndex  = contF.querySelectorAll('.facturacion-block').length;
 
-                btnAgregar.addEventListener('click', function () {
-                    if (index >= 10) return;
+            function createFacturacionBlock(idx) {
+                const wrap = document.createElement('div');
+                wrap.className = 'col-12 col-md-6 mb-4 facturacion-block border rounded p-3 bg-light-subtle';
+                wrap.dataset.index = idx;
+                wrap.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0 text-muted">Razón Social ${idx + 1}</h6>
+                    <button type="button" class="btn-close eliminar-facturacion" aria-label="Eliminar"></button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12">
+                    <label class="form-label">Razón social</label>
+                    <input type="text" name="razones[${idx}][nombre]" class="form-control">
+                    </div>
+                    <div class="col-12">
+                    <label class="form-label">RFC</label>
+                    <input type="text" name="razones[${idx}][rfc]" class="form-control">
+                    </div>
+                    <div class="col-6">
+                    <label class="form-label">Método de pago</label>
+                    <select name="razones[${idx}][id_metodo_pago]" class="form-select">
+                        <option value="">— Selecciona —</option>
+                    </select>
+                    </div>
+                    <div class="col-6">
+                    <label class="form-label">Forma de pago</label>
+                    <select name="razones[${idx}][id_forma_pago]" class="form-select">
+                        <option value="">— Selecciona —</option>
+                    </select>
+                    </div>
+                    <div class="col-6">
+                    <label class="form-label">Uso del CFDI</label>
+                    <select name="razones[${idx}][id_uso_cfdi]" class="form-select">
+                        <option value="">— Selecciona —</option>
+                    </select>
+                    </div>
+                    <div class="col-6">
+                    <label class="form-label">Régimen fiscal</label>
+                    <select name="razones[${idx}][id_regimen_fiscal]" class="form-select">
+                        <option value="">— Selecciona —</option>
+                    </select>
+                    </div>
+                </div>
 
-                    const bloque = contenedor.querySelector('.facturacion-block').cloneNode(true);
-                    bloque.querySelector('h6').innerText = `Razón Social ${index + 1}`;
+                <hr class="my-4">
 
-                    // Reemplazar todos los índices [0] por [index]
-                    bloque.innerHTML = bloque.innerHTML.replace(/\[0\]/g, `[${index}]`);
-                    contenedor.appendChild(bloque);
+                <div class="row g-3 mb-3">
+                    <div class="col-3">
+                    <label class="form-label">C.P.</label>
+                    <input type="text"
+                            name="razones[${idx}][cp]"
+                            class="form-control cp-field"
+                            maxlength="5">
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-6">
+                    <label class="form-label">Calle</label>
+                    <input type="text" name="razones[${idx}][direccion][calle]" class="form-control">
+                    </div>
+                    <div class="col-3">
+                    <label class="form-label">Num. ext.</label>
+                    <input type="text" name="razones[${idx}][direccion][num_ext]" class="form-control">
+                    </div>
+                    <div class="col-3">
+                    <label class="form-label">Num. int.</label>
+                    <input type="text" name="razones[${idx}][direccion][num_int]" class="form-control">
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-4">
+                    <label class="form-label">Colonia</label>
+                    <select name="razones[${idx}][direccion][colonia]"
+                            class="form-select colonia-select" disabled>
+                        <option>— Selecciona CP primero —</option>
+                    </select>
+                    </div>
+                    <div class="col-4">
+                    <label class="form-label">Ciudad / Municipio</label>
+                    <select name="razones[${idx}][direccion][id_ciudad]"
+                            class="form-select municipio-field" disabled>
+                        <option>— Selecciona CP primero —</option>
+                    </select>
+                    </div>
+                    <div class="col-4">
+                    <label class="form-label">Estado</label>
+                    <select name="razones[${idx}][direccion][id_estado]"
+                            class="form-select estado-field" disabled>
+                        <option>— Selecciona CP primero —</option>
+                    </select>
+                    </div>
+                </div>`;
+                return wrap;
+            }
 
-                    index++;
-                });
+            contF.addEventListener('click', e => {
+                // a) Tile “Agregar razón social”
+                if (e.target.closest('.tile-agregar-facturacion')) {
+                if (factIndex >= MAX_FACT) return;
+                const block = createFacturacionBlock(factIndex);
+                const tileCol = e.target.closest('.col-12, .col-md-6');
+                contF.insertBefore(block, tileCol);
+                factIndex++;
+                return;
+                }
+                // b) Eliminar ficha
+                if (e.target.closest('.eliminar-facturacion')) {
+                e.target.closest('.facturacion-block').remove();
+                }
             });
-        </script>
+            });
+            </script>
+
 
         <script>
             (() => {
