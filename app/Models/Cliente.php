@@ -43,5 +43,16 @@ class Cliente extends Model
         return $this->hasOne(Contacto::class, 'id_cliente', 'id_cliente')
             ->oldestOfMany('id_contacto');
     }
+    public function razonesSociales()
+    {
+        return $this->hasMany(RazonSocial::class, 'id_cliente', 'id_cliente');
+    }
+
+    public function direccionesEntrega()
+    {
+        return $this->hasMany(Direccion::class, 'id_cliente', 'id_cliente');
+    }
+
+
 
 }

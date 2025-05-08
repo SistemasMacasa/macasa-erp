@@ -24,6 +24,8 @@ Route::put('/clientes/{cliente}', [ClienteController::class, 'update'])->name('c
 //delete
 Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name('clientes.delete');
 
+Route::get('/clientes/view/{id}', [ClienteController::class, 'view'])->name('clientes.view');
+
 //name sirve para darle un alias a la ruta y que puedes usar en todo el código de Laravel
 // por ejemplo: <a href="{{ route('clientes.create') }}">Crear Cliente</a>
 
@@ -48,3 +50,4 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);
     // ... y cualquier otra ruta que quieras proteger
 });
+

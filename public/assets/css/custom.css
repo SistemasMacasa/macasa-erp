@@ -352,6 +352,9 @@ body[data-sidebar="dark"] .opcion-card-body p {
     padding: .375rem .75rem;
     font-size: .9rem;
   }
+
+  .contacto-block .form-label{font-size:.875rem;}
+
 /* Encabezados de sección en flujo vertical */
 .section-card-header {
     display: flex;
@@ -397,7 +400,7 @@ body[data-sidebar="dark"] .opcion-card-body p {
   /* Si quieres un ancho distinto en pantallas grandes: */
   @media (min-width: 992px) {
     .section-card-cuenta-empresarial {
-      max-width: 800px;
+      max-width: 1200px;
     }
   }
   
@@ -473,4 +476,10 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   color: var(--bs-white);
 }
 
+.form-wrapper{
+    max-width:1100px;      /*  ajuste a gusto: 960-1200 */
+    margin-left:auto;      /*  centra */
+    margin-right:auto;
+    padding-inline:1rem;   /*  respeta 16 px laterales */
+  }
   

@@ -123,9 +123,9 @@
                         $email = optional($pc)->email;
                     @endphp
                     <tr>
-                        {{-- ID con enlace al show --}}
+                        {{-- ID con enlace al view --}}
                         <td>
-                            <a href="{{ route('clientes.show', $c->id_cliente) }}"
+                            <a href="{{ route('clientes.view', $c->id_cliente) }}"
                                 class="fw-semibold text-decoration-underline">
                                 {{ $c->id_cliente }}
                             </a>
