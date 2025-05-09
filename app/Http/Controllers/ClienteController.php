@@ -51,11 +51,30 @@ class ClienteController extends Controller
     }
 
     public function view($id)
-{
-    $cliente = Cliente::with(['contactos', 'razonesSociales', 'direccionesEntrega', 'notas'])
+    {
+        $cliente = Cliente::with([
+            'contacto_predet',
+            'razon_social_predet',
+            'contacto_entrega_predet',
+            'contacto_entrega_predet.direccion_entrega',
+            'razon_social_predet.direccion_facturacion',
+            'direccionesEntrega',
+            'notas',
+            'razon_social_predet.uso_cfdi',
+            'razon_social_predet.metodo_pago',
+            'razon_social_predet.forma_pago',
+            'razon_social_predet.regimen_fiscal',
+            'razon_social_predet.direccion_facturacion',
+            // ❗ Quitamos este bloque:
+            // 'contacto_entrega_predet.direccion_entrega.ciudad',
+            // 'contacto_entrega_predet.direccion_entrega.estado',
+            // 'contacto_entrega_predet.direccion_entrega.pais',
+        ])
         ->findOrFail($id);
-    return view('clientes.view', compact('cliente'));
-}
+        
+
+        return view('clientes.view', compact('cliente'));
+    }
 
 
     public function update(Request $request, $id)

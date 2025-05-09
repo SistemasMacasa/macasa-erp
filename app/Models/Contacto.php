@@ -49,8 +49,10 @@ class Contacto extends Model
     {
         return trim("{$this->nombre} {$this->apellido_p} {$this->apellido_m}");
     }
-    public function direccionEntrega()
+    public function direccion_entrega()
     {
-        return $this->belongsTo(Direccion::class, 'id_direccion_entrega', 'id_direccion');
+        return $this->belongsTo(Direccion::class, 'id_direccion_entrega', 'id_direccion')
+                    ->with(['ciudad', 'estado', 'pais']);
     }
+
 }

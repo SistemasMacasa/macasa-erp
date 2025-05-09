@@ -37,6 +37,13 @@ class Cliente extends Model
     {
         return $this->hasMany(Contacto::class, 'id_cliente', 'id_cliente');
     }
+    /** El contacto principal (el “predeterminado”) */
+    public function contacto_predet()
+    {
+        return $this->hasOne(Contacto::class, 'id_cliente', 'id_cliente')
+                    ->where('predeterminado', 1);
+    }
+
     /** El primer contacto (el “principal”) */
     public function primerContacto()
     {
@@ -48,11 +55,29 @@ class Cliente extends Model
         return $this->hasMany(RazonSocial::class, 'id_cliente', 'id_cliente');
     }
 
+    public function razon_social_predet()
+    {
+        return $this->hasOne(RazonSocial::class, 'id_cliente', 'id_cliente')
+                    ->where('predeterminado', 1);
+    }
+
+
     public function direccionesEntrega()
     {
         return $this->hasMany(Direccion::class, 'id_cliente', 'id_cliente');
     }
 
+    public function contacto_entrega_predet()
+    {
+        return $this->hasOne(Contacto::class, 'id_cliente', 'id_cliente')
+                    ->where('predeterminado', 1)
+                    ->whereNotNull('id_direccion_entrega');
+    }
 
+
+    public function notas()
+    {
+        return $this->hasMany(Nota::class, 'id_cliente', 'id_cliente')->orderBy('fecha_registro', 'desc');
+    }
 
 }

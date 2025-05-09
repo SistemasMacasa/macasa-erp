@@ -483,3 +483,6 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
     padding-inline:1rem;   /*  respeta 16 px laterales */
   }
   
+
+  .btn.agregar-tel-ext,
+.btn.agregar-celular { min-height:38px; }

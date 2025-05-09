@@ -49,5 +49,20 @@ class Direccion extends Model
     {
         return $this->hasMany(Contacto::class, 'id_direccion_entrega', 'id_direccion');
     }
+    public function ciudad()
+    {
+        return $this->belongsTo(Ciudad::class, 'id_ciudad', 'id_ciudad');
+    }
+
+    public function estado()
+    {
+        return $this->belongsTo(Estado::class, 'id_estado', 'id_estado');
+    }
+
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'id_pais', 'id_pais');
+    }
+
 }
 

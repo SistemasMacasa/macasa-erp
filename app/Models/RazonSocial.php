@@ -21,4 +21,31 @@ class RazonSocial extends Model
         'dias_credito',
         'saldo',
     ];
+
+    public function direccion_facturacion()
+    {
+        return $this->belongsTo(Direccion::class, 'id_direccion_facturacion', 'id_direccion');
+    }
+
+    public function uso_cfdi()
+    {
+        return $this->belongsTo(UsoCfdi::class, 'id_uso_cfdi', 'id_uso_cfdi');
+    }
+
+    public function metodo_pago()
+    {
+        return $this->belongsTo(MetodoPago::class, 'id_metodo_pago', 'id_metodo_pago');
+    }
+
+    public function forma_pago()
+    {
+        return $this->belongsTo(FormaPago::class, 'id_forma_pago', 'id_forma_pago');
+    }
+
+    public function regimen_fiscal()
+    {
+        return $this->belongsTo(RegimenFiscal::class, 'id_regimen_fiscal', 'id_regimen_fiscal');
+    }
+
+
 }
