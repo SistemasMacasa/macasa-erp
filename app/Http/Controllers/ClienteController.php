@@ -159,7 +159,6 @@ class ClienteController extends Controller
                             'email'      => $contacto['email']      ?? null,
                             'puesto'     => $contacto['puesto']     ?? null,
                             'genero'     => $contacto['genero']     ?? null,
-                    
                             // teléfono/ext celular limpias
                             'telefono1'  => $contacto['telefono1'],  'ext1' => $contacto['ext1'],
                             'telefono2'  => $contacto['telefono2'],  'ext2' => $contacto['ext2'],
@@ -171,6 +170,7 @@ class ClienteController extends Controller
                             'celular3'   => $contacto['celular3'],
                             'celular4'   => $contacto['celular4'],
                             'celular5'   => $contacto['celular5'],
+                            'predeterminado' => 1, // contacto predeterminado
                         ]);
                     
             }

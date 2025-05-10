@@ -102,6 +102,7 @@
                                     </select>
                                 </div>
                             </div>
+                            <hr>
 
                             {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
                             <h6 class="fw-semibold mb-3">Contacto principal</h6>
@@ -141,45 +142,42 @@
                                     </select>
                                 </div>
 
-                                {{-- Teléfono / Extensión base --}}
-                                <div class="col-sm-4">
-                                <label class="form-label">Teléfono&nbsp;1</label>
-                                <input name="contacto[0][telefono1]" class="form-control phone-field" maxlength="14">
-                                </div>
-                                <div class="col-sm-2">
-                                <label class="form-label">Ext.</label>
-                                <input name="contacto[0][ext1]" class="form-control" maxlength="7">
-                                </div>
-                                <div class="col-sm-1 d-flex align-items-end">
-                                <button type="button" class="btn btn-outline-secondary w-100 agregar-tel-ext">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                                </div>
+                                <hr class="mt-3">
 
-                                {{-- Celular base --}}
-                                <div class="col-sm-4">
-                                <label class="form-label">Teléfono Celular&nbsp;1</label>
-                                <input name="contacto[0][celular1]" class="form-control phone-field" maxlength="14">
-                                </div>
-                                <div class="col-sm-1 d-flex align-items-end">
-                                <button type="button" class="btn btn-outline-secondary w-100 agregar-celular">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                                </div>
-
-                                <!-- NUEVOS contenedores -->
-                                <div class="row g-2 w-100 mt-3"><!-- g-2 para igual separación -->
-                                    <div class="col-md-6">
-                                        <div class="telefonos-tel-ext"><!-- Teléfono + Ext 2-5 --></div>
+                                {{-- Contacto Principal ─ Teléfonos --}}
+                                <div class="container">
+                                <div class="row">
+                                    {{-- Teléfonos fijos --}}
+                                    <div class="col-md-6" id="telefonos-col">
+                                    {{-- Fila inicial --}}
+                                    <div class="mb-2 telefono-item">
+                                        <label>Teléfono 1</label>
+                                        <div class="input-group">
+                                        <input type="text" name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
+                                        <input type="text" name="contacto[0][ext1]"      class="form-control" placeholder="Ext." maxlength="7">
+                                        <button type="button" class="btn btn-outline-primary agregar-telefono">+</button>
+                                        </div>
+                                    </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <div class="celulares-extra"><!-- Celular 2-5 --></div>
+                                    {{-- Celulares --}}
+                                    <div class="col-md-6" id="celulares-col">
+                                    {{-- Fila inicial --}}
+                                    <div class="mb-2 celular-item">
+                                        <label>Teléfono Celular 1</label>
+                                        <div class="input-group">
+                                        <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
+                                        <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
+                                </div>
 
-
-
+                                {{-- Mensajes de límite --}}
+                                <style>
+                                #telefonos-col small, #celulares-col small { display: block; margin-top: .25rem; }
+                                </style>
                             </div>
                         </div> <!-- /card-body -->
 
@@ -359,118 +357,137 @@
         </div>
     @endif
 
-    {{-- phones.blade snippet v2 --}}
-    
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+ 
 
-    /* ── Hace funcionar los botones [+] en clientes.create ───────────────────────────── */
-        /* Teléfono + Ext (fila = 12 col) */
-        const tplTel = (idx,n) => `
-        <div class="row g-2 telefono-extra-row">
-            <div class="col-sm-8">
-                <label class="form-label">Teléfono ${n}</label>
-                <input name="contacto[${idx}][telefono${n}]"
-                    class="form-control phone-field" maxlength="14">
-            </div>
-            <div class="col-sm-3">
-                <label class="form-label">Ext.</label>
-                <input name="contacto[${idx}][ext${n}]"
-                    class="form-control" maxlength="7">
-            </div>
-            <div class="col-sm-1 d-flex align-items-end">
-                <button type="button" class="btn btn-link text-danger p-0 quitar-fila"
-                        aria-label="Eliminar Teléfono ${n}">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </div>
-        </div>`;
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            const MAX = 5;
+            const telCol = document.getElementById('telefonos-col');
+            const celCol = document.getElementById('celulares-col');
 
-        /* Celular (fila = 12 col) */
-        const tplCel = (idx,n) => `
-        <div class="row g-2 celular-extra-row">
-            <div class="col-sm-8">
-                <label class="form-label">Teléfono Celular ${n}</label>
-                <input name="contacto[${idx}][celular${n}]"
-                    class="form-control phone-field" maxlength="14">
-            </div>
-            <div class="col-sm-1 d-flex align-items-end">
-                <button type="button" class="btn btn-link text-danger p-0 quitar-fila"
-                        aria-label="Eliminar Celular ${n}">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </div>
-        </div>`;
-
-
-    /* ── RESTO DEL SCRIPT (botones + / trash, validaciones, etc.) ───────── */
-    const MAX = 5;
-
-    document.addEventListener('click', e => {
-        /* botón para Teléfono+Ext */
-        if (e.target.closest('.agregar-tel-ext')) {
-            const block = e.target.closest('.contacto-block');
-            const idx   = block.dataset.index;
-            const wrap  = block.querySelector('.telefonos-tel-ext');
-            const filas = wrap.querySelectorAll('.telefono-extra-row').length;
-
-            if (filas >= MAX-1) return;      // ya hay 2-5
-            wrap.insertAdjacentHTML('beforeend', tplTel(idx, filas+2));
-            return;
-        }
-
-        /* botón para Celular */
-        if (e.target.closest('.agregar-celular')) {
-            const block = e.target.closest('.contacto-block');
-            const idx   = block.dataset.index;
-            const wrap  = block.querySelector('.celulares-extra');
-            const filas = wrap.querySelectorAll('.celular-extra-row').length;
-
-            if (filas >= MAX-1) return;      // ya hay 2-5
-            wrap.insertAdjacentHTML('beforeend', tplCel(idx, filas+2));
-            return;
-        }
-
-        /* papelera */
-        if (e.target.closest('.quitar-fila')) {
-            e.target.closest('.row')?.remove();
-        }
-    });
-
-});
-</script>
-
-
-
-    <script>
-        document.addEventListener('input', e => {
-            const input = e.target.closest('.phone-field');
-            if (!input) return;                        // Sólo teléfonos/celulares
-
-            /* ---- Normaliza --------------------------------------------------- */
-            let digits = input.value.replace(/\D/g,'');   // quita todo salvo dígitos
-            if (digits.length > 10) digits = digits.slice(0, 10);
-
-            /* ---- Formatea ---------------------------------------------------- */
-            let pretty = digits;
-            if (digits.length === 10) {
-                if (digits.startsWith('55')) {          // Celular CDMX
-                    pretty = digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1)-$2-$3');
-                } else {                               // Fijo nacional 3-3-4
-                    pretty = digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1)-$2-$3');
+            // Reindexa filas después de añadir/borrar
+            function reindex(tipo) {
+                const selector = tipo === 'telefono' ? '.telefono-item' : '.celular-item';
+                document.querySelectorAll(selector).forEach((item, i) => {
+                const idx = i + 1;
+                const label = item.querySelector('label');
+                if (tipo === 'telefono') {
+                    const [inpTel, inpExt] = item.querySelectorAll('input');
+                    inpTel.name = `contacto[0][telefono${idx}]`;
+                    inpExt.name = `contacto[0][ext${idx}]`;
+                    label.textContent = `Teléfono ${idx}`;
+                } else {
+                    const inpCel = item.querySelector('input');
+                    inpCel.name = `contacto[0][celular${idx}]`;
+                    label.textContent = `Teléfono Celular ${idx}`;
                 }
-            } else if (digits.length >= 7) {            // Mientras escriben (parcial)
-                pretty = digits.replace(/(\d{3})(\d{0,3})(\d{0,4})/,
-                                        (_,a,b,c)=> a + (b?'-'+b:'') + (c?'-'+c:''));
+                });
             }
 
-            input.value = pretty;
-            /* ---- Sincroniza atributo "maxlength" para evitar +10 dígitos ------ */
-            input.maxLength = pretty.startsWith('(55)') ? 14 : 15; // ()---------
+            // Muestra un pequeño aviso que desaparece
+            function showMsg(msj, col) {
+                const id = col + '-msg';
+                let box = document.getElementById(id);
+                if (!box) {
+                box = document.createElement('small');
+                box.id = id;
+                box.className = 'text-danger';
+                (col === 'telefonos' ? telCol : celCol).appendChild(box);
+                }
+                box.textContent = msj;
+                setTimeout(() => box.textContent = '', 3000);
+            }
 
-            /* ---- HTML5 validity (pattern) ------------------------------------ */
-            input.setCustomValidity(digits.length === 10 ? '' : 'Número incompleto');
-        });
-    </script>
+            // Añadir teléfono
+            document.querySelector('.agregar-telefono').addEventListener('click', function() {
+                if (telCol.querySelectorAll('.telefono-item').length >= MAX) {
+                return showMsg('Solo puedes agregar hasta 5 teléfonos.', 'telefonos');
+                }
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mb-2 telefono-item';
+                wrapper.innerHTML = `
+                <label></label>
+                <div class="input-group">
+                    <input type="text" class="form-control phone-field" placeholder="Teléfono">
+                    <input type="text" class="form-control" placeholder="Ext." maxlength="7">
+                    <button type="button" class="btn btn-outline-danger eliminar-item">X</button>
+                </div>
+                `;
+                telCol.appendChild(wrapper);
+                reindex('telefono');
+            });
+
+            // Añadir celular
+            document.querySelector('.agregar-celular').addEventListener('click', function() {
+                if (celCol.querySelectorAll('.celular-item').length >= MAX) {
+                return showMsg('Solo puedes agregar hasta 5 celulares.', 'celulares');
+                }
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mb-2 celular-item';
+                wrapper.innerHTML = `
+                <label></label>
+                <div class="input-group">
+                    <input type="text" class="form-control phone-field" placeholder="Celular">
+                    <button type="button" class="btn btn-outline-danger eliminar-item">X</button>
+                </div>
+                `;
+                celCol.appendChild(wrapper);
+                reindex('celular');
+            });
+
+            // Borrar elemento y reindexar
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('eliminar-item')) {
+                const item = e.target.closest('.telefono-item, .celular-item');
+                const parentId = item.parentElement.id;
+                item.remove();
+                if (parentId === 'telefonos-col')    reindex('telefono');
+                else if (parentId === 'celulares-col') reindex('celular');
+                }
+            });
+
+            // Reindex inicial (por si hay valores viejos)
+            reindex('telefono');
+            reindex('celular');
+            });
+        </script>
+
+
+    
+        <script>
+            document.addEventListener('input', e => {
+                // Solo actuamos sobre inputs con clase .phone-field
+                const input = e.target.closest('.phone-field');
+                if (!input) return;
+
+                /* ---- Normaliza --------------------------------------------------- */
+                let digits = input.value.replace(/\D/g, '');   // elimina todo salvo dígitos
+                if (digits.length > 10) digits = digits.slice(0, 10);
+
+                /* ---- Formatea ---------------------------------------------------- */
+                let pretty = digits;
+                if (digits.length === 10) {
+                    if (digits.startsWith('55')) {  // Celular CDMX
+                        pretty = digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1)-$2-$3');
+                    } else {                         // Fijo nacional 3-3-4
+                        pretty = digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1)-$2-$3');
+                    }
+                } else if (digits.length >= 7) {    // Formateo parcial mientras escriben
+                    pretty = digits.replace(
+                        /(\d{3})(\d{0,3})(\d{0,4})/,
+                        (_, a, b, c) => a + (b ? '-' + b : '') + (c ? '-' + c : '')
+                    );
+                }
+
+                input.value = pretty;
+
+                /* ---- Ajusta maxlength para evitar >10 dígitos -------------- */
+                input.maxLength = pretty.startsWith('(55)') ? 14 : 15;
+
+                /* ---- HTML5 validity (pattern) ----------------------------- */
+                input.setCustomValidity(digits.length === 10 ? '' : 'Número incompleto');
+            });
+        </script>
+
 
 @endsection

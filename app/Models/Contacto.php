@@ -27,6 +27,8 @@ class Contacto extends Model
         'apellido_p',
         'apellido_m',
         'email',
+        'puesto',
+        'genero',
         'telefono1',
         'ext1',
         'telefono2',
@@ -37,7 +39,7 @@ class Contacto extends Model
         'ext4',
         'telefono5',
         'ext5',
-        'puesto',
+        'predeterminado',
     ];
 
     public function cliente()
