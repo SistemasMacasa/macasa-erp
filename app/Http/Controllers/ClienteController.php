@@ -106,7 +106,9 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->input('tipo') == 'fisica') 
+        \Log::info('Tipo recibido:', ['tipo' => $request->input('tipo')]);
+
+        if ($request->input('sector') == 'persona') 
         { // SI ES FISICA
             $rules = [
                 /* === Cuenta Personal === */
@@ -114,9 +116,16 @@ class ClienteController extends Controller
                 'apellido_p'    => 'required|string|max:27',
                 'apellido_m'    => 'nullable|string|max:27',
                 'id_vendedor'   => 'required|integer',
+
+                'ciclo_venta'   => 'nullable|string|max:100',
+                'estatus'       => 'required|string|max:100',
+                'tipo'          => 'required|string|max:100',
+                'sector'        => 'nullable|string|max:100',
             
                 // Datos personales …
-                'contacto.0.email'       => 'nullable|email|max:120',
+                'email'                  => 'nullable|email|max:120',
+                'segmento'               => 'nullable|string|max:100',
+                'genero'                 => 'nullable|string|max:17',
                 'contacto.0.telefono*'   => 'nullable|digits:10',
                 'contacto.0.celular*'    => 'nullable|digits:10',
                 'contacto.0.ext*'        => 'nullable|digits_between:1,6',
@@ -128,8 +137,8 @@ class ClienteController extends Controller
                  // GUARDAR CUENTA EJE PERSONAL
                  $cliente = Cliente::create([
                     'nombre'      => $request->input('nombre'),
-                    'apellido_p'=> $request->input('apellido_p'),
-                    'apellido_m'=> $request->input('apellido_m'),
+                    'apellido_p'  => $request->input('apellido_p'),
+                    'apellido_m'  => $request->input('apellido_m'),
                     'ciclo_venta' => $request->input('ciclo_venta'),
                     'estatus'     => $request->input('estatus'),
                     'tipo'        => $request->input('tipo'),
@@ -152,26 +161,34 @@ class ClienteController extends Controller
                         }
                     
                         Contacto::create([
-                            'id_cliente' => $cliente->id_cliente,
-                            'nombre'     => $request->input('nombre'),
-                            'apellido_p' => $request->input('apellido_p') ?? null,
-                            'apellido_m' => $request->input('apellido_m') ?? null,
-                            'email'      => $contacto['email']      ?? null,
-                            'puesto'     => $contacto['puesto']     ?? null,
-                            'genero'     => $contacto['genero']     ?? null,
-                            // teléfono/ext celular limpias
-                            'telefono1'  => $contacto['telefono1'],  'ext1' => $contacto['ext1'],
-                            'telefono2'  => $contacto['telefono2'],  'ext2' => $contacto['ext2'],
-                            'telefono3'  => $contacto['telefono3'],  'ext3' => $contacto['ext3'],
-                            'telefono4'  => $contacto['telefono4'],  'ext4' => $contacto['ext4'],
-                            'telefono5'  => $contacto['telefono5'],  'ext5' => $contacto['ext5'],
-                            'celular1'   => $contacto['celular1'],   // …igual 1-5
-                            'celular2'   => $contacto['celular2'],
-                            'celular3'   => $contacto['celular3'],
-                            'celular4'   => $contacto['celular4'],
-                            'celular5'   => $contacto['celular5'],
-                            'predeterminado' => 1, // contacto predeterminado
+                            'id_cliente'  => $cliente->id_cliente,
+                            'nombre'      => $request->input('nombre'),
+                            'apellido_p'  => $request->input('apellido_p'),
+                            'apellido_m'  => $request->input('apellido_m'),
+                            'email'       => $request->input('email'),
+                            'genero'      => $request->input('genero'),
+                            'puesto'      => null, // o define si vendrá después
+                        
+                            'telefono1'   => $contacto['telefono1'] ?? null,
+                            'ext1'        => $contacto['ext1']      ?? null,
+                            'telefono2'   => $contacto['telefono2'] ?? null,
+                            'ext2'        => $contacto['ext2']      ?? null,
+                            'telefono3'   => $contacto['telefono3'] ?? null,
+                            'ext3'        => $contacto['ext3']      ?? null,
+                            'telefono4'   => $contacto['telefono4'] ?? null,
+                            'ext4'        => $contacto['ext4']      ?? null,
+                            'telefono5'   => $contacto['telefono5'] ?? null,
+                            'ext5'        => $contacto['ext5']      ?? null,
+                        
+                            'celular1'    => $contacto['celular1']  ?? null,
+                            'celular2'    => $contacto['celular2']  ?? null,
+                            'celular3'    => $contacto['celular3']  ?? null,
+                            'celular4'    => $contacto['celular4']  ?? null,
+                            'celular5'    => $contacto['celular5']  ?? null,
+                        
+                            'predeterminado' => 1,
                         ]);
+                        
                     
             }
             catch (Exception $e){
@@ -363,8 +380,15 @@ class ClienteController extends Controller
             }
         }
         // Redirigir a la lista
-        return redirect('clientes.index')->with('success', 'Cliente creado correctamente');
-    }
+        $total = Cliente::count();
+        $clientes = Cliente::paginate(25);
+        $porPagina = 25;
+        $ultimaPagina = ceil($total / $porPagina);
+
+
+        return redirect()->route('clientes.index', ['page' => $ultimaPagina])
+        ->with('success', 'Cliente creado correctamente');
+        }
 
 }
 

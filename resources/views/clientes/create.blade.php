@@ -146,32 +146,32 @@
 
                                 {{-- Contacto Principal ─ Teléfonos --}}
                                 <div class="container">
-                                <div class="row">
-                                    {{-- Teléfonos fijos --}}
-                                    <div class="col-md-6" id="telefonos-col">
-                                    {{-- Fila inicial --}}
-                                    <div class="mb-2 telefono-item">
-                                        <label>Teléfono 1</label>
-                                        <div class="input-group">
-                                        <input type="text" name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
-                                        <input type="text" name="contacto[0][ext1]"      class="form-control" placeholder="Ext." maxlength="7">
-                                        <button type="button" class="btn btn-outline-primary agregar-telefono">+</button>
+                                    <div class="row">
+                                        {{-- Teléfonos fijos --}}
+                                        <div class="col-md-6" id="telefonos-col">
+                                        {{-- Fila inicial --}}
+                                        <div class="mb-2 telefono-item">
+                                            <label>Teléfono 1</label>
+                                            <div class="input-group">
+                                            <input type="text" name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
+                                            <input type="text" name="contacto[0][ext1]"      class="form-control" placeholder="Ext." maxlength="7">
+                                            <button type="button" class="btn btn-outline-primary agregar-telefono">+</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    </div>
+                                        </div>
 
-                                    {{-- Celulares --}}
-                                    <div class="col-md-6" id="celulares-col">
-                                    {{-- Fila inicial --}}
-                                    <div class="mb-2 celular-item">
-                                        <label>Teléfono Celular 1</label>
-                                        <div class="input-group">
-                                        <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
-                                        <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                        {{-- Celulares --}}
+                                        <div class="col-md-6" id="celulares-col">
+                                        {{-- Fila inicial --}}
+                                        <div class="mb-2 celular-item">
+                                            <label>Teléfono Celular 1</label>
+                                            <div class="input-group">
+                                            <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
+                                            <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                            </div>
+                                        </div>
                                         </div>
                                     </div>
-                                    </div>
-                                </div>
                                 </div>
 
                                 {{-- Mensajes de límite --}}
@@ -294,8 +294,8 @@
 
                                 <!-- Correo Electrónico -->
                                 <div class="col-sm-4">
-                                    <label for="contacto[0][email]" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" name="contacto[0][email]" maxlength="120">
+                                    <label for="email" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" name="email" maxlength="120">
                                 </div>
 
                                 <div class="col-md-4">
@@ -312,8 +312,8 @@
 
                                 <!-- Género -->
                                 <div class="col-sm-4">
-                                    <label for="contacto[0][genero]" class="form-label">Género</label>
-                                    <select name="contacto[0][genero]" id="contacto[0][genero]" class="form-select">
+                                    <label for="genero" class="form-label">Género</label>
+                                    <select name="genero" id="genero" class="form-select">
                                         <option value="">-- Selecciona --</option>
                                         <option value="masculino">Masculino</option>
                                         <option value="femenino">Femenino</option>
@@ -321,31 +321,37 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Teléfono 1 -->
-                                <div class="col-sm-4">
-                                    <label for="contacto[0][telefono1]" class="form-label">Teléfono 1</label>
-                                    <input type="text" maxlength="14" class="form-control phone-field" name="contacto[0][telefono1]" title="Número de 10 dígitos"> 
-                                </div>
-                                <!-- Extensión -->
-                                <div class="col-sm-2">
-                                    <label for="contacto[0][ext1]" class="form-label">Ext.</label>
-                                    <input type="text" maxlength="7" class="form-control" name="contacto[0][ext1]">
-                                </div>
-                                <!-- Celular 1 -->
-                                <div class="col-sm-4">
-                                    <label class="form-label">Teléfono Celular 1</label>
-                                    <input type="text"  class="form-control phone-field" name="contacto[0][celular1]"
-                                            maxlength="14" title="Celular de 10 dígitos" id="celular">
-                                </div>
+                                <hr class="mt-3">
 
-                                <div class="col-sm-2 mt-4">
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm agregar-telefono">
-                                        <i class="fa fa-plus me-2"></i>Agregar teléfono
-                                    </button>
-                                </div>
+                                {{-- Contacto Principal ─ Teléfonos --}}
+                                <div class="container">
+                                    <div class="row">
+                                        {{-- Teléfonos fijos --}}
+                                        <div class="col-md-6" id="telefonos-col">
+                                            {{-- Fila inicial --}}
+                                            <div class="mb-2 telefono-item">
+                                                <label>Teléfono 1</label>
+                                                <div class="input-group">
+                                                <input type="text" name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
+                                                <input type="text" name="contacto[0][ext1]"      class="form-control" placeholder="Ext." maxlength="7">
+                                                <button type="button" class="btn btn-outline-primary agregar-telefono">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                <div class="telefonos-principal-extra"></div>
+                                        {{-- Celulares --}}
+                                        <div class="col-md-6" id="celulares-col">
+                                        {{-- Fila inicial --}}
+                                        <div class="mb-2 celular-item">
+                                            <label>Teléfono Celular 1</label>
+                                            <div class="input-group">
+                                            <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
+                                            <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                             </div>
 

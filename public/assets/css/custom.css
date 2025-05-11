@@ -486,3 +486,27 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 
   .btn.agregar-tel-ext,
 .btn.agregar-celular { min-height:38px; }
+/* src/resources/css/custom.css (o donde coloques tus ajustes) */
+.btn.agregar-tel-ext,
+.btn.agregar-celular,
+.btn.quitar-fila {
+  border-width: 1px;                               /* base */
+}
+
+/* hover / focus / active => todas iguales  */
+.btn.agregar-telefono:focus,
+.btn.agregar-telefono:active,
+.btn.agregar-celular:focus,
+.btn.agregar-celular:active,
+.btn.quitar-fila:hover,
+.btn.quitar-fila:focus,
+.btn.quitar-fila:active {
+  border-color: var(--bs-btn-border-color) !important;
+  color:        var(--bs-btn-border-color) !important;
+  background:   transparent !important;            /* opcional */
+}
+.btn.agregar-telefono:active,
+.btn.agregar-celular:active,
+.btn.quitar-fila:active {
+  background: rgba(0,0,0,.04) !important;
+}
