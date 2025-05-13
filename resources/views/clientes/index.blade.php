@@ -26,74 +26,179 @@
     </div>
 
     {{-- 🔎 Buscador --}}
-    <div class="input-group mb-3">
-        <span class="input-group-text bg-white"><i class="fa fa-search"></i></span>
-        <input type="text" id="buscador-clientes" class="form-control" placeholder="Buscar cliente por nombre, correo, ID…">
-    </div>
+    <form method="GET" action="{{ route('clientes.index') }}">
+        <div class="card mb-4">
+            <div class="card-header">Filtros</div>
+            <div class="card-body">
+                <div class="row gy-3">
+
+                    {{-- Búsqueda global --}}
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">Búsqueda</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa fa-search"></i></span>
+                            <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            class="form-control"
+                            placeholder="Cliente, email, ID…"
+                            value="{{ request('search') }}"
+                            >
+                        </div>
+                    </div>
+
+              
+                    {{-- Ejecutivos (multi-select con Bootstrap-Multiselect) --}}
+                    <div class="col-md-3">
+                        <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
+                        <select
+                            id="ejecutivos"
+                            name="ejecutivos[]"
+                            class="form-select"
+                            multiple="multiple"
+                        >
+                            @foreach($vendedores as $v)
+                            <option
+                                value="{{ $v->id_usuario }}"
+                                {{ in_array($v->id_usuario, request('ejecutivos', [])) ? 'selected' : '' }}
+                            >
+                                {{ $v->username }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
+
+
+                    {{-- Ciclo de venta --}}
+                    <div class="col-md-2">
+                        <label for="cycle" class="form-label">Ciclo de venta</label>
+                        <select name="cycle" id="cycle" class="form-select">
+                            <option value="">Todos</option>
+                            @foreach($ciclos as $ciclo)
+                            <option
+                                value="{{ $ciclo }}"
+                                {{ request('cycle') == $ciclo ? 'selected' : '' }}
+                            >{{ $ciclo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Ordenar por --}}
+                    <div class="col-md-2">
+                        <label for="order" class="form-label">Ordenar por</label>
+                        <select name="order" id="order" class="form-select">
+                            <option value="nombre"   {{ request('order','nombre') == 'nombre' ? 'selected':'' }}>Empresa</option>
+                            <option value="created_at"{{ request('order') == 'created_at' ? 'selected':'' }}>Fecha alta</option>
+                            {{-- otros campos… --}}
+                        </select>
+                    </div>
+
+                    {{-- Registros por página --}}
+                    <div class="col-md-1">
+                        <label for="perPage" class="form-label">Ver</label>
+                        <select name="perPage" id="perPage" class="form-select">
+                            @foreach([10,25,50,100] as $n)
+                            <option
+                                value="{{ $n }}"
+                                {{ request('perPage',25) == $n ? 'selected':'' }}
+                            >{{ $n }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Botón Buscar --}}
+                    <div class="col-md-12 text-end">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-search"></i> Buscar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
 
         {{-- ───────── Paginación ───────── --}}
-        @if($clientes->hasPages())
-    <div class="row align-items-center mb-4">
-        <div class="col-sm">
-        <p class="mb-0 text-muted small">
-            Mostrando {{ $clientes->firstItem() }} a {{ $clientes->lastItem() }}
-            de {{ $clientes->total() }} clientes
-        </p>
+    @if($clientes->hasPages())
+        <div class="row align-items-center mb-4">
+            <div class="col-sm">
+                <p class="mb-0 text-muted small">
+                    Mostrando {{ $clientes->firstItem() }} a {{ $clientes->lastItem() }}
+                    de {{ $clientes->total() }} clientes
+                </p>
+            </div>
+            <div class="col-sm-auto">
+                <nav aria-label="Paginación de clientes">
+                    <ul class="pagination pagination-rounded pagination-sm mb-0">
+                    
+                    {{-- ← Anterior (icon only) --}}
+                    @if($clientes->onFirstPage())
+                        <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                            <span class="visually-hidden">Anterior</span>
+                        </span>
+                        </li>
+                    @else
+                        <li class="page-item">
+                        <a class="page-link" href="{{ $clientes->previousPageUrl() }}" rel="prev"
+                            aria-label="Anterior">
+                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                            <span class="visually-hidden">Anterior</span>
+                        </a>
+                        </li>
+                    @endif
+
+                {{-- Páginas numéricas (current ±1) --}}
+                    @php
+                        $last = $clientes->lastPage();
+                        $curr = $clientes->currentPage();
+
+                        // rango “normal”: currentPage ±1
+                        $start = max(1, $curr - 1);
+                        $end   = min($last, $curr + 1);
+
+                        // si estamos en la página 1, forzamos [1,2,3]
+                        if ($curr === 1) {
+                            $end = min($last, 3);
+                        }
+                        // si estamos en la última, forzamos [last-2, last-1, last]
+                        if ($curr === $last) {
+                            $start = max(1, $last - 2);
+                        }
+                    @endphp
+
+                    @foreach ($clientes->getUrlRange($start, $end) as $page => $url)
+                        <li class="page-item {{ $page == $curr ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                        </li>
+                    @endforeach
+
+                    {{-- Siguiente → (icon only) --}}
+                    @if($clientes->hasMorePages())
+                        <li class="page-item">
+                        <a class="page-link" href="{{ $clientes->nextPageUrl() }}" rel="next"
+                            aria-label="Siguiente">
+                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                            <span class="visually-hidden">Siguiente</span>
+                        </a>
+                        </li>
+                    @else
+                        <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                            <span class="visually-hidden">Siguiente</span>
+                        </span>
+                        </li>
+                    @endif
+
+                    </ul>
+                </nav>
+            </div>
         </div>
-        <div class="col-sm-auto">
-        <nav aria-label="Paginación de clientes">
-            <ul class="pagination pagination-rounded pagination-sm mb-0">
-            
-            {{-- ← Anterior (icon only) --}}
-            @if($clientes->onFirstPage())
-                <li class="page-item disabled">
-                <span class="page-link">
-                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                    <span class="visually-hidden">Anterior</span>
-                </span>
-                </li>
-            @else
-                <li class="page-item">
-                <a class="page-link" href="{{ $clientes->previousPageUrl() }}" rel="prev"
-                    aria-label="Anterior">
-                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                    <span class="visually-hidden">Anterior</span>
-                </a>
-                </li>
-            @endif
-
-            {{-- Páginas numéricas (current ±1) --}}
-            @foreach ($clientes->getUrlRange(
-                max(1, $clientes->currentPage() - 1),
-                min($clientes->lastPage(), $clientes->currentPage() + 1)
-                ) as $page => $url)
-                <li class="page-item {{ $page == $clientes->currentPage() ? 'active' : '' }}">
-                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                </li>
-            @endforeach
-
-            {{-- Siguiente → (icon only) --}}
-            @if($clientes->hasMorePages())
-                <li class="page-item">
-                <a class="page-link" href="{{ $clientes->nextPageUrl() }}" rel="next"
-                    aria-label="Siguiente">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    <span class="visually-hidden">Siguiente</span>
-                </a>
-                </li>
-            @else
-                <li class="page-item disabled">
-                <span class="page-link">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    <span class="visually-hidden">Siguiente</span>
-                </span>
-                </li>
-            @endif
-
-            </ul>
-        </nav>
-        </div>
-    </div>
     @endif
     {{-- ────────── Fin paginación ────────── --}}
 
@@ -110,6 +215,7 @@
                     <th>Sector</th>
                     <th>Segmento</th>
                     <th>Ciclo</th>
+                    <th>Asignado a</th>
                     <th class="text-center">…</th>
                 </tr>
             </thead>
@@ -141,7 +247,7 @@
                             {{-- Teléfono clic-to-call --}}
                         <td>
                             @if($tel)
-                                <a href="mailto:{{ $tel }}">
+                                <a href="tel:{{ $tel }}">
                                     {{ $tel }}
                                 </a>
                             @else
@@ -168,6 +274,10 @@
                             </span>
                         </td>
 
+                        <td>
+                            {{ $c->vendedor->username ?? '—' }}
+                        </td>
+
                         {{-- Acciones compactas en dropdown --}}
                         <td class="text-center">
                             <div class="dropdown">
@@ -188,7 +298,7 @@
                                                 <i class="fa fa-trash me-2"></i> Borrar
                                             </button>
                                         </form>
-                                    </li>
+                          td        </li>
                                 </ul>
                             </div>
                         </td>
@@ -230,14 +340,30 @@
             @endif
 
             {{-- Páginas numéricas (current ±1) --}}
-            @foreach ($clientes->getUrlRange(
-                max(1, $clientes->currentPage() - 1),
-                min($clientes->lastPage(), $clientes->currentPage() + 1)
-                ) as $page => $url)
-                <li class="page-item {{ $page == $clientes->currentPage() ? 'active' : '' }}">
-                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+            @php
+                $last = $clientes->lastPage();
+                $curr = $clientes->currentPage();
+
+                // rango “normal”: currentPage ±1
+                $start = max(1, $curr - 1);
+                $end   = min($last, $curr + 1);
+
+                // si estamos en la página 1, forzamos [1,2,3]
+                if ($curr === 1) {
+                    $end = min($last, 3);
+                }
+                // si estamos en la última, forzamos [last-2, last-1, last]
+                if ($curr === $last) {
+                    $start = max(1, $last - 2);
+                }
+            @endphp
+
+            @foreach ($clientes->getUrlRange($start, $end) as $page => $url)
+                <li class="page-item {{ $page == $curr ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                 </li>
             @endforeach
+
 
             {{-- Siguiente → (icon only) --}}
             @if($clientes->hasMorePages())
@@ -264,8 +390,8 @@
     @endif
     {{-- ────────── Fin paginación ────────── --}}
 
-    {{-- 🗂️ Modal de cliente --}}
 
+   
 
 
 @endsection

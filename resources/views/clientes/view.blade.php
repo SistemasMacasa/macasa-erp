@@ -33,94 +33,122 @@
         </a>
     </div>
 
-<div class="table-responsive card mb-4">
-    <div class="card-header">
-        Datos de contacto
+<div class="row">
+    <div class="col-md-6 col-xs-12 table-responsive card mb-4">
+        <div class="card-header">
+            Datos de la Cuenta
+        </div>
+        <div class="card-body">
+            <label><strong>Tipo de cuenta:</strong></label>
+            <input type="text" name="tipo_cuenta" value="{{ $cliente->tipo }}" class="form-control mb-2">
+
+            <label><strong>Estatus:</strong></label>
+            <input type="text" name="estatus" value="{{ $cliente->estatus }}" class="form-control mb-2">
+
+            <label><strong>Ciclo de venta:</strong></label>
+            <input type="text" name="ciclo_venta" value="{{ $cliente->ciclo_venta }}" class="form-control mb-2">
+
+            <label><strong>Sector:</strong></label>
+            <input type="text" name="sector" value="{{ $cliente->sector }}" class="form-control mb-2">
+
+            <label><strong>Segmento:</strong></label>
+            <input type="text" name="segmento" value="{{ $cliente->segmento }}" class="form-control mb-2">
+
+            <label><strong>Nombre de la cuenta:</strong></label>
+            <input type="text" name="nombre_cuenta" value="{{ $cliente->apellido_p && $cliente->apellido_m ? $cliente->nombre . ' ' . $cliente->apellido_p . ' ' . $cliente->apellido_m : $cliente->nombre }}" class="form-control mb-2">
+
+            <label><strong>Asignado a:</strong></label>
+            <input type="text" name="asignado_a" value="{{ optional($cliente->vendedor)->name }}" class="form-control mb-2">
+
+            <div class="card-header">
+            Datos de la Cuenta
+            </div>
+
+            <label><strong>Nombre:</strong></label>
+            <input type="text" name="contacto_nombre" value="{{ $cliente->contacto_predet->nombre }}" class="form-control mb-2">
+
+            <label><strong>Primer Apellido:</strong></label>
+            <input type="text" name="contacto_apellido_p" value="{{ $cliente->contacto_predet->apellido_p }}" class="form-control mb-2">
+
+            <label><strong>Segundo Apellido:</strong></label>
+            <input type="text" name="contacto_apellido_m" value="{{ $cliente->contacto_predet->apellido_m }}" class="form-control mb-2">
+
+            <label><strong>Correo:</strong></label>
+            <input type="email" name="contacto_email" value="{{ $cliente->contacto_predet->email }}" class="form-control mb-2">
+
+            <label><strong>Puesto:</strong></label>
+            <input type="text" name="contacto_puesto" value="{{ $cliente->contacto_predet->puesto }}" class="form-control mb-2">
+
+            <label><strong>Género:</strong></label>
+            <input type="text" name="contacto_genero" value="{{ $cliente->contacto_predet->genero }}" class="form-control mb-2">
+
+            @for($i = 1; $i <= 5; $i++)
+            <label><strong>Teléfono {{ $i }}:</strong></label>
+            <input type="text" name="telefono{{ $i }}" value="{{ $cliente->contacto_predet->{'telefono'.$i} }}" class="form-control mb-2">
+
+            <label><strong>Extensión {{ $i }}:</strong></label>
+            <input type="text" name="extension{{ $i }}" value="{{ $cliente->contacto_predet->{'ext'.$i} }}" class="form-control mb-2">
+
+            <label><strong>Celular {{ $i }}:</strong></label>
+            <input type="text" name="celular{{ $i }}" value="{{ $cliente->contacto_predet->{'celular'.$i} }}" class="form-control mb-2">
+            @endfor
+        </div>
     </div>
-    <div class="card-body">
-        <p><strong>Tipo de cuenta:</strong> {{ $cliente->tipo_cuenta }}</p>
-        <p><strong>Estatus:</strong> {{ $cliente->estatus }}</p>
-        <p><strong>Ciclo de venta:</strong> {{ $cliente->ciclo_venta }}</p>
-        <p><strong>Sector:</strong> {{ $cliente->sector }}</p>
-        <p><strong>Segmento:</strong> {{ $cliente->segmento }}</p>
-        <p><strong>Nombre de la cuenta:</strong> 
-            @if($cliente->apellido_p && $cliente->apellido_m)
-                {{ $cliente->nombre }} {{ $cliente->apellido_p }} {{ $cliente->apellido_m }}
+
+    <div class="col-md-6 col-xs-12 table-responsive card mb-4">
+        <div class="card-header">
+            Datos de facturación
+        </div>
+        <div class="card-body">
+            @if($cliente->razon_social_predet && $cliente->razon_social_predet->direccion_facturacion)
+                <p><strong>Razón Social:</strong> {{ $cliente->razon_social_predet->nombre }}</p>
+                <p><strong>RFC:</strong> {{ $cliente->razon_social_predet->RFC }}</p>
+                <p><strong>Dirección:</strong>
+                    {{ $cliente->razon_social_predet->direccion_facturacion->calle }}
+                    {{ $cliente->razon_social_predet->direccion_facturacion->num_ext }}
+                    {{ $cliente->razon_social_predet->direccion_facturacion->num_int }},
+                    {{ $cliente->razon_social_predet->direccion_facturacion->colonia }},
+                    C.P. {{ $cliente->razon_social_predet->direccion_facturacion->cp }},
+                    {{ $cliente->razon_social_predet->direccion_facturacion->ciudad->nombre }},
+                    {{ $cliente->razon_social_predet->direccion_facturacion->estado->nombre }},
+                    {{ $cliente->razon_social_predet->direccion_facturacion->pais->nombre }},
+                </p>
+                <p><strong>Uso CFDI:</strong> {{ $cliente->razon_social_predet->uso_cfdi->nombre ?? '—' }}</p>
+                <p><strong>Método de pago:</strong> {{ $cliente->razon_social_predet->metodo_pago->nombre ?? '—' }}</p>
+                <p><strong>Forma de pago:</strong> {{ $cliente->razon_social_predet->forma_pago->nombre ?? '—' }}</p>
+                <p><strong>Régimen fiscal:</strong> {{ $cliente->razon_social_predet->regimen_fiscal->nombre ?? '—' }}</p>
+                <hr>
             @else
-                {{ $cliente->nombre }}
+                <p>No hay datos de facturación registrados.</p>
             @endif
-        </p>
-        <p><strong>Asignado a:</strong> {{ optional($cliente->vendedor)->name }}</p>
+        </div>
 
-        <hr>
-        <span class="fw-bold">Datos de contacto</span>
-        <p><strong>Nombre:</strong> {{ $cliente->contacto_predet->nombre }}</p>
-        <p><strong>Apellido Paterno:</strong> {{ $cliente->contacto_predet->apellido_p }}</p>
-        <p><strong>Apellido Materno:</strong> {{ $cliente->contacto_predet->apellido_m }}</p>
-        <p><strong>Correo:</strong> {{ $cliente->contacto_predet->email }}</p>
-        <p><strong>Puesto:</strong> {{ $cliente->contacto_predet->puesto }}</p>
-        <p><strong>Género:</strong> {{ $cliente->contacto_predet->genero }}</p>
+            <div class="card-header">Datos de entrega</div>
+            <div class="card-body">
+            @if($cliente->contacto_entrega_predet && $cliente->contacto_entrega_predet->direccion_entrega)
+                <p><strong>Contacto:</strong> {{ $cliente->contacto_entrega_predet->nombre }}</p>
+                <p><strong>Teléfono:</strong> {{ $cliente->contacto_entrega_predet->telefono1 }}</p>
+                <p><strong>Dirección:</strong>
+                    {{ $cliente->contacto_entrega_predet->direccion_entrega->calle }}
+                    {{ $cliente->contacto_entrega_predet->direccion_entrega->num_ext }}
+                    {{ $cliente->contacto_entrega_predet->direccion_entrega->num_int }},
+                    {{ $cliente->contacto_entrega_predet->direccion_entrega->colonia }},
+                    C.P. {{ $cliente->contacto_entrega_predet->direccion_entrega->cp }},
+                    {{ $cliente->contacto_entrega_predet->direccion_entrega->ciudad->nombre ?? '—' }},
+                    {{ $cliente->contacto_entrega_predet->direccion_entrega->estado->nombre ?? '—' }},
+                    {{ $cliente->contacto_entrega_predet->direccion_entrega->pais->nombre ?? '—' }}
+                </p>
 
-        @for($i = 1; $i <= 5; $i++)
-            <p><strong>Teléfono {{ $i }}:</strong> {{ $cliente->contacto_predet->{'telefono'.$i} }}</p>
-            <p><strong>Extensión {{ $i }}:</strong> {{ $cliente->contacto_predet->{'ext'.$i} }}</p>
-            <p><strong>Celular {{ $i }}:</strong> {{ $cliente->contacto_predet->{'celular'.$i} }}</p>
-        @endfor
+            @else
+                <p>No hay datos de entrega predeterminados.</p>
+            @endif
+
+            </div>
     </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-header">
-        Datos de facturación
-    </div>
-    <div class="card-body">
-        @if($cliente->razon_social_predet && $cliente->razon_social_predet->direccion_facturacion)
-            <p><strong>Razón Social:</strong> {{ $cliente->razon_social_predet->nombre }}</p>
-            <p><strong>RFC:</strong> {{ $cliente->razon_social_predet->RFC }}</p>
-            <p><strong>Dirección:</strong>
-                {{ $cliente->razon_social_predet->direccion_facturacion->calle }}
-                {{ $cliente->razon_social_predet->direccion_facturacion->num_ext }}
-                {{ $cliente->razon_social_predet->direccion_facturacion->num_int }},
-                {{ $cliente->razon_social_predet->direccion_facturacion->colonia }},
-                C.P. {{ $cliente->razon_social_predet->direccion_facturacion->cp }},
-                {{ $cliente->razon_social_predet->direccion_facturacion->ciudad->nombre }},
-                {{ $cliente->razon_social_predet->direccion_facturacion->estado->nombre }},
-                {{ $cliente->razon_social_predet->direccion_facturacion->pais->nombre }},
-            </p>
-            <p><strong>Uso CFDI:</strong> {{ $cliente->razon_social_predet->uso_cfdi->nombre ?? '—' }}</p>
-            <p><strong>Método de pago:</strong> {{ $cliente->razon_social_predet->metodo_pago->nombre ?? '—' }}</p>
-            <p><strong>Forma de pago:</strong> {{ $cliente->razon_social_predet->forma_pago->nombre ?? '—' }}</p>
-            <p><strong>Régimen fiscal:</strong> {{ $cliente->razon_social_predet->regimen_fiscal->nombre ?? '—' }}</p>
-            <hr>
-        @else
-            <p>No hay datos de facturación registrados.</p>
-        @endif
-    </div>
-</div>
 
-<div class="card mb-4">
-    <div class="card-header">Datos de entrega</div>
-    <div class="card-body">
-    @if($cliente->contacto_entrega_predet && $cliente->contacto_entrega_predet->direccion_entrega)
-        <p><strong>Contacto:</strong> {{ $cliente->contacto_entrega_predet->nombre }}</p>
-        <p><strong>Teléfono:</strong> {{ $cliente->contacto_entrega_predet->telefono1 }}</p>
-        <p><strong>Dirección:</strong>
-            {{ $cliente->contacto_entrega_predet->direccion_entrega->calle }}
-            {{ $cliente->contacto_entrega_predet->direccion_entrega->num_ext }}
-            {{ $cliente->contacto_entrega_predet->direccion_entrega->num_int }},
-            {{ $cliente->contacto_entrega_predet->direccion_entrega->colonia }},
-            C.P. {{ $cliente->contacto_entrega_predet->direccion_entrega->cp }},
-            {{ $cliente->contacto_entrega_predet->direccion_entrega->ciudad->nombre ?? '—' }},
-            {{ $cliente->contacto_entrega_predet->direccion_entrega->estado->nombre ?? '—' }},
-            {{ $cliente->contacto_entrega_predet->direccion_entrega->pais->nombre ?? '—' }}
-        </p>
-
-    @else
-        <p>No hay datos de entrega predeterminados.</p>
-    @endif
-
-    </div>
-</div>
+    
 
 
 @endsection

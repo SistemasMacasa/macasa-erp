@@ -16,13 +16,54 @@ use App\Models\RegimenFiscal;
 
 class ClienteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $clientes = Cliente::with(['primerContacto'])
-            ->paginate(25);
+        // 1) Preparo la consulta base
+        $query = Cliente::with(['primerContacto', 'vendedor']);
 
-        return view('clientes.index', compact('clientes'));
+        // 2) Filtro de búsqueda global
+        if ($term = $request->input('search')) {
+            $query->where(function($q) use($term) {
+                $q->where('nombre', 'like', "%{$term}%")
+                ->orWhere('id_cliente', 'like', "%{$term}%")
+                // si quieres buscar en contacto:
+                ->orWhereHas('primerContacto', function($q2) use($term) {
+                    $q2->where('telefono1','like',"%{$term}%");
+                });
+            });
+        }
+
+        // 3) Filtro de ejecutivos
+        if ($ejecutivos = $request->input('ejecutivos')) {
+            $query->whereIn('id_vendedor', (array) $ejecutivos);
+        }
+
+        // 4) Filtro de ciclo de venta
+        if ($cycle = $request->input('cycle')) {
+            $query->where('ciclo_venta', $cycle);
+        }
+
+        // 5) Ordenamiento
+        $order    = $request->input('order', 'id_cliente');
+        $direction= $request->input('direction','asc');
+        $query->orderBy($order, $direction);
+
+        // 6) Paginación dinámica
+        $perPage = $request->input('perPage', 25);
+        $clientes = $query
+            ->paginate($perPage)
+            ->appends($request->all()); // para conservar filtros en links
+
+        // 7) Paso datos extra para llenar selects
+        $vendedores = Usuario::whereNull('id_cliente')->get(); // usuarios internos
+        $ciclos    = Cliente::select('ciclo_venta')
+            ->distinct()
+            ->orderBy('ciclo_venta')
+            ->pluck('ciclo_venta');
+
+        return view('clientes.index', compact('clientes','vendedores', 'ciclos'));
     }
+
 
     public function create(Request $request)
     {

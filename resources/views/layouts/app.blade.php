@@ -36,7 +36,35 @@
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css"
+        />
+
     @stack('styles')
+
+    <!-- Incluye esto en tu layout, tras jQuery y Bootstrap.js -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+
+<script>
+  $(function(){
+    $('#ejecutivos').multiselect({
+      includeSelectAllOption: true,       // agrega el checkbox “Seleccionar todo”
+      selectAllText: 'Seleccionar todo',  // texto para ese checkbox
+      allSelectedText: 'Todo seleccionado ({0})',
+      nonSelectedText: 'Ninguno seleccionado',
+      enableFiltering: true,              // buscador interno
+      enableCaseInsensitiveFiltering: true,
+      buttonWidth: '100%',
+      maxHeight: 250,
+      numberDisplayed: 2,                 // cuántos mostrar antes de “+3 más”
+      // **NO** pongas maxSelectionLength: 1 (ese forzaría sólo 1)
+    });
+  });
+</script>
+
+
 </head>
 
 <body>
@@ -81,6 +109,8 @@
     @include('layouts.partials.rightbar')
 
     {{-- Scripts --}}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/metisMenu.min.js') }}"></script>
@@ -93,6 +123,7 @@
     <script src="{{ asset('assets/js/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('assets/js/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
+
     <!-- <script src="{{ asset('assets/js/dashboard.init.js') }}"></script> -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -182,10 +213,6 @@
             });
         });
     </script>
-
-
-
-    
 
 
     @stack('scripts')
