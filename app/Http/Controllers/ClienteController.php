@@ -13,6 +13,7 @@ use App\Models\FormaPago;
 use App\Models\MetodoPago;
 use App\Models\UsoCfdi;
 use App\Models\RegimenFiscal;
+use App\Models\Nota;
 
 class ClienteController extends Controller
 {
@@ -112,9 +113,15 @@ class ClienteController extends Controller
             // 'contacto_entrega_predet.direccion_entrega.pais',
         ])
         ->findOrFail($id);
+
+        $notas = Nota::with('usuario')
+            ->where('id_cliente', $cliente->id_cliente)
+            ->orderByDesc('fecha_registro')
+            ->get();
+
         
 
-        return view('clientes.view', compact('cliente'));
+        return view('clientes.view', compact('cliente', 'notas'));
     }
 
 

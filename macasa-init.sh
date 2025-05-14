@@ -77,6 +77,27 @@ until DB_READY; do
 done
 green "✅ MariaDB responde."
 
+# === VALIDACIÓN DE CONEXIÓN COMO DB_USER ===
+cyan "🔎 Verificando conexión como '$DB_USER'..."
+if ! docker compose exec -T "$SERVICE_DB" \
+     mysql -u"$DB_USER" -p"$DB_PASS" -e "SELECT 1;" &>/dev/null; then
+
+  red "⚠️ No se pudo conectar a la BD como '$DB_USER'."
+  read -p "¿Deseas limpiar contenedores y volúmenes remanentes y reiniciar? [y/N]: " RESP
+  if [[ "$RESP" =~ ^[Yy]$ ]]; then
+    cyan "🗑 Limpiando contenedores y volúmenes..."
+    docker compose down --volumes --remove-orphans
+    green "✔ Contenedores y volúmenes limpiados."
+    cyan "🐳 Levantando contenedores Docker..."
+    docker compose up -d --build
+    exec "$0"
+  else
+    die "No se puede continuar sin conexión válida a la BD."
+  fi
+fi
+green "✅ Conexión a BD como '$DB_USER' exitosa."
+
+# === Resto de la restauración ===
 TABLE_COUNT=$(docker compose exec -T "$SERVICE_DB" \
   mysql -N -s -u"$DB_USER" -p"$DB_PASS" \
   -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$DB_NAME';")
@@ -90,7 +111,6 @@ if [ -s "$EXPORT_DIR/backup-main.sql.gz" ]; then
       -e "SELECT table_name FROM information_schema.tables WHERE table_schema = '$DB_NAME';" \
       | paste -sd, -)
 
-
     if [[ -z "$TABLAS" || "$TABLAS" =~ ^,*$ ]]; then
       red "❌ No se encontraron tablas válidas para eliminar."
     else
@@ -101,7 +121,6 @@ if [ -s "$EXPORT_DIR/backup-main.sql.gz" ]; then
       green "✔ Tablas eliminadas."
     fi
   fi
-
 
   zcat "$EXPORT_DIR/backup-main.sql.gz" | docker compose exec -T "$SERVICE_DB" \
     mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"
