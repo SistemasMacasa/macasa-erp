@@ -510,3 +510,35 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 .btn.quitar-fila:active {
   background: rgba(0,0,0,.04) !important;
 }
+
+/* Estilos <th> historial de pedidos */
+#tblPedidos thead th {
+    cursor: pointer;
+    transition: background-color .15s;
+}
+#tblPedidos thead th:hover {
+    background: #eef6ff;          /* azul clarito */
+}
+
+/* Flecha genérica */
+.sort-arrow::after {
+    content: "⇅";                 /* flecha doble vertical */
+    font-size: .75rem;
+    opacity: .3;
+    margin-left: .25rem;
+}
+
+/* Estado orden ascendente */
+#tblPedidos thead th.asc .sort-arrow::after {
+    content: "▲";                 /* flecha arriba */
+    opacity: 1;
+    color: #0d6efd;               /* azul Bootstrap */
+}
+
+/* Estado orden descendente */
+#tblPedidos thead th.desc .sort-arrow::after {
+    content: "▼";                 /* flecha abajo */
+    opacity: 1;
+    color: #0d6efd;
+}
+/* Termina Estilos <th> historial de pedidos */

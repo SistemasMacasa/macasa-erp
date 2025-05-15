@@ -53,7 +53,7 @@
                         (contiene también los datos del contacto principal)
                     ─────────────────────────────────── -->
                     <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
-                    <div class="card shadow-sm mb-4 section-card section-card-cuenta-empresarial">
+                    <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
                         <div class="card-header section-card-header text-center">
                             <h5 class="mb-0">Cuenta Empresarial</h5>
                         </div>
@@ -189,11 +189,6 @@
             </form>
         </div>
 
-
-        
-
-
-
         <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━ TerminaFormulario para Personas Morales ━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
     @elseif ($tipo === 'fisica')
@@ -216,10 +211,10 @@
 
             </div>
 
-            <!-- Aviso: formulario inactivo -->
-            <div class="alert alert-warning d-flex align-items-center py-2 px-3 small mb-4 section-card-cuenta-empresarial">
-                <i data-feather="alert-circle" class="me-2"></i>
-                <span>Este formulario está inactivo y tus datos no se guardarán en el sistema al enviarlos.</span>
+            <!-- Aviso: formulario activo -->
+            <div class="alert alert-success d-flex align-items-center py-2 px-3 small mb-4 section-card-cuenta-empresarial">
+                <i data-feather="check-circle" class="me-2"></i>
+                <span>Este formulario está activo y tus datos se guardarán en el sistema al enviarlos.</span>
             </div>
             <script>
                 feather.replace(); // Asegura que Feather Icons se rendericen correctamente
@@ -238,27 +233,9 @@
                     <input type="hidden" name="sector" value="persona"><!-- Sector: gobierno, privada, persona -->
 
                     <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
-                    <div class="card shadow-sm mb-4 section-card section-card-cuenta-empresarial contacto-block">
+                    <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial contacto-block">
                         <div class="card-header section-card-header d-flex align-items-center justify-content-between">
                             <h5 class="mb-0">Cuenta Personal</h5>
-                            <div class="col-md-4">
-                                    <label for="nombre" class="form-label">Asignado a: <span
-                                            class="text-danger">*</span></label>
-                                    <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
-                                        required>
-                                        <option value="">-- Ejecutivo --</option>
-
-                                        {{-- Base General = NULL --}}
-                                        <option value="" @selected(old('id_vendedor') === '')>Base General</option>
-                                        @foreach ($vendedores as $vendedor)
-                                            <option value="{{ $vendedor->id_usuario }}"
-                                                @selected(old('id_vendedor') == $vendedor->id_usuario)>
-                                                {{ $vendedor->username }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('id_vendedor')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
@@ -293,12 +270,12 @@
                                 </div>
 
                                 <!-- Correo Electrónico -->
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="email" class="form-label">Correo Electrónico</label>
                                     <input type="email" class="form-control" name="email" maxlength="120">
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="segmento" class="form-label">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" id="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -311,7 +288,7 @@
                                 </div>
 
                                 <!-- Género -->
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label for="genero" class="form-label">Género</label>
                                     <select name="genero" id="genero" class="form-select">
                                         <option value="">-- Selecciona --</option>
@@ -319,6 +296,25 @@
                                         <option value="femenino">Femenino</option>
                                         <option value="no-especificado">No Especificado</option>
                                     </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="nombre" class="form-label">Asignado a: <span
+                                            class="text-danger">*</span></label>
+                                    <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
+                                        required>
+                                        <option value="">-- Ejecutivo --</option>
+
+                                        {{-- Base General = NULL --}}
+                                        <option value="" @selected(old('id_vendedor') === '')>Base General</option>
+                                        @foreach ($vendedores as $vendedor)
+                                            <option value="{{ $vendedor->id_usuario }}"
+                                                @selected(old('id_vendedor') == $vendedor->id_usuario)>
+                                                {{ $vendedor->username }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('id_vendedor')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 
                                 <hr class="mt-3">

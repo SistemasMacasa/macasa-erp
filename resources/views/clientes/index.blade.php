@@ -203,7 +203,7 @@
     {{-- ────────── Fin paginación ────────── --}}
 
     {{-- 📋 Tabla responsiva --}}
-    <div class="table-responsive mb-4">
+    <div class="table-responsive mb-4 shadow-lg">
         <table id="tabla-clientes" class="table align-middle table-hover table-nowrap">
             <thead class="table-light">
                 <tr>

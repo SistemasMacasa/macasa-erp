@@ -20,7 +20,7 @@ Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.ind
 Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
 //update
 Route::get('/clientes/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
-Route::put('/clientes/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
+Route::put('/clientes/update/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
 //delete
 Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name('clientes.delete');
 
