@@ -76,7 +76,7 @@
                                         <option value="" @selected(old('id_vendedor')==='')>Base General</option>
                                         @foreach($vendedores as $v)
                                             <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor')==$v->id_usuario)>
-                                                {{ $v->username }}
+                                                {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -145,34 +145,38 @@
                                 <hr class="mt-3">
 
                                 {{-- Contacto Principal ─ Teléfonos --}}
-                                <div class="container">
+                                {{-- Envoltorio centrado --}}
+                                <div id="telefonos-cel-wrapper"> 
+
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
                                         <div class="col-md-6" id="telefonos-col">
-                                        {{-- Fila inicial --}}
                                         <div class="mb-2 telefono-item">
                                             <label>Teléfono 1</label>
-                                            <div class="input-group">
-                                            <input type="text" name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
-                                            <input type="text" name="contacto[0][ext1]"      class="form-control" placeholder="Ext." maxlength="7">
-                                            <button type="button" class="btn btn-outline-primary agregar-telefono">+</button>
+
+                                            <div class="input-group input-group-separated">
+                                            <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono">
+                                            <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field"    placeholder="Ext." maxlength="7">
+                                            <button type="button" class="btn btn-outline-primary agregar-telefono btn-field">+</button>
                                             </div>
                                         </div>
                                         </div>
 
                                         {{-- Celulares --}}
                                         <div class="col-md-6" id="celulares-col">
-                                        {{-- Fila inicial --}}
                                         <div class="mb-2 celular-item">
                                             <label>Teléfono Celular 1</label>
-                                            <div class="input-group">
+
+                                            <div class="input-group input-group-separated">
                                             <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
-                                            <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                            <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
                                             </div>
                                         </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                </div>{{-- /telefonos-cel-wrapper --}}
+
 
                                 {{-- Mensajes de límite --}}
                                 <style>
@@ -324,12 +328,11 @@
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
                                         <div class="col-md-6" id="telefonos-col">
-                                            {{-- Fila inicial --}}
                                             <div class="mb-2 telefono-item">
                                                 <label>Teléfono 1</label>
-                                                <div class="input-group">
-                                                <input type="text" name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
-                                                <input type="text" name="contacto[0][ext1]"      class="form-control" placeholder="Ext." maxlength="7">
+                                                <div class="input-group input-group-separated">   {{-- ⬅️ extra clase --}}
+                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
+                                                <input type="text"  name="contacto[0][ext1]"      class="form-control"          placeholder="Ext." maxlength="7">
                                                 <button type="button" class="btn btn-outline-primary agregar-telefono">+</button>
                                                 </div>
                                             </div>
@@ -337,15 +340,15 @@
 
                                         {{-- Celulares --}}
                                         <div class="col-md-6" id="celulares-col">
-                                        {{-- Fila inicial --}}
-                                        <div class="mb-2 celular-item">
-                                            <label>Teléfono Celular 1</label>
-                                            <div class="input-group">
-                                            <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
-                                            <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                            <div class="mb-2 celular-item">
+                                                <label>Teléfono Celular 1</label>
+                                                <div class="input-group input-group-separated">   {{-- ⬅️ extra clase --}}
+                                                <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
+                                                <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                                </div>
                                             </div>
                                         </div>
-                                        </div>
+
                                     </div>
                                 </div>
 
@@ -408,13 +411,14 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'mb-2 telefono-item';
                 wrapper.innerHTML = `
-                <label></label>
-                <div class="input-group">
-                    <input type="text" class="form-control phone-field" placeholder="Teléfono">
-                    <input type="text" class="form-control" placeholder="Ext." maxlength="7">
-                    <button type="button" class="btn btn-outline-danger eliminar-item">X</button>
-                </div>
+                    <label></label>
+                    <div class="input-group input-group-separated">
+                        <input type="text" class="form-control phone-field" placeholder="Teléfono">
+                        <input type="text" class="form-control" placeholder="Ext." maxlength="7">
+                        <button type="button" class="btn btn-outline-danger eliminar-item">X</button>
+                    </div>
                 `;
+
                 telCol.appendChild(wrapper);
                 reindex('telefono');
             });
@@ -427,12 +431,13 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'mb-2 celular-item';
                 wrapper.innerHTML = `
-                <label></label>
-                <div class="input-group">
-                    <input type="text" class="form-control phone-field" placeholder="Celular">
-                    <button type="button" class="btn btn-outline-danger eliminar-item">X</button>
-                </div>
+                    <label></label>
+                    <div class="input-group input-group-separated">
+                        <input type="text" class="form-control phone-field" placeholder="Celular">
+                        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+                    </div>
                 `;
+
                 celCol.appendChild(wrapper);
                 reindex('celular');
             });
@@ -451,43 +456,6 @@
             // Reindex inicial (por si hay valores viejos)
             reindex('telefono');
             reindex('celular');
-            });
-        </script>
-
-
-    
-        <script>
-            document.addEventListener('input', e => {
-                // Solo actuamos sobre inputs con clase .phone-field
-                const input = e.target.closest('.phone-field');
-                if (!input) return;
-
-                /* ---- Normaliza --------------------------------------------------- */
-                let digits = input.value.replace(/\D/g, '');   // elimina todo salvo dígitos
-                if (digits.length > 10) digits = digits.slice(0, 10);
-
-                /* ---- Formatea ---------------------------------------------------- */
-                let pretty = digits;
-                if (digits.length === 10) {
-                    if (digits.startsWith('55')) {  // Celular CDMX
-                        pretty = digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1)-$2-$3');
-                    } else {                         // Fijo nacional 3-3-4
-                        pretty = digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1)-$2-$3');
-                    }
-                } else if (digits.length >= 7) {    // Formateo parcial mientras escriben
-                    pretty = digits.replace(
-                        /(\d{3})(\d{0,3})(\d{0,4})/,
-                        (_, a, b, c) => a + (b ? '-' + b : '') + (c ? '-' + c : '')
-                    );
-                }
-
-                input.value = pretty;
-
-                /* ---- Ajusta maxlength para evitar >10 dígitos -------------- */
-                input.maxLength = pretty.startsWith('(55)') ? 14 : 15;
-
-                /* ---- HTML5 validity (pattern) ----------------------------- */
-                input.setCustomValidity(digits.length === 10 ? '' : 'Número incompleto');
             });
         </script>
 

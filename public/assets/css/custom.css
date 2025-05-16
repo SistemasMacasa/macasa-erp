@@ -542,3 +542,62 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
     color: #0d6efd;
 }
 /* Termina Estilos <th> historial de pedidos */
+
+
+.timeline {
+    border-left: 2px solid #e2e8f0;          /* gris clarito */
+    list-style: none;
+    padding-left: 1rem;
+}
+.timeline li::before {
+    content: '';
+    position: absolute;
+    left: -6px; top: 4px;
+    width: 10px; height: 10px;
+    background: #0d6efd;     /* azul Bootstrap */
+    border-radius: 50%;
+}
+.object-fit-cover { object-fit: cover; }
+
+
+/* Estilos para telefonos en formulario clientes.create */
+
+/* --------------------------------------------------------------
+   Bloque Teléfonos fijos
+   --------------------------------------------------------------*/
+#telefonos-col .phone-field {        /* SOLO Teléfono fijo        */
+  flex: 0 0 20ch;    /* ⬅️ antes 25ch; ajusta 18–22ch si aún se ve largo */
+  max-width: 20ch;
+}
+
+/* Extensión se mantiene en 10ch */
+.ext-field          { flex: 0 0 10ch; max-width:10ch; }
+
+/* Botón sin cambios */
+.btn-field          { flex: 0 0 auto; }
+
+/* --------------------------------------------------------------
+   Bloque Celulares
+   --------------------------------------------------------------*/
+#celulares-col .phone-field {
+  flex: 0 0 20ch;    /* mismo ancho que Teléfono fijo + Ext. */
+  max-width: 20ch;
+}
+
+/* --------------------------------------------------------------
+   Centrado perfecto del wrapper
+   --------------------------------------------------------------*/
+#telefonos-cel-wrapper {
+  max-width: 100%;        /* ocupa todo el ancho de la card */
+  padding-left: 1rem;     /* mismo padding que la card (opcional) */
+  padding-right: 1rem;    /* ↑ si tu card ya lo trae, omítelo */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.input-group-separated > .form-control,
+.input-group-separated > .btn {
+  /* Restauramos bordes redondeados que Bootstrap anula dentro de .input-group */
+  border-radius: .375rem !important;
+}

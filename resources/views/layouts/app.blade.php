@@ -214,6 +214,43 @@
         });
     </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const format = (input) => {
+        let digits = input.value.replace(/\D/g, '');
+        if (digits.length > 10) digits = digits.slice(0, 10);
+
+        // --- aplica formato ---
+        let pretty = digits;
+        if (digits.length === 10) {
+            pretty = digits.startsWith('55')
+                     ? digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1)-$2-$3')
+                     : digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1)-$2-$3');
+        } else if (digits.length >= 7) {
+            pretty = digits.replace(
+                /(\d{3})(\d{0,3})(\d{0,4})/,
+                (_, a, b, c) => a + (b ? '-' + b : '') + (c ? '-' + c : '')
+            );
+        }
+
+        input.value      = pretty;
+        input.maxLength  = pretty.startsWith('(55)') ? 14 : 15;
+        input.setCustomValidity(digits.length === 10 ? '' : 'Número incompleto');
+    };
+
+    /* ---- Formateo INICIAL de todos los campos phone-field ---- */
+    document.querySelectorAll('.phone-field').forEach(format);
+
+    /* ---- Formateo en tiempo real cuando el usuario edite ---- */
+    document.addEventListener('input', e => {
+        const input = e.target.closest('.phone-field');
+        if (input) format(input);
+    });
+
+});
+</script>
+
 
     @stack('scripts')
 </body>

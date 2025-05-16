@@ -33,7 +33,7 @@
                 <div class="row gy-3">
 
                     {{-- Búsqueda global --}}
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="search" class="form-label">Búsqueda</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white"><i class="fa fa-search"></i></span>
@@ -48,9 +48,8 @@
                         </div>
                     </div>
 
-              
                     {{-- Ejecutivos (multi-select con Bootstrap-Multiselect) --}}
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
                         <select
                             id="ejecutivos"
@@ -69,11 +68,35 @@
                         </select>
                     </div>
 
-
-
+                    {{-- Sector --}}
+                    <div class="col-md-3">
+                        <label for="sector" class="form-label">Sector</label>
+                        <select name="sector" id="sector" class="form-select">
+                            <option value="">Todos</option>
+                            @foreach($sectores as $s)
+                            <option
+                                value="{{ $s }}"
+                                {{ request('sector') == $s ? 'selected' : '' }}
+                            >{{ $s }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {{-- Segmento --}}
+                    <div class="col-md-3">
+                        <label for="segmento" class="form-label">Segmento</label>
+                        <select name="segmento" id="segmento" class="form-select">
+                            <option value="">Todos</option>
+                            @foreach($segmentos as $s)
+                            <option
+                                value="{{ $s }}"
+                                {{ request('segmento') == $s ? 'selected' : '' }}
+                            >{{ $s }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     {{-- Ciclo de venta --}}
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label for="cycle" class="form-label">Ciclo de venta</label>
                         <select name="cycle" id="cycle" class="form-select">
                             <option value="">Todos</option>
@@ -85,19 +108,11 @@
                             @endforeach
                         </select>
                     </div>
-
-                    {{-- Ordenar por --}}
-                    <div class="col-md-2">
-                        <label for="order" class="form-label">Ordenar por</label>
-                        <select name="order" id="order" class="form-select">
-                            <option value="nombre"   {{ request('order','nombre') == 'nombre' ? 'selected':'' }}>Empresa</option>
-                            <option value="created_at"{{ request('order') == 'created_at' ? 'selected':'' }}>Fecha alta</option>
-                            {{-- otros campos… --}}
-                        </select>
-                    </div>
+              
+                    
 
                     {{-- Registros por página --}}
-                    <div class="col-md-1">
+                    <div class="col-md-3">
                         <label for="perPage" class="form-label">Ver</label>
                         <select name="perPage" id="perPage" class="form-select">
                             @foreach([10,25,50,100] as $n)
@@ -109,12 +124,23 @@
                         </select>
                     </div>
 
+                
+
+                    {{-- Botón Limpiar --}}
+                    <div class="col-md-1 offset-md-10 text-end">
+                        <a href="{{ route('clientes.index') }}" class="btn btn-light">
+                            <i class="fa fa-eraser"></i> Limpiar
+                        </a>
+                    </div>
                     {{-- Botón Buscar --}}
-                    <div class="col-md-12 text-end">
+                    <div class="col-md-1 text-end">
                         <button type="submit" class="btn btn-success">
                             <i class="fa fa-search"></i> Buscar
                         </button>
                     </div>
+
+                </div>
+
 
                 </div>
             </div>

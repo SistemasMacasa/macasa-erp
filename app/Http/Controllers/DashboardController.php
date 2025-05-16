@@ -20,27 +20,61 @@ class DashboardController extends Controller
         $progresoCotizacion = 60;
         $progresoVenta = 15;
 
-        // Este array debe coincidir con lo que tu vista espera
-        return view('inicio', [
-            'cuentasAsignadas' => $cuentasAsignadas,
-            'pendientesHoy' => $pendientesHoy,
-            'alcanceCotizacion' => $alcanceCotizacion,
-            'alcanceVenta' => $alcanceVenta,
-            'seriesRadial' => $seriesRadial,
-            'labelsRadial' => $labelsRadial,
-            'cotizaciones' => $cotizaciones,
-            'ventas' => $ventas,
-            'progresoCotizacion' => $progresoCotizacion,
-            'progresoVenta' => $progresoVenta,
-            'data' => compact(
-                'seriesRadial',
-                'labelsRadial',
-                'cotizaciones',
-                'ventas',
-                'progresoCotizacion',
-                'progresoVenta'
-            )
+        /* === Dummies ===================================================== */
+        $birthdays = collect([
+            ['name' => 'Ana López',     'date' => Carbon::parse('1993-06-07')],
+            ['name' => 'Carlos Pérez',  'date' => Carbon::parse('1990-06-15')],
+            ['name' => 'Mónica Ruiz',   'date' => Carbon::parse('1987-06-22')],
         ]);
+
+        $events = collect([
+            ['title' => 'Día del Padre',       'from' => '2025-06-15', 'to' => null],
+            ['title' => 'Puente 20-22 Nov',    'from' => '2025-11-20', 'to' => '2025-11-22'],
+            ['title' => 'Aniversario MACASA',  'from' => '2025-09-08', 'to' => null],
+        ]);
+
+        $focus = (object) [
+            'title'   => 'Enfoque: Licenciamiento Microsoft 365',
+            'image'   => asset('images/focus-dummy.jpg'),   // pon cualquier banner temporal
+            'message' => 'Aprovecha 15 % de descuento en renovaciones antes del 30/06.'
+        ];
+
+        $topExecs = collect([
+            ['name' => 'Marco C.', 'total' => 127_000],
+            ['name' => 'Eliezer',  'total' =>  98_500],
+            ['name' => 'Alicia',   'total' =>  73_100],
+        ]);
+
+        $topClients = collect([
+            ['name' => 'Gob. de Jalisco', 'total' => 820_000],
+            ['name' => 'IBM México',      'total' => 436_000],
+            ['name' => 'Universidad X',   'total' => 295_900],
+        ]);
+
+        $notices = collect([
+            ['body' => 'Mañana hay evento, portar camiseta institucional.'],
+            ['body' => 'Se abre vacante para soporte nivel 1.'],
+        ]);
+
+        // Este array debe coincidir con lo que tu vista espera
+        return view('inicio', compact(
+            'cuentasAsignadas',
+            'pendientesHoy',
+            'alcanceCotizacion',
+            'alcanceVenta',
+            'seriesRadial',
+            'labelsRadial',
+            'cotizaciones',
+            'ventas',
+            'progresoCotizacion',
+            'progresoVenta',
+            'birthdays',
+            'events',
+            'focus',
+            'topExecs',
+            'topClients',
+            'notices'
+        ));
     }
 
 

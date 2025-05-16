@@ -81,7 +81,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('inicio') }}">Alta de Proveedor</a></li>
                         <li><a href="{{ route('inicio') }}">Mis proveedores</a></li>
-                        <li><a href="{{ route('inicio') }}">Usuarios de SIS</a></li>
+                        <li><a href="{{ route('usuarios.index') }}">Usuarios de SIS</a></li>
                         <li><a href="{{ route('inicio') }}">Asistencia</a></li>
                     </ul>
                 </li>

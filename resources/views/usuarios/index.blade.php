@@ -25,6 +25,7 @@
         <thead class="table-dark">
             <tr>
                 <th>Username</th>
+                <th>Nombre completo</th>
                 <th>Email</th>
                 <th>Cargo</th>
                 <th>Tipo</th>
@@ -38,6 +39,7 @@
             @foreach($usuarios as $usuario)
                 <tr>
                     <td>{{ $usuario->username }}</td>
+                    <td>{{ $usuario->nombre }} {{ $usuario->apellido_p }} {{ $usuario->apellido_m }}</td>
                     <td>{{ $usuario->email }}</td>
                     <td>{{ $usuario->cargo }}</td>
                     <td>{{ $usuario->tipo }}</td>

@@ -62,7 +62,27 @@ class ClienteController extends Controller
             ->orderBy('ciclo_venta')
             ->pluck('ciclo_venta');
 
-        return view('clientes.index', compact('clientes','vendedores', 'ciclos'));
+        $sectores = [
+            '1' => 'privada',
+            '2' => 'gobierno',
+
+        ];
+
+        $segmentos = [
+            '1' => 'macasa cuentas especiales',
+            '2' => 'macasa ecommerce',
+            '3' => 'tekne store ecommerce',
+            '4' => 'la plaza ecommerce'
+        ];
+
+        return view('clientes.index',
+         compact(
+              'clientes',
+             'vendedores', 
+                        'ciclos',
+                        'sectores',
+                        'segmentos',
+                    ));
     }
 
 
@@ -161,9 +181,51 @@ class ClienteController extends Controller
             ['fecha' => '2025-02-15', 'id' => 'P-0908', 'razon' => 'Pi Enterprises',          'subtotal' => 26000.00, 'margen' => 16.8],
         ]);
 
-        return view('clientes.view', compact('cliente', 'notas', 'pedidos'));
-    }
+        $vendedores     = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos
+        $metodos_pago   = MetodoPago::pluck('nombre', 'id_metodo_pago');
+        $formas_pago    = FormaPago::pluck('nombre', 'id_forma_pago');
+        $usos_cfdi      = UsoCfdi::pluck('nombre', 'id_uso_cfdi');
+        $ciudades       = Ciudad::pluck('nombre', 'id_ciudad');
+        $estados        = Estado::pluck('nombre', 'id_estado');
+        $paises = [
+            '1' => 'México',
+            '2' => 'Estados Unidos',
+            '3' => 'Canadá',
+        ];
+        $regimen_fiscales = RegimenFiscal::pluck('nombre', 'id_regimen_fiscal');
+        $sectores = [
+            '1' => 'privada',
+            '2' => 'gobierno',
+            '3' => 'persona',
+        ];
+        //Navegación entre clientes/cuentas eje
+        $prevId = Cliente::where('id_cliente', '<', $cliente->id_cliente)
+                 ->orderByDesc('id_cliente')
+                 ->value('id_cliente');   // devuelve null si no hay anterior
 
+        $nextId = Cliente::where('id_cliente', '>', $cliente->id_cliente)
+                 ->orderBy('id_cliente')
+                 ->value('id_cliente');   // devuelve null si no hay siguiente
+
+
+        return view('clientes.view',
+                    compact(
+                  'cliente',
+                 'notas', 
+                            'pedidos',
+                            'vendedores',
+                            'metodos_pago',
+                            'formas_pago',
+                            'usos_cfdi',
+                            'ciudades',
+                            'estados',
+                            'paises',
+                            'regimen_fiscales',
+                            'prevId',
+                            'nextId',
+                            'sectores'
+                        ));
+    }
 
     public function update(Request $request, $id)
     {

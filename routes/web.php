@@ -5,12 +5,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
-Route::get('/', function () {
-    return view('inicio');
-})->name('inicio');
+// Route::get('/', function () {
+//     return view('inicio');
+// })->name('inicio');
+
+Route::get('/', [DashboardController::class, 'index'])->name('inicio');
+
 
 //CRUD Clientes (Cuentas Eje)
 //create
