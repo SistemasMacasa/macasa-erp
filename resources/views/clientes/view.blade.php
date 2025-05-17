@@ -188,7 +188,7 @@
                                     value="{{ $cliente->apellido_p && $cliente->apellido_m
                                             ? $cliente->nombre.' '.$cliente->apellido_p.' '.$cliente->apellido_m
                                             : $cliente->nombre }}"
-                                    class="form-control form-control-sm"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  disabled>
                             </div>
 
                             <div class="col-md-6">
@@ -230,19 +230,19 @@
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Nombre</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->nombre ?? ''}}"
-                                    class="form-control form-control-sm"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  disabled>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Primer Apellido</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->apellido_p ?? ''}}"
-                                    class="form-control form-control-sm"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  disabled>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Segundo Apellido</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->apellido_m ?? ''}}"
-                                    class="form-control form-control-sm"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  disabled>
                             </div>
 
                             @php
@@ -281,7 +281,7 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Puesto</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->puesto ?? ''}}"
-                                    class="form-control form-control-sm"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  disabled>
                             </div>
 
                             <div class="col-md-4">
@@ -298,12 +298,12 @@
 
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Entrega</label>
-                                <input type="text" class="form-control form-control-sm"  disabled>
+                                <input type="text" class="form-control form-control-sm guarda-mayus"  disabled>
                             </div>
 
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Condición de pago</label>
-                                <input type="text" class="form-control form-control-sm"  disabled>
+                                <input type="text" class="form-control form-control-sm guarda-mayus"  disabled>
                             </div>
 
                             {{-- Teléfonos / celulares dinámicos --}}
@@ -332,7 +332,7 @@
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Correo electrónico</label>
                                 <input type="email" value="{{ $cliente->contacto_predet->email ?? '' }}"
-                                    class="form-control form-control-sm"  disabled>
+                                    class="form-control form-control-sm guarda-minus"  disabled>
                             </div>
                         </div>
                     </div>
@@ -357,13 +357,13 @@
                         <div class="row g-3">
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Razón Social</label>
-                                <input class="form-control form-control-sm" type="text"
+                                <input class="form-control form-control-sm guarda-mayus" type="text"
                                     value="{{ $razon->nombre ?? '' }}"  disabled>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">RFC</label>
-                                <input class="form-control form-control-sm" type="text"
+                                <input class="form-control form-control-sm guarda-mayus" type="text"
                                     value="{{ $razon->RFC ?? '' }}"  disabled>
                             </div>
                         </div>
@@ -372,7 +372,7 @@
                             {{-- ------------- Dirección ------------- --}}
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Calle</label>
-                                <input class="form-control form-control-sm" type="text"
+                                <input class="form-control form-control-sm guarda-titulo" type="text"
                                     value="{{ $dirFac->calle ?? '' }}"  disabled>
                             </div>
 
@@ -529,7 +529,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Contacto</label>
-                                <input class="form-control form-control-sm" type="text"
+                                <input class="form-control form-control-sm guarda-mayus" type="text"
                                     value="{{ trim(implode(' ', array_filter([optional($cteEnt)->nombre, optional($cteEnt)->apellido_p, optional($cteEnt)->apellido_m]))) }}"
                                     disabled>
                             </div>
@@ -543,7 +543,7 @@
                             {{-- Dirección --}}
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Calle</label>
-                                <input class="form-control form-control-sm" type="text"
+                                <input class="form-control form-control-sm guarda-titulo" type="text"
                                     value="{{ $dirEnt->calle ?? '' }}"  disabled>
                             </div>
 

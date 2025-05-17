@@ -10,8 +10,8 @@
     @if ($tipo === 'moral')
 
         <!-- ╭━━━━━━━━━━━━━━━━━━━━━━━━━━ Formulario para Empresas ━━━━━━━━━━━━━━━━━━━━━━━━╮ -->
-        <h1 class="mb-4">Nueva Cuenta Empresarial</h1>
         <div class="container-fluid">
+            <h1 class="mb-4">Nueva Cuenta Empresarial</h1>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">
@@ -27,15 +27,6 @@
                 </a>
 
             </div>
-
-            <!-- Aviso: formulario operativo -->
-            <div class="alert alert-success d-flex align-items-center py-2 px-3 small mb-4 section-card-cuenta-empresarial">
-                <i data-feather="check-circle" class="me-2"></i>
-                <span>Este formulario está activo y tus datos se guardarán en el sistema al enviarlos.</span>
-            </div>
-            <script>
-                feather.replace(); // Asegura que Feather Icons se rendericen correctamente
-            </script>
 
             <!-- ╭━━━━━━━━━━━━━━━━━━ Formulario principal ━━━━━━━━━━━━━━╮ -->
             <form id="clienteForm" action="{{ route('clientes.store') }}" method="POST" autocomplete="off">
@@ -64,7 +55,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                     <input  id="nombre" name="nombre" type="text"
-                                            class="form-control @error('nombre') is-invalid @enderror"
+                                            class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
                                             value="{{ old('nombre') }}" required minlength="3" maxlength="120">
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
@@ -111,30 +102,30 @@
 
                                 {{-- Nombre(s) / Apellidos --}}
                                 <div class="col-sm-4">
-                                    <label class="form-label">Nombre(s)</label>
-                                    <input  name="contacto[0][nombre]" class="form-control" minlength="2" maxlength="60">
+                                    <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
+                                    <input  name="contacto[0][nombre]" class="form-control guarda-mayus" minlength="2" maxlength="50" required>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="form-label">Primer Apellido</label>
-                                    <input  name="contacto[0][apellido_p]" class="form-control" maxlength="27">
+                                    <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
+                                    <input  name="contacto[0][apellido_p]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="form-label">Segundo Apellido</label>
-                                    <input  name="contacto[0][apellido_m]" class="form-control" maxlength="27">
+                                    <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
+                                    <input  name="contacto[0][apellido_m]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
 
                                 {{-- Email / Puesto / Género --}}
                                 <div class="col-sm-4">
-                                    <label class="form-label">Correo Electrónico</label>
-                                    <input name="contacto[0][email]" type="email" class="form-control" maxlength="120">
+                                    <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                    <input name="contacto[0][email]" type="email" class="form-control guarda-minus" maxlength="50" required>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="form-label">Puesto</label>
-                                    <input name="contacto[0][puesto]" class="form-control" maxlength="100">
+                                    <label class="form-label">Puesto <span class="text-danger">*</span></label>
+                                    <input name="contacto[0][puesto]" class="form-control guarda-mayus" maxlength="100" required>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="form-label">Género</label>
-                                    <select name="contacto[0][genero]" class="form-select">
+                                    <label class="form-label">Género <span class="text-danger">*</span></label>
+                                    <select name="contacto[0][genero]" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="masculino">Masculino</option>
                                         <option value="femenino">Femenino</option>
@@ -142,46 +133,40 @@
                                     </select>
                                 </div>
 
-                                <hr class="mt-3">
-
-                                {{-- Contacto Principal ─ Teléfonos --}}
-                                {{-- Envoltorio centrado --}}
-                                <div id="telefonos-cel-wrapper"> 
+                                {{-- Contacto Principal ─ Teléfonos EMPRESARIAL --}}
+                                <div id="telefonos-cel-wrapper">    {{-- ⬅️ NUEVO --}}
 
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
-                                        <div class="col-md-6" id="telefonos-col">
-                                        <div class="mb-2 telefono-item">
-                                            <label>Teléfono 1</label>
+                                        <div class="col-md-4" id="telefonos-col" style="padding: 0 !important;">
+                                            <div class="mb-2 telefono-item">
+                                                <label>Teléfono 1 <span class="text-danger">*</span></label>
 
-                                            <div class="input-group input-group-separated">
-                                            <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono">
-                                            <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field"    placeholder="Ext." maxlength="7">
-                                            <button type="button" class="btn btn-outline-primary agregar-telefono btn-field">+</button>
+                                                <div class="input-group input-group-separated">
+                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" required>
+                                                <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field"    placeholder="Ext." maxlength="7">
+                                                <button type="button" class="btn btn-outline-primary agregar-telefono btn-field">+</button>
+                                                </div>
                                             </div>
-                                        </div>
                                         </div>
 
                                         {{-- Celulares --}}
-                                        <div class="col-md-6" id="celulares-col">
-                                        <div class="mb-2 celular-item">
-                                            <label>Teléfono Celular 1</label>
+                                        <div class="col-md-4" id="celulares-col" style="padding-left: 0px;">
+                                            <div class="mb-2 celular-item">
+                                                <label>Teléfono Celular 1</label>
 
-                                            <div class="input-group input-group-separated">
-                                            <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
-                                            <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
+                                                <div class="input-group input-group-separated">
+                                                <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
+                                                <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
+                                                </div>
                                             </div>
-                                        </div>
                                         </div>
                                     </div>
 
                                 </div>{{-- /telefonos-cel-wrapper --}}
 
 
-                                {{-- Mensajes de límite --}}
-                                <style>
-                                #telefonos-col small, #celulares-col small { display: block; margin-top: .25rem; }
-                                </style>
+
                             </div>
                         </div> <!-- /card-body -->
 
@@ -197,8 +182,8 @@
 
     @elseif ($tipo === 'fisica')
         <!-- ╭━━━━━━━━━━━━━━━━━━━━━━━━━━ Formulario para Personas Fisicas ━━━━━━━━━━━━━━━━━━━━━━━━╮ -->
-        <h1 class="mb-4">Nueva Cuenta Personal</h1>
         <div class="container-fluid">
+            <h1 class="mb-4">Nueva Cuenta Personal</h1>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">
@@ -215,15 +200,6 @@
 
             </div>
 
-            <!-- Aviso: formulario activo -->
-            <div class="alert alert-success d-flex align-items-center py-2 px-3 small mb-4 section-card-cuenta-empresarial">
-                <i data-feather="check-circle" class="me-2"></i>
-                <span>Este formulario está activo y tus datos se guardarán en el sistema al enviarlos.</span>
-            </div>
-            <script>
-                feather.replace(); // Asegura que Feather Icons se rendericen correctamente
-            </script>
-
             <!-- ╭━━━━━━━━━━━━━━━━━━ Formulario principal ━━━━━━━━━━━━━━╮ -->
             <form id="clienteForm" action="{{ route('clientes.store') }}" method="POST" autocomplete="off">
                 <div class="form-wrapper">
@@ -238,7 +214,7 @@
 
                     <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
                     <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial contacto-block">
-                        <div class="card-header section-card-header d-flex align-items-center justify-content-between">
+                         <div class="card-header section-card-header text-center">
                             <h5 class="mb-0">Cuenta Personal</h5>
                         </div>
                         <div class="card-body">
@@ -248,35 +224,35 @@
                                         Nombre(s) <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="nombre" id="nombre"
-                                        class="form-control @error('nombre') is-invalid  @enderror" value="{{ old('nombre') }}"
-                                        required minlength="3" maxlength="120">
+                                        class="form-control guarda-mayus @error('nombre') is-invalid  @enderror" value="{{ old('nombre') }}"
+                                        required minlength="3" maxlength="40">
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
                                 <div class="col-md-4">
                                     <label for="apellido_p" class="form-label">
-                                        Primer Apellido
+                                        Primer Apellido <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="apellido_p" id="apellido_p"
-                                        class="form-control @error('apellido_p') is-invalid  @enderror" value="{{ old('apellido_p') }}"
-                                        required minlength="3" maxlength="120">
+                                        class="form-control guarda-mayus @error('apellido_p') is-invalid  @enderror" value="{{ old('apellido_p') }}"
+                                        required minlength="3" maxlength="27">
                                     @error('apellido_p')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
                                 <div class="col-md-4">
                                     <label for="apellido_m" class="form-label">
-                                        Segundo Apellido
+                                        Segundo Apellido <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="apellido_m" id="apellido_m"
-                                        class="form-control @error('apellido_m') is-invalid  @enderror" value="{{ old('apellido_m') }}"
-                                        minlength="3" maxlength="120">
+                                        class="form-control guarda-mayus @error('apellido_m') is-invalid  @enderror" value="{{ old('apellido_m') }}"
+                                        required minlength="3" maxlength="27">
                                     @error('apellido_m')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
                                 <!-- Correo Electrónico -->
                                 <div class="col-sm-3">
-                                    <label for="email" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" name="email" maxlength="120">
+                                    <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control guarda-minus" name="email" maxlength="40" required>
                                 </div>
 
                                 <div class="col-md-3">
@@ -293,8 +269,8 @@
 
                                 <!-- Género -->
                                 <div class="col-sm-3">
-                                    <label for="genero" class="form-label">Género</label>
-                                    <select name="genero" id="genero" class="form-select">
+                                    <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
+                                    <select name="genero" id="genero" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="masculino">Masculino</option>
                                         <option value="femenino">Femenino</option>
@@ -321,36 +297,37 @@
                                     @error('id_vendedor')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 
-                                <hr class="mt-3">
+                                {{-- Contacto Principal ─ Teléfonos PERSONAL --}}
+                                <div id="telefonos-cel-wrapper">    {{-- ⬅️ NUEVO --}}
 
-                                {{-- Contacto Principal ─ Teléfonos --}}
-                                <div class="container">
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
-                                        <div class="col-md-6" id="telefonos-col">
+                                        <div class="col-md-4" id="telefonos-col" style="padding: 0 !important;">
                                             <div class="mb-2 telefono-item">
-                                                <label>Teléfono 1</label>
-                                                <div class="input-group input-group-separated">   {{-- ⬅️ extra clase --}}
-                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field" placeholder="Teléfono">
-                                                <input type="text"  name="contacto[0][ext1]"      class="form-control"          placeholder="Ext." maxlength="7">
-                                                <button type="button" class="btn btn-outline-primary agregar-telefono">+</button>
+                                                <label>Teléfono 1 <span class="text-danger">*</span></label>
+
+                                                <div class="input-group input-group-separated">
+                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" required>
+                                                <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field"    placeholder="Ext." maxlength="7">
+                                                <button type="button" class="btn btn-outline-primary agregar-telefono btn-field" style="padding-left: 10px;">+</button>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {{-- Celulares --}}
-                                        <div class="col-md-6" id="celulares-col">
+                                        <div class="col-md-4" id="celulares-col" style="">
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular 1</label>
-                                                <div class="input-group input-group-separated">   {{-- ⬅️ extra clase --}}
+                                                <div class="input-group input-group-separated">
                                                 <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
-                                                <button type="button" class="btn btn-outline-primary agregar-celular">+</button>
+                                                <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
-                                </div>
+
+                                </div>{{-- /telefonos-cel-wrapper --}}
+
 
                             </div>
 
@@ -411,12 +388,12 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'mb-2 telefono-item';
                 wrapper.innerHTML = `
-                    <label></label>
-                    <div class="input-group input-group-separated">
-                        <input type="text" class="form-control phone-field" placeholder="Teléfono">
-                        <input type="text" class="form-control" placeholder="Ext." maxlength="7">
-                        <button type="button" class="btn btn-outline-danger eliminar-item">X</button>
-                    </div>
+                <label></label>
+                <div class="input-group input-group-separated">
+                    <input type="text" class="form-control phone-field" placeholder="Teléfono" required>
+                    <input type="text" class="form-control ext-field"   placeholder="Ext." maxlength="7">
+                    <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+                </div>
                 `;
 
                 telCol.appendChild(wrapper);
@@ -431,11 +408,11 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'mb-2 celular-item';
                 wrapper.innerHTML = `
-                    <label></label>
-                    <div class="input-group input-group-separated">
-                        <input type="text" class="form-control phone-field" placeholder="Celular">
-                        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-                    </div>
+                <label></label>
+                <div class="input-group input-group-separated">
+                    <input type="text" class="form-control phone-field" placeholder="Celular" required>
+                    <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+                </div>
                 `;
 
                 celCol.appendChild(wrapper);
@@ -460,4 +437,6 @@
         </script>
 
 
+
 @endsection
+

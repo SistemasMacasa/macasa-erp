@@ -281,6 +281,8 @@ class ClienteController extends Controller
                 'contacto.0.ext*'        => 'nullable|digits_between:1,6',
             ];
             $request->validate($rules);
+
+            
             // Guardar en la base de datos
             try
             {

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('title', 'SIS 3.0 | Listado de Clientes')
 
+
+
+
 @section('content')
     {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
@@ -48,25 +51,27 @@
                         </div>
                     </div>
 
-                    {{-- Ejecutivos (multi-select con Bootstrap-Multiselect) --}}
-                    <div class="col-md-6">
-                        <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
-                        <select
-                            id="ejecutivos"
-                            name="ejecutivos[]"
-                            class="form-select"
-                            multiple="multiple"
-                        >
-                            @foreach($vendedores as $v)
-                            <option
-                                value="{{ $v->id_usuario }}"
-                                {{ in_array($v->id_usuario, request('ejecutivos', [])) ? 'selected' : '' }}
-                            >
-                                {{ $v->username }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    {{-- Ejecutivos (multi-select con Select2) --}}
+<div class="col-md-6">
+    <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
+    <select
+        id="ejecutivos"
+        name="ejecutivos[]"
+        class="select2"          {{-- ← SIN "form-select" --}}
+        multiple
+        data-placeholder="Seleccione uno o varios ejecutivos"
+    >
+        @foreach($vendedores as $v)
+            <option
+                value="{{ $v->id_usuario }}"
+                {{ in_array($v->id_usuario, request('ejecutivos', [])) ? 'selected' : '' }}
+            >
+                {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
 
                     {{-- Sector --}}
                     <div class="col-md-3">
@@ -230,11 +235,12 @@
 
     {{-- 📋 Tabla responsiva --}}
     <div class="table-responsive mb-4 shadow-lg">
-        <table id="tabla-clientes" class="table align-middle table-hover table-nowrap">
-            <thead class="table-light">
+        <table id="tabla-clientes" class="table align-middle table-hover table-nowrap
+                                         table-striped table-bordered">
+            <thead class="table-dark">
                 <tr>
-                    <th class="w-10">Cliente ID</th>
-                    <th>Cuenta (Eje)</th>
+                    <th class="w-10">ID Cliente</th>
+                    <th>Empresa</th>
                     <th>Contacto</th>
                     <th>Teléfono</th>
                     <th>Correo</th>
@@ -263,14 +269,24 @@
                             </a>
                         </td>
 
-                        <td>{{ $c->nombre }}</td>
+                        <td>
+                            <a href="{{ route('clientes.view', $c->id_cliente) }}" style="color: inherit; text-decoration: underline;">
+                                {{ $c->nombre }}
+                            </a>
+                        </td>
 
                         {{-- Contacto principal o guion --}}
                         <td>
-                            {{ optional($pc)->nombre_completo ?? '—' }}
+                            @if(optional($pc)->nombre_completo)
+                                <a href="{{ route('clientes.view', $c->id_cliente) }}" style="color: inherit; text-decoration: underline;">
+                                    {{ $pc->nombre_completo }}
+                                </a>
+                            @else
+                                —
+                            @endif
                         </td>
 
-                            {{-- Teléfono clic-to-call --}}
+                        {{-- Teléfono clic-to-call --}}
                         <td>
                             @if($tel)
                                 <a href="tel:{{ $tel }}">
@@ -295,13 +311,17 @@
 
                         {{-- Ciclo como badge --}}
                         <td>
-                            <span class="badge bg-{{ $c->ciclo_venta === 'venta' ? 'success' : 'info' }}">
+                            <span
+                                class="badge"
+                                style="background-color:{{ $c->ciclo_venta === 'venta' ? '#198754' : '#FFBF00' }};
+                                    color:{{ $c->ciclo_venta === 'venta' ? '#fff' : '#212529' }};">
                                 {{ $c->ciclo_venta }}
                             </span>
                         </td>
 
+
                         <td>
-                            {{ $c->vendedor->username ?? '—' }}
+                            {{ $c->vendedor->nombre ?? '—' }}{{ isset($c->vendedor->apellido_p) ? '' . $c->vendedor->apellido_p : '' }} {{ $c->vendedor->apellido_m ?? '' }}
                         </td>
 
                         {{-- Acciones compactas en dropdown --}}
@@ -416,8 +436,6 @@
     @endif
     {{-- ────────── Fin paginación ────────── --}}
 
-
-   
 
 
 @endsection
