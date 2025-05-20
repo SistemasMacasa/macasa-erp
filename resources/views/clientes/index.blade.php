@@ -3,7 +3,6 @@
 
 
 
-
 @section('content')
     {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
@@ -31,9 +30,12 @@
     {{-- 🔎 Buscador --}}
     <form method="GET" action="{{ route('clientes.index') }}">
         <div class="card mb-4">
-            <div class="card-header">Filtros</div>
+            <div class="card-header" style="background-color: rgba(81, 86, 190, 0.1); font-weight: 700 !important;">
+                Filtros
+            </div>
+
             <div class="card-body">
-                <div class="row gy-3">
+                <div class="row gx-3 gy-2">
 
                     {{-- Búsqueda global --}}
                     <div class="col-md-6">
@@ -52,26 +54,25 @@
                     </div>
 
                     {{-- Ejecutivos (multi-select con Select2) --}}
-<div class="col-md-6">
-    <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
-    <select
-        id="ejecutivos"
-        name="ejecutivos[]"
-        class="select2"          {{-- ← SIN "form-select" --}}
-        multiple
-        data-placeholder="Seleccione uno o varios ejecutivos"
-    >
-        @foreach($vendedores as $v)
-            <option
-                value="{{ $v->id_usuario }}"
-                {{ in_array($v->id_usuario, request('ejecutivos', [])) ? 'selected' : '' }}
-            >
-                {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
-            </option>
-        @endforeach
-    </select>
-</div>
-
+                    <div class="col-md-6">
+                        <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
+                        <select
+                            id="ejecutivos"
+                            name="ejecutivos[]"
+                            class="select2"          {{-- ← SIN "form-select" --}}
+                            multiple
+                            data-placeholder="Seleccione uno o varios ejecutivos"
+                        >
+                            @foreach($vendedores as $v)
+                                <option
+                                    value="{{ $v->id_usuario }}"
+                                    {{ in_array($v->id_usuario, request('ejecutivos', [])) ? 'selected' : '' }}
+                                >
+                                    {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     {{-- Sector --}}
                     <div class="col-md-3">
@@ -86,6 +87,7 @@
                             @endforeach
                         </select>
                     </div>
+
                     {{-- Segmento --}}
                     <div class="col-md-3">
                         <label for="segmento" class="form-label">Segmento</label>
@@ -113,12 +115,10 @@
                             @endforeach
                         </select>
                     </div>
-              
-                    
-
+            
                     {{-- Registros por página --}}
                     <div class="col-md-3">
-                        <label for="perPage" class="form-label">Ver</label>
+                        <label for="perPage" class="form-label">Ver registros</label>
                         <select name="perPage" id="perPage" class="form-select">
                             @foreach([10,25,50,100] as $n)
                             <option
@@ -129,78 +129,61 @@
                         </select>
                     </div>
 
-                
-
-                    {{-- Botón Limpiar --}}
-                    <div class="col-md-1 offset-md-10 text-end">
+                    {{-- Botones (siempre a la derecha y con espacio entre ellos) --}}
+                    <div class="col-12 col-md-auto ms-auto d-flex gap-2">
                         <a href="{{ route('clientes.index') }}" class="btn btn-light">
-                            <i class="fa fa-eraser"></i> Limpiar
+                        <i class="fa fa-eraser"></i> Limpiar
                         </a>
-                    </div>
-                    {{-- Botón Buscar --}}
-                    <div class="col-md-1 text-end">
                         <button type="submit" class="btn btn-success">
-                            <i class="fa fa-search"></i> Buscar
+                        <i class="fa fa-search"></i> Buscar
                         </button>
                     </div>
-
-                </div>
-
-
+                    
                 </div>
             </div>
         </div>
     </form>
 
-        {{-- ───────── Paginación ───────── --}}
-    @if($clientes->hasPages())
-        <div class="row align-items-center mb-4">
-            <div class="col-sm">
-                <p class="mb-0 text-muted small">
-                    Mostrando {{ $clientes->firstItem() }} a {{ $clientes->lastItem() }}
-                    de {{ $clientes->total() }} clientes
-                </p>
-            </div>
-            <div class="col-sm-auto">
-                <nav aria-label="Paginación de clientes">
-                    <ul class="pagination pagination-rounded pagination-sm mb-0">
-                    
-                    {{-- ← Anterior (icon only) --}}
-                    @if($clientes->onFirstPage())
-                        <li class="page-item disabled">
-                        <span class="page-link">
-                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                            <span class="visually-hidden">Anterior</span>
-                        </span>
-                        </li>
-                    @else
-                        <li class="page-item">
-                        <a class="page-link" href="{{ $clientes->previousPageUrl() }}" rel="prev"
-                            aria-label="Anterior">
-                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                            <span class="visually-hidden">Anterior</span>
-                        </a>
-                        </li>
-                    @endif
+    {{-- ───────── Paginación ───────── --}}
+    <div class="row align-items-center mb-4">
+        {{-- Texto de totales --}}
+        <div class="col-sm">
+            <p class="mb-0 text-muted small">
+                Mostrando <strong>{{ $clientes->firstItem() }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
+                de <strong>{{ $clientes->total() }}</strong> clientes encontrados
+            </p>
+        </div>
 
-                {{-- Páginas numéricas (current ±1) --}}
+        {{-- Controles de paginación + “Ir a página” --}}
+        <div class="col-sm-auto d-flex align-items-center">
+            <nav aria-label="Paginación de clientes">
+                <ul class="pagination pagination-rounded pagination-sm mb-0">
+                    {{-- Primero --}}
+                    <li class="page-item {{ $clientes->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $clientes->url(1) }}" aria-label="Primero">
+                            <i class="fa fa-angle-double-left"></i>
+                        </a>
+                    </li>
+
+                    {{-- Anterior --}}
+                    <li class="page-item {{ $clientes->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $clientes->previousPageUrl() }}" rel="prev" aria-label="Anterior">
+                            <i class="fa fa-chevron-left"></i>
+                        </a>
+                    </li>
+
                     @php
                         $last = $clientes->lastPage();
                         $curr = $clientes->currentPage();
-
-                        // rango “normal”: currentPage ±1
                         $start = max(1, $curr - 1);
                         $end   = min($last, $curr + 1);
-
-                        // si estamos en la página 1, forzamos [1,2,3]
-                        if ($curr === 1) {
-                            $end = min($last, 3);
-                        }
-                        // si estamos en la última, forzamos [last-2, last-1, last]
-                        if ($curr === $last) {
-                            $start = max(1, $last - 2);
-                        }
+                        if ($curr === 1)     $end   = min($last, 3);
+                        if ($curr === $last) $start = max(1, $last - 2);
                     @endphp
+
+                    @if($start > 1)
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    @endif
 
                     @foreach ($clientes->getUrlRange($start, $end) as $page => $url)
                         <li class="page-item {{ $page == $curr ? 'active' : '' }}">
@@ -208,29 +191,56 @@
                         </li>
                     @endforeach
 
-                    {{-- Siguiente → (icon only) --}}
-                    @if($clientes->hasMorePages())
-                        <li class="page-item">
-                        <a class="page-link" href="{{ $clientes->nextPageUrl() }}" rel="next"
-                            aria-label="Siguiente">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                            <span class="visually-hidden">Siguiente</span>
-                        </a>
-                        </li>
-                    @else
-                        <li class="page-item disabled">
-                        <span class="page-link">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                            <span class="visually-hidden">Siguiente</span>
-                        </span>
-                        </li>
+                    @if($end < $last)
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
                     @endif
 
-                    </ul>
-                </nav>
-            </div>
+                    {{-- Siguiente --}}
+                    <li class="page-item {{ $clientes->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $clientes->nextPageUrl() }}" rel="next" aria-label="Siguiente">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </li>
+
+                    {{-- Último --}}
+                    <li class="page-item {{ $clientes->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $clientes->url($last) }}" aria-label="Último">
+                            <i class="fa fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            {{-- Ir a página --}}
+            <form method="GET" action="{{ route('clientes.index') }}" class="d-flex ms-3 align-items-center">
+                {{-- Preserva todos los otros filtros en la query --}}
+                @foreach(request()->except('page') as $key => $value)
+                    @if(is_array($value))
+                        @foreach($value as $v)
+                            <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
+                        @endforeach
+                    @else
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    @endif
+                @endforeach
+
+
+                <label for="input-page" class="mb-0 me-1 small">Ir a</label>
+                <input
+                  type="number"
+                  id="input-page"
+                  name="page"
+                  min="1"
+                  max="{{ $clientes->lastPage() }}"
+                  class="form-control form-control-sm"
+                  style="width: 70px;"
+                  placeholder="pág."
+                  value="{{ $clientes->currentPage() }}"
+                />
+                <button type="submit" class="btn btn-sm btn-primary ms-1">Ir</button>
+            </form>
         </div>
-    @endif
+    </div>
     {{-- ────────── Fin paginación ────────── --}}
 
     {{-- 📋 Tabla responsiva --}}
@@ -239,15 +249,15 @@
                                          table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th class="w-10">ID Cliente</th>
-                    <th>Empresa</th>
-                    <th>Contacto</th>
+                    <th class="filtro-asc-desc">ID Cliente</th>
+                    <th class="filtro-asc-desc">Empresa</th>
+                    <th class="filtro-asc-desc">Contacto</th>
                     <th>Teléfono</th>
                     <th>Correo</th>
-                    <th>Sector</th>
-                    <th>Segmento</th>
-                    <th>Ciclo</th>
-                    <th>Asignado a</th>
+                    <th class="filtro-asc-desc">Sector</th>
+                    <th class="filtro-asc-desc">Segmento</th>
+                    <th class="filtro-asc-desc">Ciclo</th>
+                    <th class="filtro-asc-desc">Asignado a</th>
                     <th class="text-center">…</th>
                 </tr>
             </thead>
@@ -321,7 +331,7 @@
 
 
                         <td>
-                            {{ $c->vendedor->nombre ?? '—' }}{{ isset($c->vendedor->apellido_p) ? '' . $c->vendedor->apellido_p : '' }} {{ $c->vendedor->apellido_m ?? '' }}
+                            {{ $c->vendedor->nombre ?? '—' }} {{$c->vendedor->apellido_p ?? '' }} {{ $c->vendedor->apellido_m ?? '' }}
                         </td>
 
                         {{-- Acciones compactas en dropdown --}}
@@ -332,110 +342,212 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('clientes.edit', $c->id_cliente) }}">
+                                        <button
+                                            type="button"
+                                            class="dropdown-item"
+                                            onclick="window.location='{{ route('clientes.edit', $c->id_cliente) }}'"
+                                        >
                                             <i class="fa fa-edit me-2 text-warning"></i> Editar
-                                        </a>
+                                        </button>
                                     </li>
                                     <li>
-                                        <form action="{{ route('clientes.destroy', $c->id_cliente) }}" method="POST"
-                                            onsubmit="return confirm('¿Eliminar cliente?')">
-                                            @csrf @method('DELETE')
-                                            <button class="dropdown-item text-danger">
-                                                <i class="fa fa-trash me-2"></i> Borrar
-                                            </button>
-                                        </form>
-                          td        </li>
+                                        <button
+                                            type="button"
+                                            class="dropdown-item "
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modal-confirmar-borrar-{{ $c->id_cliente }}"
+                                        >
+                                            <i class="fa fa-trash me-2 text-danger"></i> Borrar
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
                     </tr>
+
+                    <div class="modal fade" id="modal-confirmar-borrar-{{ $c->id_cliente }}" tabindex="-1" aria-labelledby="modalLabelBorrar{{ $c->id_cliente }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabelBorrar{{ $c->id_cliente }}">
+                                <i data-feather="alert-triangle" class="me-2 text-warning"></i>
+                                Confirmar borrado
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Está seguro que desea borrar la cuenta <strong>{{ $c->nombre }}</strong> (ID: {{ $c->id_cliente }})? Esta acción no se puede deshacer.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i data-feather="x"></i> Cancelar
+                                </button>
+                                {{-- Formulario único para eliminar --}}
+                                <form action="{{ route('clientes.destroy', $c->id_cliente) }}" method="POST" class="d-inline">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-danger">
+                                    <i data-feather="trash-2"></i> Borrar
+                                </button>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             </tbody>
         </table>
     </div> {{-- /.table-responsive --}}
 
     {{-- ───────── Paginación ───────── --}}
-    @if($clientes->hasPages())
     <div class="row align-items-center mb-4">
+        {{-- Texto de totales --}}
         <div class="col-sm">
-        <p class="mb-0 text-muted small">
-            Mostrando {{ $clientes->firstItem() }} a {{ $clientes->lastItem() }}
-            de {{ $clientes->total() }} clientes
-        </p>
+            <p class="mb-0 text-muted small">
+                Mostrando <strong>{{ $clientes->firstItem() }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
+                de <strong>{{ $clientes->total() }}</strong> clientes encontrados
+            </p>
         </div>
-        <div class="col-sm-auto">
-        <nav aria-label="Paginación de clientes">
-            <ul class="pagination pagination-rounded pagination-sm mb-0">
-            
-            {{-- ← Anterior (icon only) --}}
-            @if($clientes->onFirstPage())
-                <li class="page-item disabled">
-                <span class="page-link">
-                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                    <span class="visually-hidden">Anterior</span>
-                </span>
-                </li>
-            @else
-                <li class="page-item">
-                <a class="page-link" href="{{ $clientes->previousPageUrl() }}" rel="prev"
-                    aria-label="Anterior">
-                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                    <span class="visually-hidden">Anterior</span>
-                </a>
-                </li>
-            @endif
 
-            {{-- Páginas numéricas (current ±1) --}}
-            @php
-                $last = $clientes->lastPage();
-                $curr = $clientes->currentPage();
+        {{-- Controles de paginación + “Ir a página” --}}
+        <div class="col-sm-auto d-flex align-items-center">
+            <nav aria-label="Paginación de clientes">
+                <ul class="pagination pagination-rounded pagination-sm mb-0">
+                    {{-- Primero --}}
+                    <li class="page-item {{ $clientes->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $clientes->url(1) }}" aria-label="Primero">
+                            <i class="fa fa-angle-double-left"></i>
+                        </a>
+                    </li>
 
-                // rango “normal”: currentPage ±1
-                $start = max(1, $curr - 1);
-                $end   = min($last, $curr + 1);
+                    {{-- Anterior --}}
+                    <li class="page-item {{ $clientes->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $clientes->previousPageUrl() }}" rel="prev" aria-label="Anterior">
+                            <i class="fa fa-chevron-left"></i>
+                        </a>
+                    </li>
 
-                // si estamos en la página 1, forzamos [1,2,3]
-                if ($curr === 1) {
-                    $end = min($last, 3);
-                }
-                // si estamos en la última, forzamos [last-2, last-1, last]
-                if ($curr === $last) {
-                    $start = max(1, $last - 2);
-                }
-            @endphp
+                    @php
+                        $last = $clientes->lastPage();
+                        $curr = $clientes->currentPage();
+                        $start = max(1, $curr - 1);
+                        $end   = min($last, $curr + 1);
+                        if ($curr === 1)     $end   = min($last, 3);
+                        if ($curr === $last) $start = max(1, $last - 2);
+                    @endphp
 
-            @foreach ($clientes->getUrlRange($start, $end) as $page => $url)
-                <li class="page-item {{ $page == $curr ? 'active' : '' }}">
-                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                </li>
-            @endforeach
+                    @if($start > 1)
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    @endif
+
+                    @foreach ($clientes->getUrlRange($start, $end) as $page => $url)
+                        <li class="page-item {{ $page == $curr ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                        </li>
+                    @endforeach
+
+                    @if($end < $last)
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    @endif
+
+                    {{-- Siguiente --}}
+                    <li class="page-item {{ $clientes->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $clientes->nextPageUrl() }}" rel="next" aria-label="Siguiente">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </li>
+
+                    {{-- Último --}}
+                    <li class="page-item {{ $clientes->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $clientes->url($last) }}" aria-label="Último">
+                            <i class="fa fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            {{-- Ir a página --}}
+            <form method="GET" action="{{ route('clientes.index') }}" class="d-flex ms-3 align-items-center">
+                {{-- Preserva todos los otros filtros en la query --}}
+                @foreach(request()->except('page') as $key => $value)
+    @if(is_array($value))
+        @foreach($value as $v)
+            <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
+        @endforeach
+    @else
+        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+    @endif
+@endforeach
 
 
-            {{-- Siguiente → (icon only) --}}
-            @if($clientes->hasMorePages())
-                <li class="page-item">
-                <a class="page-link" href="{{ $clientes->nextPageUrl() }}" rel="next"
-                    aria-label="Siguiente">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    <span class="visually-hidden">Siguiente</span>
-                </a>
-                </li>
-            @else
-                <li class="page-item disabled">
-                <span class="page-link">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    <span class="visually-hidden">Siguiente</span>
-                </span>
-                </li>
-            @endif
-
-            </ul>
-        </nav>
+                <label for="input-page" class="mb-0 me-1 small">Ir a</label>
+                <input
+                  type="number"
+                  id="input-page"
+                  name="page"
+                  min="1"
+                  max="{{ $clientes->lastPage() }}"
+                  class="form-control form-control-sm"
+                  style="width: 70px;"
+                  placeholder="pág."
+                  value="{{ $clientes->currentPage() }}"
+                />
+                <button type="submit" class="btn btn-sm btn-primary ms-1">Ir</button>
+            </form>
         </div>
     </div>
-    @endif
     {{-- ────────── Fin paginación ────────── --}}
+    
 
 
+    <script>
+        //Filtros ASC/DESC en cabecera de la tabla pincipal
+        document.addEventListener('DOMContentLoaded', () => {
+        const table = document.getElementById('tabla-clientes');
+        const tbody = table.tBodies[0];
+        // 1) Todos los th
+        const allThs = Array.from(table.querySelectorAll('thead th'));
+        // 2) Solo los que tienen la clase filtro-asc-desc
+        const sortableThs = allThs.filter(th => th.classList.contains('filtro-asc-desc'));
+        const dir = {};  // guardará la dirección por índice de columna
+
+        sortableThs.forEach(th => {
+            // posición real de la columna
+            const colIndex = th.cellIndex;
+
+            th.style.cursor = 'pointer';
+            // agrega la flecha
+            const arrow = document.createElement('span');
+            arrow.className = 'sort-arrow';
+            th.append(' ', arrow);
+
+            th.addEventListener('click', () => {
+            // alterna dirección
+            dir[colIndex] = dir[colIndex] === 'asc' ? 'desc' : 'asc';
+
+            // extrae y ordena filas
+            const rows = Array.from(tbody.rows);
+            rows.sort((a, b) => {
+                const A = a.cells[colIndex].innerText.trim();
+                const B = b.cells[colIndex].innerText.trim();
+                // parsea número si usas data-type="number", o texto por defecto
+                let res = 0;
+                if (th.dataset.type === 'number') {
+                res = parseFloat(A.replace(/[^\d.-]/g, '')) - parseFloat(B.replace(/[^\d.-]/g, ''));
+                } else {
+                res = A.localeCompare(B, undefined, { numeric: true, sensitivity: 'base' });
+                }
+                return dir[colIndex] === 'asc' ? res : -res;
+            });
+
+            // reinyecta las filas ordenadas
+            rows.forEach(r => tbody.appendChild(r));
+
+            // actualiza clases de flecha
+            sortableThs.forEach(t => t.classList.remove('asc', 'desc'));
+            th.classList.add(dir[colIndex]);
+            });
+        });
+        });
+    </script>
 
 @endsection

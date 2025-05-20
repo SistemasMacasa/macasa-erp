@@ -30,6 +30,16 @@ Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name
 
 Route::get('/clientes/view/{id}', [ClienteController::class, 'view'])->name('clientes.view');
 
+Route::middleware('auth')->group(function() {
+    // Mostrar formulario de transferencia
+    Route::get('/clientes/transfer', [ClienteController::class, 'transfer'])
+         ->name('clientes.transfer');
+
+    // Procesar transferencia
+    Route::post('/clientes/transfer', [ClienteController::class, 'transferStore'])
+         ->name('clientes.transfer.store');
+});
+
 //name sirve para darle un alias a la ruta y que puedes usar en todo el código de Laravel
 // por ejemplo: <a href="{{ route('clientes.create') }}">Crear Cliente</a>
 

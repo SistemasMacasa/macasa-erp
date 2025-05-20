@@ -12,14 +12,14 @@
     <h1 class="mb-4">Información de la Cuenta [{{ $cliente->id_cliente }}]</h1>
 
     {{-- 🎛 Botonera --}}
-    <div class="d-flex flex-wrap gap-2 mb-4">
+    <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
         <a href="{{ url()->previous() }}" class="btn btn-light">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
         <button type="submit"
                 class="btn btn-success"
-                form="formCuenta">   {{-- ⬅️ Vincula al form por id --}}
+                form="formCuenta">
             <i class="fa fa-save me-1"></i> Guardar
         </button>
 
@@ -34,11 +34,13 @@
         <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-secondary">
             <i class="fa fa-address-book me-1"></i> Libreta de Contactos
         </a>
-    </div>
 
-    <div class="alert alert-warning" role="alert">
-        <i class="fa fa-exclamation-triangle me-2"></i>
-        Este formulario sigue en construcción y actualmente no es funcional.
+        <div class="ms-auto">
+            <div class="alert alert-warning mb-0 py-2 px-3 d-inline-block" role="alert" style="white-space: nowrap;">
+                <i class="fa fa-exclamation-triangle me-2"></i>
+                Esta sección se encuentra en construcción.
+            </div>
+        </div>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-2">

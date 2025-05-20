@@ -56,7 +56,7 @@
                                     <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                     <input  id="nombre" name="nombre" type="text"
                                             class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
-                                            value="{{ old('nombre') }}" required minlength="3" maxlength="120">
+                                            value="{{ old('nombre') }}" required minlength="3" maxlength="45">
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
@@ -103,7 +103,7 @@
                                 {{-- Nombre(s) / Apellidos --}}
                                 <div class="col-sm-4">
                                     <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
-                                    <input  name="contacto[0][nombre]" class="form-control guarda-mayus" minlength="2" maxlength="50" required>
+                                    <input  name="contacto[0][nombre]" class="form-control guarda-mayus" minlength="2" maxlength="45" required>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
@@ -121,7 +121,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="form-label">Puesto <span class="text-danger">*</span></label>
-                                    <input name="contacto[0][puesto]" class="form-control guarda-mayus" maxlength="100" required>
+                                    <input name="contacto[0][puesto]" class="form-control guarda-mayus" maxlength="20" required>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="form-label">Género <span class="text-danger">*</span></label>

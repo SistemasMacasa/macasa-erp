@@ -544,6 +544,42 @@ class ClienteController extends Controller
         ->with('success', 'Cliente creado correctamente');
         }
 
+    /**
+     * Muestra el formulario para traspasar múltiples clientes.
+     */
+    public function transfer()
+    {
+        // Ejecutivos de venta (usuarios internos)
+        $vendedores = Usuario::whereNull('id_cliente')->get();
+
+
+        $clientes = Cliente::with(['primerContacto', 'vendedor'])
+            ->orderBy('id_cliente')
+            ->get();
+
+        return view('clientes.transfer', compact('vendedores','clientes'));
+    }
+
+    /**
+     * Procesa el traspaso: actualiza id_vendedor de los clientes seleccionados.
+     */
+    public function transferStore(Request $request)
+    {
+        $data = $request->validate([
+            'clientes' => 'required|array',
+            'clientes.*' => 'integer|exists:clientes,id_cliente',
+            'destino'  => 'required|integer|exists:usuarios,id'
+        ]);
+
+        // Actualizar en lote
+        Cliente::whereIn('id_cliente', $data['clientes'])
+               ->update(['id_vendedor' => $data['destino']]);
+
+        return redirect()
+            ->route('clientes.transfer')
+            ->with('success','¡Clientes transferidos correctamente!');
+    }
+
 }
 
 /**
