@@ -253,7 +253,7 @@
                                          table-striped table-bordered">
             <thead class="table-dark text-center align-middle" style="font-size: var(--bs-body-font-size);">
                 <tr>
-                    <th class="py-1 px-2 filtro-asc-desc" style="width: 70px;">ID Cliente</th>
+                    <th class="py-1 px-2 filtro-asc-desc">ID</th>
                     <th class="py-1 px-2 filtro-asc-desc">Empresa</th>
                     <th class="py-1 px-2 filtro-asc-desc">Contacto</th>
                     <th class="py-1 px-2">Teléfono</th>
@@ -264,82 +264,106 @@
                     <th class="py-1 px-2 filtro-asc-desc">Asignado a</th>
                 </tr>
             </thead>
+
             <tbody>
-                {{-- Filas de clientes --}}
-                {{-- Iterar clientes --}}
                 @foreach ($clientes as $c)
                     @php
-                        $pc = $c->primerContacto;
-                        $tel = optional($pc)->telefono1;
+                        $pc    = $c->primerContacto;
+                        $tel   = optional($pc)->telefono1;
                         $email = optional($pc)->email;
+                        $fullAsignado = trim(
+                            ($c->vendedor->nombre ?? '') . ' ' .
+                            ($c->vendedor->apellido_p ?? '') . ' ' .
+                            ($c->vendedor->apellido_m ?? '')
+                        );
                     @endphp
                     <tr>
-                        {{-- ID con enlace al view --}}
-                        <td class="py-1 px-2 text-truncate" style="max-width:220px;" title="{{ $c->nombre }}">
-                            <a href="{{ route('clientes.view', $c->id_cliente) }}"
-                                class="text-decoration-underline fw-bold text-dark">
-                                {{-- ID con enlace al view --}}
-                                {{ Str::limit($c->id_cliente, 7) }}
-                            </a>
-                        </td>
+                    {{-- ID Cliente --}}
+                    <td class="py-1 px-2 text-truncate" title="{{ $c->id_cliente }}">
+                        
+                        {{ Str::limit($c->id_cliente, 5) }}
+                    </td>
 
-                        <td class="py-1 px-2 text-truncate" style="max-width:220px;" title="{{ $c->nombre }}">
-                            <a href="{{ route('clientes.view', $c->id_cliente) }}" style="color: inherit; text-decoration: underline;  font-weight: bold;">
-                                {{ $c->nombre }}
-                            </a>
-                        </td>
+                    {{-- Empresa --}}
+                    <td class="py-1 px-2 text-truncate" title="{{ $c->nombre }}">
+                        <a href="{{ route('clientes.view', $c->id_cliente) }}"
+                        class="text-decoration-underline fw-bold text-dark">
+                        {{ Str::limit($c->nombre, 30) }}
+                        </a>
+                    </td>
 
-                        {{-- Contacto principal o guion --}}
-                        <td>
-                            @if(optional($pc)->nombre_completo)
-                                <a href="{{ route('clientes.view', $c->id_cliente) }}" style="color: inherit; text-decoration: underline;">
-                                    {{ $pc->nombre_completo }}
-                                </a>
-                            @else
-                                —
-                            @endif
-                        </td>
+                    {{-- Contacto --}}
+                    <td class="py-1 px-2 text-truncate"
+                        title="{{ optional($pc)->nombre_completo }}">
+                        @if(optional($pc)->nombre_completo)
+                            {{ Str::limit($pc->nombre_completo, 25) }}
+                        @else
+                        —
+                        @endif
+                    </td>
 
-                        {{-- Teléfono clic-to-call --}}
-                        <td>
-                            @if($tel)
-                                <a href="tel:{{ $tel }}">
-                                    {{ $tel }}
-                                </a>
-                            @else
-                                —
-                            @endif
-                        </td>
+                    {{-- Teléfono (sin truncar) --}}
+                    <td class="py-1 px-2 text-center phone-field">
+                        @if($tel)
+                        <a href="tel:{{ $tel }}">{{ $tel }}</a>
+                        @else
+                        —
+                        @endif
+                    </td>
 
-                        {{-- Email mailto --}}
-                        <td>
-                            @if ($email)
-                                <a href="mailto:{{ $email }}">{{ $email }}</a>
-                            @else
-                                —
-                            @endif
-                        </td>
-                        <td>{{ $c->sector ? ucfirst(mb_strtolower($c->sector)) : '—' }}</td>
-                        <td>{{ $c->segmento ? ucfirst(mb_strtolower($c->segmento)) : '—' }}</td>
+                    {{-- Correo --}}
+                    <td class="py-1 px-2 text-truncate" title="{{ $email }}">
+                        @if($email)
+                        <a href="mailto:{{ $email }}">
+                            {{ Str::limit($email, 25) }}
+                        </a>
+                        @else
+                        —
+                        @endif
+                    </td>
 
-                        {{-- Ciclo como badge --}}
-                        <td>
-                            <span
-                                class="badge"
-                                style="background-color:{{ $c->ciclo_venta === 'venta' ? '#198754' : '#FFBF00' }};
-                                    color:{{ $c->ciclo_venta === 'venta' ? '#fff' : '#212529' }}; font-size: var(--bs-body-font-size); min-width: 79px;">
-                                {{ ucfirst(mb_strtolower($c->ciclo_venta)) }}
-                            </span>
-                        </td>
+                    {{-- Sector --}}
+                    <td class="py-1 px-2 text-center">
+                        {{ $c->sector ? ucfirst(mb_strtolower($c->sector)) : '—' }}
+                    </td>
 
+                    {{-- Segmento filtrado --}}
+                    <td class="py-1 px-2 text-center">
+                        @php $seg = mb_strtolower($c->segmento ?? ''); @endphp
+                        @switch($seg)
+                        @case('macasa cuentas especiales')
+                            {{ 'Macasa Cuentas Especiales' }} @break
+                        @case('tekne store e-commerce')
+                            {{ 'Tekne Store E-Commerce' }} @break
+                        @case('laplazaenlinea e-commerce')
+                            {{ 'LaPlazaEnLinea E-Commerce' }} @break
+                        @default
+                            —
+                        @endswitch
+                    </td>
 
-                        <td>
-                            {{ $c->vendedor->nombre ?? '—' }} {{$c->vendedor->apellido_p ?? '' }} {{ $c->vendedor->apellido_m ?? '' }}
-                        </td>
+                    {{-- Ciclo (sin cambios) --}}
+                    <td class="py-1 px-2 text-center">
+                        <span class="badge"
+                            style="background-color:{{ $c->ciclo_venta==='venta'? '#2ab57d':'#FEE028' }};
+                                    color:{{ $c->ciclo_venta==='venta'? '#fff':'#000' }};
+                                    font-size: var(--bs-body-font-size);
+                                    min-width:79px;">
+                        {{ ucfirst(mb_strtolower($c->ciclo_venta)) }}
+                        </span>
+                    </td>
+
+                    {{-- Asignado a --}}
+                    <td class="py-1 px-2 text-truncate" title="{{ $fullAsignado }}">
+                        {{ $fullAsignado
+                        ? Str::limit($fullAsignado, 25)
+                        : '—'
+                        }}
+                    </td>
                     </tr>
-
                 @endforeach
             </tbody>
+
         </table>
     </div> {{-- /.table-responsive --}}
 

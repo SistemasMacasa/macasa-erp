@@ -121,19 +121,19 @@
     <script src="{{ asset('assets/js/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-    <!-- toggle del sidebar-->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('sidebar-toggle');
-    btn?.addEventListener('click', () => {
-        const size = document.body.getAttribute('data-sidebar-size') || 'lg';
-        const next = size === 'lg' ? 'sm' : 'lg';
-        document.body.setAttribute('data-sidebar-size', next);
-        localStorage.setItem('sidebarSize', next);
-        /* el CSS se encarga de girar el icono */
+        <!-- toggle del sidebar-->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('sidebar-toggle');
+        btn?.addEventListener('click', () => {
+            const size = document.body.getAttribute('data-sidebar-size') || 'lg';
+            const next = size === 'lg' ? 'sm' : 'lg';
+            document.body.setAttribute('data-sidebar-size', next);
+            localStorage.setItem('sidebarSize', next);
+            /* el CSS se encarga de girar el icono */
+        });
     });
-});
-</script>
+    </script>
 
 
     <script>
@@ -263,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 
 
+
     <script>
         /**
          * Convierte a minúsculas SIN acentos cuando el input pierde el foco.
@@ -314,12 +315,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
     <script>
-    $('#ejecutivos').select2({
-    theme: 'bootstrap-5',
-    placeholder: 'Seleccione uno o varios ejecutivos',
-    width: '100%',
-    closeOnSelect: false
-});
+        $('#ejecutivos').select2({
+        theme: 'bootstrap-5',
+        placeholder: 'Seleccione uno o varios ejecutivos',
+        width: '100%',
+        closeOnSelect: false
+    });
 
     </script>
 

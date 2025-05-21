@@ -862,49 +862,103 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
      Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */
 
-/* ID Cliente (columna 1) */
+/* ───────── Tabla con layout fijo y altura homogénea ───────── */
+#tabla-clientes {
+  table-layout: fixed;
+}
+#tabla-clientes th,
+#tabla-clientes td {
+  vertical-align: middle;
+  height: 48px;                /* altura uniforme */
+  padding-top: .5rem !important;
+  padding-bottom: .5rem !important;
+  overflow: hidden;            /* recorte general */
+}
+
+/* ───────── Sticky columns ───────── */
+/* ID Cliente (max 5 chars → 5ch) */
 #tabla-clientes th:nth-child(1),
 #tabla-clientes td:nth-child(1) {
   position: sticky;
   left: 0;
-  z-index: 3;                          /* por encima de todo */
-  background: var(--bs-table-bg);      /* mismo fondo que tabla */
-  /* opcional: fijar ancho:
-     width: 80px; max-width: 80px;    */
+  z-index: 3;
+  background: var(--bs-table-bg);
+  width: 5ch;
 }
-
-/* Empresa (columna 2) */
+/* Empresa (max 30 chars → 30ch) */
 #tabla-clientes th:nth-child(2),
 #tabla-clientes td:nth-child(2) {
   position: sticky;
-  left: 80px;                          /* igual al ancho de la col 1 */
-  z-index: 2;                          /* un nivel abajo */
+  left: 5ch;
+  z-index: 2;
   background: var(--bs-table-bg);
-  /* opcional: fijar ancho:
-     width: 200px; max-width: 200px;  */
+  width: 30ch;
 }
 
+/* Telefono (columna 4: 10 dígitos) */
+#tabla-clientes th:nth-child(4),
+#tabla-clientes td:nth-child(4) {
+  width: 12ch;            /* 10 caracteres + paddings */
+  text-align: center;
+}
 
+/* Sector (columna 6: “Gobierno” → 8 caracteres) */
+#tabla-clientes th:nth-child(6),
+#tabla-clientes td:nth-child(6) {
+  width: 8ch;
+  text-align: center;
+  white-space: nowrap;
+}
 
-/* Aplicar truncado en todas las celdas de texto pesado: */
-#tabla-clientes td:nth-child(2),
+/* Segmento (columna 7: “Macasa Cuentas Especiales” → 25 caracteres) */
+#tabla-clientes th:nth-child(7),
+#tabla-clientes td:nth-child(7) {
+  width: 20ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Ciclo (columna 8) */
+#tabla-clientes th:nth-child(8),
+#tabla-clientes td:nth-child(8) {
+  width: 12ch;            /* “Cotizacion” son 10+ caracteres */
+  text-align: center;
+}
+/* Reducir padding de la badge para aprovechar el ancho */
+#tabla-clientes td:nth-child(8) .badge {
+  padding: .25rem .5rem;
+  min-width: auto;
+}
+
+/* Asignado a (columna 9: 25 caracteres) */
+#tabla-clientes th:nth-child(9),
+#tabla-clientes td:nth-child(9) {
+  width: 25ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* ───────── Truncado columnas “pesadas” ───────── */
+/* Contacto, Correo y Asignado a (max 25 chars → 25ch) */
+#tabla-clientes th:nth-child(3),
 #tabla-clientes td:nth-child(3),
-#tabla-clientes td:nth-child(5) {
-  max-width: 200px;                    /* ajusta a tu gusto */
+#tabla-clientes th:nth-child(5),
+#tabla-clientes td:nth-child(5)
+{
+  width: 25ch;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+#tabla-clientes td:nth-child(3) a,
+#tabla-clientes td:nth-child(5) a,
+#tabla-clientes td:nth-child(9) a {
+  display: block;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-/* Para que los <a> dentro también se trunquen */
-#tabla-clientes td:nth-child(2) a,
-#tabla-clientes td:nth-child(3) a,
-#tabla-clientes td:nth-child(5) a {
-  display: block;                      /* para que text-overflow funcione */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 
 /* Flechas genéricas */
 .sort-arrow::after {
