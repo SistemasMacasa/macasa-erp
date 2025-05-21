@@ -1,40 +1,29 @@
-<header id="page-topbar">
-    <div class="navbar-header">
-        <div class="d-flex">
-            <!-- LOGO -->
-            <div class="navbar-brand-box d-flex align-items-center justify-content-center">
-                <a href="/" class="logo logo-dark">
-                    <span class="logo-sm">
-                        <img id="logo-img" src="{{ asset('assets/images/imglogin/logo.png') }}" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img id="logo-img-lg" src="{{ asset('assets/images/imglogin/logo.png') }}" alt="" height="22">
-                    </span>
-                </a>
+<header id="page-topbar" class="topbar-custom d-flex align-items-center gap-3">
 
+    {{-- 📦 Cajón de logo + toggle --}}
+    <div id="logo-box" class="d-flex align-items-center px-3 gap-2 flex-shrink-0">
+        <a href="/" class="logo d-flex align-items-center" style="margin-left: auto; margin-right: auto;">
+            {{-- Logo grande y pequeño; se oculta / muestra vía CSS --}}
+            <img src="{{ asset('assets/images/imglogin/logo.png') }}"
+                 class="logo-lg" height="22" alt="logo" />
+            <img src="{{ asset('assets/images/imglogin/loguito.png') }}"
+                 class="logo-sm" height="22" alt="logo" />
+        </a>
 
-                <a href="/" class="logo logo-light">
-                    <span class="logo-sm">
-                        <img id="logo-img" src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
-                    </span>
-                    <span class="logo-lg">
-                        <img id="logo-img-lg" src="{{ asset('assets/images/imglogin/logo.png')}}" alt="">
-                    </span>
-                </a>
-            </div>
+        <button id="sidebar-toggle"
+                class="sidebar-toggle shadow-none"
+                type="button" aria-label="Toggle menu">
+            <i id="sidebar-toggle-icon" class="bx bx-chevron-left"></i>
+        </button>
+    </div>
 
-            <button type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn">
-                <i class="fa fa-fw fa-bars"></i>
-            </button>
-
-            <!-- App Search-->
-            <form class="app-search d-none d-lg-block">
-                <div class="position-relative">
-                    <input type="text" class="form-control" placeholder="Search...">
-                    <button class="btn btn-primary" type="button"><i class="bx bx-search-alt align-middle"></i></button>
-                </div>
-            </form>
-        </div>
+{{-- 🔍 Buscador alineado y estilizado --}}
+<div class="flex-grow-1 d-flex align-items-center" style="padding-left: 1rem;">
+    <form class="search-wrap w-50 position-relative">
+        <input type="text" class="form-control search-input" placeholder="Buscar…" autocomplete="off">
+        <i class="mdi mdi-magnify search-icon"></i>
+    </form>
+</div>
 
         <div class="d-flex">
 
@@ -266,5 +255,5 @@
             </div>
 
         </div>
-    </div>
+
 </header>

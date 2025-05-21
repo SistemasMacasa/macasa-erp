@@ -8,14 +8,14 @@
                 <li>
                     <a href="{{ route('inicio') }}">
                         <i data-feather="home"></i>
-                        <span>Inicio</span>
+                        <span class="menu-item">Inicio</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="users"></i>
-                        <span>Mi CRM</span>
+                        <span class="menu-item">Mi CRM</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
@@ -33,7 +33,7 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="file-text"></i>
-                        <span>Monitor de Cotizaciones</span>
+                        <span class="menu-item">Monitor de Cotizaciones</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('inicio') }}">Monitor de Cotizaciones</a></li>
@@ -43,7 +43,7 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="shopping-cart"></i>
-                        <span>Monitor de Ventas</span>
+                        <span class="menu-item">Monitor de Ventas</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('inicio') }}">Monitor de Ventas</a></li>
@@ -55,28 +55,28 @@
                 <li>
                     <a href="{{ route('inicio') }}">
                         <i data-feather="dollar-sign"></i>
-                        <span>Monitor de Cobranza</span>
+                        <span class="menu-item">Monitor de Cobranza</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('inicio') }}">
                         <i data-feather="globe"></i>
-                        <span>E-Commerce</span>
+                        <span class="menu-item">E-Commerce</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('inicio') }}">
                         <i data-feather="bar-chart-2"></i>
-                        <span>Marketing</span>
+                        <span class="menu-item">Marketing</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="briefcase"></i>
-                        <span>Administración</span>
+                        <span class="menu-item">Administración</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('inicio') }}">Alta de Proveedor</a></li>

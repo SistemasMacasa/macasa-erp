@@ -38,7 +38,7 @@
                 <div class="row gx-3 gy-2">
 
                     {{-- Búsqueda global --}}
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="search" class="form-label">Búsqueda</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white"><i class="fa fa-search"></i></span>
@@ -54,7 +54,7 @@
                     </div>
 
                     {{-- Ejecutivos (multi-select con Select2) --}}
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
                         <select
                             id="ejecutivos"
@@ -83,7 +83,7 @@
                             <option
                                 value="{{ $s }}"
                                 {{ request('sector') == $s ? 'selected' : '' }}
-                            >{{ $s }}</option>
+                            >{{ ucfirst(mb_strtolower($s)) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -97,7 +97,7 @@
                             <option
                                 value="{{ $s }}"
                                 {{ request('segmento') == $s ? 'selected' : '' }}
-                            >{{ $s }}</option>
+                            >{{ ucfirst(mb_strtolower($s)) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -111,7 +111,7 @@
                             <option
                                 value="{{ $ciclo }}"
                                 {{ request('cycle') == $ciclo ? 'selected' : '' }}
-                            >{{ $ciclo }}</option>
+                            >{{ ucfirst(mb_strtolower($ciclo)) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -129,13 +129,17 @@
                         </select>
                     </div>
 
-                    {{-- Botones (siempre a la derecha y con espacio entre ellos) --}}
-                    <div class="col-12 col-md-auto ms-auto d-flex gap-2">
-                        <a href="{{ route('clientes.index') }}" class="btn btn-light">
-                        <i class="fa fa-eraser"></i> Limpiar
+                    <div class="col-md-3 d-flex gap-2 align-items-end">
+                        <a  href="{{ route('clientes.index') }}"
+                            class="btn btn-light d-flex align-items-center justify-content-center"
+                            style="height:38px">
+                            <i class="fa fa-eraser me-1"></i> Limpiar
                         </a>
-                        <button type="submit" class="btn btn-success">
-                        <i class="fa fa-search"></i> Buscar
+
+                        <button type="submit"
+                                class="btn btn-success d-flex align-items-center justify-content-center"
+                                style="height:38px">
+                            <i class="fa fa-search me-1"></i> Buscar
                         </button>
                     </div>
                     
@@ -258,7 +262,6 @@
                     <th class="filtro-asc-desc">Segmento</th>
                     <th class="filtro-asc-desc">Ciclo</th>
                     <th class="filtro-asc-desc">Asignado a</th>
-                    <th class="text-center">…</th>
                 </tr>
             </thead>
             <tbody>
@@ -274,13 +277,14 @@
                         {{-- ID con enlace al view --}}
                         <td>
                             <a href="{{ route('clientes.view', $c->id_cliente) }}"
-                                class="fw-semibold text-decoration-underline">
+                                class=" " style="color: inherit; text-decoration: underline;">
+                                {{-- ID con enlace al view --}}
                                 {{ $c->id_cliente }}
                             </a>
                         </td>
 
                         <td>
-                            <a href="{{ route('clientes.view', $c->id_cliente) }}" style="color: inherit; text-decoration: underline;">
+                            <a href="{{ route('clientes.view', $c->id_cliente) }}" style="color: inherit; text-decoration: underline;  font-weight: bold;">
                                 {{ $c->nombre }}
                             </a>
                         </td>
@@ -315,17 +319,16 @@
                                 —
                             @endif
                         </td>
-
-                        <td>{{ $c->sector ?? '—' }}</td>
-                        <td>{{ $c->segmento ?? '—' }}</td>
+                        <td>{{ $c->sector ? ucfirst(mb_strtolower($c->sector)) : '—' }}</td>
+                        <td>{{ $c->segmento ? ucfirst(mb_strtolower($c->segmento)) : '—' }}</td>
 
                         {{-- Ciclo como badge --}}
                         <td>
                             <span
                                 class="badge"
                                 style="background-color:{{ $c->ciclo_venta === 'venta' ? '#198754' : '#FFBF00' }};
-                                    color:{{ $c->ciclo_venta === 'venta' ? '#fff' : '#212529' }};">
-                                {{ $c->ciclo_venta }}
+                                    color:{{ $c->ciclo_venta === 'venta' ? '#fff' : '#212529' }}; font-size: var(--bs-body-font-size); min-width: 79px;">
+                                {{ ucfirst(mb_strtolower($c->ciclo_venta)) }}
                             </span>
                         </td>
 
@@ -333,66 +336,8 @@
                         <td>
                             {{ $c->vendedor->nombre ?? '—' }} {{$c->vendedor->apellido_p ?? '' }} {{ $c->vendedor->apellido_m ?? '' }}
                         </td>
-
-                        {{-- Acciones compactas en dropdown --}}
-                        <td class="text-center">
-                            <div class="dropdown">
-                                <button class="btn btn-icon btn-light btn-sm" data-bs-toggle="dropdown">
-                                    <i class="fa fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <button
-                                            type="button"
-                                            class="dropdown-item"
-                                            onclick="window.location='{{ route('clientes.edit', $c->id_cliente) }}'"
-                                        >
-                                            <i class="fa fa-edit me-2 text-warning"></i> Editar
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            type="button"
-                                            class="dropdown-item "
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modal-confirmar-borrar-{{ $c->id_cliente }}"
-                                        >
-                                            <i class="fa fa-trash me-2 text-danger"></i> Borrar
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
                     </tr>
 
-                    <div class="modal fade" id="modal-confirmar-borrar-{{ $c->id_cliente }}" tabindex="-1" aria-labelledby="modalLabelBorrar{{ $c->id_cliente }}" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabelBorrar{{ $c->id_cliente }}">
-                                <i data-feather="alert-triangle" class="me-2 text-warning"></i>
-                                Confirmar borrado
-                                </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                            </div>
-                            <div class="modal-body">
-                                ¿Está seguro que desea borrar la cuenta <strong>{{ $c->nombre }}</strong> (ID: {{ $c->id_cliente }})? Esta acción no se puede deshacer.
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                <i data-feather="x"></i> Cancelar
-                                </button>
-                                {{-- Formulario único para eliminar --}}
-                                <form action="{{ route('clientes.destroy', $c->id_cliente) }}" method="POST" class="d-inline">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i data-feather="trash-2"></i> Borrar
-                                </button>
-                                </form>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
                 @endforeach
             </tbody>
         </table>

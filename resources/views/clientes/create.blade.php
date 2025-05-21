@@ -138,7 +138,7 @@
 
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
-                                        <div class="col-md-4" id="telefonos-col" style="padding: 0 !important;">
+                                        <div class="col-md-4 col-sm-6" id="telefonos-col" style="padding: 0 !important;">
                                             <div class="mb-2 telefono-item">
                                                 <label>Teléfono 1 <span class="text-danger">*</span></label>
 
@@ -151,7 +151,7 @@
                                         </div>
 
                                         {{-- Celulares --}}
-                                        <div class="col-md-4" id="celulares-col" style="padding-left: 0px;">
+                                        <div class="col-md-4 col-sm-6" id="celulares-col" style="padding-left: 0px;">
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular 1</label>
 

@@ -65,6 +65,7 @@ class ClienteController extends Controller
         $sectores = [
             '1' => 'privada',
             '2' => 'gobierno',
+            '3' => 'persona',
 
         ];
 

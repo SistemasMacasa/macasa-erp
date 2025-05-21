@@ -42,6 +42,176 @@ body[data-sidebar-size="md"] .logo-sm img {
     width: 50px; /* Ajusta aquí tu tamaño colapsado */
     height: auto;
 }
+/* =========================================================
+   TOPBAR + SIDEBAR-TOGGLE  (ERP MACASA)
+   ========================================================= */
+
+/* 1) Base del topbar ------------------------------------- */
+.topbar-custom{
+    height: 70px;                /* tu nueva altura */
+    background: #fff;
+}
+
+/* 2) Cajón del logo -------------------------------------- */
+#logo-box{
+    position: relative;          /* ← necesario para posicionar el botón */
+    height: 100%;
+    background: var(--bs-sidebar-bg, #f8f9fa);
+    border-right: 1px solid #e9ecef;
+    transition: width .35s ease;
+    display: flex;
+    align-items: center;
+    padding-left: .75rem;        /* pequeño respiro antes del logo */
+}
+
+/* Anchuras */
+body[data-sidebar-size="lg"] #logo-box{ width: 250px; }
+body[data-sidebar-size="sm"] #logo-box{ width:  80px; } 
+
+/* Mostrar/ocultar logo */
+body[data-sidebar-size="lg"] .logo-sm{ display:none; }
+body[data-sidebar-size="sm"] .logo-lg{ display:none; }
+
+/* 3) Botón minimalista ----------------------------------- */
+.sidebar-toggle{
+    width: 22px;
+    height: 22px;
+    border: 0;
+    background: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background .15s, color .15s;
+    position: absolute;          /* ❶ lo fijamos */
+    top: 20%;
+    right: 6px;                  /* a 6 px del borde */
+    transform: translateY(-50%);
+}
+.sidebar-toggle:hover{
+    background: rgba(0,0,0,.06);
+    color: #343a40;
+}
+.sidebar-toggle i{
+    font-size: 18px;
+    transition: transform .25s ease calc(0.35s - .05s);
+}
+
+/* Giro del icono */
+body[data-sidebar-size="lg"] .sidebar-toggle i{ transform: rotate(0deg);   }
+body[data-sidebar-size="sm"] .sidebar-toggle i{ transform: rotate(180deg); }
+
+/* 4) Padding del contenido ------------------------------- 
+body[data-sidebar-size="lg"] .main-content { padding-left: 250px; } */
+body[data-sidebar-size="sm"] .main-content { padding-left:  0px; }
+
+/* =========================================================
+   SEARCH BOX – TOPBAR
+   ========================================================= */
+
+/* 1) Input con altura consistente (≈ 38 px) */
+.search-input{
+    height: 38px;
+    padding-left: 2.25rem;              /* hueco para el icono */
+    border-radius: 6px;
+    border: 1px solid #dfe3e8;
+    background: #f8f9fa;
+    font-size: .925rem;
+}
+
+/* 2) Icono magnifying glass */
+.search-icon{
+    position: absolute;
+    top: 50%;
+    left: .75rem;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #6c757d;
+    pointer-events: none;
+}
+
+/* 3) Interacción */
+.search-input:focus{
+    border-color: #6c5ce7;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(108,92,231,.15);
+    outline: 0;
+}
+
+/* 4) Dark-mode ready (si lo usas) */
+[data-bs-theme="dark"] .search-input{
+    background: #2e3239;
+    border-color: #444950;
+    color: #ced4da;
+}
+[data-bs-theme="dark"] .search-input:focus{
+    border-color: #6c5ce7;
+    background:#343a40;
+    box-shadow: 0 0 0 2px rgba(108,92,231,.25);
+}
+
+
+/* ========================================================= */
+
+/* =========================================================
+   SIDEBAR  (animación de ancho + sin “tirones” de SimpleBar)
+   ========================================================= */
+
+/* 1) Contenedor lateral principal ------------------------ */
+.vertical-menu{
+    /* ancho base (expandido) – idéntico a #logo-box */
+    width: 250px;
+    transition: width .35s ease;
+    overflow: hidden;                     /* evita scroll horizontal FLASH */
+}
+
+/* 2) Estado colapsado ------------------------------------ */
+body[data-sidebar-size="sm"] .vertical-menu{
+    width:  70px;                         /* mismo colapso que #logo-box */
+}
+
+/* 3) SimpleBar interno – quita min-width que provoca “brinco” */
+.vertical-menu .simplebar-content-wrapper{
+    transition: width .25s ease;          /* acompaña al padre */
+    width: 100% !important;               /* se adapta al ancho nuevo */
+}
+
+/* 4) Sin duplicar padding: el contenido se mueve con topbar 
+body[data-sidebar-size="lg"] .main-content   { padding-left: 250px; }
+body[data-sidebar-size="sm"] .main-content   { padding-left:  70px; } */
+
+/* =========================================================
+   Ocultar / mostrar texto del menú mientras se anima
+   ========================================================= */
+
+/* 1) Sidebar colapsado → texto completamente oculto */
+body[data-sidebar-size="sm"] .vertical-menu .menu-item{
+    opacity: 0;
+    pointer-events: none;          /* evita clic en texto invisible */
+    transition: opacity .1s linear 0s;      /* sin delay al ocultar */
+}
+
+/* 2) Sidebar expandido → texto aparece DESPUÉS de la animación */
+body[data-sidebar-size="lg"] .vertical-menu .menu-item{
+    opacity: 1;
+    transition: opacity .15s ease .35s;     
+}
+
+/* (Opcional) evita que el contenido del li colapse en altura */
+.vertical-menu .menu-item{
+    white-space: nowrap;
+}
+
+/* =========================================================
+   Suavizado del desplazamiento del contenido y topbar
+   ========================================================= */
+
+.main-content,
+.topbar-custom{
+    transition:
+        margin-left  0.35s ease,
+        padding-left 0.35s ease;
+}
+
 
 /* Cambia el color del logo según el tema */
 .layout-mode-dark,

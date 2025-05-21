@@ -121,33 +121,20 @@
     <script src="{{ asset('assets/js/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-    <!-- <script src="{{ asset('assets/js/dashboard.init.js') }}"></script> -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            if (typeof feather !== 'undefined') {
-                feather.replace();
-            } else {
-                console.error('Feather no está cargado o no está disponible.');
-            }
+    <!-- toggle del sidebar-->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('sidebar-toggle');
+    btn?.addEventListener('click', () => {
+        const size = document.body.getAttribute('data-sidebar-size') || 'lg';
+        const next = size === 'lg' ? 'sm' : 'lg';
+        document.body.setAttribute('data-sidebar-size', next);
+        localStorage.setItem('sidebarSize', next);
+        /* el CSS se encarga de girar el icono */
+    });
+});
+</script>
 
-            const toggleBtn = document.getElementById("vertical-menu-btn");
-
-            if (toggleBtn) {
-                toggleBtn.addEventListener("click", function (e) {
-                    e.preventDefault();
-
-                    // Alternar clase
-                    document.body.classList.toggle("sidebar-enable");
-
-                    // Alternar data-sidebar-size
-                    const currentSize = document.body.getAttribute("data-sidebar-size") || 'lg';
-                    const newSize = currentSize === 'lg' ? 'sm' : 'lg';
-                    document.body.setAttribute('data-sidebar-size', newSize);
-                    localStorage.setItem('sidebarSize', newSize);
-                });
-            }
-        });
-    </script>
 
     <script>
         //Quitar mensaje de éxito después de 5 segundos
@@ -162,20 +149,29 @@
         }, 5000);
     </script>
 
+
     <script>
-        $('#vertical-menu-btn').on('click', function (t) {
-            t.preventDefault();
-            $('body').toggleClass('sidebar-enable');
+        function ajustarPaddingTopbar() {
+            const topbar = document.getElementById('topbar-fluid');
+            const size = document.body.getAttribute('data-sidebar-size') || 'lg';
+            if (!topbar) return;
 
-            if ($(window).width() >= 992) {
-                const currentSize = document.body.getAttribute('data-sidebar-size') || 'lg';
-                const newSize = currentSize === 'lg' ? 'sm' : 'lg';
-
-                document.body.setAttribute('data-sidebar-size', newSize);
-                localStorage.setItem('sidebarSize', newSize);
+            if (size === 'sm') {
+                topbar.style.paddingLeft = '100px'; // puedes ajustar según lo que visualmente te guste más
+            } else {
+                topbar.style.paddingLeft = ''; // reset para volver al valor de Bootstrap
             }
+        }
+
+        // Ejecutar en carga inicial
+        document.addEventListener("DOMContentLoaded", ajustarPaddingTopbar);
+
+        // Ejecutar después de hacer toggle
+        document.getElementById("vertical-menu-btn")?.addEventListener("click", () => {
+            setTimeout(ajustarPaddingTopbar, 100); // esperamos 100ms por si hay animaciones
         });
     </script>
+
 
     <script>
         // Buscador de clientes
@@ -251,31 +247,39 @@
 
     <script>
         /**
-         * Convierte el valor a MAYÚSCULAS cuando el input pierde el foco.
-         * Funciona también con campos agregados dinámicamente.
-         * AGREGAR LA CLASE guarda-mayus
+         * Convierte el valor a MAYÚSCULAS **sin acentos** cuando el input pierde el foco.
+         * Úsalo en cualquier <input> o <textarea> con la clase guarda-mayus.
          */
-        document.addEventListener('focusout', function (e) {
-        const el = e.target;
-        if (el.matches('.guarda-mayus')) {
-            // toLocaleUpperCase asegura Á, É, Í, Ó, Ú, Ü, Ñ en español
-            el.value = el.value.toLocaleUpperCase('es-MX'); 
-        }
+        document.addEventListener('focusout', e => {
+            const el = e.target;
+            if (!el.matches('.guarda-mayus')) return;
+
+            /* 1) Normaliza: é -> e + ́   2) Quita diacríticos   3) Uppercase */
+            el.value = el.value
+                .normalize('NFD')                      // é → e + ́
+                .replace(/[\u0300-\u036f]/g, '')       // fuera tildes/diéresis
+                .toLocaleUpperCase('es-MX');           // → MAYÚSCULAS SIN ACENTOS
         });
     </script>
 
+
     <script>
         /**
-         * Convierte a minúsculas cuando el input pierde el foco.
-         * Incluye caracteres acentuados y eñes (locale ES-MX).
+         * Convierte a minúsculas SIN acentos cuando el input pierde el foco.
+         * Aplícalo a cualquier input/textarea con la clase guarda-minus.
          */
-        document.addEventListener('focusout', function (e) {
-        const el = e.target;
-        if (el.matches('.guarda-minus')) {
-            el.value = el.value.toLocaleLowerCase('es-MX');
-        }
+        document.addEventListener('focusout', e => {
+            const el = e.target;
+            if (!el.matches('.guarda-minus')) return;
+
+            /* 1) Descompone signos diacríticos   2) Los quita   3) a minúsculas */
+            el.value = el.value
+                .normalize('NFD')                      // Á → A + ́
+                .replace(/[\u0300-\u036f]/g, '')       // elimina tildes/diéresis
+                .toLocaleLowerCase('es-MX');           // → minusculas sin acento
         });
     </script>
+
 
     <script>
         /**
