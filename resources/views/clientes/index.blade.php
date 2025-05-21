@@ -251,17 +251,17 @@
     <div class="table-responsive mb-4 shadow-lg">
         <table id="tabla-clientes" class="table align-middle table-hover table-nowrap
                                          table-striped table-bordered">
-            <thead class="table-dark">
+            <thead class="table-dark text-center align-middle" style="font-size: var(--bs-body-font-size);">
                 <tr>
-                    <th class="filtro-asc-desc">ID Cliente</th>
-                    <th class="filtro-asc-desc">Empresa</th>
-                    <th class="filtro-asc-desc">Contacto</th>
-                    <th>Teléfono</th>
-                    <th>Correo</th>
-                    <th class="filtro-asc-desc">Sector</th>
-                    <th class="filtro-asc-desc">Segmento</th>
-                    <th class="filtro-asc-desc">Ciclo</th>
-                    <th class="filtro-asc-desc">Asignado a</th>
+                    <th class="py-1 px-2 filtro-asc-desc" style="width: 70px;">ID Cliente</th>
+                    <th class="py-1 px-2 filtro-asc-desc">Empresa</th>
+                    <th class="py-1 px-2 filtro-asc-desc">Contacto</th>
+                    <th class="py-1 px-2">Teléfono</th>
+                    <th class="py-1 px-2">Correo</th>
+                    <th class="py-1 px-2 filtro-asc-desc">Sector</th>
+                    <th class="py-1 px-2 filtro-asc-desc">Segmento</th>
+                    <th class="py-1 px-2 filtro-asc-desc">Ciclo</th>
+                    <th class="py-1 px-2 filtro-asc-desc">Asignado a</th>
                 </tr>
             </thead>
             <tbody>
@@ -275,15 +275,15 @@
                     @endphp
                     <tr>
                         {{-- ID con enlace al view --}}
-                        <td>
+                        <td class="py-1 px-2 text-truncate" style="max-width:220px;" title="{{ $c->nombre }}">
                             <a href="{{ route('clientes.view', $c->id_cliente) }}"
-                                class=" " style="color: inherit; text-decoration: underline;">
+                                class="text-decoration-underline fw-bold text-dark">
                                 {{-- ID con enlace al view --}}
-                                {{ $c->id_cliente }}
+                                {{ Str::limit($c->id_cliente, 7) }}
                             </a>
                         </td>
 
-                        <td>
+                        <td class="py-1 px-2 text-truncate" style="max-width:220px;" title="{{ $c->nombre }}">
                             <a href="{{ route('clientes.view', $c->id_cliente) }}" style="color: inherit; text-decoration: underline;  font-weight: bold;">
                                 {{ $c->nombre }}
                             </a>
