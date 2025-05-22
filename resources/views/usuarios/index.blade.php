@@ -3,11 +3,15 @@
 @section('title', 'Usuarios del Sistema')
 
 @section('content')
+<div class="container-fluid">
+
+
+
+    {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('usuarios.index') }}">Usuarios de SIS</a></li>
     @endsection
-
 
     <h1 class="mb-4">Usuarios del Sistema</h1>
 
@@ -64,5 +68,5 @@
             @endforeach
         </tbody>
     </table>
-
+</div>
 @endsection
