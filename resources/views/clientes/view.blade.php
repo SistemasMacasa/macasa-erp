@@ -2,6 +2,8 @@
 @section('title', 'SIS 3.0 | Listado de Clientes')
 
 @section('content')
+
+<div class="container-fluid">
     {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
@@ -13,7 +15,7 @@
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
-        <a href="{{ url()->previous() }}" class="btn btn-light">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
@@ -23,7 +25,7 @@
             <i class="fa fa-save me-1"></i> Guardar
         </button>
 
-        <a href="{{ route('clientes.index') }}" class="btn btn-info">
+        <a href="{{ route('clientes.index') }}" class="btn btn-primary">
             <i class="fa fa-list me-1"></i> Mis Cuentas
         </a>
 
@@ -31,7 +33,7 @@
             <i class="fa fa-file-invoice-dollar me-1"></i> Levantar Cotización
         </a>
 
-        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-secondary">
+        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary">
             <i class="fa fa-address-book me-1"></i> Libreta de Contactos
         </a>
 
@@ -118,7 +120,7 @@
                                 <label class="form-label fw-bold">Ciclo de venta</label>
                                 <input type="text" 
                                     value="{{ $cliente->ciclo_venta === 'cotizacion' ? 'Cotización' : ($cliente->ciclo_venta === 'venta' ? 'Venta' : $cliente->ciclo_venta) }}" 
-                                    class="form-control form-control-sm no-editar"  
+                                    class="form-control form-control-sm no-editar" 
                                     disabled>
                             </div>
 
@@ -190,7 +192,7 @@
                                     value="{{ $cliente->apellido_p && $cliente->apellido_m
                                             ? $cliente->nombre.' '.$cliente->apellido_p.' '.$cliente->apellido_m
                                             : $cliente->nombre }}"
-                                    class="form-control form-control-sm guarda-mayus"  disabled>
+                                    class="form-control form-control-sm guarda-mayus" maxlength="45" disabled>
                             </div>
 
                             <div class="col-md-6">
@@ -232,19 +234,19 @@
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Nombre</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->nombre ?? ''}}"
-                                    class="form-control form-control-sm guarda-mayus"  disabled>
+                                    class="form-control form-control-sm guarda-mayus" maxlength="45"  disabled>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Primer Apellido</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->apellido_p ?? ''}}"
-                                    class="form-control form-control-sm guarda-mayus"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  maxlength="27" disabled>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Segundo Apellido</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->apellido_m ?? ''}}"
-                                    class="form-control form-control-sm guarda-mayus"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  maxlength="27" disabled>
                             </div>
 
                             @php
@@ -283,7 +285,7 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Puesto</label>
                                 <input type="text" value="{{ $cliente->contacto_predet->puesto ?? ''}}"
-                                    class="form-control form-control-sm guarda-mayus"  disabled>
+                                    class="form-control form-control-sm guarda-mayus"  maxlength="20" disabled>
                             </div>
 
                             <div class="col-md-4">
@@ -300,12 +302,12 @@
 
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Entrega</label>
-                                <input type="text" class="form-control form-control-sm guarda-mayus"  disabled>
+                                <input type="text" class="form-control form-control-sm guarda-mayus" placeholder="¿Se va a usar este campo?" disabled>
                             </div>
 
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Condición de pago</label>
-                                <input type="text" class="form-control form-control-sm guarda-mayus"  disabled>
+                                <input type="text" class="form-control form-control-sm guarda-mayus" placeholder="¿Se va a usar este campo?"  disabled>
                             </div>
 
                             {{-- Teléfonos / celulares dinámicos --}}
@@ -783,28 +785,6 @@
         @endif
     </div>
 
-        {{-- 🎛 Botonera --}}
-    <div class="d-flex flex-wrap gap-2 mb-4">
-        <a href="{{ url()->previous() }}" class="btn btn-light">
-            <i class="fa fa-arrow-left me-1"></i> Regresar
-        </a>
-
-        <button type="submit" class="btn btn-success" form="formCuenta">
-            <i class="fa fa-save me-1"></i> Guardar
-        </button>
-
-        <a href="{{ route('clientes.index') }}" class="btn btn-info">
-            <i class="fa fa-list me-1"></i> Mis Cuentas
-        </a>
-
-        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary">
-            <i class="fa fa-file-invoice-dollar me-1"></i> Levantar Cotización
-        </a>
-
-        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-secondary">
-            <i class="fa fa-address-book me-1"></i> Libreta de Contactos
-        </a>
-    </div>
 
     <script>
         // Script para ordenar tabla de pedidos
@@ -886,6 +866,6 @@
     });
     </script>
 
-
+</div><!-- Fin contenedor principal -->
 
 @endsection

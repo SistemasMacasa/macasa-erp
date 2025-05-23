@@ -4,8 +4,11 @@
 
 
 @section('content')
+<div class="container-fluid">
+
     {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
+    
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
@@ -13,12 +16,12 @@
     <h1 class="mb-4">Mis Cuentas</h1>
 
     {{-- 🎛 Botonera --}}
-    <div class="d-flex flex-wrap gap-2 mb-4">
-        <a href="{{ url()->previous() }}" class="btn btn-light">
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-outline-primary">
+        <a href="{{ route('inicio') }}" class="btn btn-primary">
             <i class="fa fa-phone me-1"></i> Mis Recall's
         </a>
 
@@ -29,7 +32,7 @@
 
     {{-- 🔎 Buscador --}}
     <form method="GET" action="{{ route('clientes.index') }}">
-        <div class="card mb-4">
+        <div class="card mb-3">
             <div class="card-header" style="background-color: rgba(81, 86, 190, 0.1); font-weight: 700 !important;">
                 Filtros
             </div>
@@ -149,7 +152,7 @@
     </form>
 
     {{-- ───────── Paginación ───────── --}}
-    <div class="row align-items-center mb-4">
+    <div class="row align-items-center mb-3">
         {{-- Texto de totales --}}
         <div class="col-sm">
             <p class="mb-0 text-muted small">
@@ -248,7 +251,7 @@
     {{-- ────────── Fin paginación ────────── --}}
 
     {{-- 📋 Tabla responsiva --}}
-    <div class="table-responsive mb-4 shadow-lg">
+    <div class="table-responsive mb-3 shadow-lg">
         <table id="tabla-clientes" class="table align-middle table-hover table-nowrap
                                          table-striped table-bordered">
             <thead class="table-dark text-center align-middle" style="font-size: var(--bs-body-font-size);">
@@ -438,14 +441,14 @@
             <form method="GET" action="{{ route('clientes.index') }}" class="d-flex ms-3 align-items-center">
                 {{-- Preserva todos los otros filtros en la query --}}
                 @foreach(request()->except('page') as $key => $value)
-    @if(is_array($value))
-        @foreach($value as $v)
-            <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
-        @endforeach
-    @else
-        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-    @endif
-@endforeach
+                    @if(is_array($value))
+                        @foreach($value as $v)
+                            <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
+                        @endforeach
+                    @else
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    @endif
+                @endforeach
 
 
                 <label for="input-page" class="mb-0 me-1 small">Ir a</label>
@@ -465,7 +468,8 @@
         </div>
     </div>
     {{-- ────────── Fin paginación ────────── --}}
-    
+</div>
+   
 
 
     <script>

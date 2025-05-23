@@ -23,7 +23,7 @@
                 </button>
 
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary">
-                    <i class="fa fa-list me-1"></i> Mis cuentas
+                    <i class="fa fa-list me-1"></i> Mis Cuentas
                 </a>
 
             </div>
@@ -195,7 +195,7 @@
                 </button>
 
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary">
-                    <i class="fa fa-list me-1"></i> Mis cuentas
+                    <i class="fa fa-list me-1"></i> Mis Cuentas
                 </a>
 
             </div>

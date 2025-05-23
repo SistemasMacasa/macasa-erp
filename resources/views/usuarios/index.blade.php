@@ -15,11 +15,15 @@
 
     <h1 class="mb-4">Usuarios del Sistema</h1>
 
-    <p>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left me-1"></i> Regresar
+        </a>
         <a href="{{ route('usuarios.create') }}" class="btn btn-primary">
             Nuevo Usuario
         </a>
-    </p>
+
+    </div>
 
     <div class="mb-3">
         <input type="text" id="buscador-usuarios" class="form-control" placeholder="Buscar usuario...">
