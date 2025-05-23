@@ -11,7 +11,7 @@
 
         <!-- ╭━━━━━━━━━━━━━━━━━━━━━━━━━━ Formulario para Empresas ━━━━━━━━━━━━━━━━━━━━━━━━╮ -->
         <div class="container-fluid">
-            <h1 class="mb-4">Nueva Cuenta Empresarial</h1>
+            <h2 class="mb-4">Nueva Cuenta Empresarial</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">
@@ -183,7 +183,7 @@
     @elseif ($tipo === 'fisica')
         <!-- ╭━━━━━━━━━━━━━━━━━━━━━━━━━━ Formulario para Personas Fisicas ━━━━━━━━━━━━━━━━━━━━━━━━╮ -->
         <div class="container-fluid">
-            <h1 class="mb-4">Nueva Cuenta Personal</h1>
+            <h2 class="mb-4">Nueva Cuenta Personal</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">

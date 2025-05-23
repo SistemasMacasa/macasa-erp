@@ -208,42 +208,56 @@
     </script>
 
     <script>
-        //FORMATEO DE NUMERO DE TELEFONO SOLO AGREGAR .phone-field
+        //Fomateo de telefonos con clase phone-field
         document.addEventListener('DOMContentLoaded', () => {
 
-            const format = (input) => {
-                let digits = input.value.replace(/\D/g, '');
-                if (digits.length > 10) digits = digits.slice(0, 10);
+        const formatPhone = (el) => {
+            // 1) Leer contenido bruto
+            let raw = ('value' in el)
+            ? el.value
+            : el.textContent;
+            let digits = raw.replace(/\D/g, '');
+            if (digits.length > 10) digits = digits.slice(0, 10);
 
-                // --- aplica formato ---
-                let pretty = digits;
-                if (digits.length === 10) {
-                    pretty = digits.startsWith('55')
-                            ? digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1)-$2-$3')
-                            : digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1)-$2-$3');
-                } else if (digits.length >= 7) {
-                    pretty = digits.replace(
-                        /(\d{3})(\d{0,3})(\d{0,4})/,
-                        (_, a, b, c) => a + (b ? '-' + b : '') + (c ? '-' + c : '')
-                    );
-                }
+            // 2) Dar formato “pretty”
+            let pretty = digits;
+            if (digits.length === 10) {
+            pretty = digits.startsWith('55')
+                ? digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1)-$2-$3')
+                : digits.replace(/(\d{3})(\d{3})(\d{4})/, '($1)-$2-$3');
+            } else if (digits.length >= 7) {
+            pretty = digits.replace(
+                /(\d{3})(\d{0,3})(\d{0,4})/,
+                (_, a, b, c) => a + (b ? '-' + b : '') + (c ? '-' + c : '')
+            );
+            }
 
-                input.value      = pretty;
-                input.maxLength  = pretty.startsWith('(55)') ? 14 : 15;
-                input.setCustomValidity(digits.length === 10 ? '' : 'Número incompleto');
-            };
+            // 3) Escribir contenido formateado
+            if ('value' in el) {
+            el.value = pretty;
+            el.maxLength = pretty.startsWith('(55)') ? 14 : 15;
+            el.setCustomValidity(digits.length === 10 ? '' : 'Número incompleto');
+            } else {
+            el.textContent = pretty;
+            // Si es enlace, actualizar href a tel:
+            if (el.tagName === 'A') {
+                el.href = 'tel:' + digits;
+            }
+            }
+        };
 
-            /* ---- Formateo INICIAL de todos los campos phone-field ---- */
-            document.querySelectorAll('.phone-field').forEach(format);
+        // Formateo inicial de todos los .phone-field
+        document.querySelectorAll('.phone-field').forEach(formatPhone);
 
-            /* ---- Formateo en tiempo real cuando el usuario edite ---- */
-            document.addEventListener('input', e => {
-                const input = e.target.closest('.phone-field');
-                if (input) format(input);
-            });
+        // Si editas inputs en tiempo real
+        document.addEventListener('input', e => {
+            const el = e.target.closest('.phone-field');
+            if (el && 'value' in el) formatPhone(el);
+        });
 
         });
     </script>
+
 
     <script>
         /**
@@ -261,8 +275,6 @@
                 .toLocaleUpperCase('es-MX');           // → MAYÚSCULAS SIN ACENTOS
         });
     </script>
-
-
 
     <script>
         /**
@@ -323,8 +335,6 @@
     });
 
     </script>
-
-
 
     @stack('scripts')
 </body>

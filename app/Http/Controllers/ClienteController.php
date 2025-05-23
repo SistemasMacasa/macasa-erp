@@ -85,8 +85,6 @@ class ClienteController extends Controller
                         'segmentos',
                     ));
     }
-
-
     public function create(Request $request)
     {
         $tipo           = $request->input('tipo', 'moral'); // por defecto: moral
@@ -105,14 +103,12 @@ class ClienteController extends Controller
         $regimen_fiscales = RegimenFiscal::pluck('nombre', 'id_regimen_fiscal');
         return view('clientes.create', compact('vendedores', 'metodos_pago', 'formas_pago', 'usos_cfdi', 'ciudades', 'estados', 'paises', 'tipo', 'regimen_fiscales'));
     }
-
     public function edit($id)
     {
         $cliente    = Cliente::findOrFail($id);
         $vendedores = Usuario::whereNull('id_cliente')->get(); // usuarios internos
         return view('clientes.edit', compact('cliente', 'vendedores'));
     }
-
     public function view($id)
     {
         $cliente = Cliente::with([
@@ -208,6 +204,7 @@ class ClienteController extends Controller
                  ->orderBy('id_cliente')
                  ->value('id_cliente');   // devuelve null si no hay siguiente
 
+        $usuario = auth()->user();
 
         return view('clientes.view',
                     compact(
@@ -224,10 +221,10 @@ class ClienteController extends Controller
                             'regimen_fiscales',
                             'prevId',
                             'nextId',
-                            'sectores'
+                            'sectores',
+                            'usuario'
                         ));
     }
-
     public function update(Request $request, $id)
     {
         // 1) Validar datos
@@ -245,7 +242,6 @@ class ClienteController extends Controller
         $cliente->update($request->all());
         return redirect('clientes')->with('success', 'Cliente actualizado correctamente');
     }
-
     public function destroy($id)
     {
         // 1) Buscar el registro existente
@@ -254,7 +250,6 @@ class ClienteController extends Controller
         $cliente->delete();
         return redirect('clientes')->with('success', 'Cliente eliminado correctamente');
     }
-
     public function store(Request $request)
     {
         \Log::info('Tipo recibido:', ['tipo' => $request->input('tipo')]);

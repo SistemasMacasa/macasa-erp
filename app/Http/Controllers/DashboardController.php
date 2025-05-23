@@ -56,6 +56,8 @@ class DashboardController extends Controller
             ['body' => 'Se abre vacante para soporte nivel 1.'],
         ]);
 
+        $usuario = auth()->user();
+
         // Este array debe coincidir con lo que tu vista espera
         return view('inicio', compact(
             'cuentasAsignadas',
@@ -73,7 +75,8 @@ class DashboardController extends Controller
             'focus',
             'topExecs',
             'topClients',
-            'notices'
+            'notices',
+            'usuario'
         ));
     }
 

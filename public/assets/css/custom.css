@@ -607,6 +607,11 @@ body[data-sidebar="dark"] .opcion-card-body p {
     gap: .5rem;            /* separación entre título y botón */
     padding: .75rem 1rem;  /* o el padding que uses normalmente */
   }
+
+.section-card-header.section-card-header--view {
+    flex-direction: row;
+    gap: .5rem;
+}
   
   /* –– BOTÓN “Agregar Contacto” –– */
   .card-header.section-card-header #agregarContacto {
@@ -766,7 +771,6 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
     opacity: 1;
     color: #0d6efd;
 }
-/* Termina Estilos <th> historial de pedidos */
 
 
 .timeline {
@@ -943,7 +947,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   left: 0;
   z-index: 3;
   background: var(--bs-table-bg);
-  width: 5ch;
+  width: 8ch;
 }
 /* Empresa (max 30 chars → 30ch) */
 #tabla-clientes th:nth-child(2),
@@ -952,14 +956,22 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   left: 5ch;
   z-index: 2;
   background: var(--bs-table-bg);
-  width: 30ch;
+  width: 29ch;
 }
 
 /* Telefono (columna 4: 10 dígitos) */
 #tabla-clientes th:nth-child(4),
 #tabla-clientes td:nth-child(4) {
-  width: 12ch;            /* 10 caracteres + paddings */
+  width: 13ch;          
   text-align: center;
+}
+/* Correo (columna 5: 25 caracteres) */
+#tabla-clientes th:nth-child(5),
+#tabla-clientes td:nth-child(5) {
+  width: 23ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* Sector (columna 6: “Gobierno” → 8 caracteres) */
@@ -973,7 +985,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* Segmento (columna 7: “Macasa Cuentas Especiales” → 25 caracteres) */
 #tabla-clientes th:nth-child(7),
 #tabla-clientes td:nth-child(7) {
-  width: 20ch;
+  width: 21ch;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -982,7 +994,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* Ciclo (columna 8) */
 #tabla-clientes th:nth-child(8),
 #tabla-clientes td:nth-child(8) {
-  width: 12ch;            /* “Cotizacion” son 10+ caracteres */
+  width: 11ch;            /* “Cotizacion” son 10+ caracteres */
   text-align: center;
 }
 /* Reducir padding de la badge para aprovechar el ancho */
@@ -994,17 +1006,15 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* Asignado a (columna 9: 25 caracteres) */
 #tabla-clientes th:nth-child(9),
 #tabla-clientes td:nth-child(9) {
-  width: 25ch;
+  width: 21ch;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 /* ───────── Truncado columnas “pesadas” ───────── */
-/* Contacto, Correo y Asignado a (max 25 chars → 25ch) */
+/* Contacto (max 25 chars → 25ch) */
 #tabla-clientes th:nth-child(3),
-#tabla-clientes td:nth-child(3),
-#tabla-clientes th:nth-child(5),
-#tabla-clientes td:nth-child(5)
+#tabla-clientes td:nth-child(3)
 {
   width: 25ch;
   text-overflow: ellipsis;
@@ -1041,3 +1051,4 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* ───────────────────────────────────────────────
    Termina Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */
+

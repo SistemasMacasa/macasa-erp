@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
 
-    <h1 class="mb-4">Mis Cuentas</h1>
+    <h2 class="mb-4">Mis Cuentas</h2>
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -256,7 +256,7 @@
                                          table-striped table-bordered">
             <thead class="table-dark text-center align-middle" style="font-size: var(--bs-body-font-size);">
                 <tr>
-                    <th class="py-1 px-2 filtro-asc-desc">ID</th>
+                    <th class="py-1 px-2 filtro-asc-desc">ID&nbsp;Cliente</th>
                     <th class="py-1 px-2 filtro-asc-desc">Empresa</th>
                     <th class="py-1 px-2 filtro-asc-desc">Contacto</th>
                     <th class="py-1 px-2">Teléfono</th>
@@ -282,9 +282,8 @@
                     @endphp
                     <tr>
                     {{-- ID Cliente --}}
-                    <td class="py-1 px-2 text-truncate" title="{{ $c->id_cliente }}">
-                        
-                        {{ Str::limit($c->id_cliente, 5) }}
+                    <td class="py-1 px-2 text-truncate text-center" title="{{ $c->id_cliente }}">
+                        {{ Str::limit($c->id_cliente, 6) }}
                     </td>
 
                     {{-- Empresa --}}
@@ -306,9 +305,9 @@
                     </td>
 
                     {{-- Teléfono (sin truncar) --}}
-                    <td class="py-1 px-2 text-center phone-field">
+                    <td class="py-1 px-2 text-center">
                         @if($tel)
-                        <a href="tel:{{ $tel }}">{{ $tel }}</a>
+                        <a class="phone-field" href="tel:{{ $tel }}">{{ $tel }}</a>
                         @else
                         —
                         @endif
@@ -318,7 +317,7 @@
                     <td class="py-1 px-2 text-truncate" title="{{ $email }}">
                         @if($email)
                         <a href="mailto:{{ $email }}">
-                            {{ Str::limit($email, 25) }}
+                            {{ Str::limit($email, 30) }}
                         </a>
                         @else
                         —
@@ -359,7 +358,7 @@
                     {{-- Asignado a --}}
                     <td class="py-1 px-2 text-truncate" title="{{ $fullAsignado }}">
                         {{ $fullAsignado
-                        ? Str::limit($fullAsignado, 25)
+                        ? Str::limit($fullAsignado, 27)
                         : '—'
                         }}
                     </td>
