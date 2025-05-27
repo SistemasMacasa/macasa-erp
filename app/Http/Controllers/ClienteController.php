@@ -17,74 +17,80 @@ use App\Models\Nota;
 
 class ClienteController extends Controller
 {
-    public function index(Request $request)
+        public function index(Request $request)
     {
-        // 1) Preparo la consulta base
+        // 1) consulta base + relaciones
         $query = Cliente::with(['primerContacto', 'vendedor']);
 
-        // 2) Filtro de búsqueda global
+        /* ---------- Filtros ---------- */
+
+        // Búsqueda global
         if ($term = $request->input('search')) {
-            $query->where(function($q) use($term) {
+            $query->where(function ($q) use ($term) {
                 $q->where('nombre', 'like', "%{$term}%")
-                ->orWhere('id_cliente', 'like', "%{$term}%")
-                // si quieres buscar en contacto:
-                ->orWhereHas('primerContacto', function($q2) use($term) {
-                    $q2->where('telefono1','like',"%{$term}%");
-                });
+                   ->orWhere('id_cliente', 'like', "%{$term}%")
+                   ->orWhereHas('primerContacto', fn ($q2) =>
+                        $q2->where('telefono1', 'like', "%{$term}%"));
             });
         }
 
-        // 3) Filtro de ejecutivos
+        // Ejecutivos
         if ($ejecutivos = $request->input('ejecutivos')) {
             $query->whereIn('id_vendedor', (array) $ejecutivos);
         }
 
-        // 4) Filtro de ciclo de venta
-        if ($cycle = $request->input('cycle')) {
+        // ⤵️  LOS QUE FALTABAN
+        if ($sector = $request->input('sector')) {          // sector = 'privada' | 'gobierno' | ...
+            $query->where('sector', $sector);
+        }
+
+        if ($segmento = $request->input('segmento')) {      // segmento = 'macasa cuentas especiales' | …
+            $query->where('segmento', $segmento);
+        }
+
+        // Ciclo de venta
+        if ($cycle = $request->input('cycle')) {            // cycle = 'cotizacion' | 'venta'
             $query->where('ciclo_venta', $cycle);
         }
 
-        // 5) Ordenamiento
-        $order    = $request->input('order', 'id_cliente');
-        $direction= $request->input('direction','asc');
-        $query->orderBy($order, $direction);
+        /* ---------- Orden y paginación ---------- */
+        $query->orderBy(
+            $request->input('order', 'id_cliente'),
+            $request->input('direction', 'asc')
+        );
 
         // 6) Paginación dinámica
-        $perPage = $request->input('perPage', 25);
-        $clientes = $query
-            ->paginate($perPage)
-            ->appends($request->all()); // para conservar filtros en links
+$perPageParam = $request->input('perPage', 25);
 
-        // 7) Paso datos extra para llenar selects
-        $vendedores = Usuario::whereNull('id_cliente')->get(); // usuarios internos
-        $ciclos    = Cliente::select('ciclo_venta')
-            ->distinct()
-            ->orderBy('ciclo_venta')
-            ->pluck('ciclo_venta');
+if ($perPageParam === 'all') {
+    // “Todos”  ⇒  ponemos como tamaño de página el total de registros
+    $perPage = $query->count() ?: 1;   // evita división por cero
+} else {
+    $perPage = (int) $perPageParam;    // 10, 25, 50, 100…
+}
 
-        $sectores = [
-            '1' => 'privada',
-            '2' => 'gobierno',
-            '3' => 'persona',
+$clientes = $query->paginate($perPage)
+                  ->appends($request->all());   // conserva filtros
 
-        ];
 
-        $segmentos = [
-            '1' => 'macasa cuentas especiales',
-            '2' => 'macasa ecommerce',
-            '3' => 'tekne store ecommerce',
-            '4' => 'la plaza ecommerce'
-        ];
 
-        return view('clientes.index',
-         compact(
-              'clientes',
-             'vendedores', 
-                        'ciclos',
-                        'sectores',
-                        'segmentos',
-                    ));
+        /* ---------- Catálogos para los <select> ---------- */
+        $vendedores = Usuario::whereNull('id_cliente')->get();
+
+        // Los sacamos directo de la tabla para que no se “desincronicen”
+        $sectores   = Cliente::select('sector')->distinct()->pluck('sector');
+        $segmentos  = Cliente::select('segmento')->distinct()->pluck('segmento');
+        $ciclos     = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
+
+        return view('clientes.index', compact(
+            'clientes',
+            'vendedores',
+            'sectores',
+            'segmentos',
+            'ciclos',
+        ));
     }
+
     public function create(Request $request)
     {
         $tipo           = $request->input('tipo', 'moral'); // por defecto: moral
@@ -227,20 +233,96 @@ class ClienteController extends Controller
     }
     public function update(Request $request, $id)
     {
-        // 1) Validar datos
-        $request->validate([
-            'nombre'    => 'required|max:100',
-            'apellido'  => 'nullable|max:100',
-            'estatus'   => 'required',
-            'tipo'      => 'required',
-            'id_vendedor' => 'required|integer'
-        ]);
+        // Actualiza los datos de un cliente existente desde clientes.view
+    
+        if($request->sector == "privada" || $request->tipo == "gobierno")
+        {
+            $data = $request->validate([
+                'estatus'       => 'required|string|max:100',
+                'ciclo_venta'   => 'nullable|string|max:100',
+                'tipo'          => 'required|string|max:100',
+                'nombre'        => 'required|string|max:100',
+                'id_vendedor'   => 'required|integer',
+                'sector'        => 'nullable|string|max:100',
+                'segmento'      => 'nullable|string|max:100',
 
-        // 2) Buscar el registro existente
-        $cliente = Cliente::findOrFail($id);
-        // 3) Actualizar usando mass assignment (requiere $fillable en el modelo)
-        $cliente->update($request->all());
-        return redirect('clientes')->with('success', 'Cliente actualizado correctamente');
+                'contacto.0.nombre'      => 'nullable|string|max:60',
+                'contacto.0.apellido_p'  => 'nullable|string|max:27',
+                'contacto.0.apellido_m'  => 'nullable|string|max:27',
+                'contacto.0.email'       => 'nullable|email|max:120',
+                'contacto.0.puesto'      => 'nullable|string|max:60',
+                'contacto.0.genero'     => 'nullable|string|max:17',
+                'contacto.0.telefono*'   => 'nullable|digits:10',
+                'contacto.0.ext*'        => 'nullable|digits_between:1,7',
+                'contacto.0.celular*'    => 'nullable|digits:10',
+                'contacto.0.predeterminado' => 'nullable|boolean',
+            ]);
+
+            // Actualizar el cliente en la BD
+            try{
+                $cliente = Cliente::findOrFail($id);
+                $cliente->update([
+                    'estatus'       => $data['estatus'],
+                    'ciclo_venta'   => $data['ciclo_venta'],
+                    'tipo'          => $data['tipo'],
+                    'nombre'        => $data['nombre'],
+                    'id_vendedor'   => $data['id_vendedor'],
+                    'sector'        => $data['sector'],
+                    'segmento'      => $data['segmento'],
+                ]);
+
+                // Actualizar el contacto principal
+                $contacto = Contacto::where('id_cliente', $cliente->id_cliente)
+                                    ->where('predeterminado', 1)
+                                    ->first();
+
+                if ($contacto) {
+                    $contacto->update([
+                        'nombre'      => $data['contacto'][0]['nombre'] ?? null,
+                        'apellido_p'  => $data['contacto'][0]['apellido_p'] ?? null,
+                        'apellido_m'  => $data['contacto'][0]['apellido_m'] ?? null,
+                        'email'       => $data['contacto'][0]['email'] ?? null,
+                        'puesto'      => $data['contacto'][0]['puesto'] ?? null,
+                        'genero'      => $data['contacto'][0]['genero'] ?? null,
+                    ]);
+                    for ($i = 1; $i <= 5; $i++) {
+                        $contacto->{"telefono$i"} = digits_only($data['contacto'][0]["telefono$i"] ?? null);
+                        $contacto->{"ext$i"}      = digits_only($data['contacto'][0]["ext$i"] ?? null);
+                        $contacto->{"celular$i"}  = digits_only($data['contacto'][0]["celular$i"] ?? null);
+                    }
+                    $contacto->save();
+                }
+
+                return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
+                                 ->with('success', 'Cliente empresarial actualizado correctamente');
+
+            }catch (Exception $e) {
+                return redirect('clientes')->with('error', 'Error al actualizar el cliente: ' . $e->getMessage());
+            }
+
+        }elseif($request->sector == "persona")
+        {
+            $rules = [
+                'nombre'        => 'required|string|max:60',
+                'apellido_p'    => 'required|string|max:27',
+                'apellido_m'    => 'nullable|string|max:27',
+                'id_vendedor'   => 'required|integer',
+
+                'ciclo_venta'   => 'nullable|string|max:100',
+                'estatus'       => 'required|string|max:100',
+                'tipo'          => 'required|string|max:100',
+                'sector'        => 'nullable|string|max:100',
+
+                // Datos personales …
+                'email'                  => 'nullable|email|max:120',
+                'segmento'               => 'nullable|string|max:100',
+                'genero'                 => 'nullable|string|max:17',
+                'contacto.0.telefono*'   => 'nullable|digits:10',
+                'contacto.0.celular*'    => 'nullable|digits:10',
+                'contacto.0.ext*'        => 'nullable|digits_between:1,6',
+            ];
+            $request->validate($rules);
+        }
     }
     public function destroy($id)
     {
@@ -252,6 +334,7 @@ class ClienteController extends Controller
     }
     public function store(Request $request)
     {
+        //Guarda los datos de un cliente nuevo desde clientes.index
         \Log::info('Tipo recibido:', ['tipo' => $request->input('tipo')]);
 
         if ($request->input('sector') == 'persona') 

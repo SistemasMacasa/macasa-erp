@@ -758,6 +758,14 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
     margin-left: .25rem;
 }
 
+/* Quita el borde inferior de la ÚLTIMA fila de datos */
+#tblPedidos tbody tr:last-child > *{
+    border-bottom: none !important;
+}
+
+
+
+
 /* Estado orden ascendente */
 #tblPedidos thead th.asc .sort-arrow::after {
     content: "▲";                 /* flecha arriba */
@@ -811,6 +819,11 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
    Bloque Celulares
    --------------------------------------------------------------*/
 #celulares-col .phone-field {
+  flex: 0 0 25ch;    /* mismo ancho que Teléfono fijo + Ext. */
+  max-width: 25ch;
+}
+
+#celulares-col--view .phone-field {
   flex: 0 0 25ch;    /* mismo ancho que Teléfono fijo + Ext. */
   max-width: 25ch;
 }

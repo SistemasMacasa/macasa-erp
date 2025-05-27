@@ -47,19 +47,13 @@
 
     @if($cliente->sector === 'privada' || $cliente->sector === 'gobierno')
         <!-- ╭━━━━━━━━━━━━━━━━━━ Ficha persona Moral (Privada o Gobierno) ━━━━━━━━━━━━━━╮ -->
-        <form id="formCuenta" action="{{ route('clientes.store') }}" method="POST" autocomplete="off">
+        <form id="formCuenta" action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST" autocomplete="off">
+            @csrf
+            @method('PUT')
             <div class="form-wrapper" style="margin-right: auto;">
 
                 {{-- ── Tarjeta: Cuenta Empresarial ─────────────────────────── --}}
-
-                @csrf
-
-                <!-- Valores por defecto / lógica de negocio -->
-                <input type="hidden" name="ciclo_venta" value="cotizacion">
-                <input type="hidden" name="estatus" value="activo">
-                <input type="hidden" name="tipo" value="erp"><!-- alta desde ERP -->
-
-                <!-- ───────────────────────────────
+                <!-- ──────────────────────────────
                     TARJETA ÚNICA  →  Cuenta Empresarial
                     (contiene también los datos del contacto principal)
                 ─────────────────────────────────── -->
@@ -67,7 +61,6 @@
                 <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
                         <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
                             <h5 class="mb-0 flex-grow-1">Cuenta&nbsp;Empresarial</h5>
-
                             
                             @if ($usuario->es_admin)
                                 <button type="button" id="btnEditar" class="btn btn-sm btn-primary ms-auto btn-editar-cuenta">
@@ -79,6 +72,27 @@
                     <div class="card-body">
                         {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
                         <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Estatus</label>
+                                <select name="estatus" class="form-select" disabled>
+                                    <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
+                                    <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ciclo de Venta</label>
+                                <select name="ciclo_venta" class="form-select" disabled>
+                                    <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
+                                    <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Origen de la Cuenta</label>
+                                <select name="tipo" class="form-select" disabled>
+                                    <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
+                                    <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
+                                </select>
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                 <input  id="nombre" name="nombre" type="text"
@@ -193,32 +207,51 @@
 
                                     {{-- Teléfonos fijos --}}
                                     <div class="col-md-4 col-sm-6" id="telefonos-col--view">
-                                        @for ($i = 1; $i <= 5; $i++)
+
+                                        {{-- Teléfono fila 1 --}}
+                                          <div class="mb-2 telefono-item">
+                                            <label>Teléfono 1</label>
+                                            <div class="input-group input-group-separated">
+                                            <input name="contacto[0][telefono1]" class="form-control phone-field" value="{{ $cliente->contacto_predet->telefono1 ?? '' }}" placeholder="Teléfono">
+                                            <input name="contacto[0][ext1]" class="form-control ext-field" value="{{ $cliente->contacto_predet->ext1 ?? '' }}" placeholder="Ext." maxlength="7">
+                                            <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
+                                            </div>
+                                        </div>
+
+                                        @for ($i = 2; $i <= 5; $i++)
                                             @continue(!$hasTel($i))
                                             <div class="mb-2 telefono-item">
-                                            <label>Teléfono {{ $i }}</label>
-                                            <div class="input-group input-group-separated">
-                                                <input  type="text" name="contacto[0][telefono{{ $i }}]"
-                                                        value="{{ $cliente->contacto_predet->{'telefono'.$i} }}"
-                                                        class="form-control phone-field">
-                                                <input  type="text" name="contacto[0][ext{{ $i }}]"
-                                                        value="{{ $cliente->contacto_predet->{'ext'.$i} }}"
-                                                        class="form-control ext-field" maxlength="7">
-                                                <button type="button"
-                                                        class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
-                                            </div>
+                                                <label>Teléfono {{ $i }}</label>
+                                                <div class="input-group input-group-separated">
+                                                    <input  type="text" name="contacto[0][telefono{{ $i }}]"
+                                                            value="{{ $cliente->contacto_predet->{'telefono'.$i} }}"
+                                                            class="form-control phone-field">
+                                                    <input  type="text" name="contacto[0][ext{{ $i }}]"
+                                                            value="{{ $cliente->contacto_predet->{'ext'.$i} }}"
+                                                            class="form-control ext-field" maxlength="7">
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                </div>
                                             </div>
                                         @endfor
-                                        {{-- botón + (arranca oculto) --}}
-                                        <button type="button"
-                                                class="btn btn-outline-primary w-100 agregar-telefono btn-field d-none">
-                                            + Añadir teléfono
-                                        </button>
+                                        <small id="tel-limit-msg" class="text-danger mt-1 d-none">
+                                            Solo puedes agregar hasta 5 teléfonos.
+                                        </small>
+
+
                                     </div>
 
                                     {{-- Celulares --}}
                                     <div class="col-md-4 col-sm-6" id="celulares-col--view">
-                                        @for ($i = 1; $i <= 5; $i++)
+                                        {{-- Celular fila 1 --}}
+                                        <div class="mb-2 celular-item">
+                                            <label>Teléfono Celular 1</label>
+                                            <div class="input-group input-group-separated">
+                                                <input type="text" name="contacto[0][celular1]" placeholder="Celular" value="{{ $cliente->contacto_predet->celular1 ?? '' }}" class="form-control phone-field">
+                                                <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
+                                            </div>
+                                        </div>
+                                        @for ($i = 2; $i <= 5; $i++)
                                             @continue(!$hasCel($i))
                                             <div class="mb-2 celular-item">
                                             <label>Teléfono Celular {{ $i }}</label>
@@ -231,10 +264,9 @@
                                             </div>
                                             </div>
                                         @endfor
-                                        <button type="button"
-                                                class="btn btn-outline-primary w-100 agregar-celular btn-field d-none">
-                                            + Añadir celular
-                                        </button>
+                                        <small id="cel-limit-msg" class="text-danger mt-1 d-none">
+                                            Solo puedes agregar hasta 5 celulares.
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +282,7 @@
 
     @elseif($cliente->sector === 'persona')
         <!-- ╭━━━━━━━━━━━━━━━━━━ Ficha persona Fisica (Persona) ━━━━━━━━━━━━━━╮ -->
-        <form id="formCuenta" style="max-width: 100%;" action="{{ route('clientes.store') }}" method="POST" autocomplete="off">
+        <form id="formCuenta" style="max-width: 100%;" action="{{ route('clientes.update') }}" method="POST" autocomplete="off">
             <div class="form-wrapper" style="margin-right: auto;">
 
                 {{-- ── Tarjeta: Cuenta Empresarial ─────────────────────────── --}}
@@ -274,6 +306,27 @@
                         </div>
                     <div class="card-body">
                         <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Estatus</label>
+                                <select name="estatus" class="form-select" disabled>
+                                    <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
+                                    <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ciclo de Venta</label>
+                                <select name="ciclo_venta" class="form-select" disabled>
+                                    <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
+                                    <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Origen de la Cuenta</label>
+                                <select name="tipo" class="form-select" disabled>
+                                    <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
+                                    <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
+                                </select>
+                            </div>
                             <div class="col-md-4">
                                 <label for="nombre" class="form-label">
                                     Nombre(s) <span class="text-danger">*</span>
@@ -353,35 +406,82 @@
                             </div>
                             
                             {{-- Contacto Principal ─ Teléfonos PERSONAL --}}
-                            <div id="telefonos-cel-wrapper">    {{-- ⬅️ NUEVO --}}
+                            {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
+                            @php
+                                // helpers
+                                $hasTel = fn($i)=> !empty($cliente->contacto_predet->{'telefono'.$i}) ||
+                                                !empty($cliente->contacto_predet->{'ext'.$i});
+                                $hasCel = fn($i)=> !empty($cliente->contacto_predet->{'celular'.$i});
+                            @endphp
 
+                            <div id="telefonos-cel-wrapper--view">
                                 <div class="row">
-                                    {{-- Teléfonos fijos --}}
-                                    <div class="col-md-4" id="telefonos-col" style="padding: 0 !important;">
-                                        <div class="mb-2 telefono-item">
-                                            <label>Teléfono 1 <span class="text-danger">*</span></label>
 
+                                    {{-- Teléfonos fijos --}}
+                                    <div class="col-md-4 col-sm-6" id="telefonos-col--view">
+
+                                        {{-- Teléfono fila 1 --}}
+                                          <div class="mb-2 telefono-item">
+                                            <label>Teléfono 1</label>
                                             <div class="input-group input-group-separated">
-                                            <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" required>
-                                            <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field"    placeholder="Ext." maxlength="7">
-                                            <button type="button" class="btn btn-outline-primary agregar-telefono btn-field" style="padding-left: 10px;">+</button>
+                                            <input … class="form-control phone-field" value="{{ $cliente->contacto_predet->telefono1 ?? '' }}" placeholder="Teléfono">
+                                            <input … class="form-control ext-field" value="{{ $cliente->contacto_predet->ext1 ?? '' }}" placeholder="Ext." maxlength="7">
+                                            <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
                                             </div>
                                         </div>
+
+                                        @for ($i = 2; $i <= 5; $i++)
+                                            @continue(!$hasTel($i))
+                                            <div class="mb-2 telefono-item">
+                                                <label>Teléfono {{ $i }}</label>
+                                                <div class="input-group input-group-separated">
+                                                    <input  type="text" name="contacto[0][telefono{{ $i }}]"
+                                                            value="{{ $cliente->contacto_predet->{'telefono'.$i} }}"
+                                                            class="form-control phone-field">
+                                                    <input  type="text" name="contacto[0][ext{{ $i }}]"
+                                                            value="{{ $cliente->contacto_predet->{'ext'.$i} }}"
+                                                            class="form-control ext-field" maxlength="7">
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                        <small id="tel-limit-msg" class="text-danger mt-1 d-none">
+                                            Solo puedes agregar hasta 5 teléfonos.
+                                        </small>
+
+
                                     </div>
 
                                     {{-- Celulares --}}
-                                    <div class="col-md-4" id="celulares-col" style="">
+                                    <div class="col-md-4 col-sm-6" id="celulares-col--view">
+                                        {{-- Celular fila 1 --}}
                                         <div class="mb-2 celular-item">
                                             <label>Teléfono Celular 1</label>
                                             <div class="input-group input-group-separated">
-                                            <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
-                                            <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
+                                                <input type="text" name="contacto[0][celular1]" placeholder="Celular" value="{{ $cliente->contacto_predet->celular1 ?? '' }}" class="form-control phone-field">
+                                                <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
                                             </div>
                                         </div>
+                                        @for ($i = 2; $i <= 5; $i++)
+                                            @continue(!$hasCel($i))
+                                            <div class="mb-2 celular-item">
+                                            <label>Teléfono Celular {{ $i }}</label>
+                                            <div class="input-group input-group-separated">
+                                                <input type="text" name="contacto[0][celular{{ $i }}]"
+                                                        value="{{ $cliente->contacto_predet->{'celular'.$i} }}"
+                                                        class="form-control phone-field">
+                                                <button type="button"
+                                                        class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                            </div>
+                                            </div>
+                                        @endfor
+                                        <small id="cel-limit-msg" class="text-danger mt-1 d-none">
+                                            Solo puedes agregar hasta 5 celulares.
+                                        </small>
                                     </div>
                                 </div>
-
-                            </div>{{-- /telefonos-cel-wrapper --}}
+                            </div>
 
 
                         </div>
@@ -395,13 +495,19 @@
 
     {{-- Historial de pedidos ---------------------------------------------------}}
     <div class="card shadow-lg" style="margin-right: auto; max-width: 1200px;">
+        {{-- Botón para archivar cuenta --}}
         {{-- Cabecera de la tarjeta --}}
         <div class="card-header fw-bold" style="background-color: rgba(81, 86, 190, 0.1);">Historial de pedidos</div>
 
         <div class="card-body p-0"> {{-- p-0 = quitamos padding extra --}}
             {{-- contenedor scroll con altura máx (ajusta a tu gusto) --}}
             <div class="table-responsive" style="max-height: 470px; overflow-y: auto;">
-                <table id="tblPedidos" class="table table-sm table-striped mb-0">
+                @php
+                    $totalSubtotal = $pedidos->sum('subtotal');
+                    $totalMargen   = $pedidos->avg('margen');   // o lo que te pidan mostrar
+                @endphp
+
+                <table id="tblPedidos" class="table table-sm table-striped mb-0" style="border-style: none !important;">
                     <thead class="table-light position-sticky top-0" style="z-index:1">
                         <tr>
                             <th data-type="date">Fecha <span class="sort-arrow"></span></th>
@@ -427,6 +533,14 @@
                             </tr>
                         @endforelse
                     </tbody>
+                    <tfoot class="table-light position-sticky bottom-0" style="border-style: none !important; z-index:1;">
+                        <tr style="border-style: none !important;">
+                            <th colspan="3" class="text-end">Totales</th>
+                            <th class="text-end">$ {{ number_format($totalSubtotal, 2) }}</th>
+                            <th class="text-end">{{ number_format($totalMargen, 2) }}%</th>
+                        </tr>
+                    </tfoot>
+
                 </table>
             </div>
         </div>
@@ -612,163 +726,288 @@
         });
     </script>
 
-    <script>
-        //Botón editar clientes/view
-        document.addEventListener('DOMContentLoaded', () => {
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const MAX    = 5;
+  const telCol = document.getElementById('telefonos-col--view');
+  const celCol = document.getElementById('celulares-col--view');
+  const addTel = telCol.querySelector('.agregar-telefono');
+  const addCel = celCol.querySelector('.agregar-celular');
+  const btnEdit= document.getElementById('btnEditar');
+  const form   = document.getElementById('formCuenta');
+  if (!btnEdit || !form) return;
 
-            const btn  = document.getElementById('btnEditar');
-            const form = document.getElementById('formCuenta');
-            if (!btn || !form) return;
+  // fila 1 ⇢ incluye botón ➕ (oculto con d-none)
+const mkTelRowPlus = () => `
+  <div class="mb-2 telefono-item">
+    <label>Teléfono 1</label>
+    <div class="input-group input-group-separated">
+      <input type="text" class="form-control phone-field" placeholder="Teléfono">
+      <input type="text" class="form-control ext-field"   placeholder="Ext." maxlength="7">
+      <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
+    </div>
+  </div>`;
+const mkCelRowPlus = () => `
+  <div class="mb-2 celular-item">
+    <label>Teléfono Celular 1</label>
+    <div class="input-group input-group-separated">
+      <input type="text" class="form-control phone-field" placeholder="Celular">
+      <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
+    </div>
+  </div>`;
 
-            /* 1) Al cargar, deja todo des-habilitado */
-            form.querySelectorAll('input, select, textarea').forEach(el => {
-                if (el.classList.contains('no-editar')) return;
-                el.disabled = true;
-            });
 
-            let editing = false;
+  // ——— Crea filas sin ➕ ———
+  const mkTelRow = () => `
+    <div class="mb-2 telefono-item">
+      <label></label>
+      <div class="input-group input-group-separated">
+        <input type="text" class="form-control phone-field"  placeholder="Teléfono">
+        <input type="text" class="form-control ext-field"    placeholder="Ext." maxlength="7">
+        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+      </div>
+    </div>`;
+  const mkCelRow = () => `
+    <div class="mb-2 celular-item">
+      <label></label>
+      <div class="input-group input-group-separated">
+        <input type="text" class="form-control phone-field" placeholder="Celular">
+        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+      </div>
+    </div>`;
 
-            const habilitar = () => {
-                form.querySelectorAll('input, select, textarea').forEach(el => {
-                    if (el.classList.contains('no-editar')) return;
-                    el.disabled = false;
-                });
-                btn.classList.replace('btn-primary', 'btn-secondary');
-                btn.innerHTML = '<i class="fa fa-unlock me-1"></i> Edición habilitada';
-                editing = true;
-            };
+  // ——— Actualiza nombres/textos y botones ➕/❌ ———
+  function updateRowButtons() {
+    // Teléfonos
+    telCol.querySelectorAll('.telefono-item').forEach((item, idx) => {
+      const plus  = item.querySelector('.agregar-telefono');
+      const minus = item.querySelector('.eliminar-item');
+      if (idx === 0) { plus?.classList.remove('d-none'); minus?.classList.add('d-none'); }
+      else           { plus?.classList.add('d-none');   minus?.classList.remove('d-none'); }
+    });
+    // Celulares
+    celCol.querySelectorAll('.celular-item').forEach((item, idx) => {
+      const plus  = item.querySelector('.agregar-celular');
+      const minus = item.querySelector('.eliminar-item');
+      if (idx === 0) { plus?.classList.remove('d-none'); minus?.classList.add('d-none'); }
+      else           { plus?.classList.add('d-none');   minus?.classList.remove('d-none'); }
+    });
+  }
 
-            const bloquear = () => {
-                form.querySelectorAll('input:not([readonly]), select, textarea').forEach(el => {
-                    el.disabled = true;
-                });
-                btn.classList.replace('btn-secondary', 'btn-primary');
-                btn.innerHTML = '<i class="fa fa-edit me-1"></i> Editar cuenta';
-                editing = false;
-            };
+let telTimeout, celTimeout;
+function toggleLimitMessages() {
+  const telMsg = document.getElementById('tel-limit-msg');
+  const celMsg = document.getElementById('cel-limit-msg');
+  const telCount = telCol.querySelectorAll('.telefono-item').length;
+  const celCount = celCol.querySelectorAll('.celular-item').length;
 
-            btn.addEventListener('click', () => editing ? bloquear() : habilitar());
-        });
-    </script>
+  // —— Teléfonos ——
+  if (telMsg) {
+    if (telCount >= MAX) {
+      // muestra y mueve al final
+      telMsg.classList.remove('d-none');
+      telCol.appendChild(telMsg);
+      clearTimeout(telTimeout);
+      telTimeout = setTimeout(() => {
+        telMsg.classList.add('d-none');
+      }, 5000);
+    } else {
+      telMsg.classList.add('d-none');
+      clearTimeout(telTimeout);
+    }
+  }
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+  // —— Celulares ——
+  if (celMsg) {
+    if (celCount >= MAX) {
+      celMsg.classList.remove('d-none');
+      celCol.appendChild(celMsg);
+      clearTimeout(celTimeout);
+      celTimeout = setTimeout(() => {
+        celMsg.classList.add('d-none');
+      }, 5000);
+    } else {
+      celMsg.classList.add('d-none');
+      clearTimeout(celTimeout);
+    }
+  }
+}
 
-            const MAX = 5;
-            const telCol = document.getElementById('telefonos-col--view');
-            const celCol = document.getElementById('celulares-col--view');
-            const addTel = telCol.querySelector('.agregar-telefono');
-            const addCel = celCol.querySelector('.agregar-celular');
-            const btnEdit = document.querySelector('.btn-editar-cuenta');
 
-            /* ── utilidades ─────────────────────────── */
-            const mkTelRow = () => `
-            <div class="mb-2 telefono-item">
-                <label></label>
-                <div class="input-group input-group-separated">
-                <input type="text" class="form-control phone-field"  placeholder="Teléfono">
-                <input type="text" class="form-control ext-field"   placeholder="Ext." maxlength="7">
-                <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-                </div>
-            </div>`;
-            const mkCelRow = () => `
-            <div class="mb-2 celular-item">
-                <label></label>
-                <div class="input-group input-group-separated">
-                <input type="text" class="form-control phone-field" placeholder="Celular">
-                <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-                </div>
-            </div>`;
 
-            const reindex = (tipo) => {
-                const items = (tipo==='telefono')
-                                ? telCol.querySelectorAll('.telefono-item')
-                                : celCol.querySelectorAll('.celular-item');
-                items.forEach((item,i)=>{
-                    const idx=i+1;
-                    if (tipo==='telefono'){
-                        const [tel,ext] = item.querySelectorAll('input');
-                        tel.name=`contacto[0][telefono${idx}]`;
-                        ext.name=`contacto[0][ext${idx}]`;
-                        item.querySelector('label').textContent=`Teléfono ${idx}`;
-                    }else{
-                        item.querySelector('input').name=`contacto[0][celular${idx}]`;
-                        item.querySelector('label').textContent=`Teléfono Celular ${idx}`;
-                    }
-                });
-            };
+  function ensureFirstPlusButtons() {
+  // —— Teléfonos ——
+  const firstTel = telCol.querySelector('.telefono-item');
+  if (firstTel && !firstTel.querySelector('.agregar-telefono')) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-outline-primary agregar-telefono btn-field';
+    btn.textContent = '+';
+    // lo metemos al final de la input-group
+    firstTel.querySelector('.input-group').appendChild(btn);
+  }
+  // —— Celulares ——
+  const firstCel = celCol.querySelector('.celular-item');
+  if (firstCel && !firstCel.querySelector('.agregar-celular')) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-outline-primary agregar-celular btn-field';
+    btn.textContent = '+';
+    firstCel.querySelector('.input-group').appendChild(btn);
+  }
+}
 
-            const removeEmptyRows = () => {
-                telCol.querySelectorAll('.telefono-item').forEach(i=>{
-                    const [tel,ext]=i.querySelectorAll('input');
-                    if(!tel.value.trim() && !ext.value.trim()) i.remove();
-                });
-                celCol.querySelectorAll('.celular-item').forEach(i=>{
-                    if(!i.querySelector('input').value.trim()) i.remove();
-                });
-                reindex('telefono'); reindex('celular');
-            };
 
-            const setEditing = (state) => {
-                /* 1) Inputs ───────────────────────────── */
-                telCol.querySelectorAll('input').forEach(el => el.disabled = !state);
-                celCol.querySelectorAll('input').forEach(el => el.disabled = !state);
+  // ——— Ajusta índices y etiquetas ———
+  const reindex = tipo => {
+    const items = (tipo === 'telefono')
+      ? telCol.querySelectorAll('.telefono-item')
+      : celCol.querySelectorAll('.celular-item');
+    items.forEach((item, i) => {
+      const idx = i + 1;
+      if (tipo === 'telefono') {
+        const [tel, ext] = item.querySelectorAll('input');
+        tel.name = `contacto[0][telefono${idx}]`;
+        ext.name = `contacto[0][ext${idx}]`;
+        item.querySelector('label').textContent = `Teléfono ${idx}`;
+      } else {
+        item.querySelector('input').name = `contacto[0][celular${idx}]`;
+        item.querySelector('label').textContent = `Teléfono Celular ${idx}`;
+      }
+    });
+    updateRowButtons();
+  };
 
-                /* 2) Botones de acción (+ / X) ────────── */
-                const toggleBtns = (parent, selector) => {
-                    parent.querySelectorAll(selector).forEach(btn => {
-                        if (state) {
-                            btn.classList.remove('d-none');
-                            btn.disabled = false;
-                            btn.style.display = '';      // resetea display
-                        } else {
-                            btn.disabled = true;
-                            btn.classList.add('d-none');
-                        }
-                    });
-                };
-                toggleBtns(telCol, '.eliminar-item, .agregar-telefono');
-                toggleBtns(celCol, '.eliminar-item, .agregar-celular');
-            };
+  // ——— Elimina filas vacías ———
+const removeEmptyRows = () => {
+  // borra vacías…
+  telCol.querySelectorAll('.telefono-item').forEach(el => {
+    const [tel, ext] = el.querySelectorAll('input');
+    if (!tel.value.trim() && !ext.value.trim()) el.remove();
+  });
+  celCol.querySelectorAll('.celular-item').forEach(el => {
+    if (!el.querySelector('input').value.trim()) el.remove();
+  });
 
-            /* ── estado inicial (solo-lectura) ── */
-            setEditing(false);
-            reindex('telefono'); reindex('celular');
+  // si quedó a 0, recrea fila 1 (con ➕ oculto)
+  if (telCol.querySelectorAll('.telefono-item').length === 0) {
+    telCol.insertAdjacentHTML('afterbegin', mkTelRowPlus());
+  }
+  if (celCol.querySelectorAll('.celular-item').length === 0) {
+    celCol.insertAdjacentHTML('afterbegin', mkCelRowPlus());
+  }
 
-            /* ── manejo del botón Editar ───────── */
-            let editing=false;
-            btnEdit.addEventListener('click', ()=>{
-                editing = !editing;
-                if(editing){
-                    setEditing(true);
-                }else{
-                    removeEmptyRows();
-                    setEditing(false);
-                }
-            });
+  ensureFirstPlusButtons();
 
-            /* ── añadir filas ──────────────────── */
-            addTel.addEventListener('click', ()=>{
-                if(telCol.querySelectorAll('.telefono-item').length>=MAX) return;
-                addTel.insertAdjacentHTML('beforebegin', mkTelRow());
-                reindex('telefono');
-            });
-            addCel.addEventListener('click', ()=>{
-                if(celCol.querySelectorAll('.celular-item').length>=MAX) return;
-                addCel.insertAdjacentHTML('beforebegin', mkCelRow());
-                reindex('celular');
-            });
+  // re-indexa y ajusta botones
+  reindex('telefono');
+  reindex('celular');
+  toggleLimitMessages();
 
-            /* ── eliminar filas ────────────────── */
-            document.addEventListener('click', e=>{
-                if(!e.target.classList.contains('eliminar-item')) return;
-                const item = e.target.closest('.telefono-item, .celular-item');
-                const col  = item.closest('#telefonos-col--view') ? 'telefono' : 'celular';
-                item.remove();
-                reindex(col);
-            });
-        });
-    </script>
+};
+
+
+
+
+  // ——— Ocultar inputs/botones ———
+  const setEditing = state => {
+    // Habilita/deshabilita inputs
+    form.querySelectorAll('input:not(.no-editar), select, textarea')
+        .forEach(i => i.disabled = !state);
+    // Muestra u oculta botones
+    const toggleBtns = (col, sel) => {
+      col.querySelectorAll(sel).forEach(btn => {
+        btn.disabled = !state;
+        btn.classList.toggle('d-none', !state);
+      });
+    };
+    toggleBtns(telCol, '.agregar-telefono, .eliminar-item');
+    toggleBtns(celCol, '.agregar-celular, .eliminar-item');
+  };
+
+  // ——— Lógica de Editar / Guardar ———
+  let editing = false;
+btnEdit.addEventListener('click', () => {
+  editing = !editing;
+  if (editing) {
+    // — Entrar a edición —
+    btnEdit.classList.replace('btn-primary','btn-secondary');
+    btnEdit.innerHTML = '<i class="fa fa-unlock me-1"></i> Edición habilitada';
+    setEditing(true);
+
+    // Asegura fila 1 de celular si no existía
+    if (celCol.querySelectorAll('.celular-item').length === 0) {
+      celCol.insertAdjacentHTML(
+        'afterbegin',
+        mkCelRow().replace('<label></label>','<label>Teléfono Celular 1</label>')
+      );
+    }
+
+    ensureFirstPlusButtons();
+
+    // Reindex para mostrar ➕/❌ correctamente
+    reindex('telefono');
+    reindex('celular');
+    toggleLimitMessages();
+
+  } else {
+    // — Cerrar edición —
+    removeEmptyRows();        // limpia vacías y deja al menos 1 fila
+    ensureFirstPlusButtons();
+
+    reindex('telefono');      // reposiciona y reaplica updateRowButtons
+    reindex('celular');
+    toggleLimitMessages();
+
+    setEditing(false);        // por último, oculta todos los ➕/❌ y bloquea inputs
+
+    btnEdit.classList.replace('btn-secondary','btn-primary');
+    btnEdit.innerHTML = '<i class="fa fa-edit me-1"></i> Editar cuenta';
+  }
+});
+
+
+  // ——— Añadir filas ———
+telCol.addEventListener('click', e => {
+  if (!e.target.closest('.agregar-telefono')) return;
+  if (telCol.querySelectorAll('.telefono-item').length >= MAX) return;
+  telCol.insertAdjacentHTML('beforeend', mkTelRow()); // fila sin ➕
+  reindex('telefono');
+  toggleLimitMessages();
+
+});
+
+celCol.addEventListener('click', e => {
+  if (!e.target.closest('.agregar-celular')) return;
+  if (celCol.querySelectorAll('.celular-item').length >= MAX) return;
+  celCol.insertAdjacentHTML('beforeend', mkCelRow());
+  reindex('celular');
+  toggleLimitMessages();
+
+});
+
+
+  // ——— Eliminar filas ———
+  document.addEventListener('click', e => {
+    if (!e.target.classList.contains('eliminar-item')) return;
+    const item = e.target.closest('.telefono-item, .celular-item');
+    const isTel = !!item.closest('#telefonos-col--view');
+    item.remove();
+    reindex(isTel ? 'telefono' : 'celular');
+  });
+
+  ensureFirstPlusButtons();
+
+  // Estado inicial
+    reindex('telefono');
+    reindex('celular');
+    toggleLimitMessages();
+
+    setEditing(false);
+
+});
+</script>
+
 
 
 

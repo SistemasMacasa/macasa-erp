@@ -234,7 +234,9 @@
                     id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/mcarreon.png')}}"
                         alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ $usuario->nombre }}</span>
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium">
+                        {{ $usuario->nombre }} {{ $usuario->apellido_p }} {{ $usuario->apellido_m }}
+                    </span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">

@@ -96,14 +96,25 @@
                         <label for="segmento" class="form-label">Segmento</label>
                         <select name="segmento" id="segmento" class="form-select">
                             <option value="">Todos</option>
-                            @foreach($segmentos as $s)
-                            <option
-                                value="{{ $s }}"
-                                {{ request('segmento') == $s ? 'selected' : '' }}
-                            >{{ ucfirst(mb_strtolower($s)) }}</option>
+                            @foreach ($segmentos as $s)
+                                @php
+                                    $label = match ($s) {
+                                        'macasa cuentas especiales'  => 'Macasa Cuentas Especiales',
+                                        'tekne store ecommerce'      => 'Tekne Store E-Commerce',
+                                        'la plaza ecommerce'         => 'LaPlazaEnLinea E-Commerce',
+                                        default                      => ucfirst($s), // por si aparece otro
+                                    };
+                                @endphp
+                                <option
+                                    value="{{ $s }}"
+                                    {{ request('segmento') == $s ? 'selected' : '' }}
+                                >
+                                    {{ $label }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
+
 
                     {{-- Ciclo de venta --}}
                     <div class="col-md-3">
@@ -123,11 +134,16 @@
                     <div class="col-md-3">
                         <label for="perPage" class="form-label">Ver registros</label>
                         <select name="perPage" id="perPage" class="form-select">
-                            @foreach([10,25,50,100] as $n)
                             <option
-                                value="{{ $n }}"
-                                {{ request('perPage',25) == $n ? 'selected':'' }}
-                            >{{ $n }}</option>
+                                value="all"
+                                {{ request('perPage') == 'all' ? 'selected' : '' }}
+                            >Todos</option>
+
+                            @foreach ([10, 25, 50, 100] as $n)
+                                <option
+                                    value="{{ $n }}"
+                                    {{ request('perPage', 25) == $n ? 'selected' : '' }}
+                                >{{ $n }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -156,8 +172,8 @@
         {{-- Texto de totales --}}
         <div class="col-sm">
             <p class="mb-0 text-muted small">
-                Mostrando <strong>{{ $clientes->firstItem() }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
-                de <strong>{{ $clientes->total() }}</strong> clientes encontrados
+                Mostrando <strong>{{ $clientes->firstItem() ?? "Todos" }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
+                de <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes encontrados
             </p>
         </div>
 
@@ -335,9 +351,9 @@
                         @switch($seg)
                         @case('macasa cuentas especiales')
                             {{ 'Macasa Cuentas Especiales' }} @break
-                        @case('tekne store e-commerce')
+                        @case('tekne store ecommerce')
                             {{ 'Tekne Store E-Commerce' }} @break
-                        @case('laplazaenlinea e-commerce')
+                        @case('la plaza ecommerce')
                             {{ 'LaPlazaEnLinea E-Commerce' }} @break
                         @default
                             —
