@@ -144,44 +144,44 @@ $clientes = $query->paginate($perPage)
 
         // ===== Dummy de historial mientras no hay modelo Pedido =====
         $pedidos = collect([
-            ['fecha' => '2025-04-02', 'id' => 'P-1023', 'razon' => 'ACME S.A. de C.V.',      'subtotal' => 15230.50, 'margen' => 18.4],
-            ['fecha' => '2025-03-17', 'id' => 'P-0976', 'razon' => 'Tech México S.A.',        'subtotal' =>  8650.00, 'margen' => 22.1],
-            ['fecha' => '2025-02-28', 'id' => 'P-0911', 'razon' => 'Comercial XYZ S. de R.L', 'subtotal' => 43120.90, 'margen' => 15.2],
-            ['fecha' => '2025-04-10', 'id' => 'P-1034', 'razon' => 'Distribuidora ABC S.A.',  'subtotal' => 12345.67, 'margen' => 19.8],
-            ['fecha' => '2025-03-25', 'id' => 'P-0987', 'razon' => 'Global Tech Solutions',   'subtotal' =>  9876.54, 'margen' => 20.5],
-            ['fecha' => '2025-02-15', 'id' => 'P-0899', 'razon' => 'Innovaciones S.A. de C.V.', 'subtotal' => 25678.90, 'margen' => 17.3],
-            ['fecha' => '2025-04-05', 'id' => 'P-1028', 'razon' => 'Servicios Integrales MX', 'subtotal' =>  7654.32, 'margen' => 21.7],
-            ['fecha' => '2025-03-12', 'id' => 'P-0965', 'razon' => 'Corporativo Delta',       'subtotal' => 18900.00, 'margen' => 16.9],
-            ['fecha' => '2025-02-20', 'id' => 'P-0905', 'razon' => 'Grupo Empresarial Omega', 'subtotal' => 34210.75, 'margen' => 14.8],
-            ['fecha' => '2025-04-08', 'id' => 'P-1031', 'razon' => 'Soluciones Avanzadas',    'subtotal' => 11234.56, 'margen' => 18.2],
-            ['fecha' => '2025-03-30', 'id' => 'P-0992', 'razon' => 'TechnoWorld S.A.',        'subtotal' =>  6543.21, 'margen' => 23.0],
-            ['fecha' => '2025-02-10', 'id' => 'P-0888', 'razon' => 'Comercializadora Alfa',   'subtotal' => 27890.12, 'margen' => 16.5],
-            ['fecha' => '2025-04-12', 'id' => 'P-1036', 'razon' => 'Distribuciones Beta',     'subtotal' =>  8765.43, 'margen' => 20.3],
-            ['fecha' => '2025-03-20', 'id' => 'P-0980', 'razon' => 'Innovación Global',       'subtotal' => 14567.89, 'margen' => 19.1],
-            ['fecha' => '2025-02-25', 'id' => 'P-0910', 'razon' => 'Corporativo Gamma',       'subtotal' => 39876.54, 'margen' => 15.7],
-            ['fecha' => '2025-04-15', 'id' => 'P-1040', 'razon' => 'Servicios Empresariales', 'subtotal' => 13456.78, 'margen' => 18.9],
-            ['fecha' => '2025-03-10', 'id' => 'P-0954', 'razon' => 'Tech Solutions MX',       'subtotal' =>  9876.54, 'margen' => 21.2],
-            ['fecha' => '2025-02-05', 'id' => 'P-0877', 'razon' => 'Comercial Delta',         'subtotal' => 31234.56, 'margen' => 14.5],
-            ['fecha' => '2025-04-18', 'id' => 'P-1045', 'razon' => 'Distribuidora Zeta',      'subtotal' =>  7654.32, 'margen' => 22.4],
-            ['fecha' => '2025-03-05', 'id' => 'P-0943', 'razon' => 'Global Innovators',       'subtotal' => 16789.01, 'margen' => 17.8],
-            ['fecha' => '2025-04-20', 'id' => 'P-1050', 'razon' => 'Alpha Solutions',         'subtotal' => 14500.00, 'margen' => 19.0],
-            ['fecha' => '2025-03-22', 'id' => 'P-0995', 'razon' => 'Beta Enterprises',        'subtotal' =>  9800.00, 'margen' => 20.0],
-            ['fecha' => '2025-02-18', 'id' => 'P-0920', 'razon' => 'Gamma Corp.',             'subtotal' => 32000.00, 'margen' => 15.0],
-            ['fecha' => '2025-04-25', 'id' => 'P-1060', 'razon' => 'Delta Innovations',       'subtotal' => 12000.00, 'margen' => 18.5],
-            ['fecha' => '2025-03-28', 'id' => 'P-1000', 'razon' => 'Epsilon Group',           'subtotal' =>  8700.00, 'margen' => 21.0],
-            ['fecha' => '2025-02-12', 'id' => 'P-0890', 'razon' => 'Zeta Solutions',          'subtotal' => 25000.00, 'margen' => 16.0],
-            ['fecha' => '2025-04-22', 'id' => 'P-1055', 'razon' => 'Omega Enterprises',       'subtotal' => 13500.00, 'margen' => 19.5],
-            ['fecha' => '2025-03-15', 'id' => 'P-0970', 'razon' => 'Sigma Tech',              'subtotal' =>  9400.00, 'margen' => 20.8],
-            ['fecha' => '2025-02-08', 'id' => 'P-0885', 'razon' => 'Lambda Corp.',            'subtotal' => 31000.00, 'margen' => 14.8],
-            ['fecha' => '2025-04-28', 'id' => 'P-1070', 'razon' => 'Theta Innovations',       'subtotal' => 11000.00, 'margen' => 18.0],
-            ['fecha' => '2025-03-18', 'id' => 'P-0985', 'razon' => 'Iota Enterprises',        'subtotal' =>  8900.00, 'margen' => 21.5],
-            ['fecha' => '2025-02-22', 'id' => 'P-0930', 'razon' => 'Kappa Solutions',         'subtotal' => 27000.00, 'margen' => 16.2],
-            ['fecha' => '2025-04-30', 'id' => 'P-1080', 'razon' => 'Lambda Innovations',      'subtotal' => 14000.00, 'margen' => 19.2],
-            ['fecha' => '2025-03-25', 'id' => 'P-0998', 'razon' => 'Mu Enterprises',          'subtotal' =>  9200.00, 'margen' => 20.2],
-            ['fecha' => '2025-02-28', 'id' => 'P-0945', 'razon' => 'Nu Corp.',                'subtotal' => 29000.00, 'margen' => 15.5],
-            ['fecha' => '2025-04-18', 'id' => 'P-1048', 'razon' => 'Xi Solutions',            'subtotal' => 12500.00, 'margen' => 18.7],
-            ['fecha' => '2025-03-12', 'id' => 'P-0968', 'razon' => 'Omicron Group',           'subtotal' =>  8800.00, 'margen' => 21.3],
-            ['fecha' => '2025-02-15', 'id' => 'P-0908', 'razon' => 'Pi Enterprises',          'subtotal' => 26000.00, 'margen' => 16.8],
+            ['fecha' => '2025-04-02', 'id' => 'P-1023', 'razon' => 'ACME S.A. de C.V.',      'subtotal' => 15230.50, 'margen' => 2800.00],
+            ['fecha' => '2025-03-17', 'id' => 'P-0976', 'razon' => 'Tech México S.A.',        'subtotal' =>  8650.00, 'margen' => 1910.00],
+            ['fecha' => '2025-02-28', 'id' => 'P-0911', 'razon' => 'Comercial XYZ S. de R.L', 'subtotal' => 43120.90, 'margen' => 6550.00],
+            ['fecha' => '2025-04-10', 'id' => 'P-1034', 'razon' => 'Distribuidora ABC S.A.',  'subtotal' => 12345.67, 'margen' => 2450.00],
+            ['fecha' => '2025-03-25', 'id' => 'P-0987', 'razon' => 'Global Tech Solutions',   'subtotal' =>  9876.54, 'margen' => 2020.00],
+            ['fecha' => '2025-02-15', 'id' => 'P-0899', 'razon' => 'Innovaciones S.A. de C.V.', 'subtotal' => 25678.90, 'margen' => 4450.00],
+            ['fecha' => '2025-04-05', 'id' => 'P-1028', 'razon' => 'Servicios Integrales MX', 'subtotal' =>  7654.32, 'margen' => 1660.00],
+            ['fecha' => '2025-03-12', 'id' => 'P-0965', 'razon' => 'Corporativo Delta',       'subtotal' => 18900.00, 'margen' => 3200.00],
+            ['fecha' => '2025-02-20', 'id' => 'P-0905', 'razon' => 'Grupo Empresarial Omega', 'subtotal' => 34210.75, 'margen' => 5050.00],
+            ['fecha' => '2025-04-08', 'id' => 'P-1031', 'razon' => 'Soluciones Avanzadas',    'subtotal' => 11234.56, 'margen' => 2050.00],
+            ['fecha' => '2025-03-30', 'id' => 'P-0992', 'razon' => 'TechnoWorld S.A.',        'subtotal' =>  6543.21, 'margen' => 1500.00],
+            ['fecha' => '2025-02-10', 'id' => 'P-0888', 'razon' => 'Comercializadora Alfa',   'subtotal' => 27890.12, 'margen' => 4600.00],
+            ['fecha' => '2025-04-12', 'id' => 'P-1036', 'razon' => 'Distribuciones Beta',     'subtotal' =>  8765.43, 'margen' => 1780.00],
+            ['fecha' => '2025-03-20', 'id' => 'P-0980', 'razon' => 'Innovación Global',       'subtotal' => 14567.89, 'margen' => 2750.00],
+            ['fecha' => '2025-02-25', 'id' => 'P-0910', 'razon' => 'Corporativo Gamma',       'subtotal' => 39876.54, 'margen' => 6100.00],
+            ['fecha' => '2025-04-15', 'id' => 'P-1040', 'razon' => 'Servicios Empresariales', 'subtotal' => 13456.78, 'margen' => 2500.00],
+            ['fecha' => '2025-03-10', 'id' => 'P-0954', 'razon' => 'Tech Solutions MX',       'subtotal' =>  9876.54, 'margen' => 2100.00],
+            ['fecha' => '2025-02-05', 'id' => 'P-0877', 'razon' => 'Comercial Delta',         'subtotal' => 31234.56, 'margen' => 4530.00],
+            ['fecha' => '2025-04-18', 'id' => 'P-1045', 'razon' => 'Distribuidora Zeta',      'subtotal' =>  7654.32, 'margen' => 1710.00],
+            ['fecha' => '2025-03-05', 'id' => 'P-0943', 'razon' => 'Global Innovators',       'subtotal' => 16789.01, 'margen' => 2980.00],
+            ['fecha' => '2025-04-20', 'id' => 'P-1050', 'razon' => 'Alpha Solutions',         'subtotal' => 14500.00, 'margen' => 2750.00],
+            ['fecha' => '2025-03-22', 'id' => 'P-0995', 'razon' => 'Beta Enterprises',        'subtotal' =>  9800.00, 'margen' => 1950.00],
+            ['fecha' => '2025-02-18', 'id' => 'P-0920', 'razon' => 'Gamma Corp.',             'subtotal' => 32000.00, 'margen' => 4800.00],
+            ['fecha' => '2025-04-25', 'id' => 'P-1060', 'razon' => 'Delta Innovations',       'subtotal' => 12000.00, 'margen' => 2200.00],
+            ['fecha' => '2025-03-28', 'id' => 'P-1000', 'razon' => 'Epsilon Group',           'subtotal' =>  8700.00, 'margen' => 1830.00],
+            ['fecha' => '2025-02-12', 'id' => 'P-0890', 'razon' => 'Zeta Solutions',          'subtotal' => 25000.00, 'margen' => 4000.00],
+            ['fecha' => '2025-04-22', 'id' => 'P-1055', 'razon' => 'Omega Enterprises',       'subtotal' => 13500.00, 'margen' => 2600.00],
+            ['fecha' => '2025-03-15', 'id' => 'P-0970', 'razon' => 'Sigma Tech',              'subtotal' =>  9400.00, 'margen' => 1950.00],
+            ['fecha' => '2025-02-08', 'id' => 'P-0885', 'razon' => 'Lambda Corp.',            'subtotal' => 31000.00, 'margen' => 4600.00],
+            ['fecha' => '2025-04-28', 'id' => 'P-1070', 'razon' => 'Theta Innovations',       'subtotal' => 11000.00, 'margen' => 2000.00],
+            ['fecha' => '2025-03-18', 'id' => 'P-0985', 'razon' => 'Iota Enterprises',        'subtotal' =>  8900.00, 'margen' => 1920.00],
+            ['fecha' => '2025-02-22', 'id' => 'P-0930', 'razon' => 'Kappa Solutions',         'subtotal' => 27000.00, 'margen' => 4200.00],
+            ['fecha' => '2025-04-30', 'id' => 'P-1080', 'razon' => 'Lambda Innovations',      'subtotal' => 14000.00, 'margen' => 2650.00],
+            ['fecha' => '2025-03-25', 'id' => 'P-0998', 'razon' => 'Mu Enterprises',          'subtotal' =>  9200.00, 'margen' => 1850.00],
+            ['fecha' => '2025-02-28', 'id' => 'P-0945', 'razon' => 'Nu Corp.',                'subtotal' => 29000.00, 'margen' => 4500.00],
+            ['fecha' => '2025-04-18', 'id' => 'P-1048', 'razon' => 'Xi Solutions',            'subtotal' => 12500.00, 'margen' => 2350.00],
+            ['fecha' => '2025-03-12', 'id' => 'P-0968', 'razon' => 'Omicron Group',           'subtotal' =>  8800.00, 'margen' => 1870.00],
+            ['fecha' => '2025-02-15', 'id' => 'P-0908', 'razon' => 'Pi Enterprises',          'subtotal' => 26000.00, 'margen' => 4300.00],
         ]);
 
         $vendedores     = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos
@@ -237,26 +237,48 @@ $clientes = $query->paginate($perPage)
     
         if($request->sector == "privada" || $request->tipo == "gobierno")
         {
-            $data = $request->validate([
-                'estatus'       => 'required|string|max:100',
-                'ciclo_venta'   => 'nullable|string|max:100',
-                'tipo'          => 'required|string|max:100',
-                'nombre'        => 'required|string|max:100',
-                'id_vendedor'   => 'required|integer',
-                'sector'        => 'nullable|string|max:100',
-                'segmento'      => 'nullable|string|max:100',
+
+            $request->merge([
+                'contacto' => collect($request->input('contacto', []))
+                    ->map(function ($c) {
+                        foreach (range(1,5) as $i) {
+                            foreach (['telefono', 'celular', 'ext'] as $campo) {
+                                $key = "{$campo}{$i}";
+                                $c[$key] = isset($c[$key]) ? preg_replace('/\D/', '', $c[$key]) : null;
+                            }
+                        }
+                        return $c;
+                    })->all()
+            ]);
+
+            // ── Reglas base ──────────────────────────────────────────────────────────
+            $rules = [
+                'estatus'     => 'required|string|max:100',
+                'ciclo_venta' => 'nullable|string|max:100',
+                'tipo'        => 'required|string|max:100',
+                'nombre'      => 'required|string|max:60',
+                'id_vendedor' => 'nullable|integer',
+                'sector'      => 'nullable|string|max:100',
+                'segmento'    => 'nullable|string|max:100',
 
                 'contacto.0.nombre'      => 'nullable|string|max:60',
                 'contacto.0.apellido_p'  => 'nullable|string|max:27',
                 'contacto.0.apellido_m'  => 'nullable|string|max:27',
                 'contacto.0.email'       => 'nullable|email|max:120',
                 'contacto.0.puesto'      => 'nullable|string|max:60',
-                'contacto.0.genero'     => 'nullable|string|max:17',
-                'contacto.0.telefono*'   => 'nullable|digits:10',
-                'contacto.0.ext*'        => 'nullable|digits_between:1,7',
-                'contacto.0.celular*'    => 'nullable|digits:10',
-                'contacto.0.predeterminado' => 'nullable|boolean',
-            ]);
+                'contacto.0.genero'      => 'nullable|string|max:17',
+            ];
+
+            // ── Teléfonos / Extensiones / Celulares (1‒5) ───────────────────────────
+            for ($i = 1; $i <= 5; $i++) {
+                $rules["contacto.0.telefono{$i}"] = 'nullable|digits:10';
+                $rules["contacto.0.celular{$i}"]  = 'nullable|digits:10';
+                $rules["contacto.0.ext{$i}"]      = 'nullable|digits_between:1,7';
+            }
+
+            // ── Validamos ───────────────────────────────────────────────────────────
+            $data = $request->validate($rules);
+
 
             // Actualizar el cliente en la BD
             try{
@@ -272,26 +294,30 @@ $clientes = $query->paginate($perPage)
                 ]);
 
                 // Actualizar el contacto principal
-                $contacto = Contacto::where('id_cliente', $cliente->id_cliente)
-                                    ->where('predeterminado', 1)
-                                    ->first();
 
-                if ($contacto) {
-                    $contacto->update([
-                        'nombre'      => $data['contacto'][0]['nombre'] ?? null,
+                $contacto = Contacto::updateOrCreate(
+                    [
+                        'id_cliente'     => $cliente->id_cliente,
+                        'predeterminado' => 1
+                    ],
+                    [ // ➊ datos “de cabecera”
+                        'nombre'      => $data['contacto'][0]['nombre']  ?? null,
                         'apellido_p'  => $data['contacto'][0]['apellido_p'] ?? null,
                         'apellido_m'  => $data['contacto'][0]['apellido_m'] ?? null,
                         'email'       => $data['contacto'][0]['email'] ?? null,
                         'puesto'      => $data['contacto'][0]['puesto'] ?? null,
                         'genero'      => $data['contacto'][0]['genero'] ?? null,
-                    ]);
-                    for ($i = 1; $i <= 5; $i++) {
-                        $contacto->{"telefono$i"} = digits_only($data['contacto'][0]["telefono$i"] ?? null);
-                        $contacto->{"ext$i"}      = digits_only($data['contacto'][0]["ext$i"] ?? null);
-                        $contacto->{"celular$i"}  = digits_only($data['contacto'][0]["celular$i"] ?? null);
-                    }
-                    $contacto->save();
+                    ]
+                );
+
+                // ➋ teléfonos / extensiones
+                for ($i = 1; $i <= 5; $i++) {
+                    $contacto->{"telefono$i"} = digits_only($data['contacto'][0]["telefono$i"] ?? null);
+                    $contacto->{"ext$i"}      = digits_only($data['contacto'][0]["ext$i"]      ?? null);
+                    $contacto->{"celular$i"}  = digits_only($data['contacto'][0]["celular$i"]  ?? null);
                 }
+                $contacto->save();
+
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
                                  ->with('success', 'Cliente empresarial actualizado correctamente');

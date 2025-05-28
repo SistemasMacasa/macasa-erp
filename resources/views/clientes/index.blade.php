@@ -17,15 +17,15 @@
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
-        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-primary">
+        <a href="{{ route('inicio') }}" class="btn btn-primary btn-30ch">
             <i class="fa fa-phone me-1"></i> Mis Recall's
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-primary">
+        <a href="{{ route('inicio') }}" class="btn btn-primary btn-30ch">
             <i class="fa fa-check me-1"></i> Enviar carta de presentación
         </a>
     </div>
@@ -33,18 +33,19 @@
     {{-- 🔎 Buscador --}}
     <form method="GET" action="{{ route('clientes.index') }}">
         <div class="card mb-3">
-            <div class="card-header" style="background-color: rgba(81, 86, 190, 0.1); font-weight: 700 !important;">
-                Filtros
-            </div>
+            <div class="card-header section-card-header text-center">
+                            <h5 class="mb-0">Filtros</h5>
+                        </div>
 
-            <div class="card-body">
-                <div class="row gx-3 gy-2">
+            <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
+                <div class="row gx-3 gy-2 justify-content-between">
+
+                    {{-- Fecha de creación --}}
 
                     {{-- Búsqueda global --}}
-                    <div class="col-md-3">
-                        <label for="search" class="form-label">Búsqueda</label>
+                    <div class="col">
+                        <label for="search" class="form-label"><i class="fa fa-search"></i> Búsqueda </label>
                         <div class="input-group">
-                            <span class="input-group-text bg-white"><i class="fa fa-search"></i></span>
                             <input
                             type="text"
                             name="search"
@@ -52,12 +53,13 @@
                             class="form-control"
                             placeholder="Cliente, email, ID…"
                             value="{{ request('search') }}"
+                            maxlength="25"
                             >
                         </div>
                     </div>
 
                     {{-- Ejecutivos (multi-select con Select2) --}}
-                    <div class="col-md-3">
+                    <div class="col">
                         <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
                         <select
                             id="ejecutivos"
@@ -78,7 +80,7 @@
                     </div>
 
                     {{-- Sector --}}
-                    <div class="col-md-3">
+                    <div class="col">
                         <label for="sector" class="form-label">Sector</label>
                         <select name="sector" id="sector" class="form-select">
                             <option value="">Todos</option>
@@ -92,7 +94,7 @@
                     </div>
 
                     {{-- Segmento --}}
-                    <div class="col-md-3">
+                    <div class="col">
                         <label for="segmento" class="form-label">Segmento</label>
                         <select name="segmento" id="segmento" class="form-select">
                             <option value="">Todos</option>
@@ -117,7 +119,7 @@
 
 
                     {{-- Ciclo de venta --}}
-                    <div class="col-md-3">
+                    <div class="col">
                         <label for="cycle" class="form-label">Ciclo de venta</label>
                         <select name="cycle" id="cycle" class="form-select">
                             <option value="">Todos</option>
@@ -125,13 +127,29 @@
                             <option
                                 value="{{ $ciclo }}"
                                 {{ request('cycle') == $ciclo ? 'selected' : '' }}
-                            >{{ ucfirst(mb_strtolower($ciclo)) }}</option>
+                            >
+                                    @switch($ciclo)
+                                        @case('venta')
+                                            Venta
+                                            @break
+                                        @case('cotizacion')
+                                            Cotización
+                                            @break
+                                        @default
+                                            {{ ucfirst(mb_strtolower($ciclo)) }}
+                                    @endswitch
+                            {{ ucfirst(mb_strtolower($ciclo)) }}
+                        </option>
                             @endforeach
                         </select>
                     </div>
+                </div> {{-- /.row --}}
+
+
+                <div class="row gx-3 gy-2 justify-content-between mt-3">
             
                     {{-- Registros por página --}}
-                    <div class="col-md-3">
+                    <div class="col">
                         <label for="perPage" class="form-label">Ver registros</label>
                         <select name="perPage" id="perPage" class="form-select">
                             <option
@@ -147,22 +165,35 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>
 
-                    <div class="col-md-3 d-flex gap-2 align-items-end">
-                        <a  href="{{ route('clientes.index') }}"
-                            class="btn btn-light d-flex align-items-center justify-content-center"
-                            style="height:38px">
-                            <i class="fa fa-eraser me-1"></i> Limpiar
+
+                <div class="row gx-3 gy-2 mt-3 justify-content-end">
+                    <div class="col-auto d-flex gap-2 align-items-end">
+                        <a
+                        href="{{ route('clientes.index') }}"
+                        class="btn btn-secondary d-flex align-items-center justify-content-center"
+                        style="width:15ch; /* múltiplo de 5ch */"
+                        >
+                            <i class="fa fa-eraser me-1"></i>
+                            Limpiar
                         </a>
 
-                        <button type="submit"
-                                class="btn btn-success d-flex align-items-center justify-content-center"
-                                style="height:38px">
-                            <i class="fa fa-search me-1"></i> Buscar
+                        <button
+                        type="submit"
+                        class="btn btn-success d-flex align-items-center justify-content-center"
+                        style="width:15ch; /* mismo ancho que el otro */"
+                        >
+                            <i class="fa fa-search me-1"></i>
+                            Buscar
                         </button>
                     </div>
-                    
                 </div>
+
             </div>
         </div>
     </form>
@@ -290,11 +321,7 @@
                         $pc    = $c->primerContacto;
                         $tel   = optional($pc)->telefono1;
                         $email = optional($pc)->email;
-                        $fullAsignado = trim(
-                            ($c->vendedor->nombre ?? '') . ' ' .
-                            ($c->vendedor->apellido_p ?? '') . ' ' .
-                            ($c->vendedor->apellido_m ?? '')
-                        );
+                        $username = $c->vendedor->username ?? '';
                     @endphp
                     <tr>
                     {{-- ID Cliente --}}
@@ -342,7 +369,17 @@
 
                     {{-- Sector --}}
                     <td class="py-1 px-2 text-center">
-                        {{ $c->sector ? ucfirst(mb_strtolower($c->sector)) : '—' }}
+                        @switch($c->sector)
+                        @case('privada')
+                            {{ 'Privado' }} @break
+                        @case('gobierno')
+                            {{ 'Gobierno' }} @break
+                        @case('persona')
+                            {{ 'Persona' }} @break
+                        @default
+                            —
+                        @endswitch
+                            
                     </td>
 
                     {{-- Segmento filtrado --}}
@@ -360,22 +397,30 @@
                         @endswitch
                     </td>
 
-                    {{-- Ciclo (sin cambios) --}}
+                    {{-- Ciclo Venta --}}
                     <td class="py-1 px-2 text-center">
                         <span class="badge"
                             style="background-color:{{ $c->ciclo_venta==='venta'? '#2ab57d':'#FEE028' }};
                                     color:{{ $c->ciclo_venta==='venta'? '#fff':'#000' }};
                                     font-size: var(--bs-body-font-size);
-                                    min-width:79px;">
-                        {{ ucfirst(mb_strtolower($c->ciclo_venta)) }}
+                                    min-width:10ch;">
+                            
+                                @switch($c->ciclo_venta)
+                                    @case('venta')
+                                        {{ 'Venta' }} @break
+                                    @case('cotizacion')
+                                        {{ 'Cotización' }} @break
+                                    @default
+                                        —
+                                @endswitch
                         </span>
                     </td>
 
                     {{-- Asignado a --}}
-                    <td class="py-1 px-2 text-truncate" title="{{ $fullAsignado }}">
-                        {{ $fullAsignado
-                        ? Str::limit($fullAsignado, 27)
-                        : '—'
+                    <td class="py-1 px-2 text-truncate" title="{{ $username }}">
+                        {{ $username
+                        ? Str::limit($username, 15)
+                        : 'Base General'
                         }}
                     </td>
                     </tr>

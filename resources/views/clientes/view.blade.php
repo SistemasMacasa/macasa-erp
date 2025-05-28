@@ -12,37 +12,31 @@
     @endsection
 
     <h2 class="mb-4">Información de la Cuenta [{{ $cliente->id_cliente }}] - {{ $cliente->nombre }}</h2>
+    
 
     {{-- 🎛 Botonera --}}
-    <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
-        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+    <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
         <button type="submit"
-                class="btn btn-success"
+                class="btn btn-success btn-30ch"
                 form="formCuenta">
             <i class="fa fa-save me-1"></i> Guardar
         </button>
 
-        <a href="{{ route('clientes.index') }}" class="btn btn-primary">
+        <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-30ch">
             <i class="fa fa-list me-1"></i> Mis Cuentas
         </a>
 
-        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary">
+        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary btn-30ch">
             <i class="fa fa-file-invoice-dollar me-1"></i> Levantar Cotización
         </a>
 
-        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary">
+        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary btn-30ch">
             <i class="fa fa-address-book me-1"></i> Libreta de Contactos
         </a>
-
-        <div class="ms-auto">
-            <div class="alert alert-warning mb-0 py-2 px-3 d-inline-block" role="alert" style="white-space: nowrap;">
-                <i class="fa fa-exclamation-triangle me-2"></i>
-                Esta sección se encuentra en construcción.
-            </div>
-        </div>
     </div>
 
     @if($cliente->sector === 'privada' || $cliente->sector === 'gobierno')
@@ -53,10 +47,7 @@
             <div class="form-wrapper" style="margin-right: auto;">
 
                 {{-- ── Tarjeta: Cuenta Empresarial ─────────────────────────── --}}
-                <!-- ──────────────────────────────
-                    TARJETA ÚNICA  →  Cuenta Empresarial
-                    (contiene también los datos del contacto principal)
-                ─────────────────────────────────── -->
+
                 <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
                 <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
                         <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
@@ -71,29 +62,31 @@
 
                     <div class="card-body">
                         {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
+                        <div class="row gx-3 gy-2 mb-2">
+                            <div class="col div-30ch">
                                 <label class="form-label">Estatus</label>
                                 <select name="estatus" class="form-select" disabled>
                                     <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
                                     <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col div-30ch">
                                 <label class="form-label">Ciclo de Venta</label>
                                 <select name="ciclo_venta" class="form-select" disabled>
                                     <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
                                     <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col div-30ch">
                                 <label class="form-label">Origen de la Cuenta</label>
                                 <select name="tipo" class="form-select" disabled>
                                     <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
                                     <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <div class="row gx-3 gy-2 mb-2">
+                            <div class="col div-60ch">
                                 <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                 <input  id="nombre" name="nombre" type="text"
                                         class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
@@ -101,10 +94,9 @@
                                 @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col div-30ch">
                                 <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
                                 <select name="id_vendedor" class="form-select" required>
-                                    <option value="">-- Ejecutivo --</option>
                                     <option value=""
                                             @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
                                         Base General
@@ -119,7 +111,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col div-30ch">
                                 <label class="form-label">Sector <span class="text-danger">*</span></label>
                                 <select name="sector" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -128,7 +120,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="div-30ch">
                                 <label class="form-label">Segmento <span class="text-danger">*</span></label>
                                 <select name="segmento" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -156,32 +148,32 @@
                         {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
                         <h6 class="fw-semibold mb-3">Contacto principal</h6>
 
-                        <div class="row g-2 contacto-block" data-index="0">
+                        <div class="row g-3 contacto-block" data-index="0">
 
                             {{-- Nombre(s) / Apellidos --}}
-                            <div class="col-sm-4">
+                            <div class="col div-60ch">
                                 <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
                                 <input  name="contacto[0][nombre]" value="{{ $cliente->contacto_predet->nombre ?? '' }}" class="form-control guarda-mayus" minlength="2" maxlength="45" required>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col div-60ch">
                                 <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
                                 <input  name="contacto[0][apellido_p]" value="{{ $cliente->contacto_predet->apellido_p ?? '' }}" class="form-control guarda-mayus" maxlength="27" required>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col div-60ch">
                                 <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
                                 <input  name="contacto[0][apellido_m]" value="{{ $cliente->contacto_predet->apellido_m ?? '' }}" class="form-control guarda-mayus" maxlength="27" required>
                             </div>
 
                             {{-- Email / Puesto / Género --}}
-                            <div class="col-sm-4">
+                            <div class="col div-60ch">
                                 <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                 <input name="contacto[0][email]" value="{{ $cliente->contacto_predet->email ?? '' }}" type="email" class="form-control guarda-minus" maxlength="50" required>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col div-30ch">
                                 <label class="form-label">Puesto <span class="text-danger">*</span></label>
                                 <input name="contacto[0][puesto]" value="{{ $cliente->contacto_predet->puesto ?? '' }}" class="form-control guarda-mayus" maxlength="20" required>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col div-30ch">
                                 <label class="form-label">Género <span class="text-danger">*</span></label>
                                 @php
                                     $genero = old('contacto.0.genero', $cliente->contacto_predet->genero ?? '');
@@ -206,14 +198,14 @@
                                 <div class="row">
 
                                     {{-- Teléfonos fijos --}}
-                                    <div class="col-md-4 col-sm-6" id="telefonos-col--view">
+                                    <div class="col div-60ch" id="telefonos-col--view">
 
                                         {{-- Teléfono fila 1 --}}
                                           <div class="mb-2 telefono-item">
                                             <label>Teléfono 1</label>
                                             <div class="input-group input-group-separated">
-                                            <input name="contacto[0][telefono1]" class="form-control phone-field" value="{{ $cliente->contacto_predet->telefono1 ?? '' }}" placeholder="Teléfono">
-                                            <input name="contacto[0][ext1]" class="form-control ext-field" value="{{ $cliente->contacto_predet->ext1 ?? '' }}" placeholder="Ext." maxlength="7">
+                                            <input name="contacto[0][telefono1]" class="form-control phone-field div-30ch" value="{{ $cliente->contacto_predet->telefono1 ?? '' }}" placeholder="Teléfono">
+                                            <input name="contacto[0][ext1]" class="form-control ext-field div-10ch" value="{{ $cliente->contacto_predet->ext1 ?? '' }}" placeholder="Ext." maxlength="7">
                                             <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
                                             </div>
                                         </div>
@@ -225,7 +217,7 @@
                                                 <div class="input-group input-group-separated">
                                                     <input  type="text" name="contacto[0][telefono{{ $i }}]"
                                                             value="{{ $cliente->contacto_predet->{'telefono'.$i} }}"
-                                                            class="form-control phone-field">
+                                                            class="form-control phone-field div-30ch">
                                                     <input  type="text" name="contacto[0][ext{{ $i }}]"
                                                             value="{{ $cliente->contacto_predet->{'ext'.$i} }}"
                                                             class="form-control ext-field" maxlength="7">
@@ -242,12 +234,12 @@
                                     </div>
 
                                     {{-- Celulares --}}
-                                    <div class="col-md-4 col-sm-6" id="celulares-col--view">
+                                    <div class="col div-30ch" id="celulares-col--view">
                                         {{-- Celular fila 1 --}}
-                                        <div class="mb-2 celular-item">
+                                        <div class="mb-2 celular-item div-30ch">
                                             <label>Teléfono Celular 1</label>
                                             <div class="input-group input-group-separated">
-                                                <input type="text" name="contacto[0][celular1]" placeholder="Celular" value="{{ $cliente->contacto_predet->celular1 ?? '' }}" class="form-control phone-field">
+                                                <input type="text" name="contacto[0][celular1]" placeholder="Celular" value="{{ $cliente->contacto_predet->celular1 ?? '' }}" class="form-control phone-field div-30ch">
                                                 <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
                                             </div>
                                         </div>
@@ -255,7 +247,7 @@
                                             @continue(!$hasCel($i))
                                             <div class="mb-2 celular-item">
                                             <label>Teléfono Celular {{ $i }}</label>
-                                            <div class="input-group input-group-separated">
+                                            <div class="input-group input-group-separated div-30ch">
                                                 <input type="text" name="contacto[0][celular{{ $i }}]"
                                                         value="{{ $cliente->contacto_predet->{'celular'.$i} }}"
                                                         class="form-control phone-field">
@@ -282,52 +274,54 @@
 
     @elseif($cliente->sector === 'persona')
         <!-- ╭━━━━━━━━━━━━━━━━━━ Ficha persona Fisica (Persona) ━━━━━━━━━━━━━━╮ -->
-        <form id="formCuenta" style="max-width: 100%;" action="{{ route('clientes.update') }}" method="POST" autocomplete="off">
+        <form id="formCuenta" action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST" autocomplete="off">
+            @csrf
+            @method('PUT')
             <div class="form-wrapper" style="margin-right: auto;">
 
-                {{-- ── Tarjeta: Cuenta Empresarial ─────────────────────────── --}}
-
-                @csrf
+                {{-- ── Tarjeta: Cuenta Personal ─────────────────────────── --}}
 
                 <!-- Valores por defecto / lógica de negocio -->
-                <input type="hidden" name="ciclo_venta" value="cotizacion">
-                <input type="hidden" name="estatus" value="activo">
-                <input type="hidden" name="tipo" value="erp"><!-- alta desde ERP -->
                 <input type="hidden" name="sector" value="persona"><!-- Sector: gobierno, privada, persona -->
 
                 <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
-                <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial contacto-block" style="max-width: 100%;">
-                        <div class="card-header section-card-header section-card-header--view text-center">
-                            <h5 class="mb-0">Cuenta Personal</h5>
+                <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
+                        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+                            <h5 class="mb-0 flex-grow-1">Cuenta&nbsp;Personal</h5>
                             
-                            <button type="button" id="btnEditar" class="btn btn-sm btn-primary">
-                                <i class="fa fa-edit me-1"></i> Editar cuenta
-                            </button>
+                            @if ($usuario->es_admin)
+                                <button type="button" id="btnEditar" class="btn btn-sm btn-primary ms-auto btn-editar-cuenta">
+                                    <i class="fa fa-edit me-1"></i> Editar cuenta
+                                </button>
+                            @endif
                         </div>
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-4">
+                        <div class="row gx-3 gy-2 mb-2">
+                            <div class="col div-30ch">
                                 <label class="form-label">Estatus</label>
                                 <select name="estatus" class="form-select" disabled>
                                     <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
                                     <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col div-30ch">
                                 <label class="form-label">Ciclo de Venta</label>
                                 <select name="ciclo_venta" class="form-select" disabled>
                                     <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
                                     <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col div-30ch">
                                 <label class="form-label">Origen de la Cuenta</label>
                                 <select name="tipo" class="form-select" disabled>
                                     <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
                                     <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
+                        </div>
+
+                        <div class="row gx-3 gy-2 mb-2">
+                            <div class="col div-60ch">
                                 <label for="nombre" class="form-label">
                                     Nombre(s) <span class="text-danger">*</span>
                                 </label>
@@ -337,7 +331,7 @@
                                 @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col div-60ch">
                                 <label for="apellido_p" class="form-label">
                                     Primer Apellido <span class="text-danger">*</span>
                                 </label>
@@ -347,7 +341,7 @@
                                 @error('apellido_p')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col div-60ch">
                                 <label for="apellido_m" class="form-label">
                                     Segundo Apellido <span class="text-danger">*</span>
                                 </label>
@@ -358,12 +352,12 @@
                             </div>
 
                             <!-- Correo Electrónico -->
-                            <div class="col-sm-3">
+                            <div class="col div-60ch">
                                 <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control guarda-minus" name="email" maxlength="40" required>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col div-30ch">
                                 <label for="segmento" class="form-label">Segmento <span class="text-danger">*</span></label>
                                 <select name="segmento" id="segmento" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -376,7 +370,7 @@
                             </div>
 
                             <!-- Género -->
-                            <div class="col-sm-3">
+                            <div class="col div-30ch">
                                 <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
                                 <select name="genero" id="genero" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -386,7 +380,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col div-30ch">
                                 <label for="nombre" class="form-label">Asignado a: <span
                                         class="text-danger">*</span></label>
                                 <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
@@ -406,7 +400,7 @@
                             </div>
                             
                             {{-- Contacto Principal ─ Teléfonos PERSONAL --}}
-                            {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
+                                                        {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
                             @php
                                 // helpers
                                 $hasTel = fn($i)=> !empty($cliente->contacto_predet->{'telefono'.$i}) ||
@@ -414,18 +408,17 @@
                                 $hasCel = fn($i)=> !empty($cliente->contacto_predet->{'celular'.$i});
                             @endphp
 
-                            <div id="telefonos-cel-wrapper--view">
-                                <div class="row">
+                            <div id="telefonos-cel-wrapper--view" class="row gx-3 gy-2 mb-2">
 
                                     {{-- Teléfonos fijos --}}
-                                    <div class="col-md-4 col-sm-6" id="telefonos-col--view">
+                                    <div class="col div-60ch" id="telefonos-col--view">
 
                                         {{-- Teléfono fila 1 --}}
                                           <div class="mb-2 telefono-item">
                                             <label>Teléfono 1</label>
                                             <div class="input-group input-group-separated">
-                                            <input … class="form-control phone-field" value="{{ $cliente->contacto_predet->telefono1 ?? '' }}" placeholder="Teléfono">
-                                            <input … class="form-control ext-field" value="{{ $cliente->contacto_predet->ext1 ?? '' }}" placeholder="Ext." maxlength="7">
+                                            <input name="contacto[0][telefono1]" class="form-control phone-field div-30ch" value="{{ $cliente->contacto_predet->telefono1 ?? '' }}" placeholder="Teléfono">
+                                            <input name="contacto[0][ext1]" class="form-control ext-field div-10ch" value="{{ $cliente->contacto_predet->ext1 ?? '' }}" placeholder="Ext." maxlength="7">
                                             <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
                                             </div>
                                         </div>
@@ -434,7 +427,7 @@
                                             @continue(!$hasTel($i))
                                             <div class="mb-2 telefono-item">
                                                 <label>Teléfono {{ $i }}</label>
-                                                <div class="input-group input-group-separated">
+                                                <div class="input-group input-group-separated div-30ch">
                                                     <input  type="text" name="contacto[0][telefono{{ $i }}]"
                                                             value="{{ $cliente->contacto_predet->{'telefono'.$i} }}"
                                                             class="form-control phone-field">
@@ -454,7 +447,7 @@
                                     </div>
 
                                     {{-- Celulares --}}
-                                    <div class="col-md-4 col-sm-6" id="celulares-col--view">
+                                    <div class="col div-30ch" id="celulares-col--view">
                                         {{-- Celular fila 1 --}}
                                         <div class="mb-2 celular-item">
                                             <label>Teléfono Celular 1</label>
@@ -467,7 +460,7 @@
                                             @continue(!$hasCel($i))
                                             <div class="mb-2 celular-item">
                                             <label>Teléfono Celular {{ $i }}</label>
-                                            <div class="input-group input-group-separated">
+                                            <div class="input-group input-group-separated div-30ch">
                                                 <input type="text" name="contacto[0][celular{{ $i }}]"
                                                         value="{{ $cliente->contacto_predet->{'celular'.$i} }}"
                                                         class="form-control phone-field">
@@ -480,7 +473,6 @@
                                             Solo puedes agregar hasta 5 celulares.
                                         </small>
                                     </div>
-                                </div>
                             </div>
 
 
@@ -494,7 +486,7 @@
     @endif
 
     {{-- Historial de pedidos ---------------------------------------------------}}
-    <div class="card shadow-lg" style="margin-right: auto; max-width: 1200px;">
+    <div class="card shadow-lg">
         {{-- Botón para archivar cuenta --}}
         {{-- Cabecera de la tarjeta --}}
         <div class="card-header fw-bold" style="background-color: rgba(81, 86, 190, 0.1);">Historial de pedidos</div>
@@ -504,7 +496,7 @@
             <div class="table-responsive" style="max-height: 470px; overflow-y: auto;">
                 @php
                     $totalSubtotal = $pedidos->sum('subtotal');
-                    $totalMargen   = $pedidos->avg('margen');   // o lo que te pidan mostrar
+                    $totalMargen   = $pedidos->sum('margen');   // o lo que te pidan mostrar
                 @endphp
 
                 <table id="tblPedidos" class="table table-sm table-striped mb-0" style="border-style: none !important;">
@@ -514,7 +506,7 @@
                             <th data-type="text">ID&nbsp;pedido <span class="sort-arrow"></span></th>
                             <th data-type="text">Razón social <span class="sort-arrow"></span></th>
                             <th data-type="number" class="text-end">Subtotal <span class="sort-arrow"></span></th>
-                            <th data-type="number" class="text-end">Margen&nbsp;% <span class="sort-arrow"></span></th>
+                            <th data-type="number" class="text-end">Margen <span class="sort-arrow"></span></th>
                         </tr>
                     </thead>
 
@@ -525,7 +517,7 @@
                                 <td>{{ $p['id'] }}</td>
                                 <td>{{ $p['razon'] }}</td>
                                 <td class="text-end">$ {{ number_format($p['subtotal'], 2) }}</td>
-                                <td class="text-end">{{ number_format($p['margen'], 2) }}%</td>
+                                <td class="text-end">{{ number_format($p['margen'], 2) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -537,7 +529,7 @@
                         <tr style="border-style: none !important;">
                             <th colspan="3" class="text-end">Totales</th>
                             <th class="text-end">$ {{ number_format($totalSubtotal, 2) }}</th>
-                            <th class="text-end">{{ number_format($totalMargen, 2) }}%</th>
+                            <th class="text-end">{{ number_format($totalMargen, 2) }}</th>
                         </tr>
                     </tfoot>
 
@@ -548,7 +540,7 @@
 
 
     {{-- 📝 Historial de notas --}}
-    <div class="card shadow-lg" style="margin-righ: auto; max-width: 1200px;">
+    <div class="card shadow-lg">
         {{-- Cabecera de la tarjeta --}}
         <div class="card-header fw-bold" style="background-color: rgba(81, 86, 190, 0.1);">
             Historial de notas
@@ -742,8 +734,8 @@ const mkTelRowPlus = () => `
   <div class="mb-2 telefono-item">
     <label>Teléfono 1</label>
     <div class="input-group input-group-separated">
-      <input type="text" class="form-control phone-field" placeholder="Teléfono">
-      <input type="text" class="form-control ext-field"   placeholder="Ext." maxlength="7">
+      <input type="text" class="form-control phone-field div-30ch" placeholder="Teléfono">
+      <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
       <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
     </div>
   </div>`;
@@ -751,7 +743,7 @@ const mkCelRowPlus = () => `
   <div class="mb-2 celular-item">
     <label>Teléfono Celular 1</label>
     <div class="input-group input-group-separated">
-      <input type="text" class="form-control phone-field" placeholder="Celular">
+      <input type="text" class="form-control phone-field div-30ch" placeholder="Celular">
       <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
     </div>
   </div>`;
@@ -762,8 +754,8 @@ const mkCelRowPlus = () => `
     <div class="mb-2 telefono-item">
       <label></label>
       <div class="input-group input-group-separated">
-        <input type="text" class="form-control phone-field"  placeholder="Teléfono">
-        <input type="text" class="form-control ext-field"    placeholder="Ext." maxlength="7">
+        <input type="text" class="form-control phone-field div-30ch"  placeholder="Teléfono">
+        <input type="text" class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
         <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
       </div>
     </div>`;
@@ -771,7 +763,7 @@ const mkCelRowPlus = () => `
     <div class="mb-2 celular-item">
       <label></label>
       <div class="input-group input-group-separated">
-        <input type="text" class="form-control phone-field" placeholder="Celular">
+        <input type="text" class="form-control phone-field div-30ch" placeholder="Celular">
         <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
       </div>
     </div>`;

@@ -14,15 +14,15 @@
             <h2 class="mb-4">Nueva Cuenta Empresarial</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
                     <i class="fa fa-arrow-left me-1"></i> Regresar
                 </a>
 
-                <button form="clienteForm" type="submit" class="btn btn-success">
+                <button form="clienteForm" type="submit" class="btn btn-success btn-30ch">
                     <i class="fa fa-save me-1"></i> Guardar
                 </button>
 
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary">
+                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-30ch">
                     <i class="fa fa-list me-1"></i> Mis Cuentas
                 </a>
 
@@ -186,15 +186,15 @@
             <h2 class="mb-4">Nueva Cuenta Personal</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
                     <i class="fa fa-arrow-left me-1"></i> Regresar
                 </a>
 
-                <button form="clienteForm" type="submit" class="btn btn-success">
+                <button form="clienteForm" type="submit" class="btn btn-success btn-30ch">
                     <i class="fa fa-save me-1"></i> Guardar
                 </button>
 
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary">
+                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-30ch">
                     <i class="fa fa-list me-1"></i> Mis Cuentas
                 </a>
 

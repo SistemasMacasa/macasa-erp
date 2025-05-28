@@ -16,6 +16,74 @@
     display: none;
 }
 
+/* Clases globales para las medidas de botones, deben de ser en multiplos de 5ch. */
+
+.btn-5ch {
+    min-width: 5ch; /* 5 caracteres */
+}
+.btn-10ch {
+    min-width: 10ch; /* 10 caracteres */
+}
+.btn-15ch {
+    min-width: 15ch; /* 15 caracteres */
+}
+.btn-20ch {
+    min-width: 20ch; /* 20 caracteres */
+}
+.btn-25ch {
+    min-width: 25ch; /* 25 caracteres */
+}
+.btn-30ch {
+    min-width: 30ch; /* 30 caracteres */
+}
+.div-5ch {
+    min-width: 5ch; /* 30 caracteres */
+    max-width: 5ch; /* 30 caracteres */
+}
+.div-10ch {
+    min-width: 10ch; /* 30 caracteres */
+    max-width: 10ch; /* 30 caracteres */
+}
+.div-15ch {
+    min-width: 15ch; /* 30 caracteres */
+    max-width: 15ch; /* 30 caracteres */
+}
+.div-20ch {
+    min-width: 20ch; /* 30 caracteres */
+    max-width: 20ch; /* 30 caracteres */
+}
+.div-25ch {
+    min-width: 25ch; /* 30 caracteres */
+    max-width: 25ch; /* 30 caracteres */
+}
+.div-30ch {
+    min-width: 30ch; /* 30 caracteres */
+    max-width: 30ch; /* 30 caracteres */
+}
+.div-35ch {
+    min-width: 35ch; /* 30 caracteres */
+    max-width: 35ch; /* 30 caracteres */
+}
+.div-40ch {
+    min-width: 40ch; /* 30 caracteres */
+    max-width: 40ch; /* 30 caracteres */
+}
+.div-45ch {
+    min-width: 45ch; /* 30 caracteres */
+    max-width: 45ch; /* 30 caracteres */
+}
+.div-50ch {
+    min-width: 50ch; /* 30 caracteres */
+    max-width: 50ch; /* 30 caracteres */
+}
+.div-55ch {
+    min-width: 55ch; /* 30 caracteres */
+    max-width: 55ch; /* 30 caracteres */
+}
+.div-60ch {
+    min-width: 60ch; /* 30 caracteres */
+    max-width: 60ch; /* 30 caracteres */
+}
 /* Expandido (lg) */
 body[data-sidebar-size="lg"] .logo-lg {
     display: inline-block;
@@ -65,7 +133,7 @@ body[data-sidebar-size="md"] .logo-sm img {
 }
 
 /* Anchuras */
-body[data-sidebar-size="lg"] #logo-box{ width: 250px; }
+body[data-sidebar-size="lg"] #logo-box{ width: 30ch; }
 body[data-sidebar-size="sm"] #logo-box{ width:  80px; } 
 
 /* Mostrar/ocultar logo */
@@ -168,7 +236,7 @@ body[data-sidebar-size="sm"] .main-content { padding-left:  0px; }
    PREPARA EL CONTENEDOR + SIMPLEBAR
    ====================================================== */
 .vertical-menu {
-  width: 250px;
+  width: 30ch;
   transition: width var(--sidebar-speed) ease;
   overflow: hidden;            /* sólo en expandido */
 }
@@ -626,16 +694,10 @@ body[data-sidebar="dark"] .opcion-card-body p {
   /* — Hacer más angosto el card de “Cuenta Empresarial” — */
 .section-card-cuenta-empresarial {
     width: 100%;
-    max-width: 900px;    /* ajusta este valor a lo que te guste */
     margin-bottom: 1.5rem; /* espacio debajo */
   }
   
-  /* Si quieres un ancho distinto en pantallas grandes: */
-  @media (min-width: 992px) {
-    .section-card-cuenta-empresarial {
-      max-width: 1200px;
-    }
-  }
+
   
   /* Base común para ambos tiles */
 .tile-agregar-contacto,
@@ -710,7 +772,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 }
 
 .form-wrapper{
-    max-width:1200px;      /*  ajuste a gusto: 960-1200 */
+    /* max-width:1200px;       ajuste a gusto: 960-1200 */
   }
   
 
@@ -823,10 +885,10 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   max-width: 25ch;
 }
 
-#celulares-col--view .phone-field {
-  flex: 0 0 25ch;    /* mismo ancho que Teléfono fijo + Ext. */
+/* #celulares-col--view .phone-field {
+  flex: 0 0 25ch;    
   max-width: 25ch;
-}
+} */
 
 /* --------------------------------------------------------------
    Centrado perfecto del wrapper
@@ -861,7 +923,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
     padding:        .375rem .75rem !important;            /* idéntico a form-select */
     border:         1px solid var(--bs-border-color) !important;
     border-radius:  --bs-border-radius !important;
-    background-color: var(--bs-tertiary-bg) !important;
+    background-color: var(--bs-secondary-bg) !important;
     color:          var(--bs-body-color) !important;
     font-size:      .875rem !important;                   /* 14px */
     line-height:    1.5 !important;
@@ -960,7 +1022,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   left: 0;
   z-index: 3;
   background: var(--bs-table-bg);
-  width: 8ch;
+  width: 10ch;
 }
 /* Empresa (max 30 chars → 30ch) */
 #tabla-clientes th:nth-child(2),
@@ -969,19 +1031,19 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   left: 5ch;
   z-index: 2;
   background: var(--bs-table-bg);
-  width: 29ch;
+  width: 30ch;
 }
 
 /* Telefono (columna 4: 10 dígitos) */
 #tabla-clientes th:nth-child(4),
 #tabla-clientes td:nth-child(4) {
-  width: 13ch;          
+  width: 15ch;          
   text-align: center;
 }
 /* Correo (columna 5: 25 caracteres) */
 #tabla-clientes th:nth-child(5),
 #tabla-clientes td:nth-child(5) {
-  width: 23ch;
+  width: 25ch;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -990,7 +1052,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* Sector (columna 6: “Gobierno” → 8 caracteres) */
 #tabla-clientes th:nth-child(6),
 #tabla-clientes td:nth-child(6) {
-  width: 8ch;
+  width: 10ch;
   text-align: center;
   white-space: nowrap;
 }
@@ -998,7 +1060,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* Segmento (columna 7: “Macasa Cuentas Especiales” → 25 caracteres) */
 #tabla-clientes th:nth-child(7),
 #tabla-clientes td:nth-child(7) {
-  width: 21ch;
+  width: 20ch;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -1012,14 +1074,14 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 }
 /* Reducir padding de la badge para aprovechar el ancho */
 #tabla-clientes td:nth-child(8) .badge {
-  padding: .25rem .5rem;
+  padding: .20rem .3rem;
   min-width: auto;
 }
 
 /* Asignado a (columna 9: 25 caracteres) */
 #tabla-clientes th:nth-child(9),
 #tabla-clientes td:nth-child(9) {
-  width: 21ch;
+  width: 15ch;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
