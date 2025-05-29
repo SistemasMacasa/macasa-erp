@@ -11,7 +11,7 @@
 
         <!-- ╭━━━━━━━━━━━━━━━━━━━━━━━━━━ Formulario para Empresas ━━━━━━━━━━━━━━━━━━━━━━━━╮ -->
         <div class="container-fluid">
-            <h2 class="mb-4">Nueva Cuenta Empresarial</h2>
+            <h2 class="mb-3">Nueva Cuenta Empresarial</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
@@ -51,8 +51,8 @@
 
                         <div class="card-body">
                             {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-6">
+                            <div class="row gx-3 gy-2 mb-4">
+                                <div class="col div-60ch">
                                     <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                     <input  id="nombre" name="nombre" type="text"
                                             class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
@@ -60,7 +60,7 @@
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col div-30ch">
                                     <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
                                     <select name="id_vendedor" class="form-select" required>
                                         <option value="">-- Ejecutivo --</option>
@@ -73,7 +73,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col div-30ch">
                                     <label class="form-label">Sector <span class="text-danger">*</span></label>
                                     <select name="sector" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -82,7 +82,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col div-30ch">
                                     <label class="form-label">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -98,32 +98,32 @@
                             {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
                             <h6 class="fw-semibold mb-3">Contacto principal</h6>
 
-                            <div class="row g-2 contacto-block" data-index="0">
+                            <div class="row g-3 contacto-block" data-index="0">
 
                                 {{-- Nombre(s) / Apellidos --}}
-                                <div class="col-sm-4">
+                                <div class="col div-60ch">
                                     <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][nombre]" class="form-control guarda-mayus" minlength="2" maxlength="45" required>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col div-60ch">
                                     <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][apellido_p]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col div-60ch">
                                     <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][apellido_m]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
 
                                 {{-- Email / Puesto / Género --}}
-                                <div class="col-sm-4">
+                                <div class="col div-60ch">
                                     <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                     <input name="contacto[0][email]" type="email" class="form-control guarda-minus" maxlength="50" required>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col div-30ch">
                                     <label class="form-label">Puesto <span class="text-danger">*</span></label>
                                     <input name="contacto[0][puesto]" class="form-control guarda-mayus" maxlength="20" required>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col div-30ch">
                                     <label class="form-label">Género <span class="text-danger">*</span></label>
                                     <select name="contacto[0][genero]" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -138,25 +138,25 @@
 
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
-                                        <div class="col-md-4 col-sm-6" id="telefonos-col" style="padding: 0 !important;">
+                                        <div class="col div-35ch" id="telefonos-col" style="padding-right: 0 !important;">
                                             <div class="mb-2 telefono-item">
                                                 <label>Teléfono 1 <span class="text-danger">*</span></label>
 
                                                 <div class="input-group input-group-separated">
-                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" required>
-                                                <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field"    placeholder="Ext." maxlength="7">
+                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;" required>
+                                                <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
                                                 <button type="button" class="btn btn-outline-primary agregar-telefono btn-field">+</button>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {{-- Celulares --}}
-                                        <div class="col-md-4 col-sm-6" id="celulares-col" style="padding-left: 0px;">
+                                        <div class="col div-30ch" id="celulares-col">
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular 1</label>
 
                                                 <div class="input-group input-group-separated">
-                                                <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
+                                                <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
                                                 <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
                                                 </div>
                                             </div>
@@ -183,7 +183,7 @@
     @elseif ($tipo === 'fisica')
         <!-- ╭━━━━━━━━━━━━━━━━━━━━━━━━━━ Formulario para Personas Fisicas ━━━━━━━━━━━━━━━━━━━━━━━━╮ -->
         <div class="container-fluid">
-            <h2 class="mb-4">Nueva Cuenta Personal</h2>
+            <h2 class="mb-3">Nueva Cuenta Personal</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
@@ -219,7 +219,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-md-4">
+                                <div class="col div-60ch">
                                     <label for="nombre" class="form-label">
                                         Nombre(s) <span class="text-danger">*</span>
                                     </label>
@@ -229,7 +229,7 @@
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col div-60ch">
                                     <label for="apellido_p" class="form-label">
                                         Primer Apellido <span class="text-danger">*</span>
                                     </label>
@@ -239,7 +239,7 @@
                                     @error('apellido_p')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col div-60ch">
                                     <label for="apellido_m" class="form-label">
                                         Segundo Apellido <span class="text-danger">*</span>
                                     </label>
@@ -250,12 +250,12 @@
                                 </div>
 
                                 <!-- Correo Electrónico -->
-                                <div class="col-sm-3">
+                                <div class="col div-60ch">
                                     <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                     <input type="email" class="form-control guarda-minus" name="email" maxlength="40" required>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col div-30ch">
                                     <label for="segmento" class="form-label">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" id="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -268,7 +268,7 @@
                                 </div>
 
                                 <!-- Género -->
-                                <div class="col-sm-3">
+                                <div class="col div-30ch">
                                     <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
                                     <select name="genero" id="genero" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -278,7 +278,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col div-30ch">
                                     <label for="nombre" class="form-label">Asignado a: <span
                                             class="text-danger">*</span></label>
                                     <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
@@ -302,24 +302,25 @@
 
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
-                                        <div class="col-md-4" id="telefonos-col" style="padding: 0 !important;">
+                                        <div class="col div-35ch" id="telefonos-col" style="padding-right: 0 !important;">
                                             <div class="mb-2 telefono-item">
                                                 <label>Teléfono 1 <span class="text-danger">*</span></label>
 
                                                 <div class="input-group input-group-separated">
-                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" required>
-                                                <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field"    placeholder="Ext." maxlength="7">
-                                                <button type="button" class="btn btn-outline-primary agregar-telefono btn-field" style="padding-left: 10px;">+</button>
+                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;" required>
+                                                <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
+                                                <button type="button" class="btn btn-outline-primary agregar-telefono btn-field">+</button>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {{-- Celulares --}}
-                                        <div class="col-md-4" id="celulares-col" style="">
+                                        <div class="col div-30ch" id="celulares-col">
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular 1</label>
+
                                                 <div class="input-group input-group-separated">
-                                                <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular">
+                                                <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
                                                 <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
                                                 </div>
                                             </div>
@@ -390,8 +391,8 @@
                 wrapper.innerHTML = `
                 <label></label>
                 <div class="input-group input-group-separated">
-                    <input type="text" class="form-control phone-field" placeholder="Teléfono" required>
-                    <input type="text" class="form-control ext-field"   placeholder="Ext." maxlength="7">
+                    <input type="text" class="form-control phone-field" placeholder="Teléfono" style="min-width:16ch; max-width:16ch" required>
+                    <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
                     <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
                 </div>
                 `;
@@ -410,7 +411,7 @@
                 wrapper.innerHTML = `
                 <label></label>
                 <div class="input-group input-group-separated">
-                    <input type="text" class="form-control phone-field" placeholder="Celular" required>
+                    <input type="text" class="form-control phone-field" style="min-width:16ch; max-width:16px;" placeholder="Celular">
                     <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
                 </div>
                 `;

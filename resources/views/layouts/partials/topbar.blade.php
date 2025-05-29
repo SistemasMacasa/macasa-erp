@@ -5,9 +5,9 @@
         <a href="/" class="logo d-flex align-items-center" style="margin-left: auto; margin-right: auto;">
             {{-- Logo grande y pequeño; se oculta / muestra vía CSS --}}
             <img src="{{ asset('assets/images/imglogin/logo.png') }}"
-                 class="logo-lg" height="22" alt="logo" />
+                 class="logo-lg" height="26" alt="logo" />
             <img src="{{ asset('assets/images/imglogin/loguito.png') }}"
-                 class="logo-sm" height="22" alt="logo" />
+                 class="logo-sm" height="25" alt="logo" />
         </a>
 
         <button id="sidebar-toggle"

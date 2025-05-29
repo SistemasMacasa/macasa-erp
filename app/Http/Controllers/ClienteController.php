@@ -235,7 +235,7 @@ $clientes = $query->paginate($perPage)
     {
         // Actualiza los datos de un cliente existente desde clientes.view
     
-        if($request->sector == "privada" || $request->tipo == "gobierno")
+        if($request->sector == "privada" || $request->sector == "gobierno")
         {
 
             $request->merge([
@@ -253,10 +253,10 @@ $clientes = $query->paginate($perPage)
 
             // ── Reglas base ──────────────────────────────────────────────────────────
             $rules = [
-                'estatus'     => 'required|string|max:100',
+                'estatus'     => 'nullable|string|max:100',
                 'ciclo_venta' => 'nullable|string|max:100',
-                'tipo'        => 'required|string|max:100',
-                'nombre'      => 'required|string|max:60',
+                'tipo'        => 'nullable|string|max:100',
+                'nombre'      => 'nullable|string|max:60',
                 'id_vendedor' => 'nullable|integer',
                 'sector'      => 'nullable|string|max:100',
                 'segmento'    => 'nullable|string|max:100',

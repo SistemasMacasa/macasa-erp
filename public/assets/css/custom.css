@@ -871,7 +871,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 
 /* Extensión se mantiene en 10ch */
 .ext-field { 
-    flex: 0 0 12ch; max-width:12ch; 
+    flex: 0 0 10ch; max-width:10ch; 
 }
 
 /* Botón sin cambios */
@@ -1060,7 +1060,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* Segmento (columna 7: “Macasa Cuentas Especiales” → 25 caracteres) */
 #tabla-clientes th:nth-child(7),
 #tabla-clientes td:nth-child(7) {
-  width: 20ch;
+  width: 22ch;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

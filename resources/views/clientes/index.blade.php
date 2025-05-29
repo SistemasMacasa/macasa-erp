@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
 
-    <h2 class="mb-4">Mis Cuentas</h2>
+    <h2 class="mb-3">Mis Cuentas</h2>
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -138,7 +138,6 @@
                                         @default
                                             {{ ucfirst(mb_strtolower($ciclo)) }}
                                     @endswitch
-                            {{ ucfirst(mb_strtolower($ciclo)) }}
                         </option>
                             @endforeach
                         </select>
@@ -172,12 +171,16 @@
                 </div>
 
 
-                <div class="row gx-3 gy-2 mt-3 justify-content-end">
-                    <div class="col-auto d-flex gap-2 align-items-end">
+                <div class="row gx-3 gy-2 mt-1 justify-content-between">
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col d-flex gap-2 align-items-end">
                         <a
                         href="{{ route('clientes.index') }}"
                         class="btn btn-secondary d-flex align-items-center justify-content-center"
-                        style="width:15ch; /* múltiplo de 5ch */"
+                        style="width:50%; /* múltiplo de 5ch */"
                         >
                             <i class="fa fa-eraser me-1"></i>
                             Limpiar
@@ -186,7 +189,7 @@
                         <button
                         type="submit"
                         class="btn btn-success d-flex align-items-center justify-content-center"
-                        style="width:15ch; /* mismo ancho que el otro */"
+                        style="width:50%; /* múltiplo de 5ch */"
                         >
                             <i class="fa fa-search me-1"></i>
                             Buscar
@@ -417,10 +420,10 @@
                     </td>
 
                     {{-- Asignado a --}}
-                    <td class="py-1 px-2 text-truncate" title="{{ $username }}">
+                    <td class="py-1 px-2 text-truncate text-uppercase" title="{{ strtoupper($username) }}">
                         {{ $username
-                        ? Str::limit($username, 15)
-                        : 'Base General'
+                            ? Str::limit(strtoupper($username), 15)
+                            : 'BASE GENERAL'
                         }}
                     </td>
                     </tr>

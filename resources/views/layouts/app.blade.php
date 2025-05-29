@@ -234,9 +234,11 @@
 
             // 3) Escribir contenido formateado
             if ('value' in el) {
-            el.value = pretty;
-            el.maxLength = pretty.startsWith('(55)') ? 14 : 15;
-            el.setCustomValidity(digits.length === 10 ? '' : 'Número incompleto');
+                el.value = pretty;
+                el.maxLength = pretty.startsWith('(55)') ? 14 : 15;
+                el.setCustomValidity(
+                    (digits.length === 0 || digits.length === 10) ? '' : 'Número incompleto'
+                );           
             } else {
             el.textContent = pretty;
             // Si es enlace, actualizar href a tel:
