@@ -237,6 +237,9 @@ $clientes = $query->paginate($perPage)
     
         if($request->sector == "privada" || $request->sector == "gobierno")
         {
+            if(auth()->user()->es_admin != 1) {
+                return redirect()->back()->with('error', 'No tienes permiso para actualizar este cliente.');
+            }
 
             $request->merge([
                 'contacto' => collect($request->input('contacto', []))

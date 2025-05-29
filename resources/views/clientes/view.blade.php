@@ -80,7 +80,7 @@
 
                             <div class="col div-30ch">
                                 <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
-                                <select name="id_vendedor" class="form-select" required>
+                                <select name="id_vendedor" class="form-select">
                                     <option value=""
                                             @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
                                         Base General
@@ -393,7 +393,7 @@
 
                             <div class="col div-30ch">
                                 <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
-                                <select name="id_vendedor" class="form-select" required>
+                                <select name="id_vendedor" class="form-select">
                                     <option value=""
                                             @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
                                         Base General
