@@ -80,7 +80,7 @@
         {{-- Contenido --}}
         <div class="main-content">
             <div class="page-content">
-                <div class="container-fluid">
+                <div class="container-fluid" style="margin-left: 0ch; max-width: 193ch;">
                     @if($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <ul class="mb-0">

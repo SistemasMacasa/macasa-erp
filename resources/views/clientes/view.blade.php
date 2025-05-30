@@ -8,7 +8,9 @@
 
 @section('content')
 
-<div class="container-fluid">
+<div class="container-fluid" >
+
+    {{-- 🏷 Mensajes de estado --}}
     {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
