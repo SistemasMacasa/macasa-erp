@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'SIS 3.0 | Listado de Clientes')
+@section('title', 'SIS 3.0 | Mis Cuentas')
 
 
 
@@ -64,16 +64,21 @@
                         <select
                             id="ejecutivos"
                             name="ejecutivos[]"
-                            class="select2"          {{-- ← SIN "form-select" --}}
+                            class="form-select select2"          {{-- ← SIN "form-select" --}}
                             multiple
                             data-placeholder="Seleccione uno o varios ejecutivos"
                         >
+                            <option value="base_general"
+                                {{ in_array('base_general', request('ejecutivos', [])) ? 'selected' : '' }}>
+                                Base General
+                            </option>
+
                             @foreach($vendedores as $v)
                                 <option
                                     value="{{ $v->id_usuario }}"
                                     {{ in_array($v->id_usuario, request('ejecutivos', [])) ? 'selected' : '' }}
                                 >
-                                    {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                    {{ $v->username }}
                                 </option>
                             @endforeach
                         </select>

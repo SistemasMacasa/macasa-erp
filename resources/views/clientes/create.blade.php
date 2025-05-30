@@ -219,65 +219,89 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
+                                <!-- Nombre(s) del contacto = Nombre de la Cuenta -->
                                 <div class="col div-60ch">
                                     <label for="nombre" class="form-label">
                                         Nombre(s) <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="nombre" id="nombre"
-                                        class="form-control guarda-mayus @error('nombre') is-invalid  @enderror" value="{{ old('nombre') }}"
-                                        required minlength="3" maxlength="40">
+                                    <input  name="nombre" 
+                                            type="text"  
+                                            id="nombre"
+                                            class="form-control guarda-mayus" 
+                                            value="{{ old('nombre') }}"
+                                            required 
+                                            minlength="3" 
+                                            maxlength="40">
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-
+                                <!-- Apellido 1 -->
                                 <div class="col div-60ch">
                                     <label for="apellido_p" class="form-label">
                                         Primer Apellido <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="apellido_p" id="apellido_p"
-                                        class="form-control guarda-mayus @error('apellido_p') is-invalid  @enderror" value="{{ old('apellido_p') }}"
-                                        required minlength="3" maxlength="27">
+                                    <input  name="apellido_p"
+                                            type="text"  
+                                            id="apellido_p"
+                                            class="form-control guarda-mayus" 
+                                            value="{{ old('apellido_p') }}"
+                                            required 
+                                            minlength="3" 
+                                            maxlength="27">
                                     @error('apellido_p')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-
+                                <!-- Apellido 2 -->
                                 <div class="col div-60ch">
                                     <label for="apellido_m" class="form-label">
                                         Segundo Apellido <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="apellido_m" id="apellido_m"
-                                        class="form-control guarda-mayus @error('apellido_m') is-invalid  @enderror" value="{{ old('apellido_m') }}"
-                                        required minlength="3" maxlength="27">
+                                    <input  name="apellido_m"
+                                            type="text"  
+                                            id="apellido_m"
+                                            class="form-control guarda-mayus" 
+                                            value="{{ old('apellido_m') }}"
+                                            required 
+                                            minlength="3" 
+                                            maxlength="27">
                                     @error('apellido_m')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-
                                 <!-- Correo Electrónico -->
                                 <div class="col div-60ch">
                                     <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control guarda-minus" name="email" maxlength="40" required>
+                                    <input  name="email"
+                                            type="email" 
+                                            class="form-control guarda-minus"  
+                                            value="{{ old('email') }}"
+                                            maxlength="40" 
+                                            required>
                                 </div>
-
+                                <!-- Segmento -->
                                 <div class="col div-30ch">
                                     <label for="segmento" class="form-label">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" id="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
-                                        <option value="macasa cuentas especiales">Macasa Cuentas Especiales</option>
-                                        <option value="macasa ecommerce">Macasa Ecommerce</option>
-                                        <option value="tekne store ecommerce">Tekne Store ECommerce</option>
-                                        <option value="la plaza ecommerce">La Plaza Ecommerce</option>
+                                        <option value="macasa cuentas especiales" @selected(old('segmento') == 'macasa cuentas especiales')>
+                                            Macasa Cuentas Especiales
+                                        </option>
+                                        <option value="tekne store ecommerce" @selected(old('segmento') == 'tekne store ecommerce')>
+                                            Tekne Store E-Commerce
+                                        </option>
+                                        <option value="la plaza ecommerce" @selected(old('segmento') == 'la plaza ecommerce')>
+                                            LaPlazaEnLinea E-Commerce
+                                        </option>
                                     </select>
                                     @error('segmento')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-
                                 <!-- Género -->
                                 <div class="col div-30ch">
                                     <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
                                     <select name="genero" id="genero" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
-                                        <option value="masculino">Masculino</option>
-                                        <option value="femenino">Femenino</option>
-                                        <option value="no-especificado">No Especificado</option>
+                                        <option value="masculino"        @selected(old('genero') == 'masculino')>Masculino</option>
+                                        <option value="femenino"         @selected(old('genero') == 'femenino')>Femenino</option>
+                                        <option value="no-especificado"  @selected(old('genero') == 'no-especificado')>No Especificado</option>
                                     </select>
                                 </div>
-
+                                <!-- Asignado a / id_vendedor -->
                                 <div class="col div-30ch">
                                     <label for="nombre" class="form-label">Asignado a: <span
                                             class="text-danger">*</span></label>
@@ -307,8 +331,21 @@
                                                 <label>Teléfono 1 <span class="text-danger">*</span></label>
 
                                                 <div class="input-group input-group-separated">
-                                                <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;" required>
-                                                <input type="text"  name="contacto[0][ext1]"      class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
+                                                <input  name="contacto[0][telefono1]"
+                                                        type="text"  
+                                                        class="form-control phone-field"  
+                                                        value="{{ old('contacto.0.telefono1') }}"
+                                                        placeholder="Teléfono" 
+                                                        style="min-width: 16ch; max-width: 16ch;" 
+                                                        required>
+                                                @error('contacto.0.telefono1')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                <input  name="contacto[0][ext1]" 
+                                                        type="text" 
+                                                        class="form-control ext-field div-10ch"    
+                                                        value="{{ old('contacto.0.ext1') }}"
+                                                        placeholder="Ext." 
+                                                        maxlength="7">
+                                                @error('contacto.0.ext1')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                                 <button type="button" class="btn btn-outline-primary agregar-telefono btn-field">+</button>
                                                 </div>
                                             </div>
@@ -318,24 +355,24 @@
                                         <div class="col div-30ch" id="celulares-col">
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular 1</label>
-
                                                 <div class="input-group input-group-separated">
-                                                <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
-                                                <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
+                                                    <input  name="contacto[0][celular1]"
+                                                            type="text" 
+                                                            class="form-control phone-field" 
+                                                            value="{{ old('contacto.0.celular1') }}"
+                                                            placeholder="Celular" 
+                                                            style="min-width: 16ch; max-width: 16ch;">
+                                                    @error('contacto.0.celular1')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                                    <button type="button" class="btn btn-outline-primary agregar-celular btn-field">+</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>{{-- /telefonos-cel-wrapper --}}
-
-
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
+                            </div><!-- /row g-3 -->
+                        </div> <!-- /card-body -->
+                    </div> <!-- /card-->
+                </div><!-- /form-wrapper -->
             </form>
         </div>
     @endif

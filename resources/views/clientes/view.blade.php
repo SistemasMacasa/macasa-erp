@@ -1,5 +1,10 @@
 @extends('layouts.app')
-@section('title', 'SIS 3.0 | Listado de Clientes')
+@php
+    $titulo = 'SIS 3.0 | Ver Cuenta ' . '[' . $cliente->id_cliente . ']'. ' - '. $cliente->nombre;
+    @endphp
+@section('title', $titulo )
+
+{{-- Estilos específicos de esta vista --}}
 
 @section('content')
 
@@ -148,35 +153,66 @@
                         <h6 class="fw-semibold mb-3">Contacto principal</h6>
 
                         <div class="row g-3 contacto-block" data-index="0">
+                            {{-- Ojo: El operador ?-> es para navegación segura --}}
 
-                            {{-- Nombre(s) / Apellidos --}}
+                            {{-- Nombre(s) de Contacto --}}
                             <div class="col div-60ch">
                                 <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
-                                <input  name="contacto[0][nombre]" value="{{ $cliente->contacto_predet->nombre ?? '' }}" class="form-control guarda-mayus" minlength="2" maxlength="45" required>
+                                <input  name="contacto[0][nombre]"
+                                        value="{{ old('contacto.0.nombre', $cliente->contacto_predet?->nombre) }}"
+                                        class="form-control guarda-mayus @error('contacto.0.nombre') is-invalid @enderror"
+                                        minlength="2"
+                                        maxlength="45"
+                                        required>
+                                @error('contacto.0.nombre') <div class="invalid-feedback">{{ $message }}</div> @enderror
+
                             </div>
+                            {{-- Primer Apellido --}}
                             <div class="col div-60ch">
                                 <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
-                                <input  name="contacto[0][apellido_p]" value="{{ $cliente->contacto_predet->apellido_p ?? '' }}" class="form-control guarda-mayus" maxlength="27" required>
+                                <input  name="contacto[0][apellido_p]"
+                                        value="{{ old('contacto.0.apellido_p', $cliente->contacto_predet?->apellido_p) }}"
+                                        class="form-control guarda-mayus"
+                                        maxlength="27"
+                                        required>
+                                @error('contacto.0.apellido_p') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            {{-- Segundo Apellido --}}
                             <div class="col div-60ch">
                                 <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
-                                <input  name="contacto[0][apellido_m]" value="{{ $cliente->contacto_predet->apellido_m ?? '' }}" class="form-control guarda-mayus" maxlength="27" required>
+                                <input  name="contacto[0][apellido_m]" 
+                                        value="{{ old('contacto.0.apellido_m', $cliente->contacto_predet?->apellido_m) }}" 
+                                        class="form-control guarda-mayus" 
+                                        maxlength="27" 
+                                        required>
                             </div>
-
-                            {{-- Email / Puesto / Género --}}
+                            {{-- Email --}}
                             <div class="col div-60ch">
                                 <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
-                                <input name="contacto[0][email]" value="{{ $cliente->contacto_predet->email ?? '' }}" type="email" class="form-control guarda-minus" maxlength="50" required>
+                                <input name="contacto[0][email]" 
+                                        value="{{ old('contacto.0.email', $cliente->contacto_predet?->email) }}" 
+                                        type="email" 
+                                        class="form-control guarda-minus" 
+                                        maxlength="50" 
+                                        required>
+                                @error('contacto.0.email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            {{-- Puesto --}}
                             <div class="col div-30ch">
                                 <label class="form-label">Puesto <span class="text-danger">*</span></label>
-                                <input name="contacto[0][puesto]" value="{{ $cliente->contacto_predet->puesto ?? '' }}" class="form-control guarda-mayus" maxlength="20" required>
+                                <input  name="contacto[0][puesto]" 
+                                        value="{{ old('contacto.0.puesto', $cliente->contacto_predet?->puesto) }}" 
+                                        class="form-control guarda-mayus" 
+                                        maxlength="20" 
+                                        required>
+                                @error('contacto.0.puesto') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col div-30ch">
                                 <label class="form-label">Género <span class="text-danger">*</span></label>
                                 @php
-                                    $genero = old('contacto.0.genero', $cliente->contacto_predet->genero ?? '');
+                                    $genero = old('contacto.0.genero', $cliente->contacto_predet?->genero);
                                 @endphp
+
                                 <select name="contacto[0][genero]" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
                                     <option value="masculino"       @selected($genero == 'masculino')>Masculino</option>
@@ -203,8 +239,18 @@
                                           <div class="mb-2 telefono-item">
                                             <label>Teléfono 1</label>
                                             <div class="input-group input-group-separated">
-                                            <input name="contacto[0][telefono1]" class="form-control phone-field" value="{{ $cliente->contacto_predet->telefono1 ?? null }}" placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-                                            <input name="contacto[0][ext1]" class="form-control ext-field div-10ch" value="{{ $cliente->contacto_predet->ext1 ?? null }}" placeholder="Ext." maxlength="7">
+                                            <input  name="contacto[0][telefono1]" 
+                                                    class="form-control phone-field" 
+                                                    value="{{ old('contacto.0.telefono1', $cliente->contacto_predet?->telefono1) }}" 
+                                                    placeholder="Teléfono" 
+                                                    style="min-width: 16ch; max-width: 16ch;">
+                                            @error('contacto.0.telefono1') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <input  name="contacto[0][ext1]" 
+                                                    class="form-control ext-field div-10ch" 
+                                                    value="{{ old('contacto.0.ext1', $cliente->contacto_predet?->ext1) }}" 
+                                                    placeholder="Ext." 
+                                                    maxlength="7">
+                                            @error('contacto.0.ext1') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
                                             </div>
                                         </div>
@@ -215,12 +261,15 @@
                                                 <label>Teléfono {{ $i }}</label>
                                                 <div class="input-group input-group-separated">
                                                     <input  type="text" name="contacto[0][telefono{{ $i }}]"
-                                                            value="{{ $cliente->contacto_predet->{'telefono'.$i} }}"
+                                                            value="{{ old('contacto.0.telefono'.$i, $cliente->contacto_predet?->{'telefono'.$i}) }}"
                                                             class="form-control phone-field"
                                                             style="min-width: 16ch; max-width: 16ch;">
+                                                    @error('contacto.0.telefono'.$i) <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     <input  type="text" name="contacto[0][ext{{ $i }}]"
-                                                            value="{{ $cliente->contacto_predet->{'ext'.$i} }}"
-                                                            class="form-control ext-field div-10ch" maxlength="7">
+                                                            value="{{ old('contacto.0.ext'.$i, $cliente->contacto_predet?->{'ext'.$i}) }}"
+                                                            class="form-control ext-field div-10ch" 
+                                                            maxlength="7">
+                                                    @error('contacto.0.ext'.$i) <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                     <button type="button"
                                                             class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
                                                 </div>
@@ -239,7 +288,13 @@
                                         <div class="mb-2 celular-item div-30ch">
                                             <label>Teléfono Celular 1</label>
                                             <div class="input-group input-group-separated">
-                                                <input type="text" name="contacto[0][celular1]" placeholder="Celular" value="{{ $cliente->contacto_predet->celular1 ?? null }}" class="form-control phone-field" style="min-width: 16ch; max-width: 16ch;">
+                                                <input  name="contacto[0][celular1]" 
+                                                        type="text"
+                                                        placeholder="Celular" 
+                                                        value="{{ old('contacto.0.celular1', $cliente->contacto_predet?->celular1) }}" 
+                                                        class="form-control phone-field" 
+                                                        style="min-width: 16ch; max-width: 16ch;">
+                                                @error('contacto.0.celular1') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
                                             </div>
                                         </div>
@@ -249,9 +304,10 @@
                                             <label>Teléfono Celular {{ $i }}</label>
                                             <div class="input-group input-group-separated div-30ch">
                                                 <input type="text" name="contacto[0][celular{{ $i }}]"
-                                                        value="{{ $cliente->contacto_predet->{'celular'.$i} ?? null }}"
+                                                        value="{{ old('contacto.0.celular'.$i, $cliente->contacto_predet?->{'celular'.$i}) }}"
                                                         class="form-control phone-field"
                                                         style="min-width: 16ch; max-width: 16ch;">
+                                                @error('contacto.0.celular'.$i) <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                 <button type="button"
                                                         class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
                                             </div>
@@ -283,7 +339,7 @@
                 {{-- ── Tarjeta: Cuenta Personal ─────────────────────────── --}}
 
                 <!-- Valores por defecto / lógica de negocio -->
-                <input type="hidden" name="sector" value="persona"><!-- Sector: gobierno, privada, persona -->
+                <input type="hidden" name="sector" value="persona">
 
                 <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
                 <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
@@ -326,9 +382,14 @@
                                 <label for="nombre" class="form-label">
                                     Nombre(s) <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="nombre" id="nombre"
-                                    class="form-control guarda-mayus @error('nombre') is-invalid  @enderror" value="{{ old('nombre', $cliente->contacto_predet->nombre) }}"
-                                    required minlength="3" maxlength="40">
+                                <input  type="text" 
+                                        name="nombre" 
+                                        id="nombre"
+                                        class="form-control guarda-mayus" 
+                                        value="{{ old('nombre', $cliente->contacto_predet?->nombre) }}"
+                                        required 
+                                        minlength="3" 
+                                        maxlength="40">
                                 @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
@@ -336,9 +397,14 @@
                                 <label for="apellido_p" class="form-label">
                                     Primer Apellido <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="apellido_p" id="apellido_p"
-                                    class="form-control guarda-mayus @error('apellido_p') is-invalid  @enderror" value="{{ old('apellido_p', $cliente->contacto_predet->apellido_p) }}"
-                                    required minlength="3" maxlength="27">
+                                <input  type="text" 
+                                        name="apellido_p" 
+                                        id="apellido_p"
+                                        class="form-control guarda-mayus" 
+                                        value="{{ old('apellido_p', $cliente->contacto_predet?->apellido_p) }}"
+                                        required 
+                                        minlength="3" 
+                                        maxlength="27">
                                 @error('apellido_p')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
@@ -346,16 +412,25 @@
                                 <label for="apellido_m" class="form-label">
                                     Segundo Apellido <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="apellido_m" id="apellido_m"
-                                    class="form-control guarda-mayus @error('apellido_m') is-invalid  @enderror" value="{{ old('apellido_m', $cliente->contacto_predet->apellido_m) }}"
-                                    required  maxlength="27">
+                                <input  type="text" 
+                                        name="apellido_m" 
+                                        id="apellido_m"
+                                        class="form-control guarda-mayus" 
+                                        value="{{ old('apellido_m', $cliente->contacto_predet?->apellido_m) }}"
+                                        required  
+                                        maxlength="27">
                                 @error('apellido_m')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
                             <!-- Correo Electrónico -->
                             <div class="col div-60ch">
                                 <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control guarda-minus" name="email" maxlength="40" value="{{ old( 'email', $cliente->contacto_predet->email) }}" required>
+                                <input  name="email"
+                                        type="email" 
+                                        class="form-control guarda-minus"  
+                                        maxlength="40" 
+                                        value="{{ old( 'email', $cliente->contacto_predet?->email) }}" 
+                                        required>
                             </div>
 
                             <div class="div-30ch">
@@ -381,7 +456,7 @@
                             <div class="col div-30ch">
                                 <label class="form-label">Género <span class="text-danger">*</span></label>
                                 @php
-                                    $genero = old('contacto.0.genero', $cliente->contacto_predet->genero ?? '');
+                                    $genero = old('genero', $cliente->contacto_predet?->genero);
                                 @endphp
                                 <select name="genero" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -427,8 +502,18 @@
                                           <div class="mb-2 telefono-item">
                                             <label>Teléfono 1</label>
                                             <div class="input-group input-group-separated">
-                                            <input name="contacto[0][telefono1]" class="form-control phone-field" value="{{ $cliente->contacto_predet->telefono1 ?? null }}" placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-                                            <input name="contacto[0][ext1]" class="form-control ext-field div-10ch" value="{{ $cliente->contacto_predet->ext1 ?? null }}" placeholder="Ext." maxlength="7">
+                                            <input  name="contacto[0][telefono1]" 
+                                                    class="form-control phone-field" 
+                                                    value="{{ old("contacto.0.telefono1", $cliente->contacto_predet?->telefono1) }}" 
+                                                    placeholder="Teléfono" 
+                                                    style="min-width: 16ch; max-width: 16ch;">
+                                            @error('contacto.0.telefono1') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <input  name="contacto[0][ext1]" 
+                                                    class="form-control ext-field div-10ch" 
+                                                    value="{{ old("contacto.0.ext1", $cliente->contacto_predet?->ext1) }}" 
+                                                    placeholder="Ext." 
+                                                    maxlength="7">
+                                            @error('contacto.0.ext1') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
                                             </div>
                                         </div>
@@ -439,11 +524,11 @@
                                                 <label>Teléfono {{ $i }}</label>
                                                 <div class="input-group input-group-separated">
                                                     <input  type="text" name="contacto[0][telefono{{ $i }}]"
-                                                            value="{{ $cliente->contacto_predet->{'telefono'.$i} ?? null }}"
+                                                            value="{{ old("contacto.0.telefono".$i, $cliente->contacto_predet?->{'telefono'.$i}) }}"
                                                             class="form-control phone-field"
                                                             style="min-width: 16ch; max-width: 16ch;">
                                                     <input  type="text" name="contacto[0][ext{{ $i }}]"
-                                                            value="{{ $cliente->contacto_predet->{'ext'.$i} }}"
+                                                            value="{{ old("contacto.0.ext".$i, $cliente->contacto_predet?->{'ext'.$i}) }}"
                                                             class="form-control ext-field div-10ch" maxlength="7">
                                                     <button type="button"
                                                             class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
@@ -463,22 +548,26 @@
                                         <div class="mb-2 celular-item div-30ch">
                                             <label>Teléfono Celular 1</label>
                                             <div class="input-group input-group-separated">
-                                                <input type="text" name="contacto[0][celular1]" placeholder="Celular" value="{{ $cliente->contacto_predet->celular1 ?? null }}" class="form-control phone-field" style="min-width: 16ch; max-width: 16ch;">
+                                                <input  type="text" 
+                                                        name="contacto[0][celular1]" 
+                                                        placeholder="Celular" 
+                                                        value="{{ old("contacto.0.celular1", $cliente->contacto_predet?->celular1) }}" 
+                                                        class="form-control phone-field" 
+                                                        style="min-width: 16ch; max-width: 16ch;">
                                                 <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
                                             </div>
                                         </div>
                                         @for ($i = 2; $i <= 5; $i++)
                                             @continue(!$hasCel($i))
                                             <div class="mb-2 celular-item">
-                                            <label>Teléfono Celular {{ $i }}</label>
-                                            <div class="input-group input-group-separated div-30ch">
-                                                <input type="text" name="contacto[0][celular{{ $i }}]"
-                                                        value="{{ $cliente->contacto_predet->{'celular'.$i} }}"
-                                                        class="form-control phone-field"
-                                                        style="min-width: 16ch; max-width: 16ch;">
-                                                <button type="button"
-                                                        class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
-                                            </div>
+                                                <label>Teléfono Celular {{ $i }}</label>
+                                                <div class="input-group input-group-separated div-30ch">
+                                                    <input type="text" name="contacto[0][celular{{ $i }}]"
+                                                            value="{{ old("contacto.0.celular".$i, $cliente->contacto_predet?->{'celular'.$i}) }}"
+                                                            class="form-control phone-field"
+                                                            style="min-width: 16ch; max-width: 16ch;">
+                                                    <button type="button" class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                </div>
                                             </div>
                                         @endfor
                                         <small id="cel-limit-msg" class="text-danger mt-1 d-none">
@@ -564,7 +653,7 @@
             <div class="form-group mb-4">
                 <textarea class="form-control" rows="10"  disabled style="resize: none; overflow-y: scroll;">
                     @foreach ($notas as $nota)
-                    {{ \Carbon\Carbon::parse($nota->fecha_registro)->format('d-m-Y h:i A') }} - EJECUTIVO: {{ $nota->usuario->nombre_completo ?? '—' }} - ETAPA: {{ strtoupper($nota->etapa) }}
+                    {{ \Carbon\Carbon::parse($nota->fecha_registro)->format('d-m-Y h:i A') }} - EJECUTIVO: {{ $nota->usuario->username ?? '—' }} - ETAPA: {{ strtoupper($nota->etapa) }}
 
                     {!! $nota->contenido !!}
 
@@ -785,7 +874,7 @@ const mkCelRowPlus = () => `
   <div class="mb-2 celular-item">
     <label>Teléfono Celular 1</label>
     <div class="input-group input-group-separated">
-      <input type="text" value="{{ $cliente->contacto_predet->celular1 ?? null }}" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
+      <input type="text" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
       <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
     </div>
   </div>`;
@@ -943,7 +1032,7 @@ const removeEmptyRows = () => {
   // ——— Ocultar inputs/botones ———
   const setEditing = (state) => {
     /* 1. Inputs y selects */
-    form.querySelectorAll('input:not(.no-editar), select, textarea')
+    form.querySelectorAll('input:not(.no-editar), select:not(.no-editar), textarea:not(.no-editar)')
         .forEach(el => { el.disabled = !state; });
 
     /* 2. Botones dinámicos de teléfonos / celulares */

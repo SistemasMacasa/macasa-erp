@@ -17,7 +17,7 @@ use App\Models\Nota;
 
 class ClienteController extends Controller
 {
-        public function index(Request $request)
+    public function index(Request $request)
     {
         // 1) consulta base + relaciones
         $query = Cliente::with(['primerContacto', 'vendedor']);
@@ -35,9 +35,24 @@ class ClienteController extends Controller
         }
 
         // Ejecutivos
-        if ($ejecutivos = $request->input('ejecutivos')) {
-            $query->whereIn('id_vendedor', (array) $ejecutivos);
+        if ($ejecutivos = $request->input('ejecutivos')) 
+        {
+            $query->where(function ($q) use ($ejecutivos) 
+            {
+                // Si se seleccionó "Base General", filtramos por id_vendedor NULL
+                if (in_array('base_general', $ejecutivos)) {
+                    $q->orWhereNull('id_vendedor');
+                }
+
+                // IDs reales de ejecutivos (ignoramos "base_general")
+                $ids = array_filter($ejecutivos, fn($id) => $id !== 'base_general');
+
+                if (!empty($ids)) {
+                    $q->orWhereIn('id_vendedor', $ids);
+                }
+            });
         }
+
 
         // ⤵️  LOS QUE FALTABAN
         if ($sector = $request->input('sector')) {          // sector = 'privada' | 'gobierno' | ...
@@ -60,19 +75,17 @@ class ClienteController extends Controller
         );
 
         // 6) Paginación dinámica
-$perPageParam = $request->input('perPage', 25);
+        $perPageParam = $request->input('perPage', 25);
 
-if ($perPageParam === 'all') {
-    // “Todos”  ⇒  ponemos como tamaño de página el total de registros
-    $perPage = $query->count() ?: 1;   // evita división por cero
-} else {
-    $perPage = (int) $perPageParam;    // 10, 25, 50, 100…
-}
+        if ($perPageParam === 'all') {
+            // “Todos”  ⇒  ponemos como tamaño de página el total de registros
+            $perPage = $query->count() ?: 1;   // evita división por cero
+        } else {
+            $perPage = (int) $perPageParam;    // 10, 25, 50, 100…
+        }
 
-$clientes = $query->paginate($perPage)
-                  ->appends($request->all());   // conserva filtros
-
-
+        $clientes = $query->paginate($perPage)
+                        ->appends($request->all());   // conserva filtros
 
         /* ---------- Catálogos para los <select> ---------- */
         $vendedores = Usuario::whereNull('id_cliente')->get();
@@ -288,9 +301,9 @@ $clientes = $query->paginate($perPage)
                 $cliente = Cliente::findOrFail($id);
                 $cliente->update([
                     'estatus'       => $data['estatus'],
+                    'nombre'        => $data['nombre'],
                     'ciclo_venta'   => $data['ciclo_venta'],
                     'tipo'          => $data['tipo'],
-                    'nombre'        => $data['nombre'],
                     'id_vendedor'   => $data['id_vendedor'],
                     'sector'        => $data['sector'],
                     'segmento'      => $data['segmento'],
@@ -321,6 +334,15 @@ $clientes = $query->paginate($perPage)
                 }
                 $contacto->save();
 
+                //registrarNota es una función Helper, está definida en app/Helpers/
+                $mensaje = "El usuario " . auth()->user()->nombre." ".auth()->user()->apellido_p." ".auth()->user()->apellido_m .
+                            " ha actualizado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
+
+                registrarNota(
+                    $cliente->id_cliente,
+                    $mensaje,
+                    $cliente->ciclo_venta,
+                );
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
                                  ->with('success', 'Cliente empresarial actualizado correctamente');
@@ -331,26 +353,104 @@ $clientes = $query->paginate($perPage)
 
         }elseif($request->sector == "persona")
         {
+            if(auth()->user()->es_admin != 1) {
+                return redirect()->back()->with('error', 'No tienes permiso para actualizar este cliente.');
+            }
+
+            $request->merge([
+                'contacto' => collect($request->input('contacto', []))
+                    ->map(function ($c) {
+                        foreach (range(1,5) as $i) {
+                            foreach (['telefono', 'celular', 'ext'] as $campo) {
+                                $key = "{$campo}{$i}";
+                                $c[$key] = isset($c[$key]) ? preg_replace('/\D/', '', $c[$key]) : null;
+                            }
+                        }
+                        return $c;
+                    })->all()
+            ]);
+
             $rules = [
                 'nombre'        => 'required|string|max:60',
                 'apellido_p'    => 'required|string|max:27',
                 'apellido_m'    => 'nullable|string|max:27',
-                'id_vendedor'   => 'required|integer',
+                'id_vendedor'   => 'nullable|integer',
 
                 'ciclo_venta'   => 'nullable|string|max:100',
                 'estatus'       => 'required|string|max:100',
-                'tipo'          => 'required|string|max:100',
+                'tipo'          => 'nullable|string|max:100',
                 'sector'        => 'nullable|string|max:100',
 
                 // Datos personales …
                 'email'                  => 'nullable|email|max:120',
                 'segmento'               => 'nullable|string|max:100',
                 'genero'                 => 'nullable|string|max:17',
-                'contacto.0.telefono*'   => 'nullable|digits:10',
-                'contacto.0.celular*'    => 'nullable|digits:10',
-                'contacto.0.ext*'        => 'nullable|digits_between:1,6',
-            ];
+                   ];
+            // ── Teléfonos / Extensiones / Celulares (1‒5) ───────────────────────────
+            for ($i = 1; $i <= 5; $i++) {
+                $rules["contacto.0.telefono{$i}"] = 'nullable|digits:10';
+                $rules["contacto.0.celular{$i}"]  = 'nullable|digits:10';
+                $rules["contacto.0.ext{$i}"]      = 'nullable|digits_between:1,7';
+            }
             $request->validate($rules);
+            // Actualizar el cliente en la BD
+            try
+            {
+                $cliente = Cliente::findOrFail($id);
+                $cliente->update([
+                    'nombre'        => $request->input('nombre'),
+                    'apellido_p'    => $request->input('apellido_p'),
+                    'apellido_m'    => $request->input('apellido_m'),
+                    'ciclo_venta'   => $request->input('ciclo_venta'),
+                    'estatus'       => $request->input('estatus'),
+                    'tipo'          => $request->input('tipo'),
+                    'sector'        => $request->input('sector'),
+                    'segmento'      => $request->input('segmento'),
+                    'id_vendedor'   => $request->filled('id_vendedor')
+                        ? $request->input('id_vendedor')
+                        : null,
+                ]);
+
+                // Actualizar el contacto principal
+                $contacto = Contacto::updateOrCreate(
+                    [
+                        'id_cliente'     => $cliente->id_cliente,
+                        'predeterminado' => 1
+                    ],
+                    [
+                        'nombre'      => $request->input('nombre'),
+                        'apellido_p'  => $request->input('apellido_p'),
+                        'apellido_m'  => $request->input('apellido_m'),
+                        'email'       => $request->input('email'),
+                        'puesto'      => null, // Cuentas personales no manejan puesto
+                        'genero'      => $request->input('genero'),
+                    ]
+                );
+
+                // ➋ teléfonos / extensiones
+                for ($i = 1; $i <= 5; $i++) {
+                    $contacto->{"telefono$i"} = digits_only($request->input("contacto.0.telefono$i"));
+                    $contacto->{"ext$i"}      = digits_only($request->input("contacto.0.ext$i"));
+                    $contacto->{"celular$i"}  = digits_only($request->input("contacto.0.celular$i"));
+                }
+                $contacto->save();
+
+                //registrarNota es una función Helper, está definida en app/Helpers/
+                $mensaje = "El usuario ".auth()->user()->nombre." ".
+                            auth()->user()->apellido_p."".auth()->user()->apellido_m .
+                            " ha actualizado la cuenta personal [{$cliente->id_cliente}] -> {$cliente->nombre}.";
+
+                registrarNota(
+                    $cliente->id_cliente,
+                    $mensaje,
+                    $cliente->ciclo_venta,
+                );
+
+                return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
+                                 ->with('success', 'Cliente personal actualizado correctamente');
+            } catch (Exception $e) {
+                return redirect('clientes')->with('error', 'Error al actualizar el cliente: ' . $e->getMessage());
+            }
         }
     }
     public function destroy($id)
@@ -359,6 +459,16 @@ $clientes = $query->paginate($perPage)
         $cliente = Cliente::findOrFail($id);
         // 2) Eliminar el registro
         $cliente->delete();
+
+        //registrarNota es una función Helper, está definida en app/Helpers/
+                $mensaje = "El usuario " . auth()->user()->nombre_completo .
+                            " ha creado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
+
+                registrarNota(
+                    $cliente->id_cliente,
+                    $mensaje,
+                    $cliente->ciclo_venta,
+                );
         return redirect('clientes')->with('success', 'Cliente eliminado correctamente');
     }
     public function store(Request $request)
@@ -413,43 +523,55 @@ $clientes = $query->paginate($perPage)
                 $contactos = $request->input('contacto', []);
                 $contacto = $contactos[0] ?? null; // solo un contacto
                   
-                        // Normaliza phones/exts
-                        foreach (range(1,5) as $n) {
-                            $contacto["telefono$n"] = digits_only($contacto["telefono$n"] ?? null);
-                            $contacto["celular$n"]  = digits_only($contacto["celular$n"]  ?? null);
-                            $contacto["ext$n"]      = digits_only($contacto["ext$n"]      ?? null);
-                        }
-                    
-                        Contacto::create([
-                            'id_cliente'  => $cliente->id_cliente,
-                            'nombre'      => $request->input('nombre'),
-                            'apellido_p'  => $request->input('apellido_p'),
-                            'apellido_m'  => $request->input('apellido_m'),
-                            'email'       => $request->input('email'),
-                            'genero'      => $request->input('genero'),
-                            'puesto'      => null, // o define si vendrá después
-                        
-                            'telefono1'   => $contacto['telefono1'] ?? null,
-                            'ext1'        => $contacto['ext1']      ?? null,
-                            'telefono2'   => $contacto['telefono2'] ?? null,
-                            'ext2'        => $contacto['ext2']      ?? null,
-                            'telefono3'   => $contacto['telefono3'] ?? null,
-                            'ext3'        => $contacto['ext3']      ?? null,
-                            'telefono4'   => $contacto['telefono4'] ?? null,
-                            'ext4'        => $contacto['ext4']      ?? null,
-                            'telefono5'   => $contacto['telefono5'] ?? null,
-                            'ext5'        => $contacto['ext5']      ?? null,
-                        
-                            'celular1'    => $contacto['celular1']  ?? null,
-                            'celular2'    => $contacto['celular2']  ?? null,
-                            'celular3'    => $contacto['celular3']  ?? null,
-                            'celular4'    => $contacto['celular4']  ?? null,
-                            'celular5'    => $contacto['celular5']  ?? null,
-                        
-                            'predeterminado' => 1,
-                        ]);
-                        
-                    
+                // Normaliza phones/exts
+                foreach (range(1,5) as $n) {
+                    $contacto["telefono$n"] = digits_only($contacto["telefono$n"] ?? null);
+                    $contacto["celular$n"]  = digits_only($contacto["celular$n"]  ?? null);
+                    $contacto["ext$n"]      = digits_only($contacto["ext$n"]      ?? null);
+                }
+            
+                Contacto::create([
+                    'id_cliente'  => $cliente->id_cliente,
+                    'nombre'      => $request->input('nombre'),
+                    'apellido_p'  => $request->input('apellido_p'),
+                    'apellido_m'  => $request->input('apellido_m'),
+                    'email'       => $request->input('email'),
+                    'genero'      => $request->input('genero'),
+                    'puesto'      => null, // o define si vendrá después
+                
+                    'telefono1'   => $contacto['telefono1'] ?? null,
+                    'ext1'        => $contacto['ext1']      ?? null,
+                    'telefono2'   => $contacto['telefono2'] ?? null,
+                    'ext2'        => $contacto['ext2']      ?? null,
+                    'telefono3'   => $contacto['telefono3'] ?? null,
+                    'ext3'        => $contacto['ext3']      ?? null,
+                    'telefono4'   => $contacto['telefono4'] ?? null,
+                    'ext4'        => $contacto['ext4']      ?? null,
+                    'telefono5'   => $contacto['telefono5'] ?? null,
+                    'ext5'        => $contacto['ext5']      ?? null,
+                
+                    'celular1'    => $contacto['celular1']  ?? null,
+                    'celular2'    => $contacto['celular2']  ?? null,
+                    'celular3'    => $contacto['celular3']  ?? null,
+                    'celular4'    => $contacto['celular4']  ?? null,
+                    'celular5'    => $contacto['celular5']  ?? null,
+                
+                    'predeterminado' => 1,
+                ]);
+                
+
+                //registrarNota es una función Helper, está definida en app/Helpers/
+                $mensaje = "El usuario " . auth()->user()->nombre_completo .
+                            " ha creado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
+
+                registrarNota(
+                    $cliente->id_cliente,
+                    $mensaje,
+                    $cliente->ciclo_venta,
+                );
+
+                return redirect(to: '/clientes')->with('success', 'Cuenta personal creada correctamente');
+
             }
             catch (Exception $e){
                 return redirect('')->with('error', $e->getMessage());
@@ -636,7 +758,17 @@ $clientes = $query->paginate($perPage)
                 //     }
                 // }
 
-                return redirect('/clientes')->with('success', 'Cliente creado correctamente');
+                //registrarNota es una función Helper, está definida en app/Helpers/
+                $mensaje = "El usuario " . auth()->user()->nombre_completo .
+                            " ha creado la cuenta personal [{$cliente->id_cliente}]  {$cliente->nombre}.";
+
+                registrarNota(
+                    $cliente->id_cliente,
+                    $mensaje,
+                    $cliente->ciclo_venta,
+                );
+
+                return redirect(to: '/clientes')->with('success', 'Cliente creado correctamente');
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()]);
             }
