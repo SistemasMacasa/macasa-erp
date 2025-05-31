@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
 
-    <h2 class="mb-3">Mis Cuentas</h2>
+    <h2 class="mb-3" style="color: inherit;">Mis Cuentas</h2>
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -44,7 +44,7 @@
 
                     {{-- Búsqueda global --}}
                     <div class="col">
-                        <label for="search" class="form-label"><i class="fa fa-search"></i> Búsqueda </label>
+                        <label for="search" class="form-label"><i class="fa fa-search"></i> Búsqueda</label>
                         <div class="input-group">
                             <input
                             type="text"
@@ -60,10 +60,11 @@
 
                     {{-- Ejecutivos (multi-select con Select2) --}}
                     <div class="col">
-                        <label for="ejecutivos" class="form-label">Seleccione ejecutivo(s)</label>
+                        <label for="ejecutivos" class="form-label">Ejecutivo(s)</label>
                         <select
                             id="ejecutivos"
                             name="ejecutivos[]"
+                            placeholder="Todos"
                             class="form-select select2"          {{-- ← SIN "form-select" --}}
                             multiple
                             data-placeholder="Seleccione uno o varios ejecutivos"
@@ -309,17 +310,17 @@
     <div class="table-responsive mb-3 shadow-lg">
         <table id="tabla-clientes" class="table align-middle table-hover table-nowrap
                                          table-striped table-bordered">
-            <thead class="table-dark text-center align-middle" style="font-size: var(--bs-body-font-size);">
+            <thead class="text-center align-middle">
                 <tr>
-                    <th class="py-1 px-2 filtro-asc-desc">ID&nbsp;Cliente</th>
-                    <th class="py-1 px-2 filtro-asc-desc">Empresa</th>
-                    <th class="py-1 px-2 filtro-asc-desc">Contacto</th>
-                    <th class="py-1 px-2">Teléfono</th>
-                    <th class="py-1 px-2">Correo</th>
-                    <th class="py-1 px-2 filtro-asc-desc">Sector</th>
-                    <th class="py-1 px-2 filtro-asc-desc">Segmento</th>
-                    <th class="py-1 px-2 filtro-asc-desc">Ciclo</th>
-                    <th class="py-1 px-2 filtro-asc-desc">Asignado a</th>
+                    <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">ID Cliente</th>
+                    <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Empresa</th>
+                    <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Contacto</th>
+                    <th class="py-1 px-2"                   style="background-color: var( --tabla-header-bg);">Teléfono</th>
+                    <th class="py-1 px-2"                   style="background-color: var( --tabla-header-bg);">Correo</th>
+                    <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Sector</th>
+                    <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Segmento</th>
+                    <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Ciclo</th>
+                    <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Asignado a</th>
                 </tr>
             </thead>
 

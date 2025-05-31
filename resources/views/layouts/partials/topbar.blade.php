@@ -1,4 +1,4 @@
-<header id="page-topbar" class="topbar-custom d-flex align-items-center gap-3">
+<header id="page-topbar" class="topbar-custom d-flex align-items-center gap-3" style="max-width: 250ch;">
 
     {{-- 📦 Cajón de logo + toggle --}}
     <div id="logo-box" class="d-flex align-items-center px-3 gap-2 flex-shrink-0">
