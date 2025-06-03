@@ -27,11 +27,15 @@
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
+
         <button type="submit"
-                class="btn btn-success btn-30ch btnGuardarCuenta"
-                form="formCuenta">
-            <i class="fa fa-save me-1"></i> Guardar
+                class="btn btn-secondary btn-30ch btnGuardarCuenta"
+                disabled
+                form="formCuenta"
+                style="opacity: 1;">
+        <i class="fa fa-save me-1"></i> Guardar
         </button>
+
 
         <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-30ch">
             <i class="fa fa-list me-1"></i> Mis Cuentas
@@ -60,9 +64,12 @@
                         <div class="card-header section-card-header section-card-header--view d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Cuenta Empresarial</h5>
                             @if($usuario->es_admin)
-                                <button type="button" id="btnEditar" class="btn btn-sm btn-primary btn-15ch btn-editar-cuenta" style="margin-right:5ch;">
+                                <button type="button" id="btnEditar"
+                                        class="btn btn-sm btn-macasa-verde btn-15ch btn-editar-cuenta"
+                                        style="margin-right:5ch;">
                                 <i class="fa fa-edit me-1"></i> Editar cuenta
                                 </button>
+
                             @endif
                         </div>
 
@@ -349,7 +356,7 @@
                             <h5 class="mb-0 flex-grow-1">Cuenta&nbsp;Personal</h5>
                             
                             @if ($usuario->es_admin)
-                                <button type="button" id="btnEditar" class="btn btn-sm btn-primary ms-auto btn-editar-cuenta" style="margin-right:5ch;">
+                                <button type="button" id="btnEditar" class="btn btn-sm btn-success ms-auto btn-editar-cuenta" style="margin-right:5ch;">
                                     <i class="fa fa-edit me-1"></i> Editar cuenta
                                 </button>
                             @endif
@@ -1047,9 +1054,23 @@ const removeEmptyRows = () => {
     toggleBtns(telCol, '.agregar-telefono, .eliminar-item');
     toggleBtns(celCol, '.agregar-celular, .eliminar-item');
 
-    /* 3. Botón Guardar (usa la clase que le pusiste) */
+    /* 3. Botón Guardar */
     const btnGuardar = document.querySelector('.btnGuardarCuenta');
-    if (btnGuardar) btnGuardar.disabled = !state;
+    if (btnGuardar) {
+        if (state) {
+            // Activar y poner en verde MACASA
+            btnGuardar.classList.remove('btn-secondary');
+            btnGuardar.classList.add('btn-macasa-verde');
+            btnGuardar.disabled = false;
+        } else {
+            // Desactivar y poner gris Bootstrap
+            btnGuardar.classList.remove('btn-macasa-verde');
+            btnGuardar.classList.add('btn-secondary');
+            btnGuardar.disabled = true;
+        }
+    }
+
+    
   };
 
   // ——— Lógica de Editar / Guardar ———
@@ -1058,8 +1079,10 @@ btnEdit.addEventListener('click', () => {
   editing = !editing;
   if (editing) {
     // — Entrar a edición —
-    btnEdit.classList.replace('btn-primary','btn-secondary');
-    btnEdit.innerHTML = '<i class="fa fa-unlock me-1"></i> Edición habilitada';
+    btnEdit.classList.remove('btn-macasa-verde');
+    btnEdit.classList.add('btn-secondary');
+    btnEdit.innerHTML = '<i class="fa fa-lock-open me-1"></i> Edición habilitada';
+
     setEditing(true);
 
     // Asegura fila 1 de celular si no existía
@@ -1088,8 +1111,10 @@ btnEdit.addEventListener('click', () => {
 
     setEditing(false);        // por último, oculta todos los ➕/❌ y bloquea inputs
 
-    btnEdit.classList.replace('btn-secondary','btn-primary');
+    btnEdit.classList.remove('btn-secondary');
+    btnEdit.classList.add('btn-macasa-verde');
     btnEdit.innerHTML = '<i class="fa fa-edit me-1"></i> Editar cuenta';
+
   }
 });
 

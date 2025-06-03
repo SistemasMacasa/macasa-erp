@@ -3,7 +3,7 @@
         <div id="sidebar-menu">
             <ul class="metismenu list-unstyled" id="side-menu">
 
-                <li class="menu-title" data-key="t-menu">Menú</li>
+                <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem;">Menú</li>
 
                 <li>
                     <a href="{{ route('inicio') }}">
@@ -14,8 +14,8 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="users"></i>
-                        <span class="menu-item">Mi CRM</span>
+                        <span class="icon icon-crm"></span>
+                        <span class="menu-item">CRM</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
@@ -32,7 +32,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="trending-up"></i>
                         <span class="menu-item">Monitor de Cotizaciones</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -53,8 +53,8 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('inicio') }}">
-                        <i data-feather="dollar-sign"></i>
+                    <a href="{{ route('inicio') }}" class="sidebar-link">
+                        <span class="icon icon-bolsa"></span>
                         <span class="menu-item">Monitor de Cobranza</span>
                     </a>
                 </li>
@@ -75,7 +75,7 @@
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="briefcase"></i>
+                        <i data-feather="settings"></i>
                         <span class="menu-item">Administración</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
