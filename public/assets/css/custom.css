@@ -137,8 +137,8 @@ body[data-sidebar="light"] label{
 /* ——— base ——— */
 .icon {
     display:inline-block;
-    width:18px;          /* ajusta al tamaño de tus feather */
-    height:18px;
+    width:16px;          /* ajusta al tamaño de tus feather */
+    height:16px;
     background-color:currentColor;  /* color = texto */
     -webkit-mask-size:contain;
             mask-size:contain;
@@ -150,13 +150,25 @@ body[data-sidebar="light"] label{
 }
 
 /* ——— icono específico ——— */
-.icon-bolsa {
+.icon-cobranza {
+  margin-right: 10px;
     -webkit-mask-image:url('/assets/icons/bolsa-de-dinero.svg');
             mask-image:url('/assets/icons/bolsa-de-dinero.svg');
 }
 .icon-crm {
+    margin-right: 10px;
     -webkit-mask-image:url('/assets/icons/ciclo.svg');
             mask-image:url('/assets/icons/ciclo.svg');
+}
+.icon-marketing {
+    margin-right: 10px;
+    -webkit-mask-image:url('/assets/icons/dardos.svg');
+            mask-image:url('/assets/icons/dardos.svg');
+}
+.icon-ventas {
+    margin-right: 10px;
+    -webkit-mask-image:url('/assets/icons/grafica.svg');
+            mask-image:url('/assets/icons/grafica.svg');
 }
 /*  Añade más:
 .icon-carrito { mask-image:url('/assets/icons/carrito.svg'); }

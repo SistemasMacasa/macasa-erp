@@ -409,7 +409,7 @@
                     {{-- Ciclo Venta --}}
                     <td class="py-1 px-2 text-center">
                         <span class="badge"
-                            style="background-color:{{ $c->ciclo_venta==='venta'? '#2ab57d':'#FEE028' }};
+                            style="background-color:{{ $c->ciclo_venta==='venta'? 'var(--macasa-verde)' : '#FEE028' }};
                                     color:{{ $c->ciclo_venta==='venta'? '#fff':'#000' }};
                                     font-size: var(--bs-body-font-size);
                                     min-width:10ch;">

@@ -3,16 +3,16 @@
         <div id="sidebar-menu">
             <ul class="metismenu list-unstyled" id="side-menu">
 
-                <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem;">Menú</li>
+                <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem; max-height: 2.5rem;">Menú</li>
 
-                <li>
+                <li style="max-height: 2.5rem;">
                     <a href="{{ route('inicio') }}">
                         <i data-feather="home"></i>
                         <span class="menu-item">Inicio</span>
                     </a>
                 </li>
 
-                <li>
+                <li style="max-height: 2.5rem;">
                     <a href="javascript: void(0);" class="has-arrow">
                         <span class="icon icon-crm"></span>
                         <span class="menu-item">CRM</span>
@@ -30,9 +30,9 @@
                     </ul>
                 </li>
 
-                <li>
+                <li style="max-height: 2.5rem;">
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="trending-up"></i>
+                        <span class="icon icon-ventas"></span>
                         <span class="menu-item">Monitor de Cotizaciones</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -40,9 +40,9 @@
                     </ul>
                 </li>
 
-                <li>
+                <li style="max-height: 2.5rem;">
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="shopping-cart"></i>
+                        <span class="icon icon-ventas"></span>
                         <span class="menu-item">Monitor de Ventas</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -52,28 +52,28 @@
                     </ul>
                 </li>
 
-                <li>
-                    <a href="{{ route('inicio') }}" class="sidebar-link">
-                        <span class="icon icon-bolsa"></span>
+                <li style="max-height: 2.5rem;">
+                    <a href="{{ route('inicio') }}">
+                        <span class="icon icon-cobranza"></span>
                         <span class="menu-item">Monitor de Cobranza</span>
                     </a>
                 </li>
 
-                <li>
+                <li style="max-height: 2.5rem;">
                     <a href="{{ route('inicio') }}">
                         <i data-feather="globe"></i>
                         <span class="menu-item">E-Commerce</span>
                     </a>
                 </li>
 
-                <li>
+                <li style="max-height: 2.5rem;">
                     <a href="{{ route('inicio') }}">
-                        <i data-feather="bar-chart-2"></i>
+                        <span class="icon icon-marketing"></span>
                         <span class="menu-item">Marketing</span>
                     </a>
                 </li>
 
-                <li>
+                <li style="max-height: 2.5rem;">
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="settings"></i>
                         <span class="menu-item">Administración</span>

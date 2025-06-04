@@ -145,7 +145,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row gx-3 gy-2 mb-2">
+
+                                                <hr>
+
+
+
+                        <div class="row gx-3 gy-2 mb-3">
                             <div class="col div-60ch">
                                 <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                 <input  id="nombre" name="nombre" type="text"
@@ -156,7 +161,6 @@
 
 
                         </div>
-                        <hr>
 
                         {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
                         <h6 class="fw-semibold mb-3">Contacto principal</h6>
@@ -378,18 +382,70 @@
                                 </select>
                             </div>
                             <div class="col div-30ch">
+                                <label class="form-label">Asignado a: <span class="text-danger" id="asterisco">*</span></label>
+                                <select name="id_vendedor" class="form-select">
+                                    <option value=""
+                                            @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
+                                        Base General
+                                    </option>
+
+                                    @foreach($vendedores as $v)
+                                        <option value="{{ $v->id_usuario }}"
+                                                @selected(old('id_vendedor', $cliente->id_vendedor) == $v->id_usuario)>
+                                            {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Género -->
+                            <div class="col div-30ch">
+                                <label class="form-label">Género <span class="text-danger" id="asterisco">*</span></label>
+                                @php
+                                    $genero = old('genero', $cliente->contacto_predet?->genero);
+                                @endphp
+                                <select name="genero" class="form-select" required>
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="masculino"       @selected($genero == 'masculino')>Masculino</option>
+                                    <option value="femenino"        @selected($genero == 'femenino')>Femenino</option>
+                                    <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado</option>
+                                </select>
+                            </div>
+
+                            <div class="div-30ch">
+                                <label class="form-label">Segmento <span class="text-danger" id="asterisco">*</span></label>
+                                <select name="segmento" class="form-select" required>
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="macasa cuentas especiales"
+                                            @selected(old('segmento', $cliente->segmento)=='macasa cuentas especiales')>
+                                        Macasa Cuentas Especiales
+                                    </option>
+                                    <option value="tekne store ecommerce"
+                                            @selected(old('segmento', $cliente->segmento)=='tekne store ecommerce')>
+                                        Tekne Store E-Commerce
+                                    </option>
+                                    <option value="la plaza ecommerce"
+                                            @selected(old('segmento', $cliente->segmento)=='la plaza ecommerce')>
+                                        LaPlazaEnLinea E-Commerce
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col div-30ch">
                                 <label class="form-label">Origen de la Cuenta</label>
                                 <select name="tipo" class="form-select" disabled>
                                     <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
                                     <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
                                 </select>
                             </div>
-                        </div>
 
+                            
+                        </div>
+                        <hr>
                         <div class="row gx-3 gy-2 mb-2">
                             <div class="col div-60ch">
                                 <label for="nombre" class="form-label">
-                                    Nombre(s) <span class="text-danger">*</span>
+                                    Nombre(s) <span class="text-danger" id="asterisco">*</span>
                                 </label>
                                 <input  type="text" 
                                         name="nombre" 
@@ -404,7 +460,7 @@
 
                             <div class="col div-60ch">
                                 <label for="apellido_p" class="form-label">
-                                    Primer Apellido <span class="text-danger">*</span>
+                                    Primer Apellido <span class="text-danger" id="asterisco">*</span>
                                 </label>
                                 <input  type="text" 
                                         name="apellido_p" 
@@ -442,55 +498,7 @@
                                         required>
                             </div>
 
-                            <div class="div-30ch">
-                                <label class="form-label">Segmento <span class="text-danger">*</span></label>
-                                <select name="segmento" class="form-select" required>
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="macasa cuentas especiales"
-                                            @selected(old('segmento', $cliente->segmento)=='macasa cuentas especiales')>
-                                        Macasa Cuentas Especiales
-                                    </option>
-                                    <option value="tekne store ecommerce"
-                                            @selected(old('segmento', $cliente->segmento)=='tekne store ecommerce')>
-                                        Tekne Store E-Commerce
-                                    </option>
-                                    <option value="la plaza ecommerce"
-                                            @selected(old('segmento', $cliente->segmento)=='la plaza ecommerce')>
-                                        LaPlazaEnLinea E-Commerce
-                                    </option>
-                                </select>
-                            </div>
-
-                            <!-- Género -->
-                            <div class="col div-30ch">
-                                <label class="form-label">Género <span class="text-danger">*</span></label>
-                                @php
-                                    $genero = old('genero', $cliente->contacto_predet?->genero);
-                                @endphp
-                                <select name="genero" class="form-select" required>
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="masculino"       @selected($genero == 'masculino')>Masculino</option>
-                                    <option value="femenino"        @selected($genero == 'femenino')>Femenino</option>
-                                    <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado</option>
-                                </select>
-                            </div>
-
-                            <div class="col div-30ch">
-                                <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
-                                <select name="id_vendedor" class="form-select">
-                                    <option value=""
-                                            @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
-                                        Base General
-                                    </option>
-
-                                    @foreach($vendedores as $v)
-                                        <option value="{{ $v->id_usuario }}"
-                                                @selected(old('id_vendedor', $cliente->id_vendedor) == $v->id_usuario)>
-                                            {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            
                             
                             {{-- Contacto Principal ─ Teléfonos PERSONAL --}}
                             {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
@@ -596,6 +604,64 @@
         </form>
     @endif
 
+    {{-- Historial de cotizaciones ---------------------------------------------------}}
+    <div class="card shadow-lg">
+        {{-- Botón para archivar cuenta --}}
+        {{-- Cabecera de la tarjeta --}}
+        <div class="card-header fw-bold" style="background-color: rgba(81, 86, 190, 0.1);">Historial de cotizaciones</div>
+
+        <div class="card-body p-0"> {{-- p-0 = quitamos padding extra --}}
+            {{-- contenedor scroll con altura máx (ajusta a tu gusto) --}}
+            <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
+                @php
+                    $totalSubtotal = $cotizaciones->sum('subtotal');
+                    $totalMargen   = $cotizaciones->sum('margen');   // o lo que te pidan mostrar
+                    $totalFactor   = $cotizaciones->sum('factor');
+                @endphp
+
+                <table id="tblCotizaciones" class="table table-sm table-striped mb-0" style="border-style: none !important;">
+                    <thead class="table-light position-sticky top-0" style="z-index:1">
+                        <tr>
+                            <th data-type="date" class="div-10ch">Fecha <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="div-10ch">ID&nbsp;cotización <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="div-30ch">Razón social <span class="sort-arrow"></span></th>
+                            <th data-type="number" class="div-15ch text-end">Subtotal <span class="sort-arrow"></span></th>
+                            <th data-type="number" class="div-15ch text-end">Margen <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="div-10ch text-end">Factor <span class="sort-arrow"></span></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse ($cotizaciones as $c)
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($c['fecha'])->format('d-m-Y') }}</td>
+                                <td>{{ $c['id'] }}</td>
+                                <td>{{ $c['razon'] }}</td>
+                                <td class="text-end">$ {{ number_format($c['subtotal'], 2) }}</td>
+                                <td class="text-end">{{ number_format($c['margen'], 2) }}</td>
+                                <td class="text-end">{{ number_format($c['factor'], 2) }}%</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Sin cotizaciones registradas…</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                    <tfoot class="table-light position-sticky bottom-0" style="border-style: none !important; z-index:1;">
+                        <tr style="border-style: none !important;">
+                            <th colspan="3" class="text-end">Totales</th>
+                            <th class="text-end">$ {{ number_format($totalSubtotal, 2) }}</th>
+                            <th class="text-end">{{ number_format($totalMargen, 2) }}</th>
+                            <th class="text-end">{{ number_format($totalFactor, 2) }}%</th>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+
     {{-- Historial de pedidos ---------------------------------------------------}}
     <div class="card shadow-lg">
         {{-- Botón para archivar cuenta --}}
@@ -604,20 +670,22 @@
 
         <div class="card-body p-0"> {{-- p-0 = quitamos padding extra --}}
             {{-- contenedor scroll con altura máx (ajusta a tu gusto) --}}
-            <div class="table-responsive" style="max-height: 470px; overflow-y: auto;">
+            <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
                 @php
                     $totalSubtotal = $pedidos->sum('subtotal');
                     $totalMargen   = $pedidos->sum('margen');   // o lo que te pidan mostrar
+                    $totalFactor   = $pedidos->sum('factor');
                 @endphp
 
                 <table id="tblPedidos" class="table table-sm table-striped mb-0" style="border-style: none !important;">
                     <thead class="table-light position-sticky top-0" style="z-index:1">
                         <tr>
-                            <th data-type="date">Fecha <span class="sort-arrow"></span></th>
-                            <th data-type="text">ID&nbsp;pedido <span class="sort-arrow"></span></th>
-                            <th data-type="text">Razón social <span class="sort-arrow"></span></th>
-                            <th data-type="number" class="text-end">Subtotal <span class="sort-arrow"></span></th>
-                            <th data-type="number" class="text-end">Margen <span class="sort-arrow"></span></th>
+                            <th data-type="date" class="div-10ch">Fecha <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="div-10ch">ID&nbsp;pedido <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="div-30ch">Razón social <span class="sort-arrow"></span></th>
+                            <th data-type="number" class="div-15ch text-end">Subtotal <span class="sort-arrow"></span></th>
+                            <th data-type="number" class="div-15ch text-end">Margen <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="div-10ch text-end">Factor <span class="sort-arrow"></span></th>
                         </tr>
                     </thead>
 
@@ -629,6 +697,7 @@
                                 <td>{{ $p['razon'] }}</td>
                                 <td class="text-end">$ {{ number_format($p['subtotal'], 2) }}</td>
                                 <td class="text-end">{{ number_format($p['margen'], 2) }}</td>
+                                <td class="text-end">{{ number_format($p['factor'], 2) }}%</td>
                             </tr>
                         @empty
                             <tr>
@@ -641,6 +710,7 @@
                             <th colspan="3" class="text-end">Totales</th>
                             <th class="text-end">$ {{ number_format($totalSubtotal, 2) }}</th>
                             <th class="text-end">{{ number_format($totalMargen, 2) }}</th>
+                            <th class="text-end">{{ number_format($totalFactor, 2) }}%</th>
                         </tr>
                     </tfoot>
 

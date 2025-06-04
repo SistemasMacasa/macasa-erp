@@ -5,8 +5,8 @@
 <style type="text/css">
 	.st0{display:none;}
 	.st1{display:inline;}
-	.st2{fill:#EDEDED;}
-	.st3{display:inline;fill:#EDEDED;}
+	.st2{fill:currentColor; opacity:0.18;}
+	.st3{display:inline;fill:currentColor;}
 	.st4{font-family:'HelveticaRounded-Bold';}
 	.st5{font-size:97.9003px;}
 </style>
