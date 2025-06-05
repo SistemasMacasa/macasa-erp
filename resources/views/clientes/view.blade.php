@@ -398,17 +398,11 @@
                                 </select>
                             </div>
 
-                            <!-- Género -->
                             <div class="col div-30ch">
-                                <label class="form-label">Género <span class="text-danger" id="asterisco">*</span></label>
-                                @php
-                                    $genero = old('genero', $cliente->contacto_predet?->genero);
-                                @endphp
-                                <select name="genero" class="form-select" required>
+                                <label class="form-label">Sector <span class="text-danger">*</span></label>
+                                <select name="sector" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
-                                    <option value="masculino"       @selected($genero == 'masculino')>Masculino</option>
-                                    <option value="femenino"        @selected($genero == 'femenino')>Femenino</option>
-                                    <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado</option>
+                                    <option value="privada"   @selected(old('sector', $cliente->sector)=='persona')>Persona</option>
                                 </select>
                             </div>
 
@@ -496,6 +490,20 @@
                                         maxlength="40" 
                                         value="{{ old( 'email', $cliente->contacto_predet?->email) }}" 
                                         required>
+                            </div>
+
+                            <!-- Género -->
+                            <div class="col div-30ch">
+                                <label class="form-label">Género <span class="text-danger" id="asterisco">*</span></label>
+                                @php
+                                    $genero = old('genero', $cliente->contacto_predet?->genero);
+                                @endphp
+                                <select name="genero" class="form-select" required>
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="masculino"       @selected($genero == 'masculino')>Masculino</option>
+                                    <option value="femenino"        @selected($genero == 'femenino')>Femenino</option>
+                                    <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado</option>
+                                </select>
                             </div>
 
                             
@@ -608,11 +616,13 @@
     <div class="card shadow-lg">
         {{-- Botón para archivar cuenta --}}
         {{-- Cabecera de la tarjeta --}}
-        <div class="card-header fw-bold" style="background-color: rgba(81, 86, 190, 0.1);">Historial de cotizaciones</div>
+        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+            <h5 class="mb-0 flex-grow-1">Historial de cotizaciones</h5>
+        </div>
 
         <div class="card-body p-0"> {{-- p-0 = quitamos padding extra --}}
             {{-- contenedor scroll con altura máx (ajusta a tu gusto) --}}
-            <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
+            <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0px 17px; background: var(--tabla-header-bg);">
                 @php
                     $totalSubtotal = $cotizaciones->sum('subtotal');
                     $totalMargen   = $cotizaciones->sum('margen');   // o lo que te pidan mostrar
@@ -666,11 +676,13 @@
     <div class="card shadow-lg">
         {{-- Botón para archivar cuenta --}}
         {{-- Cabecera de la tarjeta --}}
-        <div class="card-header fw-bold" style="background-color: rgba(81, 86, 190, 0.1);">Historial de pedidos</div>
+        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+            <h5 class="mb-0 flex-grow-1">Historial de pedidos</h5>
+        </div>
 
         <div class="card-body p-0"> {{-- p-0 = quitamos padding extra --}}
             {{-- contenedor scroll con altura máx (ajusta a tu gusto) --}}
-            <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
+            <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0px 17px; background: var(--tabla-header-bg);">
                 @php
                     $totalSubtotal = $pedidos->sum('subtotal');
                     $totalMargen   = $pedidos->sum('margen');   // o lo que te pidan mostrar
@@ -680,7 +692,7 @@
                 <table id="tblPedidos" class="table table-sm table-striped mb-0" style="border-style: none !important;">
                     <thead class="table-light position-sticky top-0" style="z-index:1">
                         <tr>
-                            <th data-type="date" class="div-10ch">Fecha <span class="sort-arrow"></span></th>
+                            <th data-type="date" class="div-10ch" >Fecha <span class="sort-arrow"></span></th>
                             <th data-type="text" class="div-10ch">ID&nbsp;pedido <span class="sort-arrow"></span></th>
                             <th data-type="text" class="div-30ch">Razón social <span class="sort-arrow"></span></th>
                             <th data-type="number" class="div-15ch text-end">Subtotal <span class="sort-arrow"></span></th>

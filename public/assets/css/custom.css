@@ -137,8 +137,8 @@ body[data-sidebar="light"] label{
 /* ——— base ——— */
 .icon {
     display:inline-block;
-    width:16px;          /* ajusta al tamaño de tus feather */
-    height:16px;
+    width:20px;          /* ajusta al tamaño de tus feather */
+    height:20px;
     background-color:currentColor;  /* color = texto */
     -webkit-mask-size:contain;
             mask-size:contain;
@@ -165,10 +165,15 @@ body[data-sidebar="light"] label{
     -webkit-mask-image:url('/assets/icons/dardos.svg');
             mask-image:url('/assets/icons/dardos.svg');
 }
-.icon-ventas {
+.icon-cotizaciones {
     margin-right: 10px;
     -webkit-mask-image:url('/assets/icons/grafica.svg');
             mask-image:url('/assets/icons/grafica.svg');
+}
+.icon-ventas{
+    margin-right: 10px;
+    -webkit-mask-image:url('/assets/icons/graficas.svg');
+            mask-image:url('/assets/icons/graficas.svg');
 }
 /*  Añade más:
 .icon-carrito { mask-image:url('/assets/icons/carrito.svg'); }
@@ -183,7 +188,14 @@ body[data-sidebar="light"] label{
     color:var(--verde-macasa);    /* tu verde corporativo */
 }
 
+.text-primary{
+  color: var(--macasa-azul) !important;
+}
 
+.text-primary-emphasis {
+    color: var(--macasa-azul) !important;
+
+}
 
 .btn-primary{
     background-color: var(--macasa-azul);
@@ -554,15 +566,10 @@ body[data-sidebar="dark"] .section-card              {background:#242933;border:
 body[data-sidebar="dark"] .section-card-header       {background: var(--tabla-header-bg);color:#e8eaf3;border-bottom:1px solid #3a4150;}
 body[data-sidebar="dark"] .card-body                 {background:#242933;}  /* evita “cartas blancas” */
 body[data-sidebar="dark"] .section-card .form-control,
-body[data-sidebar="dark"] .section-card .form-select {
-    background:#2f343e;
-    color:#e8eaf3;
-    border-color:#4a5265;
-}
-body[data-sidebar="dark"] .section-card .form-control::placeholder {color:#8d96ad;}
+
 
 body[data-sidebar="dark"] .section-card .form-label,
-body[data-sidebar="dark"] .section-card label                    {color:#c6cad5;}
+body[data-sidebar="dark"] .section-card label                    {color:white;}
 
 /* ─────────────────────────────────────────────────────────────────────────────────
    Hover slide-in para las opciones del sidebar
@@ -576,7 +583,10 @@ body[data-sidebar="dark"] .section-card label                    {color:#c6cad5;
     align-items: center;
     transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
-
+#sidebar-menu .metismenu > li > a > svg {
+  width: 20px;
+  height: 20px;
+}
 /* efecto cuando el cursor pasa encima  */
 #sidebar-menu .metismenu > li > a:hover,
 #sidebar-menu .metismenu > li.mm-active > a {
@@ -591,7 +601,9 @@ body[data-sidebar="dark"] .section-card label                    {color:#c6cad5;
 #sidebar-menu .metismenu ul.sub-menu li.mm-active > a {
     transform: translateX(4px);
 }
-
+#sidebar-menu .has-arrow:after{
+  font-size: 0.95rem;
+}
 body[data-sidebar-size="sm"]
   .vertical-menu ul.metismenu > li:hover > a {
   transform: none !important;
@@ -1140,13 +1152,31 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   border-radius: 0.25rem; /* bordes redondeados */
 
 }
-
+.active>.page-link {
+  background-color: var(--macasa-azul);
+  border-color: var(--macasa-azul);
+}
+.active>.page-link:hover {
+  opacity: 0.9;
+}
+.table-responsive{
+  border-radius: 0.25rem;
+}
 /* Estilo de encabezados de tabla del sistema */
 .table thead {
     background-color: var(--tabla-header-bg);
     color: var(--tabla-header-text);
     font-size: var(--bs-body-font-size);
     font-weight: 600;
+}
+
+#tblPedidos thead tr th,
+#tblCotizaciones thead tr th {
+  background: var(--tabla-header-bg);
+}
+
+tfoot>tr>th {
+  background: var(--tabla-header-bg);
 }
 
 /* Hover en cualquier thead (usa los vars que Bootstrap ya define) */
@@ -1173,7 +1203,7 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(1) {
   z-index: 3;
   background: var(--bs-table-bg);
   
-  width: 10ch;
+  width: 11ch;
 }
 
 #tabla-clientes th:nth-child(1),

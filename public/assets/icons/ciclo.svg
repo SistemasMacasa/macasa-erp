@@ -4,7 +4,7 @@
 	.st1{display:inline;}
 	.st2{fill:currentColor; opacity:0.18;}
 	.st3{font-family:'HelveticaRounded-Bold';}
-	.st4{font-size:97.9003px;}
+	.st4{font-size:105px; font-weight: bold; fill: #000000;}
 	.st5{display:inline;fill:#EDEDED;}
 </style>
 <g class="st0">

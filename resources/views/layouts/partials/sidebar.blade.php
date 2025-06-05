@@ -3,18 +3,18 @@
         <div id="sidebar-menu">
             <ul class="metismenu list-unstyled" id="side-menu">
 
-                <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem; max-height: 2.5rem;">Menú</li>
+                <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem; padding: 10px 25px !important;">Menú</li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="{{ route('inicio') }}">
                         <i data-feather="home"></i>
                         <span class="menu-item">Inicio</span>
                     </a>
                 </li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <span class="icon icon-crm"></span>
+                        <span class="icon icon-crm" ></span>
                         <span class="menu-item">CRM</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -30,9 +30,9 @@
                     </ul>
                 </li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <span class="icon icon-ventas"></span>
+                        <span class="icon icon-cotizaciones"></span>
                         <span class="menu-item">Monitor de Cotizaciones</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -40,7 +40,7 @@
                     </ul>
                 </li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <span class="icon icon-ventas"></span>
                         <span class="menu-item">Monitor de Ventas</span>
@@ -52,28 +52,28 @@
                     </ul>
                 </li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="{{ route('inicio') }}">
                         <span class="icon icon-cobranza"></span>
                         <span class="menu-item">Monitor de Cobranza</span>
                     </a>
                 </li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="{{ route('inicio') }}">
                         <i data-feather="globe"></i>
                         <span class="menu-item">E-Commerce</span>
                     </a>
                 </li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="{{ route('inicio') }}">
                         <span class="icon icon-marketing"></span>
                         <span class="menu-item">Marketing</span>
                     </a>
                 </li>
 
-                <li style="max-height: 2.5rem;">
+                <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="settings"></i>
                         <span class="menu-item">Administración</span>

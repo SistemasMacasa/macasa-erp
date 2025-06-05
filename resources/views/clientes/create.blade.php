@@ -49,7 +49,7 @@
                             <h5 class="mb-0">Cuenta Empresarial</h5>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
                             {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
                             <div class="row gx-3 gy-2 mb-4">
                                 <div class="col div-60ch">
@@ -217,7 +217,7 @@
                          <div class="card-header section-card-header text-center">
                             <h5 class="mb-0">Cuenta Personal</h5>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
                             <div class="row g-3">
                                 <!-- Nombre(s) del contacto = Nombre de la Cuenta -->
                                 <div class="col div-60ch">
