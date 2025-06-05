@@ -870,6 +870,7 @@
 
 
     <script>
+        //Eric: Comentario, considerar poner un script para la tabla de cotizaciones.
         // Script para ordenar tabla de pedidos
         document.addEventListener('DOMContentLoaded', () => {
 

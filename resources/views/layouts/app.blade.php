@@ -175,6 +175,7 @@
 
     <script>
         // Buscador de clientes
+        //Eric: creo que este script no funciona.
         document.addEventListener('DOMContentLoaded', function () {
             const input = document.getElementById('buscador-clientes');
             const filas = document.querySelectorAll('table tbody tr');
@@ -191,6 +192,7 @@
     </script>
 
     <script>
+        //Eric: creo que este script no funciona. es para clientes/index
         // Buscador de usuarios
         document.addEventListener('DOMContentLoaded', function () {
             const input = document.getElementById('buscador-usuarios');
