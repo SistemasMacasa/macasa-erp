@@ -9,7 +9,7 @@
 
 :root {
   --macasa-azul: #425cc7;
-  --macasa-verde: #00ce7c;
+  --mc-verde: #00ce7c;
   --sidebar-speed: 0.35s;      /* duración del ancho */
   --item-max-width: 160px;     /* ancho aproximado de tus etiquetas */
   --tabla-header-bg: #e9eef6;
@@ -203,7 +203,7 @@ body[data-sidebar="light"] label{
 }
 
 .btn-success{
-    background-color: var(--macasa-verde);
+    background-color: var(--mc-verde);
     border-color: var(--macasa-verde);
 }
 
