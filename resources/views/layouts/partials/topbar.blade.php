@@ -19,7 +19,7 @@
 
 {{-- 🔍 Buscador alineado y estilizado --}}
 <div class="flex-grow-1 d-flex align-items-center" style="padding-left: 1.4rem;">
-    <form class="search-wrap div-60ch position-relative">
+    <form class="search-wrap campo-dato-principal position-relative">
         <input type="text" class="form-control search-input" placeholder="Buscar…" autocomplete="off">
         <i class="mdi mdi-magnify search-icon"></i>
     </form>

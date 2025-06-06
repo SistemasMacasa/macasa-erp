@@ -17,15 +17,15 @@
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
-        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-primary btn-30ch">
+        <a href="{{ route('inicio') }}" class="btn btn-primary btn-principal">
             <i class="fa fa-phone me-1"></i> Mis Recall's
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-primary btn-30ch">
+        <a href="{{ route('inicio') }}" class="btn btn-primary btn-principal">
             <i class="fa fa-check me-1"></i> Enviar carta de presentación
         </a>
     </div>
@@ -33,7 +33,7 @@
     {{-- 🔎 Buscador --}}
     <form method="GET" action="{{ route('clientes.index') }}">
         <div class="card mb-3">
-            <div class="card-header section-card-header text-center">
+            <div class="card-header text-center">
                             <h5 class="mb-0">Filtros</h5>
                         </div>
 

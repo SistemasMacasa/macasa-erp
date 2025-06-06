@@ -23,13 +23,13 @@
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
-        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
 
         <button type="submit"
-                class="btn btn-secondary btn-30ch btnGuardarCuenta"
+                class="btn btn-secondary btn-principal btnGuardarCuenta"
                 disabled
                 form="formCuenta"
                 style="opacity: 1;">
@@ -37,15 +37,15 @@
         </button>
 
 
-        <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-30ch">
+        <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal">
             <i class="fa fa-list me-1"></i> Mis Cuentas
         </a>
 
-        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary btn-30ch">
+        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary btn-principal">
             <i class="fa fa-file-invoice-dollar me-1"></i> Levantar Cotización
         </a>
 
-        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary btn-30ch">
+        <a href="{{ route('inicio', ['cliente' => $cliente->id]) }}" class="btn btn-primary btn-principal">
             <i class="fa fa-address-book me-1"></i> Libreta de Contactos
         </a>
     </div>
@@ -61,7 +61,7 @@
 
                 <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
                 <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
-                        <div class="card-header section-card-header section-card-header--view d-flex justify-content-between align-items-center">
+                        <div class="card-header card-header--row">
                             <h5 class="mb-0">Cuenta Empresarial</h5>
                             @if($usuario->es_admin)
                                 <button type="button" id="btnEditar"
@@ -77,14 +77,14 @@
                     <div class="card-body">
                         {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
                         <div class="row gx-3 gy-2 mb-2">
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Estatus</label>
                                 <select name="estatus" class="form-select" disabled>
                                     <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
                                     <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
                                 </select>
                             </div>
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Ciclo de Venta</label>
                                 <select name="ciclo_venta" class="form-select" disabled>
                                     <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
@@ -92,7 +92,7 @@
                                 </select>
                             </div>
 
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
                                 <select name="id_vendedor" class="form-select">
                                     <option value=""
@@ -109,7 +109,7 @@
                                 </select>
                             </div>
 
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Sector <span class="text-danger">*</span></label>
                                 <select name="sector" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -118,7 +118,7 @@
                                 </select>
                             </div>
 
-                            <div class="div-30ch">
+                            <div class="campo-dato-secundario">
                                 <label class="form-label">Segmento <span class="text-danger">*</span></label>
                                 <select name="segmento" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -137,7 +137,7 @@
                                 </select>
                             </div>
 
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Origen de la Cuenta</label>
                                 <select name="tipo" class="form-select" disabled>
                                     <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
@@ -151,7 +151,7 @@
 
 
                         <div class="row gx-3 gy-2 mb-3">
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                 <input  id="nombre" name="nombre" type="text"
                                         class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
@@ -169,7 +169,7 @@
                             {{-- Ojo: El operador ?-> es para navegación segura --}}
 
                             {{-- Nombre(s) de Contacto --}}
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
                                 <input  name="contacto[0][nombre]"
                                         value="{{ old('contacto.0.nombre', $cliente->contacto_predet?->nombre) }}"
@@ -181,7 +181,7 @@
 
                             </div>
                             {{-- Primer Apellido --}}
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
                                 <input  name="contacto[0][apellido_p]"
                                         value="{{ old('contacto.0.apellido_p', $cliente->contacto_predet?->apellido_p) }}"
@@ -191,7 +191,7 @@
                                 @error('contacto.0.apellido_p') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             {{-- Segundo Apellido --}}
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
                                 <input  name="contacto[0][apellido_m]" 
                                         value="{{ old('contacto.0.apellido_m', $cliente->contacto_predet?->apellido_m) }}" 
@@ -200,7 +200,7 @@
                                         required>
                             </div>
                             {{-- Email --}}
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                 <input name="contacto[0][email]" 
                                         value="{{ old('contacto.0.email', $cliente->contacto_predet?->email) }}" 
@@ -211,7 +211,7 @@
                                 @error('contacto.0.email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             {{-- Puesto --}}
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Puesto <span class="text-danger">*</span></label>
                                 <input  name="contacto[0][puesto]" 
                                         value="{{ old('contacto.0.puesto', $cliente->contacto_predet?->puesto) }}" 
@@ -220,7 +220,7 @@
                                         required>
                                 @error('contacto.0.puesto') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Género <span class="text-danger">*</span></label>
                                 @php
                                     $genero = old('contacto.0.genero', $cliente->contacto_predet?->genero);
@@ -246,7 +246,7 @@
                                 <div class="row">
 
                                     {{-- Teléfonos fijos --}}
-                                    <div class="col div-35ch" id="telefonos-col--view" style="padding-right: 0px !important;">
+                                    <div class="col campo-dato-telefono" id="telefonos-col--view" style="padding-right: 0px !important;">
 
                                         {{-- Teléfono fila 1 --}}
                                           <div class="mb-2 telefono-item">
@@ -296,9 +296,9 @@
                                     </div>
 
                                     {{-- Celulares --}}
-                                    <div class="col div-30ch" id="celulares-col--view" style="padding-right: 0px !important;" >
+                                    <div class="col campo-dato-secundario" id="celulares-col--view" style="padding-right: 0px !important;" >
                                         {{-- Celular fila 1 --}}
-                                        <div class="mb-2 celular-item div-30ch">
+                                        <div class="mb-2 celular-item campo-dato-secundario">
                                             <label>Teléfono Celular 1</label>
                                             <div class="input-group input-group-separated">
                                                 <input  name="contacto[0][celular1]" 
@@ -315,7 +315,7 @@
                                             @continue(!$hasCel($i))
                                             <div class="mb-2 celular-item">
                                             <label>Teléfono Celular {{ $i }}</label>
-                                            <div class="input-group input-group-separated div-30ch">
+                                            <div class="input-group input-group-separated campo-dato-secundario">
                                                 <input type="text" name="contacto[0][celular{{ $i }}]"
                                                         value="{{ old('contacto.0.celular'.$i, $cliente->contacto_predet?->{'celular'.$i}) }}"
                                                         class="form-control phone-field"
@@ -356,7 +356,7 @@
 
                 <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
                 <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
-                        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+                        <div class="card-header card-header--row">
                             <h5 class="mb-0 flex-grow-1">Cuenta&nbsp;Personal</h5>
                             
                             @if ($usuario->es_admin)
@@ -367,21 +367,21 @@
                         </div>
                     <div class="card-body">
                         <div class="row gx-3 gy-2 mb-2">
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Estatus</label>
                                 <select name="estatus" class="form-select" disabled>
                                     <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
                                     <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
                                 </select>
                             </div>
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Ciclo de Venta</label>
                                 <select name="ciclo_venta" class="form-select" disabled>
                                     <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
                                     <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
                                 </select>
                             </div>
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Asignado a: <span class="text-danger" id="asterisco">*</span></label>
                                 <select name="id_vendedor" class="form-select">
                                     <option value=""
@@ -398,7 +398,7 @@
                                 </select>
                             </div>
 
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Sector <span class="text-danger">*</span></label>
                                 <select name="sector" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -406,7 +406,7 @@
                                 </select>
                             </div>
 
-                            <div class="div-30ch">
+                            <div class="campo-dato-secundario">
                                 <label class="form-label">Segmento <span class="text-danger" id="asterisco">*</span></label>
                                 <select name="segmento" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
@@ -425,7 +425,7 @@
                                 </select>
                             </div>
 
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Origen de la Cuenta</label>
                                 <select name="tipo" class="form-select" disabled>
                                     <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
@@ -437,7 +437,7 @@
                         </div>
                         <hr>
                         <div class="row gx-3 gy-2 mb-2">
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label for="nombre" class="form-label">
                                     Nombre(s) <span class="text-danger" id="asterisco">*</span>
                                 </label>
@@ -452,7 +452,7 @@
                                 @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label for="apellido_p" class="form-label">
                                     Primer Apellido <span class="text-danger" id="asterisco">*</span>
                                 </label>
@@ -467,7 +467,7 @@
                                 @error('apellido_p')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label for="apellido_m" class="form-label">
                                     Segundo Apellido <span class="text-danger">*</span>
                                 </label>
@@ -482,7 +482,7 @@
                             </div>
 
                             <!-- Correo Electrónico -->
-                            <div class="col div-60ch">
+                            <div class="col campo-dato-principal">
                                 <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                 <input  name="email"
                                         type="email" 
@@ -493,7 +493,7 @@
                             </div>
 
                             <!-- Género -->
-                            <div class="col div-30ch">
+                            <div class="col campo-dato-secundario">
                                 <label class="form-label">Género <span class="text-danger" id="asterisco">*</span></label>
                                 @php
                                     $genero = old('genero', $cliente->contacto_predet?->genero);
@@ -521,7 +521,7 @@
                                 <div class="row">
 
                                     {{-- Teléfonos fijos --}}
-                                    <div class="col div-35ch" id="telefonos-col--view" style="padding-right: 0px !important;">
+                                    <div class="col campo-dato-telefono" id="telefonos-col--view" style="padding-right: 0px !important;">
 
                                         {{-- Teléfono fila 1 --}}
                                           <div class="mb-2 telefono-item">
@@ -568,9 +568,9 @@
                                     </div>
 
                                     {{-- Celulares --}}
-                                    <div class="col div-30ch" id="celulares-col--view" style="padding-right: 0px !important;" >
+                                    <div class="col campo-dato-secundario" id="celulares-col--view" style="padding-right: 0px !important;" >
                                         {{-- Celular fila 1 --}}
-                                        <div class="mb-2 celular-item div-30ch">
+                                        <div class="mb-2 celular-item campo-dato-secundario">
                                             <label>Teléfono Celular 1</label>
                                             <div class="input-group input-group-separated">
                                                 <input  type="text" 
@@ -586,7 +586,7 @@
                                             @continue(!$hasCel($i))
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular {{ $i }}</label>
-                                                <div class="input-group input-group-separated div-30ch">
+                                                <div class="input-group input-group-separated campo-dato-secundario">
                                                     <input type="text" name="contacto[0][celular{{ $i }}]"
                                                             value="{{ old("contacto.0.celular".$i, $cliente->contacto_predet?->{'celular'.$i}) }}"
                                                             class="form-control phone-field"
@@ -616,7 +616,7 @@
     <div class="card shadow-lg">
         {{-- Botón para archivar cuenta --}}
         {{-- Cabecera de la tarjeta --}}
-        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+        <div class="card-header card-header--view">
             <h5 class="mb-0 flex-grow-1">Historial de cotizaciones</h5>
         </div>
 
@@ -634,7 +634,7 @@
                         <tr>
                             <th data-type="date" class="div-10ch">Fecha <span class="sort-arrow"></span></th>
                             <th data-type="text" class="div-10ch">ID&nbsp;cotización <span class="sort-arrow"></span></th>
-                            <th data-type="text" class="div-30ch">Razón social <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="campo-dato-secundario">Razón social <span class="sort-arrow"></span></th>
                             <th data-type="number" class="div-15ch text-end">Subtotal <span class="sort-arrow"></span></th>
                             <th data-type="number" class="div-15ch text-end">Margen <span class="sort-arrow"></span></th>
                             <th data-type="text" class="div-10ch text-end">Factor <span class="sort-arrow"></span></th>
@@ -676,7 +676,7 @@
     <div class="card shadow-lg">
         {{-- Botón para archivar cuenta --}}
         {{-- Cabecera de la tarjeta --}}
-        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+        <div class="card-header card-header--view">
             <h5 class="mb-0 flex-grow-1">Historial de pedidos</h5>
         </div>
 
@@ -694,7 +694,7 @@
                         <tr>
                             <th data-type="date" class="div-10ch" >Fecha <span class="sort-arrow"></span></th>
                             <th data-type="text" class="div-10ch">ID&nbsp;pedido <span class="sort-arrow"></span></th>
-                            <th data-type="text" class="div-30ch">Razón social <span class="sort-arrow"></span></th>
+                            <th data-type="text" class="campo-dato-secundario">Razón social <span class="sort-arrow"></span></th>
                             <th data-type="number" class="div-15ch text-end">Subtotal <span class="sort-arrow"></span></th>
                             <th data-type="number" class="div-15ch text-end">Margen <span class="sort-arrow"></span></th>
                             <th data-type="text" class="div-10ch text-end">Factor <span class="sort-arrow"></span></th>

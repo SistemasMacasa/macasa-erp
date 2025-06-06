@@ -1,20 +1,22 @@
 /* LOGO DE LOGIN   */
 .auth-logo img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-    object-fit: contain;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
 }
 
 :root {
-  --macasa-azul: #425cc7;
+  --mc-azul: #425cc7;
   --mc-verde: #00ce7c;
-  --sidebar-speed: 0.35s;      /* duración del ancho */
-  --item-max-width: 160px;     /* ancho aproximado de tus etiquetas */
+  --sidebar-speed: 0.35s;
+  /* duración del ancho */
+  --item-max-width: 160px;
+  /* ancho aproximado de tus etiquetas */
   --tabla-header-bg: #e9eef6;
   --tabla-header-text: #000000;
-  --bs-btn-bg: var(--macasa-azul);
+  --bs-btn-bg: var(--mc-azul);
   --tabla-card-body-bg: #363a38;
   --sidebar-bg: #FBFAFF;
 }
@@ -26,337 +28,370 @@ body[data-bs-theme="dark"] {
   --sidebar-bg: #2C302E;
 
 }
+
 /* Modo oscuro si estás usando data-bs-theme="dark" */
 [data-bs-theme="dark"] {
-  --bs-card-color: #f1f1f1; /* texto claro */
+  --bs-card-color: #f1f1f1;
+  /* texto claro */
 }
 
 /*Botón hamburguesa, icono de menú lateral*/
 /* Por defecto (expandido) muestro el logo grande y oculto el pequeño */
 .logo-lg {
-    display: inline-block;
-}
-.logo-sm {
-    display: none;
+  display: inline-block;
 }
 
-.form-control:disabled{
+.logo-sm {
+  display: none;
+}
+
+.form-control:disabled {
   background-color: #e1e1e1;
 }
-.form-select:disabled{
+
+.form-select:disabled {
   background-color: #e1e1e1;
 }
 
 /* Clases globales para las medidas de botones, deben de ser en multiplos de 5ch. */
 
-.btn-5ch {
-    min-width: 5ch; /* 5 caracteres */
-}
-.btn-10ch {
-    min-width: 10ch; /* 10 caracteres */
-}
 .btn-15ch {
-    min-width: 15ch; /* 15 caracteres */
-}
-.btn-20ch {
-    min-width: 20ch; /* 20 caracteres */
-}
-.btn-25ch {
-    min-width: 25ch; /* 25 caracteres */
-}
-.btn-30ch {
-    min-width: 30ch; /* 30 caracteres */
-}
-.div-5ch {
-    min-width: 5ch; /* 30 caracteres */
-    max-width: 5ch; /* 30 caracteres */
-}
-.div-10ch {
-    min-width: 10ch; /* 30 caracteres */
-    max-width: 10ch; /* 30 caracteres */
-}
-.div-15ch {
-    min-width: 15ch; /* 30 caracteres */
-    max-width: 15ch; /* 30 caracteres */
-}
-.div-20ch {
-    min-width: 20ch; /* 30 caracteres */
-    max-width: 20ch; /* 30 caracteres */
-}
-.div-25ch {
-    min-width: 25ch; /* 30 caracteres */
-    max-width: 25ch; /* 30 caracteres */
-}
-.div-30ch {
-    min-width: 30ch; /* 30 caracteres */
-    max-width: 30ch; /* 30 caracteres */
-}
-.div-35ch {
-    min-width: 35ch; /* 30 caracteres */
-    max-width: 35ch; /* 30 caracteres */
-}
-.div-40ch {
-    min-width: 40ch; /* 30 caracteres */
-    max-width: 40ch; /* 30 caracteres */
-}
-.div-45ch {
-    min-width: 45ch; /* 30 caracteres */
-    max-width: 45ch; /* 30 caracteres */
-}
-.div-50ch {
-    min-width: 50ch; /* 30 caracteres */
-    max-width: 50ch; /* 30 caracteres */
-}
-.div-55ch {
-    min-width: 55ch; /* 30 caracteres */
-    max-width: 55ch; /* 30 caracteres */
-}
-.div-60ch {
-    min-width: 60ch; /* 30 caracteres */
-    max-width: 60ch; /* 30 caracteres */
-}
-/* Expandido (lg) */
-body[data-sidebar-size="lg"] .logo-lg {
-    display: inline-block;
-}
-body[data-sidebar-size="lg"] .logo-sm {
-    display: none;
-}
-body[data-sidebar-size="lg"] .logo-lg img {
-    width: 170px; /* Ajusta como quieras */
-    height: auto;
+  min-width: 15ch;
+  /* 15 caracteres */
 }
 
-body[data-sidebar="light"] h5{
+.btn-principal {
+  min-width: 30ch;
+  /* 30 caracteres */
+}
+
+.div-10ch {
+  min-width: 10ch;
+  /* 30 caracteres */
+  max-width: 10ch;
+  /* 30 caracteres */
+}
+
+.div-15ch {
+  min-width: 15ch;
+  /* 30 caracteres */
+  max-width: 15ch;
+  /* 30 caracteres */
+}
+
+.campo-dato-secundario {
+  min-width: 30ch;
+  /* 30 caracteres */
+  max-width: 30ch;
+  /* 30 caracteres */
+}
+
+.campo-dato-telefono {
+  min-width: 35ch;
+  /* 30 caracteres */
+  max-width: 35ch;
+  /* 30 caracteres */
+}
+
+.campo-dato-principal {
+  min-width: 60ch;
+  /* 60 caracteres */
+  max-width: 60ch;
+  /* 60 caracteres */
+}
+
+/* Expandido (lg) */
+body[data-sidebar-size="lg"] .logo-lg {
+  display: inline-block;
+}
+
+body[data-sidebar-size="lg"] .logo-sm {
+  display: none;
+}
+
+body[data-sidebar-size="lg"] .logo-lg img {
+  width: 170px;
+  /* Ajusta como quieras */
+  height: auto;
+}
+
+body[data-sidebar="light"] h5 {
   color: var(--tabla-header-text)
 }
-body[data-sidebar="light"] label{
+
+body[data-sidebar="light"] label {
   color: var(--tabla-header-text);
 }
 
 /* ——— base ——— */
 .icon {
-    display:inline-block;
-    width:20px;          /* ajusta al tamaño de tus feather */
-    height:20px;
-    background-color:currentColor;  /* color = texto */
-    -webkit-mask-size:contain;
-            mask-size:contain;
-    -webkit-mask-repeat:no-repeat;
-            mask-repeat:no-repeat;
-    -webkit-mask-position:center;
-            mask-position:center;
-    vertical-align:middle;          /* alinea con texto */
+  display: inline-block;
+  width: 20px;
+  /* ajusta al tamaño de tus feather */
+  height: 20px;
+  background-color: currentColor;
+  /* color = texto */
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  vertical-align: middle;
+  /* alinea con texto */
 }
 
 /* ——— icono específico ——— */
 .icon-cobranza {
   margin-right: 10px;
-    -webkit-mask-image:url('/assets/icons/bolsa-de-dinero.svg');
-            mask-image:url('/assets/icons/bolsa-de-dinero.svg');
+  -webkit-mask-image: url('/assets/icons/bolsa-de-dinero.svg');
+  mask-image: url('/assets/icons/bolsa-de-dinero.svg');
 }
+
 .icon-crm {
-    margin-right: 10px;
-    -webkit-mask-image:url('/assets/icons/ciclo.svg');
-            mask-image:url('/assets/icons/ciclo.svg');
+  margin-right: 10px;
+  -webkit-mask-image: url('/assets/icons/ciclo.svg');
+  mask-image: url('/assets/icons/ciclo.svg');
 }
+
 .icon-marketing {
-    margin-right: 10px;
-    -webkit-mask-image:url('/assets/icons/dardos.svg');
-            mask-image:url('/assets/icons/dardos.svg');
+  margin-right: 10px;
+  -webkit-mask-image: url('/assets/icons/dardos.svg');
+  mask-image: url('/assets/icons/dardos.svg');
 }
+
 .icon-cotizaciones {
-    margin-right: 10px;
-    -webkit-mask-image:url('/assets/icons/grafica.svg');
-            mask-image:url('/assets/icons/grafica.svg');
+  margin-right: 10px;
+  -webkit-mask-image: url('/assets/icons/grafica.svg');
+  mask-image: url('/assets/icons/grafica.svg');
 }
-.icon-ventas{
-    margin-right: 10px;
-    -webkit-mask-image:url('/assets/icons/graficas.svg');
-            mask-image:url('/assets/icons/graficas.svg');
+
+.icon-ventas {
+  margin-right: 10px;
+  -webkit-mask-image: url('/assets/icons/graficas.svg');
+  mask-image: url('/assets/icons/graficas.svg');
 }
+
 /*  Añade más:
 .icon-carrito { mask-image:url('/assets/icons/carrito.svg'); }
 .icon-globo   { mask-image:url('/assets/icons/globo.svg'); } */
 
-.sidebar-link{
-    display:flex;align-items:center;gap:.5rem;
-    color:#4a4a4a;                /* color normal */
-    transition:color .25s;
-}
-.sidebar-link:hover{
-    color:var(--verde-macasa);    /* tu verde corporativo */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: #4a4a4a;
+  /* color normal */
+  transition: color .25s;
 }
 
-.text-primary{
-  color: var(--macasa-azul) !important;
+.sidebar-link:hover {
+  color: var(--verde-macasa);
+  /* tu verde corporativo */
+}
+
+.text-primary {
+  color: var(--mc-azul) !important;
 }
 
 .text-primary-emphasis {
-    color: var(--macasa-azul) !important;
+  color: var(--mc-azul) !important;
 
 }
 
-.btn-primary{
-    background-color: var(--macasa-azul);
-    border-color: var(--macasa-azul);
+.btn-primary {
+  background-color: var(--mc-azul);
+  border-color: var(--mc-azul);
 }
 
-.btn-success{
-    background-color: var(--mc-verde);
-    border-color: var(--macasa-verde);
+.btn-success {
+  background-color: var(--mc-verde);
+  border-color: var(--mc-verde);
 }
 
 /* Botón verde MACASA */
 .btn-macasa-verde {
-    background-color: #00ce7c;
-    border-color: #00ce7c;
-    color: white;
+  background-color: #00ce7c;
+  border-color: #00ce7c;
+  color: white;
 }
+
 .btn-macasa-verde:hover,
 .btn-macasa-verde:focus {
-    background-color: #00b86f;
-    border-color: #00b86f;
-    color: white;
+  background-color: #00b86f;
+  border-color: #00b86f;
+  color: white;
 }
 
 /* Botón gris desactivado */
 .btn-disabled-gris {
-    background-color: #d6d6d6 !important;
-    border-color: #bfbfbf !important;
-    color: #7a7a7a !important;
-    cursor: not-allowed !important;
+  background-color: #d6d6d6 !important;
+  border-color: #bfbfbf !important;
+  color: #7a7a7a !important;
+  cursor: not-allowed !important;
 }
 
 
 /* Colapsado (sm o md) */
 body[data-sidebar-size="sm"] .logo-lg,
 body[data-sidebar-size="md"] .logo-lg {
-    display: none !important;
+  display: none !important;
 }
+
 body[data-sidebar-size="sm"] .logo-sm,
 body[data-sidebar-size="md"] .logo-sm {
-    display: inline-block !important;
+  display: inline-block !important;
 }
+
 body[data-sidebar-size="sm"] .logo-sm img,
 body[data-sidebar-size="md"] .logo-sm img {
-    width: 50px; /* Ajusta aquí tu tamaño colapsado */
-    height: auto;
+  width: 50px;
+  /* Ajusta aquí tu tamaño colapsado */
+  height: auto;
 }
 
 /* Vertical menu – sidebar */
 
 body[data-sidebar="dark"] .vertical-menu {
-    background-color: var(--sidebar-bg ); /* Fondo oscuro */
-    color: #e3e6ed; /* Texto claro */
+  background-color: var(--sidebar-bg);
+  /* Fondo oscuro */
+  color: #e3e6ed;
+  /* Texto claro */
 }
+
 /* =========================================================
    TOPBAR + SIDEBAR-TOGGLE  (ERP MACASA)
    ========================================================= */
 
 /* 1) Base del topbar ------------------------------------- */
-.topbar-custom{
-    height: 70px;                /* tu nueva altura */
-    background: #fff;
+.topbar-custom {
+  height: 70px;
+  /* tu nueva altura */
+  background: #fff;
 }
 
 /* 2) Cajón del logo -------------------------------------- */
-#logo-box{
-    position: relative;          /* ← necesario para posicionar el botón */
-    height: 100%;
-    background: var(--bs-sidebar-bg);
-    border-right: 1px solid #e9ecef;
-    transition: width .35s ease;
-    display: flex;
-    align-items: center;
-    padding-left: .75rem;        /* pequeño respiro antes del logo */
+#logo-box {
+  position: relative;
+  /* ← necesario para posicionar el botón */
+  height: 100%;
+  background: var(--bs-sidebar-bg);
+  border-right: 1px solid #e9ecef;
+  transition: width .35s ease;
+  display: flex;
+  align-items: center;
+  padding-left: .75rem;
+  /* pequeño respiro antes del logo */
 }
 
 /* Anchuras */
-body[data-sidebar-size="lg"] #logo-box{ width: 30ch; }
-body[data-sidebar-size="sm"] #logo-box{ width:  80px; } 
+body[data-sidebar-size="lg"] #logo-box {
+  width: 30ch;
+}
+
+body[data-sidebar-size="sm"] #logo-box {
+  width: 80px;
+}
 
 /* Mostrar/ocultar logo */
-body[data-sidebar-size="lg"] .logo-sm{ display:none; }
-body[data-sidebar-size="sm"] .logo-lg{ display:none; }
+body[data-sidebar-size="lg"] .logo-sm {
+  display: none;
+}
+
+body[data-sidebar-size="sm"] .logo-lg {
+  display: none;
+}
 
 /* 3) Botón minimalista ----------------------------------- */
-.sidebar-toggle{
-    width: 22px;
-    height: 22px;
-    border: 0;
-    background: transparent;
-    color: #6c757d;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background .15s, color .15s;
-    position: absolute;          /* ❶ lo fijamos */
-    top: 20%;
-    right: 6px;                  /* a 6 px del borde */
-    transform: translateY(-50%);
+.sidebar-toggle {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  background: transparent;
+  color: #6c757d;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background .15s, color .15s;
+  position: absolute;
+  /* ❶ lo fijamos */
+  top: 20%;
+  right: 6px;
+  /* a 6 px del borde */
+  transform: translateY(-50%);
 }
-.sidebar-toggle:hover{
-    background: rgba(0,0,0,.06);
-    color: #343a40;
+
+.sidebar-toggle:hover {
+  background: rgba(0, 0, 0, .06);
+  color: #343a40;
 }
-.sidebar-toggle i{
-    font-size: 18px;
-    transition: transform .25s ease calc(0.35s - .05s);
+
+.sidebar-toggle i {
+  font-size: 18px;
+  transition: transform .25s ease calc(0.35s - .05s);
 }
 
 /* Giro del icono */
-body[data-sidebar-size="lg"] .sidebar-toggle i{ transform: rotate(0deg);   }
-body[data-sidebar-size="sm"] .sidebar-toggle i{ transform: rotate(180deg); }
+body[data-sidebar-size="lg"] .sidebar-toggle i {
+  transform: rotate(0deg);
+}
+
+body[data-sidebar-size="sm"] .sidebar-toggle i {
+  transform: rotate(180deg);
+}
 
 /* 4) Padding del contenido ------------------------------- 
 body[data-sidebar-size="lg"] .main-content { padding-left: 250px; } */
-body[data-sidebar-size="sm"] .main-content { padding-left:  0px; }
+body[data-sidebar-size="sm"] .main-content {
+  padding-left: 0px;
+}
 
 /* =========================================================
    SEARCH BOX – TOPBAR
    ========================================================= */
 
 /* 1) Input con altura consistente (≈ 38 px) */
-body:not([data-sidebar="dark"]) .search-input              
-{
-    height: 38px;
-    padding-left: 2.25rem;              /* hueco para el icono */
-    border-radius: 6px;
-    border: 1px solid #dfe3e8;
-    background: #f8f9fa;
-    font-size: .925rem;
+body:not([data-sidebar="dark"]) .search-input {
+  height: 38px;
+  padding-left: 2.25rem;
+  /* hueco para el icono */
+  border-radius: 6px;
+  border: 1px solid #dfe3e8;
+  background: #f8f9fa;
+  font-size: .925rem;
 }
 
 /* 2) Icono magnifying glass */
-.search-icon{
-    position: absolute;
-    top: 50%;
-    left: .75rem;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #6c757d;
-    pointer-events: none;
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: .75rem;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #6c757d;
+  pointer-events: none;
 }
 
 /* 3) Interacción */
-.search-input:focus{
-    border-color: var(--azul-macasa);
-    background: #fff;
-    box-shadow: 0 0 0 2px rgba(108,92,231,.15);
-    outline: 0;
+.search-input:focus {
+  border-color: var(--azul-macasa);
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, .15);
+  outline: 0;
 }
 
 /* 4) Dark-mode ready (si lo usas) */
-[data-bs-theme="dark"] .search-input{
-    padding-left: 2.25rem;              /* hueco para el icono */
-    background: #2e3239;
-    border-color: #444950;
-    color: #fff;
+[data-bs-theme="dark"] .search-input {
+  padding-left: 2.25rem;
+  /* hueco para el icono */
+  background: #2e3239;
+  border-color: #444950;
+  color: #fff;
 }
-[data-bs-theme="dark"] .search-input:focus{
-    border-color: var(--azul-macasa);
-    background:#343a40;
-    box-shadow: 0 0 0 2px rgba(108,92,231,.25);
+
+[data-bs-theme="dark"] .search-input:focus {
+  border-color: var(--azul-macasa);
+  background: #343a40;
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, .25);
 }
 
 
@@ -372,12 +407,16 @@ body:not([data-sidebar="dark"]) .search-input
 .vertical-menu {
   width: 30ch;
   transition: width var(--sidebar-speed) ease;
-  overflow: hidden;            /* sólo en expandido */
+  overflow: hidden;
+  /* sólo en expandido */
 }
+
 body[data-sidebar-size="sm"] .vertical-menu {
   width: 70px;
-  overflow: visible;           /* deja volar los submenús */
+  overflow: visible;
+  /* deja volar los submenús */
 }
+
 .vertical-menu .simplebar-content-wrapper {
   width: 100% !important;
   transition: width var(--sidebar-speed) ease;
@@ -387,28 +426,31 @@ body[data-sidebar-size="sm"] .vertical-menu {
    ÍTEMS DE PRIMER NIVEL: FADE + SLIDE‐IN DE TEXTO
    ====================================================== */
 /* 1) Base: ocultos y «encolapsados» en colapsado */
-.vertical-menu ul.metismenu > li > a .menu-item {
-  display: inline-block;       /* para poder animar anchura */
+.vertical-menu ul.metismenu>li>a .menu-item {
+  display: inline-block;
+  /* para poder animar anchura */
   white-space: nowrap;
-  overflow: hidden;            /* recorta el texto */
-  max-width: 0;                /* empieza totalmente oculto */
-  opacity: 0;                  /* y transparente */
+  overflow: hidden;
+  /* recorta el texto */
+  max-width: 0;
+  /* empieza totalmente oculto */
+  opacity: 0;
+  /* y transparente */
   transition:
     max-width var(--sidebar-speed) ease,
-    opacity    var(--sidebar-speed) ease;
+    opacity var(--sidebar-speed) ease;
 }
 
 /* 2) Cuando EXPANDE: revelado gradual */
-body[data-sidebar-size="lg"]
-  .vertical-menu ul.metismenu > li > a .menu-item {
-  max-width: var(--item-max-width);  /* ajusta según longitud */
+body[data-sidebar-size="lg"] .vertical-menu ul.metismenu>li>a .menu-item {
+  max-width: var(--item-max-width);
+  /* ajusta según longitud */
   opacity: 1;
 }
 
 /* 3) Cuando COLAPSA:
      fuerza retorno inmediato (sin animación inversa) */
-body[data-sidebar-size="sm"]
-  .vertical-menu ul.metismenu > li > a .menu-item {
+body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li>a .menu-item {
   max-width: 0 !important;
   opacity: 0 !important;
   transition: none;
@@ -417,8 +459,7 @@ body[data-sidebar-size="sm"]
 /* ─────────────────────────────────────────────────────────
    Collapsado: escondemos sólo los NO hover
 ─────────────────────────────────────────────────────────*/
-body[data-sidebar-size="sm"]
-  .vertical-menu ul.metismenu > li:not(:hover) > a .menu-item {
+body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:not(:hover)>a .menu-item {
   max-width: 0 !important;
   opacity: 0 !important;
   transition: none !important;
@@ -427,28 +468,28 @@ body[data-sidebar-size="sm"]
 /* ─────────────────────────────────────────────────────────
    Collapsado + hover: mostramos sólo el ítem activo
 ─────────────────────────────────────────────────────────*/
-body[data-sidebar-size="sm"]
-  .vertical-menu ul.metismenu > li:hover > a .menu-item {
-  max-width: var(--item-max-width) !important;    /* igual que expandido */
+body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:hover>a .menu-item {
+  max-width: var(--item-max-width) !important;
+  /* igual que expandido */
   opacity: 1 !important;
   transition:
     max-width var(--sidebar-speed) ease,
-    opacity    var(--sidebar-speed) ease;
+    opacity var(--sidebar-speed) ease;
 }
 
 
 /* ======================================================
    SUB-MENÚ flotante (por si lo tienes)
    ====================================================== */
-body[data-sidebar-size="sm"]
-  .vertical-menu ul.metismenu > li.has-arrow:hover > ul.sub-menu {
+body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li.has-arrow:hover>ul.sub-menu {
   display: block !important;
   position: absolute;
   top: 0;
   left: 70px;
-  min-width: 200px;  /* o el ancho que uses */
+  min-width: 200px;
+  /* o el ancho que uses */
   background: var(--bs-body-bg);
-  box-shadow: 0 .25rem .5rem rgba(0,0,0,.15);
+  box-shadow: 0 .25rem .5rem rgba(0, 0, 0, .15);
   border-radius: .25rem;
   z-index: 1050;
   padding: .5rem 0;
@@ -463,42 +504,47 @@ body[data-sidebar-size="sm"]
    ========================================================= */
 
 .main-content,
-.topbar-custom{
-    transition:
-        margin-left  0.35s ease,
-        padding-left 0.35s ease;
+.topbar-custom {
+  transition:
+    margin-left 0.35s ease,
+    padding-left 0.35s ease;
 }
 
 
 /* Cambia el color del logo según el tema */
 .layout-mode-dark,
 .layout-mode-light {
-    display: none;
+  display: none;
 }
 
 [data-bs-theme="light"] .layout-mode-dark {
-    display: inline-block;
+  display: inline-block;
 }
 
 [data-bs-theme="dark"] .layout-mode-light {
-    display: inline-block;
+  display: inline-block;
 }
 
 /* Estilo para animar la rotación */
 .theme-icon-animate {
-    display: inline-block;
-    transition: transform 0.4s ease;
-    transform: rotate(360deg);
+  display: inline-block;
+  transition: transform 0.4s ease;
+  transform: rotate(360deg);
 }
 
 /* Animación de rotación rápida */
 @keyframes rotateIcon {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 #mode-setting-btn.animate-theme {
-    animation: rotateIcon 0.5s ease;
+  animation: rotateIcon 0.5s ease;
 }
 
 
@@ -506,70 +552,96 @@ body[data-sidebar-size="sm"]
 /* Opcional: transición suave */
 .navbar-brand-box .logo-sm img,
 .navbar-brand-box .logo-lg img {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 991.98px) {
-    .navbar-brand-box .logo-lg img {
-        width: 100px !important;
-        height: auto !important;
-    }
+  .navbar-brand-box .logo-lg img {
+    width: 100px !important;
+    height: auto !important;
+  }
 
-    .navbar-brand-box .logo-sm img {
-        width: 60px !important;
-        height: auto !important;
-    }
+  .navbar-brand-box .logo-sm img {
+    width: 60px !important;
+    height: auto !important;
+  }
 }
 
 /* ────────────────────────────────────────────────────────────────────────────────
     Estilos para Right Bar
 ──────────────────────────────────────────────────────────────────────────────── */
 .right-bar {
-    background-color: var(--bs-body-bg);
-    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-    color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  color: var(--bs-body-color);
 }
 
 .rightbar-title h5 {
-    font-weight: 600;
-    font-size: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .right-bar a {
-    transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .right-bar a:hover {
-    background-color: rgba(0, 123, 255, 0.1);
-    border-radius: 0.375rem;
-    padding-left: 0.5rem;
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 0.375rem;
+  padding-left: 0.5rem;
 }
 
-#progress1, #progress2 {
-    min-height: 60px;
-    padding-left: 10px;
-  }
+#progress1,
+#progress2 {
+  min-height: 60px;
+  padding-left: 10px;
+}
 
 
- /*───────────────────────────────────────────────
+/*───────────────────────────────────────────────
   LIGHT MODE  – nada cambia, mantiene lavanda
 ───────────────────────────────────────────────*/
-body:not([data-sidebar="dark"]) .section-card              {background:#f7f9fc;border:1px solid #e1e6ef;}
-body:not([data-sidebar="dark"]) .section-card-header       {background: var(--tabla-header-bg); color: var(--tabla-header-text);}
+body:not([data-sidebar="dark"]) .section-card {
+  background: #f7f9fc;
+  border: 1px solid #e1e6ef;
+}
+
+body:not([data-sidebar="dark"]) .section-card-header {
+  background: var(--tabla-header-bg);
+  color: var(--tabla-header-text);
+}
+
 body:not([data-sidebar="dark"]) .section-card .form-control,
-body:not([data-sidebar="dark"]) .section-card .form-select {border-color:#cfd5e3;}
+body:not([data-sidebar="dark"]) .section-card .form-select {
+  border-color: #cfd5e3;
+}
 
 /*───────────────────────────────────────────────
   DARK MODE  – paleta slate-indigo
 ───────────────────────────────────────────────*/
-body[data-sidebar="dark"] .section-card              {background:#242933;border:1px solid #3a4150;}
-body[data-sidebar="dark"] .section-card-header       {background: var(--tabla-header-bg);color:#e8eaf3;border-bottom:1px solid #3a4150;}
-body[data-sidebar="dark"] .card-body                 {background:#242933;}  /* evita “cartas blancas” */
+body[data-sidebar="dark"] .section-card {
+  background: #242933;
+  border: 1px solid #3a4150;
+}
+
+body[data-sidebar="dark"] .section-card-header {
+  background: var(--tabla-header-bg);
+  color: #e8eaf3;
+  border-bottom: 1px solid #3a4150;
+}
+
+body[data-sidebar="dark"] .card-body {
+  background: #242933;
+}
+
+/* evita “cartas blancas” */
 body[data-sidebar="dark"] .section-card .form-control,
 
 
 body[data-sidebar="dark"] .section-card .form-label,
-body[data-sidebar="dark"] .section-card label                    {color:white;}
+body[data-sidebar="dark"] .section-card label {
+  color: white;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────────
    Hover slide-in para las opciones del sidebar
@@ -578,188 +650,196 @@ body[data-sidebar="dark"] .section-card label                    {color:white;}
    2.  En :hover y en el estado .mm-active (el que usa MetisMenu
        cuando la ruta está seleccionada) desplazamos 4 px a la derecha.
 ─────────────────────────────────────────────────────────────── */
-#sidebar-menu .metismenu > li > a {
-    display: flex;
-    align-items: center;
-    transition: background-color .20s ease, color .20s ease, transform .20s ease;
+#sidebar-menu .metismenu>li>a {
+  display: flex;
+  align-items: center;
+  transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
-#sidebar-menu .metismenu > li > a > svg {
+
+#sidebar-menu .metismenu>li>a>svg {
   width: 20px;
   height: 20px;
 }
+
 /* efecto cuando el cursor pasa encima  */
-#sidebar-menu .metismenu > li > a:hover,
-#sidebar-menu .metismenu > li.mm-active > a {
-    transform: translateX(4px);
+#sidebar-menu .metismenu>li>a:hover,
+#sidebar-menu .metismenu>li.mm-active>a {
+  transform: translateX(4px);
 }
 
 /* Si quieres que los sub-menús hereden el mismo efecto: */
-#sidebar-menu .metismenu ul.sub-menu li > a {
-    transition: background-color .20s ease, color .20s ease, transform .20s ease;
+#sidebar-menu .metismenu ul.sub-menu li>a {
+  transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
-#sidebar-menu .metismenu ul.sub-menu li > a:hover,
-#sidebar-menu .metismenu ul.sub-menu li.mm-active > a {
-    transform: translateX(4px);
+
+#sidebar-menu .metismenu ul.sub-menu li>a:hover,
+#sidebar-menu .metismenu ul.sub-menu li.mm-active>a {
+  transform: translateX(4px);
 }
-#sidebar-menu .has-arrow:after{
+
+#sidebar-menu .has-arrow:after {
   font-size: 0.95rem;
 }
-body[data-sidebar-size="sm"]
-  .vertical-menu ul.metismenu > li:hover > a {
+
+body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:hover>a {
   transform: none !important;
 }
+
 /* ─────────────── Termina el efecto hover ──────────────────────────────────── */
 
 /* ────────────── Estilos del modal: Nueva Cuenta ─────────────── */
 
 /* Z-index de modal y fondo */
 .modal-backdrop {
-    z-index: 4 !important;
+  z-index: 4 !important;
 }
+
 .modal {
-    z-index: 1050 !important;
+  z-index: 1050 !important;
 }
 
 /* Estructura general */
 #modalTipoCuenta .modal-content {
-    border-radius: 0.85rem;
-    border: none;
-    box-shadow: 0 0 1.75rem rgba(0, 0, 0, 0.2);
+  border-radius: 0.85rem;
+  border: none;
+  box-shadow: 0 0 1.75rem rgba(0, 0, 0, 0.2);
 }
 
 #modalTipoCuenta .modal-header {
-    background-color: #ffffff;
-    border: none;
-    padding: 1.25rem 1.5rem 0.5rem;
-    position: relative;
-    text-align: center;
+  background-color: #ffffff;
+  border: none;
+  padding: 1.25rem 1.5rem 0.5rem;
+  position: relative;
+  text-align: center;
 }
 
 #modalTipoCuenta .modal-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #374151;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151;
 }
 
 #modalTipoCuenta .btn-close {
-    filter: grayscale(1);
-    opacity: 0.6;
-    transition: 0.2s;
+  filter: grayscale(1);
+  opacity: 0.6;
+  transition: 0.2s;
 }
 
 #modalTipoCuenta .modal-body {
-    padding: 2rem 2.5rem;
-    background-color: #ffffff;
-    border-radius: 0 0 0.85rem 0.85rem;
+  padding: 2rem 2.5rem;
+  background-color: #ffffff;
+  border-radius: 0 0 0.85rem 0.85rem;
 }
 
 #modalTipoCuenta .modal-body p {
-    color: #6c757d;
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+  color: #6c757d;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 #modalTipoCuenta .btn-close:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 
 /* ───── Estilo de opciones tipo tarjeta ───── */
 .tipo-opcion-card {
-    text-decoration: none;
-    display: block;
-    border: 2px solid transparent;
-    border-radius: 0.65rem;
-    background: #eaebf3d7;
-    color: #2b2f38;
-    transition: all 0.25s ease-in-out;
-    box-shadow: 0 0 0 transparent;
+  text-decoration: none;
+  display: block;
+  border: 2px solid transparent;
+  border-radius: 0.65rem;
+  background: #eaebf3d7;
+  color: #2b2f38;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 0 transparent;
 }
 
 .tipo-opcion-card:hover {
-    border-color: #5b6dfa;
-    background: #eef1f9;
-    box-shadow: 0 0 0 2px rgba(91, 109, 250, 0.2);
-    text-decoration: none;
+  border-color: #5b6dfa;
+  background: #eef1f9;
+  box-shadow: 0 0 0 2px rgba(91, 109, 250, 0.2);
+  text-decoration: none;
 }
 
 .tipo-opcion-card:focus {
-    outline: none;
-    border-color: #5b6dfa;
-    box-shadow: 0 0 0 3px rgba(91, 109, 250, 0.25);
+  outline: none;
+  border-color: #5b6dfa;
+  box-shadow: 0 0 0 3px rgba(91, 109, 250, 0.25);
 }
 
 
 .opcion-card-body {
-    padding: 1rem 1.25rem;
+  padding: 1rem 1.25rem;
 }
 
 .opcion-card-body strong {
-    font-weight: 700;
-    display: block;
-    margin-bottom: 0.25rem;
-    color: #2b2f38; /* título más oscuro */
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #2b2f38;
+  /* título más oscuro */
 }
 
 .opcion-card-body p {
-    margin: 0;
-    color: #4f5d6b; /* texto auxiliar más visible */
-    font-size: 0.875rem;
+  margin: 0;
+  color: #4f5d6b;
+  /* texto auxiliar más visible */
+  font-size: 0.875rem;
 }
 
 .card-body[data-sidebar="light"] {
-    color: black;
+  color: black;
 }
 
 /* ─────────────── Modal tipo cuenta - Dark Mode ─────────────── */
 body[data-sidebar="dark"] #modalTipoCuenta .modal-content {
-    background-color: #1f232a;
-    color: #e3e6ed;
-    border: 1px solid #2e333c;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+  background-color: #1f232a;
+  color: #e3e6ed;
+  border: 1px solid #2e333c;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
 }
 
 body[data-sidebar="dark"] #modalTipoCuenta .modal-header {
-    background-color: transparent !important;
-    color: #ffffff;
-    border-bottom: none;
+  background-color: transparent !important;
+  color: #ffffff;
+  border-bottom: none;
 }
 
 body[data-sidebar="dark"] #modalTipoCuenta .modal-title {
-    color: #b7bef5;
+  color: #b7bef5;
 }
 
 body[data-sidebar="dark"] #modalTipoCuenta .modal-body {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 body[data-sidebar="dark"] #modalTipoCuenta .modal-body p {
-    color: #9ca3b2;
+  color: #9ca3b2;
 }
 
 /* Tarjetas */
 body[data-sidebar="dark"] .tipo-opcion-card {
-    background: #2a2f38;
-    border: 1px solid #3a414e;
-    color: #e3e6ed;
+  background: #2a2f38;
+  border: 1px solid #3a414e;
+  color: #e3e6ed;
 }
 
 body[data-sidebar="dark"] .tipo-opcion-card:hover {
-    background: #313844;
-    border-color: #7782ff;
-    box-shadow: 0 0 0 2px rgba(123, 144, 255, 0.2);
+  background: #313844;
+  border-color: #7782ff;
+  box-shadow: 0 0 0 2px rgba(123, 144, 255, 0.2);
 }
 
 body[data-sidebar="dark"] .tipo-opcion-card:focus {
-    box-shadow: 0 0 0 3px rgba(123, 144, 255, 0.3);
+  box-shadow: 0 0 0 3px rgba(123, 144, 255, 0.3);
 }
 
 body[data-sidebar="dark"] .opcion-card-body strong {
-    color: #e5e9f2;
+  color: #e5e9f2;
 }
 
 body[data-sidebar="dark"] .opcion-card-body p {
-    color: #b2b8c6;
+  color: #b2b8c6;
 }
 
 /* ─────────────── Termina Estilos del modal/popup Nueva Cuenta ─────────────────── */
@@ -767,84 +847,87 @@ body[data-sidebar="dark"] .opcion-card-body p {
 
 /* Reduce padding de cabecera y cuerpo */
 .contenedorContactos .contacto-block .card-header {
-    padding: .5rem .75rem;
-    font-size: .95rem;
-  }
-  
-  .contenedorContactos .contacto-block .card-body {
-    padding: .75rem;
-  }
-  
-  /* Ajusta el gutter interno de filas dentro de la ficha */
-  .contenedorContactos .contacto-block .row.g-2 {
-    --bs-gutter-x: .5rem;
-    --bs-gutter-y: .5rem;
-  }
-  
-  /* Campos un poco más compactos */
-  .contenedorContactos .contacto-block .form-control,
-  .contenedorContactos .contacto-block .form-select {
-    padding: .375rem .75rem;
-    font-size: .9rem;
-  }
+  padding: .5rem .75rem;
+  font-size: .95rem;
+}
 
-  .contacto-block .form-label{font-size:.875rem;}
+.contenedorContactos .contacto-block .card-body {
+  padding: .75rem;
+}
+
+/* Ajusta el gutter interno de filas dentro de la ficha */
+.contenedorContactos .contacto-block .row.g-2 {
+  --bs-gutter-x: .5rem;
+  --bs-gutter-y: .5rem;
+}
+
+/* Campos un poco más compactos */
+.contenedorContactos .contacto-block .form-control,
+.contenedorContactos .contacto-block .form-select {
+  padding: .375rem .75rem;
+  font-size: .9rem;
+}
+
+.contacto-block .form-label {
+  font-size: .875rem;
+}
 
 /* Encabezados de sección en flujo vertical */
-.section-card-header {
-    background-color: var(--tabla-header-bg);
-    color: var(--tabla-header-text);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: .5rem 1rem;
-  }
-  .section-card-header #agregarContacto {
-    padding: .25rem .5rem;
-    font-size: .875rem;
-  }
-  
-  
-  
-  /* –– HEADER: columna y gap –– */
-.card-header.section-card-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: .5rem;            /* separación entre título y botón */
-    padding: .75rem 1rem;  /* o el padding que uses normalmente */
-  }
+/* Este ya es el predeterminado para todas las cards */
 
-.section-card-header.section-card-header--view {
-    flex-direction: row;
-    gap: .5rem;
+.card-header {
+  background-color: var(--tabla-header-bg);
+  color: var(--tabla-header-text);
+  display: flex;
+  flex-direction: column; /* por defecto columna */
+  align-items: flex-start;
+  gap: .5rem;
+  padding: .75rem 1rem;
 }
-  
-  /* –– BOTÓN “Agregar Contacto” –– */
-  .card-header.section-card-header #agregarContacto {
-    margin: 0;                   /* ya no lo empujamos */
-    padding: .25rem .75rem;      /* versión compacta */
-    font-size: .875rem;          /* un poco más pequeño */
-    align-self: flex-start;      /* asegúrate de que quede a la izquierda */
-    border-radius: .375rem;      /* igual que otros botones sm */
-  }
 
-  
-  .card-header-filtros {
+.card-header--row {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0;
+  padding: .5rem 1rem;
+}
+
+/* –– BOTÓN “Agregar Contacto” –– */
+.card-header #agregarContacto {
+  margin: 0;
+  /* ya no lo empujamos */
+  padding: .25rem .75rem;
+  /* versión compacta */
+  font-size: .875rem;
+  /* un poco más pequeño */
+  align-self: flex-start;
+  /* asegúrate de que quede a la izquierda */
+  border-radius: .375rem;
+  /* igual que otros botones sm */
+}
+
+
+
+
+
+
+.card-header-filtros {
   background-color: rgba(66, 92, 199, 0.1);
   font-weight: 700;
 }
 
 
-  /* — Hacer más angosto el card de “Cuenta Empresarial” — */
+/* — Hacer más angosto el card de “Cuenta Empresarial” — */
 .section-card-cuenta-empresarial {
-    width: 100%;
-    margin-bottom: 1.5rem; /* espacio debajo */
-  }
-  
+  width: 100%;
+  margin-bottom: 1.5rem;
+  /* espacio debajo */
+}
 
-  
-  /* Base común para ambos tiles */
+
+
+/* Base común para ambos tiles */
 .tile-agregar-contacto,
 .tile-agregar-entrega,
 .tile-agregar-facturacion {
@@ -852,10 +935,10 @@ body[data-sidebar="dark"] .opcion-card-body p {
   border: 2px dashed rgba(var(--bs-primary-rgb), 0.6);
   color: var(--bs-primary);
   transition: transform .2s ease,
-              box-shadow .2s ease,
-              background-color .2s ease,
-              border-color .2s ease,
-              color .2s ease;
+    box-shadow .2s ease,
+    background-color .2s ease,
+    border-color .2s ease,
+    color .2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -877,11 +960,12 @@ body[data-sidebar="dark"] .opcion-card-body p {
 .tile-agregar-entrega:hover,
 .tile-agregar-facturacion:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   background-color: rgba(var(--bs-primary-rgb), 0.1);
   border-color: var(--bs-primary);
   color: var(--bs-primary);
 }
+
 .tile-agregar-contacto:hover i,
 .tile-agregar-contacto:hover p,
 .tile-agregar-entrega:hover i,
@@ -898,15 +982,17 @@ body[data-sidebar="dark"] .tile-agregar-facturacion {
   border: 2px dashed rgba(var(--bs-white-rgb), 0.4);
   color: var(--bs-white);
 }
+
 body[data-sidebar="dark"] .tile-agregar-contacto:hover,
 body[data-sidebar="dark"] .tile-agregar-entrega:hover,
 body[data-sidebar="dark"] .tile-agregar-facturacion:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
   background-color: rgba(var(--bs-white-rgb), 0.05);
   border-color: var(--bs-white);
   color: var(--bs-white);
 }
+
 body[data-sidebar="dark"] .tile-agregar-contacto:hover i,
 body[data-sidebar="dark"] .tile-agregar-contacto:hover p,
 body[data-sidebar="dark"] .tile-agregar-entrega:hover i,
@@ -916,18 +1002,22 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   color: var(--bs-white);
 }
 
-.form-wrapper{
-    /* max-width:1200px;       ajuste a gusto: 960-1200 */
-  }
-  
+.form-wrapper {
+  /* max-width:1200px;       ajuste a gusto: 960-1200 */
+}
 
-  .btn.agregar-tel-ext,
-.btn.agregar-celular { min-height:38px; }
+
+.btn.agregar-tel-ext,
+.btn.agregar-celular {
+  min-height: 38px;
+}
+
 /* src/resources/css/custom.css (o donde coloques tus ajustes) */
 .btn.agregar-tel-ext,
 .btn.agregar-celular,
 .btn.quitar-fila {
-  border-width: 1px;                               /* base */
+  border-width: 1px;
+  /* base */
 }
 
 /* hover / focus / active => todas iguales  */
@@ -939,35 +1029,40 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 .btn.quitar-fila:focus,
 .btn.quitar-fila:active {
   border-color: var(--bs-btn-border-color) !important;
-  color:        var(--bs-btn-border-color) !important;
-  background:   transparent !important;            /* opcional */
+  color: var(--bs-btn-border-color) !important;
+  background: transparent !important;
+  /* opcional */
 }
+
 .btn.agregar-telefono:active,
 .btn.agregar-celular:active,
 .btn.quitar-fila:active {
-  background: rgba(0,0,0,.04) !important;
+  background: rgba(0, 0, 0, .04) !important;
 }
 
 /* Estilos <th> historial de pedidos */
 #tblPedidos thead th {
-    cursor: pointer;
-    transition: background-color .15s;
+  cursor: pointer;
+  transition: background-color .15s;
 }
+
 #tblPedidos thead th:hover {
-    background: #eef6ff;          /* azul clarito */
+  background: #eef6ff;
+  /* azul clarito */
 }
 
 /* Flecha genérica */
 .sort-arrow::after {
-    content: "⇅";                 /* flecha doble vertical */
-    font-size: .75rem;
-    opacity: .3;
-    margin-left: .25rem;
+  content: "⇅";
+  /* flecha doble vertical */
+  font-size: .75rem;
+  opacity: .3;
+  margin-left: .25rem;
 }
 
 /* Quita el borde inferior de la ÚLTIMA fila de datos */
-#tblPedidos tbody tr:last-child > *{
-    border-bottom: none !important;
+#tblPedidos tbody tr:last-child>* {
+  border-bottom: none !important;
 }
 
 
@@ -975,58 +1070,75 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 
 /* Estado orden ascendente */
 #tblPedidos thead th.asc .sort-arrow::after {
-    content: "▲";                 /* flecha arriba */
-    opacity: 1;
-    color: #0d6efd;               /* azul Bootstrap */
+  content: "▲";
+  /* flecha arriba */
+  opacity: 1;
+  color: #0d6efd;
+  /* azul Bootstrap */
 }
 
 /* Estado orden descendente */
 #tblPedidos thead th.desc .sort-arrow::after {
-    content: "▼";                 /* flecha abajo */
-    opacity: 1;
-    color: #0d6efd;
+  content: "▼";
+  /* flecha abajo */
+  opacity: 1;
+  color: #0d6efd;
 }
 
 
 .timeline {
-    border-left: 2px solid #e2e8f0;          /* gris clarito */
-    list-style: none;
-    padding-left: 1rem;
+  border-left: 2px solid #e2e8f0;
+  /* gris clarito */
+  list-style: none;
+  padding-left: 1rem;
 }
+
 .timeline li::before {
-    content: '';
-    position: absolute;
-    left: -6px; top: 4px;
-    width: 10px; height: 10px;
-    background: #0d6efd;     /* azul Bootstrap */
-    border-radius: 50%;
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  background: #0d6efd;
+  /* azul Bootstrap */
+  border-radius: 50%;
 }
-.object-fit-cover { object-fit: cover; }
+
+.object-fit-cover {
+  object-fit: cover;
+}
 
 
 /* Estilos para telefonos en formulario clientes.create */
 /* --------------------------------------------------------------
    Bloque Teléfonos fijos
    --------------------------------------------------------------*/
-#telefonos-col .phone-field {        /* SOLO Teléfono fijo        */
-  flex: 0 0 25ch;    /* ⬅️ antes 25ch; ajusta 18–22ch si aún se ve largo */
+#telefonos-col .phone-field {
+  /* SOLO Teléfono fijo        */
+  flex: 0 0 25ch;
+  /* ⬅️ antes 25ch; ajusta 18–22ch si aún se ve largo */
   max-width: 25ch;
 }
 
 
 /* Extensión se mantiene en 10ch */
-.ext-field { 
-    flex: 0 0 10ch; max-width:10ch; 
+.ext-field {
+  flex: 0 0 10ch;
+  max-width: 10ch;
 }
 
 /* Botón sin cambios */
-.btn-field          { flex: 0 0 auto; }
+.btn-field {
+  flex: 0 0 auto;
+}
 
 /* --------------------------------------------------------------
    Bloque Celulares
    --------------------------------------------------------------*/
 #celulares-col .phone-field {
-  flex: 0 0 25ch;    /* mismo ancho que Teléfono fijo + Ext. */
+  flex: 0 0 25ch;
+  /* mismo ancho que Teléfono fijo + Ext. */
   max-width: 25ch;
 }
 
@@ -1039,9 +1151,12 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
    Centrado perfecto del wrapper
    --------------------------------------------------------------*/
 #telefonos-cel-wrapper {
-  max-width: 100%;        /* ocupa todo el ancho de la card */
-  padding-left: 1rem;     /* mismo padding que la card (opcional) */
-  padding-right: 1rem;    /* ↑ si tu card ya lo trae, omítelo */
+  max-width: 100%;
+  /* ocupa todo el ancho de la card */
+  padding-left: 1rem;
+  /* mismo padding que la card (opcional) */
+  padding-right: 1rem;
+  /* ↑ si tu card ya lo trae, omítelo */
   margin-left: auto;
   margin-right: auto;
 }
@@ -1049,12 +1164,13 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 
 /* 1️⃣  Mueve el gap al contenedor */
 .input-group-separated {
-  gap: .75rem;           /* Ajusta .5 rem o 1 rem si quieres más/menos aire */
+  gap: .75rem;
+  /* Ajusta .5 rem o 1 rem si quieres más/menos aire */
 }
 
 /* 2️⃣  Mantén los bordes redondeados en los hijos                 */
-.input-group-separated > .form-control,
-.input-group-separated > .btn {
+.input-group-separated>.form-control,
+.input-group-separated>.btn {
   border-radius: .375rem !important;
 }
 
@@ -1064,48 +1180,60 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 
 /* 1) Caja exterior, igual que .form-select: */
 .select2-container--bootstrap-5 .select2-selection--multiple {
-    min-height: calc(2.25rem + 2px) !important; /* 36px + 2px border = 38px */
-    padding:        .375rem .75rem !important;            /* idéntico a form-select */
-    border:         1px solid var(--bs-border-color) !important;
-    border-radius:  --bs-border-radius !important;
-    background-color: var(--bs-secondary-bg) !important;
-    color:          var(--bs-body-color) !important;
-    font-size:      .875rem !important;                   /* 14px */
-    line-height:    1.5 !important;
-    display:        block !important;                     /* dejar block para que cierre bien */
+  min-height: calc(2.25rem + 2px) !important;
+  /* 36px + 2px border = 38px */
+  padding: .375rem .75rem !important;
+  /* idéntico a form-select */
+  border: 1px solid var(--bs-border-color) !important;
+  border-radius: --bs-border-radius !important;
+  background-color: var(--bs-secondary-bg) !important;
+  color: var(--bs-body-color) !important;
+  font-size: .875rem !important;
+  /* 14px */
+  line-height: 1.5 !important;
+  display: block !important;
+  /* dejar block para que cierre bien */
 }
 
 /* 2) UL interno: ahora es el flex container que CENTRA y WRAPEA */
 .select2-container--bootstrap-5 .select2-selection__rendered {
-    display:       flex !important;
-    align-items:   center !important;  /* centra verticalmente la primera fila */
-    flex-wrap:     wrap !important;    /* deja saltar a 2ª fila cuando sea necesario */
-    gap:           .25rem !important;  /* espacio entre chips y entre líneas */
-    margin:        0 !important;       /* elimina márgenes del theme original */
-    padding:       0 !important;       /* elimina padding del theme original */
+  display: flex !important;
+  align-items: center !important;
+  /* centra verticalmente la primera fila */
+  flex-wrap: wrap !important;
+  /* deja saltar a 2ª fila cuando sea necesario */
+  gap: .25rem !important;
+  /* espacio entre chips y entre líneas */
+  margin: 0 !important;
+  /* elimina márgenes del theme original */
+  padding: 0 !important;
+  /* elimina padding del theme original */
 }
 
 /* Chips sin márgenes extras y con padding reducido */
 .select2-container--bootstrap-5 .select2-selection__choice {
-    margin:       0 !important;      /* nada de margin-top/bottom */
-    padding:      0 .45rem !important;
-    font-size:    .75rem !important; /* 12px */
-    line-height:  1.25 !important;
-    background:   var(--bs-primary-bg-subtle) !important;
-    border:       1px solid var(--bs-primary) !important;
-    color:        var(--bs-primary-text-emphasis) !important;
-    border-radius:.25rem !important;
-    display:      inline-flex !important;
-    align-items:  center !important;
+  margin: 0 !important;
+  /* nada de margin-top/bottom */
+  padding: 0 .45rem !important;
+  font-size: .75rem !important;
+  /* 12px */
+  line-height: 1.25 !important;
+  background: var(--bs-primary-bg-subtle) !important;
+  border: 1px solid var(--bs-primary) !important;
+  color: var(--bs-primary-text-emphasis) !important;
+  border-radius: .25rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
 }
 
 .select2-container--bootstrap-5 .select2-selection__choice__remove {
-    margin-right: .25rem !important;
+  margin-right: .25rem !important;
 }
+
 .select2-container--bootstrap-5 .select2-selection__choice__display {
-    overflow:      hidden !important;
-    text-overflow: ellipsis !important;
-    white-space:   nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 /* Oculta el search inline que añade altura extra */
@@ -1119,27 +1247,28 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 }
 
 /* Cuando el contenedor recibe focus (selección abierta o clic en él) */
-.select2-container--bootstrap-5.select2-container--focus
-  .select2-selection--single,
-.select2-container--bootstrap-5.select2-container--focus
-  .select2-selection--multiple {
-  border-color: var(--bs-border-color, #86b7fe) !important; 
+.select2-container--bootstrap-5.select2-container--focus .select2-selection--single,
+.select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple {
+  border-color: var(--bs-border-color, #86b7fe) !important;
   outline: 0 !important;
   /* box-shadow idéntico al de .form-control:focus */
   box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25) !important;
 }
 
 .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
-    padding: .25rem 1.5rem !important; /* igual que el padding de .form-select */
-    font-size: .875rem !important;     /* 14px */
-    line-height: 1.5 !important;
-    color: var(--bs-body-color) !important;
+  padding: .25rem 1.5rem !important;
+  /* igual que el padding de .form-select */
+  font-size: .875rem !important;
+  /* 14px */
+  line-height: 1.5 !important;
+  color: var(--bs-body-color) !important;
 }
 
-.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--selected, .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option[aria-selected=true]:not(.select2-results__option--highlighted){
-    background-color: #5156be !important;
-    color: #ffffff !important;
-    font-weight: 500 !important;
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--selected,
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option[aria-selected=true]:not(.select2-results__option--highlighted) {
+  background-color: #5156be !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
 }
 
 /* ───────────────────────────────────────────────
@@ -1149,25 +1278,30 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* ───────── Tabla con layout fijo y altura homogénea ───────── */
 #tabla-clientes {
   table-layout: fixed;
-  border-radius: 0.25rem; /* bordes redondeados */
+  border-radius: 0.25rem;
+  /* bordes redondeados */
 
 }
+
 .active>.page-link {
-  background-color: var(--macasa-azul);
-  border-color: var(--macasa-azul);
+  background-color: var(--mc-azul);
+  border-color: var(--mc-azul);
 }
+
 .active>.page-link:hover {
   opacity: 0.9;
 }
-.table-responsive{
+
+.table-responsive {
   border-radius: 0.25rem;
 }
+
 /* Estilo de encabezados de tabla del sistema */
 .table thead {
-    background-color: var(--tabla-header-bg);
-    color: var(--tabla-header-text);
-    font-size: var(--bs-body-font-size);
-    font-weight: 600;
+  background-color: var(--tabla-header-bg);
+  color: var(--tabla-header-text);
+  font-size: var(--bs-body-font-size);
+  font-weight: 600;
 }
 
 #tblPedidos thead tr th,
@@ -1181,18 +1315,21 @@ tfoot>tr>th {
 
 /* Hover en cualquier thead (usa los vars que Bootstrap ya define) */
 #tabla-clientes thead th:hover {
-  background-color: var(--bs-table-bg)   !important;
-  color:            var(--bs-table-hover-color)!important;
+  background-color: var(--bs-table-bg) !important;
+  color: var(--bs-table-hover-color) !important;
 }
 
 #tabla-clientes th,
 #tabla-clientes td {
   vertical-align: middle;
-  height: 48px;                /* altura uniforme */
+  height: 48px;
+  /* altura uniforme */
   padding-top: .5rem !important;
   padding-bottom: .5rem !important;
-  overflow: hidden;            /* recorte general */
+  overflow: hidden;
+  /* recorte general */
 }
+
 /* ───────── Sticky columns ───────── */
 /* ID Cliente (max 5 chars → 5ch) */
 
@@ -1202,7 +1339,7 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(1) {
   left: 0;
   z-index: 3;
   background: var(--bs-table-bg);
-  
+
   width: 11ch;
 }
 
@@ -1246,7 +1383,7 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(4) {
 #tabla-clientes th:nth-child(4),
 #tabla-clientes td:nth-child(4) {
   background: var(--bs-table-hover-bg);
-  width: 15ch;          
+  width: 15ch;
   text-align: center;
 }
 
@@ -1289,9 +1426,11 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
 /* Ciclo (columna 8) */
 #tabla-clientes th:nth-child(8),
 #tabla-clientes td:nth-child(8) {
-  width: 11ch;            /* “Cotizacion” son 10+ caracteres */
+  width: 11ch;
+  /* “Cotizacion” son 10+ caracteres */
   text-align: center;
 }
+
 /* Reducir padding de la badge para aprovechar el ancho */
 #tabla-clientes td:nth-child(8) .badge {
   padding: .20rem .3rem;
@@ -1306,15 +1445,16 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
   white-space: nowrap;
   overflow: hidden;
 }
+
 /* ───────── Truncado columnas “pesadas” ───────── */
 /* Contacto (max 25 chars → 25ch) */
 #tabla-clientes th:nth-child(3),
-#tabla-clientes td:nth-child(3)
-{
+#tabla-clientes td:nth-child(3) {
   width: 25ch;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 #tabla-clientes td:nth-child(3) a,
 #tabla-clientes td:nth-child(5) a,
 #tabla-clientes td:nth-child(9) a {
@@ -1332,12 +1472,21 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
   opacity: .3;
   margin-left: .25rem;
 }
+
 /* Asc y Desc */
-#tabla-clientes thead th.asc .sort-arrow::after { content: "▲"; opacity:1; color: #0d6efd; }
-#tabla-clientes thead th.desc .sort-arrow::after { content: "▼"; opacity:1; color: #0d6efd; }
+#tabla-clientes thead th.asc .sort-arrow::after {
+  content: "▲";
+  opacity: 1;
+  color: #0d6efd;
+}
+
+#tabla-clientes thead th.desc .sort-arrow::after {
+  content: "▼";
+  opacity: 1;
+  color: #0d6efd;
+}
 
 
 /* ───────────────────────────────────────────────
    Termina Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */
-

@@ -14,15 +14,15 @@
             <h2 class="mb-3">Nueva Cuenta Empresarial</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
-                <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
+                <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
                     <i class="fa fa-arrow-left me-1"></i> Regresar
                 </a>
 
-                <button form="clienteForm" type="submit" class="btn btn-success btn-30ch">
+                <button form="clienteForm" type="submit" class="btn btn-success btn-principal">
                     <i class="fa fa-save me-1"></i> Guardar
                 </button>
 
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-30ch">
+                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal">
                     <i class="fa fa-list me-1"></i> Mis Cuentas
                 </a>
 
@@ -45,14 +45,14 @@
                     ─────────────────────────────────── -->
                     <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
                     <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
-                        <div class="card-header section-card-header text-center">
+                        <div class="card-header text-center">
                             <h5 class="mb-0">Cuenta Empresarial</h5>
                         </div>
 
                         <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
                             {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
                             <div class="row gx-3 gy-2 mb-4">
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
                                     <input  id="nombre" name="nombre" type="text"
                                             class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
@@ -60,7 +60,7 @@
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
                                     <select name="id_vendedor" class="form-select" required>
                                         <option value="">-- Ejecutivo --</option>
@@ -73,7 +73,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label class="form-label">Sector <span class="text-danger">*</span></label>
                                     <select name="sector" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -82,7 +82,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label class="form-label">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -101,29 +101,29 @@
                             <div class="row g-3 contacto-block" data-index="0">
 
                                 {{-- Nombre(s) / Apellidos --}}
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][nombre]" class="form-control guarda-mayus" minlength="2" maxlength="45" required>
                                 </div>
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][apellido_p]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][apellido_m]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
 
                                 {{-- Email / Puesto / Género --}}
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                     <input name="contacto[0][email]" type="email" class="form-control guarda-minus" maxlength="50" required>
                                 </div>
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label class="form-label">Puesto <span class="text-danger">*</span></label>
                                     <input name="contacto[0][puesto]" class="form-control guarda-mayus" maxlength="20" required>
                                 </div>
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label class="form-label">Género <span class="text-danger">*</span></label>
                                     <select name="contacto[0][genero]" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -138,7 +138,7 @@
 
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
-                                        <div class="col div-35ch" id="telefonos-col" style="padding-right: 0 !important;">
+                                        <div class="col campo-dato-telefono" id="telefonos-col" style="padding-right: 0 !important;">
                                             <div class="mb-2 telefono-item">
                                                 <label>Teléfono 1 <span class="text-danger">*</span></label>
 
@@ -151,7 +151,7 @@
                                         </div>
 
                                         {{-- Celulares --}}
-                                        <div class="col div-30ch" id="celulares-col">
+                                        <div class="col campo-dato-secundario" id="celulares-col">
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular 1</label>
 
@@ -186,15 +186,15 @@
             <h2 class="mb-3">Nueva Cuenta Personal</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
             <div class="d-flex gap-2 mb-3">
-                <a href="{{ url()->previous() }}" class="btn btn-secondary btn-30ch">
+                <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
                     <i class="fa fa-arrow-left me-1"></i> Regresar
                 </a>
 
-                <button form="clienteForm" type="submit" class="btn btn-success btn-30ch">
+                <button form="clienteForm" type="submit" class="btn btn-success btn-principal">
                     <i class="fa fa-save me-1"></i> Guardar
                 </button>
 
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-30ch">
+                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal">
                     <i class="fa fa-list me-1"></i> Mis Cuentas
                 </a>
 
@@ -214,13 +214,13 @@
 
                     <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
                     <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial contacto-block">
-                         <div class="card-header section-card-header text-center">
+                         <div class="card-header text-center">
                             <h5 class="mb-0">Cuenta Personal</h5>
                         </div>
                         <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
                             <div class="row g-3">
                                 <!-- Nombre(s) del contacto = Nombre de la Cuenta -->
-                                <div class="col div-60ch">
+                                <div class="colcampo-dato-principal">
                                     <label for="nombre" class="form-label">
                                         Nombre(s) <span class="text-danger">*</span>
                                     </label>
@@ -235,7 +235,7 @@
                                     @error('nombre')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <!-- Apellido 1 -->
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label for="apellido_p" class="form-label">
                                         Primer Apellido <span class="text-danger">*</span>
                                     </label>
@@ -250,7 +250,7 @@
                                     @error('apellido_p')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <!-- Apellido 2 -->
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label for="apellido_m" class="form-label">
                                         Segundo Apellido <span class="text-danger">*</span>
                                     </label>
@@ -265,7 +265,7 @@
                                     @error('apellido_m')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <!-- Correo Electrónico -->
-                                <div class="col div-60ch">
+                                <div class="col campo-dato-principal">
                                     <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                                     <input  name="email"
                                             type="email" 
@@ -275,7 +275,7 @@
                                             required>
                                 </div>
                                 <!-- Segmento -->
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label for="segmento" class="form-label">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" id="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -292,7 +292,7 @@
                                     @error('segmento')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <!-- Género -->
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
                                     <select name="genero" id="genero" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
@@ -302,7 +302,7 @@
                                     </select>
                                 </div>
                                 <!-- Asignado a / id_vendedor -->
-                                <div class="col div-30ch">
+                                <div class="col campo-dato-secundario">
                                     <label for="nombre" class="form-label">Asignado a: <span
                                             class="text-danger">*</span></label>
                                     <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
@@ -326,7 +326,7 @@
 
                                     <div class="row">
                                         {{-- Teléfonos fijos --}}
-                                        <div class="col div-35ch" id="telefonos-col" style="padding-right: 0 !important;">
+                                        <div class="col campo-dato-telefono" id="telefonos-col" style="padding-right: 0 !important;">
                                             <div class="mb-2 telefono-item">
                                                 <label>Teléfono 1 <span class="text-danger">*</span></label>
 
@@ -352,7 +352,7 @@
                                         </div>
 
                                         {{-- Celulares --}}
-                                        <div class="col div-30ch" id="celulares-col">
+                                        <div class="col datos-secundarios" id="celulares-col">
                                             <div class="mb-2 celular-item">
                                                 <label>Teléfono Celular 1</label>
                                                 <div class="input-group input-group-separated">
