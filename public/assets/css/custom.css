@@ -10,8 +10,13 @@
 :root {
   --mc-azul: #425cc7;
   --mc-verde: #00ce7c;
-  --sidebar-speed: 0.35s;
-  /* duración del ancho */
+  --grado-minimo: #c62828;          /* Rojo Fuerte */
+  --grado-bajo: #ef5350;            /* Rojo Claro */
+  --grado-puede-mejorar: #FEE028;   /* Ámbar */
+  --grado-bien: #81c784;            /* Verde Claro */
+  --grado-muy-bien: #4caf50;        /* Verde Medio */
+  --grado-excelente: #2e7d32;       /* Verde Fuerte */
+  --sidebar-speed: 0.35s;             /* duración del ancho */
   --item-max-width: 160px;
   /* ancho aproximado de tus etiquetas */
   --tabla-header-bg: #e9eef6;
@@ -19,6 +24,16 @@
   --bs-btn-bg: var(--mc-azul);
   --tabla-card-body-bg: #363a38;
   --sidebar-bg: #FBFAFF;
+  
+  /* FUENTES */
+  --fuente-titulo: 1.75rem;
+  --fuent-subtitulo: 1.09375rem;
+  --fuente-normal: 0.875rem;
+  --fuente-peq: 075rem;
+}
+
+html{
+  font-size: 16px;
 }
 
 body[data-bs-theme="dark"] {
@@ -55,24 +70,25 @@ body[data-bs-theme="dark"] {
 
 /* Clases globales para las medidas de botones, deben de ser en multiplos de 5ch. */
 
-.btn-15ch {
-  min-width: 15ch;
-  /* 15 caracteres */
-}
 
 .btn-principal {
   min-width: 30ch;
   /* 30 caracteres */
 }
 
-.div-10ch {
+.col-5ch {
+  min-width: 5ch;
+  max-width: 5ch;
+}
+
+.col-10ch {
   min-width: 10ch;
   /* 30 caracteres */
   max-width: 10ch;
   /* 30 caracteres */
 }
 
-.div-15ch {
+.col-15ch {
   min-width: 15ch;
   /* 30 caracteres */
   max-width: 15ch;
@@ -100,6 +116,18 @@ body[data-bs-theme="dark"] {
   /* 60 caracteres */
 }
 
+.text-titulo {
+  font-size: var(--fuente-titulo);
+}
+.text-subtitulo {
+  font-size: var(--fuent-subtitulo);
+}
+.text-normal {
+  font-size: var(--fuente-normal);
+}
+.text-peq {
+  font-size: var(--fuente-peq);
+}
 /* Expandido (lg) */
 body[data-sidebar-size="lg"] .logo-lg {
   display: inline-block;
@@ -185,11 +213,6 @@ body[data-sidebar="light"] label {
   transition: color .25s;
 }
 
-.sidebar-link:hover {
-  color: var(--verde-macasa);
-  /* tu verde corporativo */
-}
-
 .text-primary {
   color: var(--mc-azul) !important;
 }
@@ -207,20 +230,6 @@ body[data-sidebar="light"] label {
 .btn-success {
   background-color: var(--mc-verde);
   border-color: var(--mc-verde);
-}
-
-/* Botón verde MACASA */
-.btn-macasa-verde {
-  background-color: #00ce7c;
-  border-color: #00ce7c;
-  color: white;
-}
-
-.btn-macasa-verde:hover,
-.btn-macasa-verde:focus {
-  background-color: #00b86f;
-  border-color: #00b86f;
-  color: white;
 }
 
 /* Botón gris desactivado */
@@ -407,13 +416,15 @@ body:not([data-sidebar="dark"]) .search-input {
 .vertical-menu {
   width: 30ch;
   transition: width var(--sidebar-speed) ease;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   /* sólo en expandido */
 }
 
 body[data-sidebar-size="sm"] .vertical-menu {
+  position: fixed;
   width: 70px;
-  overflow: visible;
+  overflow: visible !important;
   /* deja volar los submenús */
 }
 
@@ -450,10 +461,14 @@ body[data-sidebar-size="lg"] .vertical-menu ul.metismenu>li>a .menu-item {
 
 /* 3) Cuando COLAPSA:
      fuerza retorno inmediato (sin animación inversa) */
-body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li>a .menu-item {
-  max-width: 0 !important;
-  opacity: 0 !important;
-  transition: none;
+body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li>a .icon {
+  /* flex-shrink: 0 !important; */
+  width: 20px !important;
+  height: 20px !important;
+  display: inline-flex !important;
+  /* align-items: center; */
+  /* justify-content: center; */
+  /* opacity: 1 !important; */
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -488,7 +503,7 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li.has-arrow:hover>ul.s
   left: 70px;
   min-width: 200px;
   /* o el ancho que uses */
-  background: var(--bs-body-bg);
+  /* background: var(--bs-body-bg); */
   box-shadow: 0 .25rem .5rem rgba(0, 0, 0, .15);
   border-radius: .25rem;
   z-index: 1050;
@@ -879,7 +894,8 @@ body[data-sidebar="dark"] .opcion-card-body p {
   background-color: var(--tabla-header-bg);
   color: var(--tabla-header-text);
   display: flex;
-  flex-direction: column; /* por defecto columna */
+  flex-direction: column;
+  /* por defecto columna */
   align-items: flex-start;
   gap: .5rem;
   padding: .75rem 1rem;
