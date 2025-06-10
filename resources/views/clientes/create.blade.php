@@ -63,7 +63,7 @@
                                 <div class="col div-30ch">
                                     <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
                                     <select name="id_vendedor" class="form-select" required>
-                                        <option value="">-- Ejecutivo --</option>
+                                        <option value="">-- Selecciona --</option>
                                         <option value="" @selected(old('id_vendedor')==='')>Base General</option>
                                         @foreach($vendedores as $v)
                                             <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor')==$v->id_usuario)>
@@ -307,7 +307,7 @@
                                             class="text-danger">*</span></label>
                                     <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
                                         required>
-                                        <option value="">-- Ejecutivo --</option>
+                                        <option value="">-- Selecciona --</option>
 
                                         {{-- Base General = NULL --}}
                                         <option value="" @selected(old('id_vendedor') === '')>Base General</option>

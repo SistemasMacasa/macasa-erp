@@ -870,6 +870,10 @@ class ClienteController extends Controller
         }
         if($request->input('lado'))
         {
+            $perPage = is_numeric($request->input('per_page')) 
+            ? (int) $request->input('per_page') 
+            : 25;
+
             $clientes = $query->paginate($request->input('per_page', 25))->withQueryString();
         }else{
             $clientes= null;

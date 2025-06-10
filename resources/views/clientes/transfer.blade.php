@@ -22,42 +22,59 @@
                         </div>
                         <div class="card-body">
                             <div class="row gx-2 gy-2 mb-4">
+                            <div class="col div-60ch">
+                                <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
+                                <select name="id_vendedor_origen" class="form-select">
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="base" {{ request('id_vendedor_origen') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
+                                    @foreach($vendedores as $v)
+                                        <option value="{{ $v->id_usuario }}"
+                                            {{ request('id_vendedor_origen') == $v->id_usuario ? 'selected' : '' }}>
+                                            {{ strtoupper($v->username) }} - {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                        </option>
+                                    @endforeach
+                                </select>                                
+                            </div>
 
-                                <div class="col div-60ch">
-                                    <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
-                                    <select name="id_vendedor_origen" class="form-select">
-                                        <option value="">-- Selecciona --</option>
-                                        <option value="base" {{ request('id_vendedor') === 'base' ? 'selected' : '' }}>BASE GENERAL</option>
-                                        @foreach($vendedores as $v)
-                                            <option value="{{ $v->id_usuario }}"
-                                                {{ request('id_vendedor_origen') == $v->id_usuario ? 'selected' : '' }}>
-                                                {{ $v->nombre }}
-                                            </option>
-                                        @endforeach
-                                    </select>                                
-                                </div>
+                            <div class="col div-30ch">
+                                <label for="orden" class="form-label">Ordenar por</label>
+                                <select name="orden" class="form-select">
+                                    <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
+                                    <option value="id_cliente"  {{ request('orden') == 'id_cliente' ? 'selected' : '' }}>ID Cliente</option>
+                                    <option value="nombre"      {{ request('orden') == 'nombre' ? 'selected' : '' }}>Empresa</option>
+                                    <option value="contacto"    {{ request('orden') == 'contacto' ? 'selected' : '' }}>Contacto</option>
+                                    <option value="correo"      {{ request('orden') == 'correo' ? 'selected' : '' }}>Correo</option>
+                                    <option value="sector"      {{ request('orden') == 'sector' ? 'selected' : '' }}>Sector</option>
+                                    <option value="segmento"    {{ request('orden') == 'segmento' ? 'selected' : '' }}>Segmento</option>
+                                    <option value="id_vendedor" {{ request('orden') == 'id_vendedor' ? 'selected' : '' }}>Asignado a</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col div-30ch">
+                                <label for="ver" class="form-label">Ver registros</label>
+                                <select name="per_page" id="" class="form-select">
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="5000" {{ request('per_page') == '5000' ? 'selected' : '' }}>Todos</option>
+                                    <option value="25"  {{ request('per_page') == '25' ? 'selected' : '' }}>25</option>
+                                    <option value="50"  {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
+                                    <option value="75"  {{ request('per_page') == '75' ? 'selected' : '' }}>75</option>
+                                    <option value="100" {{ request('per_page') == '100' ? 'selected' : '' }}>100</option>
+                                </select>
+                            </div>
 
                                 <div class="col div-30ch">
-                                    <label for="ordenar" class="form-label">Ordenar por</label>
-                                    <select class="form-select">
-                                        <option value="algo2">algo2</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="col div-30ch">
-                                    <label for="ver" class="form-label">Ver registros</label>
-                                    <select name="" id="" class="form-select">
-                                        <option value="algo3">algo3</option>
-                                    </select>
-                                </div>
-
-                                <div class="col div-30ch">
-                                    <label for="ciclo" class="form-label">Ciclo de venta</label>
-                                    <select name="" id="" class="form-select">
-                                        <option value="algo4">algo4</option>
+                                    <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
+                                    <select name="ciclo_venta" id="" class="form-select">
+                                        <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
+                                        <option value="cotizacion"  {{ request('ciclo_venta') == 'cotizacion' ? 'selected' : '' }}>Cotización</option>
+                                        <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
                                     </select>
                                 </div>
                             </div>
+                            <a href="{{ route('clientes.transfer') }}" class="btn btn-secondary btn-15ch ms-2">
+                                <i class="fa fa-eraser me-1"></i> Limpiar
+                            </a>
+
                             <button type="submit" class="btn btn-success btn-15ch">
                                 <i class="fa fa-search me-1"></i> Buscar
                             </button>
@@ -74,58 +91,71 @@
 
             {{-- Formulario de cuentas (destino) --}}
                 <form method="GET" action="{{ route('clientes.transfer') }}" class="col-md-5">
-                    <input type="hidden" name="lado" value="destino">
-                    <input type="hidden" name="id_vendedor_origen" value="{{ request('id_vendedor_origen') }}">
-
-
+                    <input type="hidden" name="lado" value="destino">   
+                    <input type="hidden" name="id_vendedor_destino" value="{{ request('id_vendedor_destino') }}">
+                 
                     <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
                         <div class="card-header section-card-header">
-                            <h5>Seleccione ejecutivo destino</h5>
+                            <h5>Seleccione ejecutivo de origen</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row gx-3 gy-2 mb-4">
-
-                                <div class="col div-60ch">
-                                    <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
-                                    <select name="id_vendedor_destino" class="form-select">
-                                        <option value="">-- Selecciona --</option>
-                                        <option value="base" {{ request('id_vendedor') === 'base' ? 'selected' : '' }}>BASE GENERAL</option>
-                                        @foreach($vendedores as $v)
-                                            <option value="{{ $v->id_usuario }}"
-                                                {{ request('id_vendedor_destino') == $v->id_usuario ? 'selected' : '' }}>
-                                                {{ $v->nombre }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-
-                                <div class="col div-30ch">
-                                    <label for="ordenar" class="form-label">Ordenar por</label>
-                                    <select class="form-select">
-                                        <option value="algo2">algo2</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="col div-30ch">
-                                    <label for="ver" class="form-label">Ver registros</label>
-                                    <select name="" id="" class="form-select">
-                                        <option value="algo3">algo3</option>
-                                    </select>
-                                </div>
-
-                                <div class="col div-30ch">
-                                    <label for="ciclo" class="form-label">Ciclo de venta</label>
-                                    <select name="" id="" class="form-select">
-                                        <option value="algo4">algo4</option>
-                                    </select>
-                                </div>
-
+                            <div class="row gx-2 gy-2 mb-4">
+                            <div class="col div-60ch">
+                                <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
+                                <select name="id_vendedor_origen" class="form-select">
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="base" {{ request('id_vendedor_origen') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
+                                    @foreach($vendedores as $v)
+                                        <option value="{{ $v->id_usuario }}"
+                                            {{ request('id_vendedor_origen') == $v->id_usuario ? 'selected' : '' }}>
+                                            {{ strtoupper($v->username) }} - {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                        </option>
+                                    @endforeach
+                                </select>                                
                             </div>
 
+                            <div class="col div-30ch">
+                                <label for="orden" class="form-label">Ordenar por</label>
+                                <select name="orden" class="form-select">
+                                    <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
+                                    <option value="id_cliente"  {{ request('orden') == 'id_cliente' ? 'selected' : '' }}>ID Cliente</option>
+                                    <option value="nombre"      {{ request('orden') == 'nombre' ? 'selected' : '' }}>Empresa</option>
+                                    <option value="contacto"    {{ request('orden') == 'contacto' ? 'selected' : '' }}>Contacto</option>
+                                    <option value="correo"      {{ request('orden') == 'correo' ? 'selected' : '' }}>Correo</option>
+                                    <option value="sector"      {{ request('orden') == 'sector' ? 'selected' : '' }}>Sector</option>
+                                    <option value="segmento"    {{ request('orden') == 'segmento' ? 'selected' : '' }}>Segmento</option>
+                                    <option value="id_vendedor" {{ request('orden') == 'id_vendedor' ? 'selected' : '' }}>Asignado a</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col div-30ch">
+                                <label for="ver" class="form-label">Ver registros</label>
+                                <select name="per_page" id="" class="form-select">
+                                    <option value="">-- Selecciona --</option>
+                                    <option value="5000" {{ request('per_page') == '5000' ? 'selected' : '' }}>Todos</option>
+                                    <option value="25"  {{ request('per_page') == '25' ? 'selected' : '' }}>25</option>
+                                    <option value="50"  {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
+                                    <option value="75"  {{ request('per_page') == '75' ? 'selected' : '' }}>75</option>
+                                    <option value="100" {{ request('per_page') == '100' ? 'selected' : '' }}>100</option>
+                                </select>
+                            </div>
+
+                                <div class="col div-30ch">
+                                    <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
+                                    <select name="ciclo_venta" id="" class="form-select">
+                                        <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
+                                        <option value="cotizacion"  {{ request('ciclo_venta') == 'cotizacion' ? 'selected' : '' }}>Cotización</option>
+                                        <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <a href="{{ route('clientes.transfer') }}" class="btn btn-secondary btn-15ch ms-2">
+                                <i class="fa fa-eraser me-1"></i>Limpiar
+                            </a>
                             <button type="submit" class="btn btn-success btn-15ch">
                                 <i class="fa fa-search me-1"></i> Buscar
                             </button>
+
                         </div>
                     </div>
                 </form>
@@ -138,7 +168,7 @@
                 @if(isset($clientes))
                     <p class="mb-0 text-muted small">
                         Mostrando <strong>{{ $clientes->firstItem() ?? "Todos" }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
-                        de <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes encontrados
+                        | Total: <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes de {{ request('lado') }}
                     </p>
                 @else
                     <p class="mb-0 text-muted small">
@@ -249,7 +279,7 @@
                                                 table-striped table-bordered">
                     <thead class="text-center align-middle">
                         <tr>
-                            <th class="py-1 px-2 div-5ch"                   style="background-color: var( --tabla-header-bg);"><input type="checkbox" id="selectAll"></th>
+                            <th class="py-1 px-2 div-5ch"                    style="background-color: var( --tabla-header-bg);"><input type="checkbox" id="selectAll"></th>
                             <th class="py-1 px-2 div-10ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">ID Cliente</th>
                             <th class="py-1 px-2 div-30ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Empresa</th>
                             <th class="py-1 px-2 div-25ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Contacto</th>
