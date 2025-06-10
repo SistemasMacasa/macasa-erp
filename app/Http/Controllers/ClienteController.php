@@ -130,6 +130,7 @@ class ClienteController extends Controller
     }
     public function view($id)
     {
+
         $cliente = Cliente::with([
             'contacto_predet',
             'razon_social_predet',
@@ -358,9 +359,12 @@ class ClienteController extends Controller
                             " ha actualizado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
 
                 registrarNota(
-                    $cliente->id_cliente,
-                    $mensaje,
-                    $cliente->ciclo_venta,
+                    id_cliente: $cliente->id_cliente,
+                    contenido: $mensaje,
+                    etapa: $cliente->ciclo_venta,
+                    fecha_reprogramacion: null,
+                    es_automatico: 1,
+                    
                 );
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
@@ -463,6 +467,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
@@ -487,6 +493,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
         return redirect('clientes')->with('success', 'Cliente eliminado correctamente');
     }
@@ -587,6 +595,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
 
                 return redirect(to: '/clientes')->with('success', 'Cuenta personal creada correctamente');
@@ -785,6 +795,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
 
                 return redirect(to: '/clientes')->with('success', 'Cliente creado correctamente');
@@ -802,6 +814,26 @@ class ClienteController extends Controller
         return redirect()->route('clientes.index', ['page' => $ultimaPagina])
         ->with('success', 'Cliente creado correctamente');
         }
+
+    public function storeNota(Request $request, $id)
+    {
+        $request->validate([
+            'contenido' => 'required|string',
+            'fecha_reprogramacion' => 'nullable|date',
+        ]);
+
+        $fecha_reprogramacion = $request->input('fecha_reprogramacion') ?? now()->addDays(3);
+        //Solo la llamada del helper en storeNota es manual, todas las demas son automáticas.
+        registrarNota(
+            id_cliente: $id,
+            contenido: $request->input('contenido'),
+            etapa: $request->input('ciclo_venta'),
+            fecha_reprogramacion: $fecha_reprogramacion,
+            es_automatico: $request->input('es_automatico')
+        );
+
+        return redirect()->route('clientes.view', $id)->with('success', 'Nota registrada correctamente.');
+    }
 
     /**
      * Muestra el formulario para traspasar múltiples clientes.
@@ -836,8 +868,12 @@ class ClienteController extends Controller
         } else {
             $query->orderBy('id_cliente');
         }
-
-        $clientes = $query->paginate($request->input('per_page', 25))->withQueryString();
+        if($request->input('lado'))
+        {
+            $clientes = $query->paginate($request->input('per_page', 25))->withQueryString();
+        }else{
+            $clientes= null;
+        }
 
         return view('clientes.transfer', compact('vendedores', 'clientes', 'lado', 'idVendedor'));
     }
@@ -855,7 +891,7 @@ class ClienteController extends Controller
             return back()->with('error', 'No se seleccionó ningún cliente.');
         }
 
-        $destinoId = ($destino === 'base') ? null : (int)$destino;
+        $destinoId = ($destino === 'base' || $destino === null || $destino === '0') ? null : (int)$destino;
 
         Cliente::whereIn('id_cliente', $ids)->update(['id_vendedor' => $destinoId]);
 

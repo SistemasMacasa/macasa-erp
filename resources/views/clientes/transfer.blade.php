@@ -10,11 +10,6 @@
     @endsection
     <div class="container-fluid">
         <h1 class="mb-4">Traspaso de cuentas</h1>
-
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
         <div class="row">
             {{-- Formulario de cuentas (origen) --}}
                 <form method="GET" action="{{ route('clientes.transfer') }}" class="col-md-5">
@@ -140,12 +135,19 @@
         <div class="row align-items-center mb-3">
             {{-- Texto de totales --}}
             <div class="col-sm">
-                <p class="mb-0 text-muted small">
-                    Mostrando <strong>{{ $clientes->firstItem() ?? "Todos" }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
-                    de <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes encontrados
-                </p>
+                @if(isset($clientes))
+                    <p class="mb-0 text-muted small">
+                        Mostrando <strong>{{ $clientes->firstItem() ?? "Todos" }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
+                        de <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes encontrados
+                    </p>
+                @else
+                    <p class="mb-0 text-muted small">
+                        No hay clientes encontrados
+                    </p>
+                @endif
             </div>
 
+            @if(isset($clientes))
             {{-- Controles de paginación + “Ir a página” --}}
             <div class="col-sm-auto d-flex align-items-center">
                 <nav aria-label="Paginación de clientes">
@@ -232,6 +234,7 @@
                     <button type="submit" class="btn btn-sm btn-primary ms-1">Ir</button>
                 </form>
             </div>
+            @endif
         </div>
         {{-- ────────── Fin paginación ────────── --}}
 
@@ -242,140 +245,140 @@
             <input type="hidden" name="origen" value="{{ request('id_vendedor_origen') }}">
             <input type="hidden" name="destino" value="{{ request('id_vendedor_destino') }}">
                 
-                <table id="tabla-clientes" class="table align-middle table-hover table-nowrap
+                <table id="tabla-transfer" class="table align-middle table-hover table-nowrap
                                                 table-striped table-bordered">
                     <thead class="text-center align-middle">
                         <tr>
-                            <th class="py-1 px-2"                   style="background-color: var( --tabla-header-bg);"><input type="checkbox" id="selectAll"></th>
-                            <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">ID Cliente</th>
-                            <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Empresa</th>
-                            <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Contacto</th>
-                            <th class="py-1 px-2"                   style="background-color: var( --tabla-header-bg);">Teléfono</th>
-                            <th class="py-1 px-2"                   style="background-color: var( --tabla-header-bg);">Correo</th>
-                            <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Sector</th>
-                            <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Segmento</th>
-                            <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Ciclo</th>
-                            <th class="py-1 px-2 filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Asignado a</th>
+                            <th class="py-1 px-2 div-5ch"                   style="background-color: var( --tabla-header-bg);"><input type="checkbox" id="selectAll"></th>
+                            <th class="py-1 px-2 div-10ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">ID Cliente</th>
+                            <th class="py-1 px-2 div-30ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Empresa</th>
+                            <th class="py-1 px-2 div-25ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Contacto</th>
+                            <th class="py-1 px-2 div-15ch"                   style="background-color: var( --tabla-header-bg);">Teléfono</th>
+                            <th class="py-1 px-2 div-25ch"                   style="background-color: var( --tabla-header-bg);">Correo</th>
+                            <th class="py-1 px-2 div-10ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Sector</th>
+                            <th class="py-1 px-2 div-20ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Segmento</th>
+                            <th class="py-1 px-2 div-10ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Ciclo</th>
+                            <th class="py-1 px-2 div-20ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Asignado a</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach ($clientes as $c)
-                            @php
-                                $pc    = $c->primerContacto;
-                                $tel   = optional($pc)->telefono1;
-                                $email = optional($pc)->email;
-                                $username = $c->vendedor->username ?? '';
-                            @endphp
+                        @if($clientes != null)
+                            @foreach ($clientes as $c)
+                                @php
+                                    $pc    = $c->primerContacto;
+                                    $tel   = optional($pc)->telefono1;
+                                    $email = optional($pc)->email;
+                                    $username = $c->vendedor->username ?? '';
+                                @endphp
 
-                            
-                            <tr>
-
-                            <td class="text-center">
-                                <input type="checkbox" class="cliente-checkbox" name="clientes[]" value="{{ $c->id_cliente }}">
-                            </td>
-                            
-                            {{-- ID Cliente --}}
-                            <td class="py-1 px-2 text-truncate text-center" title="{{ $c->id_cliente }}">
-                                {{ Str::limit($c->id_cliente, 6) }}
-                            </td>
-
-                            {{-- Empresa --}}
-                            <td class="py-1 px-2 text-truncate" title="{{ $c->nombre }}">
-                                <a href="{{ route('clientes.view', $c->id_cliente) }}"
-                                class="text-decoration-underline fw-bold text-dark">
-                                {{ Str::limit($c->nombre, 30) }}
-                                </a>
-                            </td>
-
-                            {{-- Contacto --}}
-                            <td class="py-1 px-2 text-truncate"
-                                title="{{ optional($pc)->nombre_completo }}">
-                                @if(optional($pc)->nombre_completo)
-                                    {{ Str::limit($pc->nombre_completo, 25) }}
-                                @else
-                                —
-                                @endif
-                            </td>
-
-                            {{-- Teléfono (sin truncar) --}}
-                            <td class="py-1 px-2 text-center">
-                                @if($tel)
-                                <a class="phone-field" href="tel:{{ $tel }}">{{ $tel }}</a>
-                                @else
-                                —
-                                @endif
-                            </td>
-
-                            {{-- Correo --}}
-                            <td class="py-1 px-2 text-truncate" title="{{ $email }}">
-                                @if($email)
-                                <a href="mailto:{{ $email }}">
-                                    {{ Str::limit($email, 30) }}
-                                </a>
-                                @else
-                                —
-                                @endif
-                            </td>
-
-                            {{-- Sector --}}
-                            <td class="py-1 px-2 text-center">
-                                @switch($c->sector)
-                                @case('privada')
-                                    {{ 'Privado' }} @break
-                                @case('gobierno')
-                                    {{ 'Gobierno' }} @break
-                                @case('persona')
-                                    {{ 'Persona' }} @break
-                                @default
-                                    —
-                                @endswitch
+                                <tr>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="cliente-checkbox" name="clientes[]" value="{{ $c->id_cliente }}">
+                                    </td>
                                     
-                            </td>
+                                    {{-- ID Cliente --}}
+                                    <td class="py-1 px-2 text-truncate text-center" title="{{ $c->id_cliente }}">
+                                        {{ Str::limit($c->id_cliente, 6) }}
+                                    </td>
 
-                            {{-- Segmento filtrado --}}
-                            <td class="py-1 px-2 text-center">
-                                @php $seg = mb_strtolower($c->segmento ?? ''); @endphp
-                                @switch($seg)
-                                @case('macasa cuentas especiales')
-                                    {{ 'Macasa Cuentas Especiales' }} @break
-                                @case('tekne store ecommerce')
-                                    {{ 'Tekne Store E-Commerce' }} @break
-                                @case('la plaza ecommerce')
-                                    {{ 'LaPlazaEnLinea E-Commerce' }} @break
-                                @default
-                                    —
-                                @endswitch
-                            </td>
+                                    {{-- Empresa --}}
+                                    <td class="py-1 px-2 text-truncate" title="{{ $c->nombre }}">
+                                        <a href="{{ route('clientes.view', $c->id_cliente) }}"
+                                        class="text-decoration-underline fw-bold text-dark">
+                                        {{ Str::limit($c->nombre, 30) }}
+                                        </a>
+                                    </td>
 
-                            {{-- Ciclo Venta --}}
-                            <td class="py-1 px-2 text-center">
-                                <span class="badge"
-                                    style="background-color:{{ $c->ciclo_venta==='venta'? 'var(--macasa-verde)' : '#FEE028' }};
-                                            color:{{ $c->ciclo_venta==='venta'? '#fff':'#000' }};
-                                            font-size: var(--bs-body-font-size);
-                                            min-width:10ch;">
-                                    
-                                        @switch($c->ciclo_venta)
-                                            @case('venta')
-                                                {{ 'Venta' }} @break
-                                            @case('cotizacion')
-                                                {{ 'Cotización' }} @break
-                                            @default
-                                                —
+                                    {{-- Contacto --}}
+                                    <td class="py-1 px-2 text-truncate"
+                                        title="{{ optional($pc)->nombre_completo }}">
+                                        @if(optional($pc)->nombre_completo)
+                                            {{ Str::limit($pc->nombre_completo, 25) }}
+                                        @else
+                                        —
+                                        @endif
+                                    </td>
+
+                                    {{-- Teléfono (sin truncar) --}}
+                                    <td class="py-1 px-2 text-center">
+                                        @if($tel)
+                                        <a class="phone-field" href="tel:{{ $tel }}">{{ $tel }}</a>
+                                        @else
+                                        —
+                                        @endif
+                                    </td>
+
+                                    {{-- Correo --}}
+                                    <td class="py-1 px-2 text-truncate" title="{{ $email }}">
+                                        @if($email)
+                                        <a href="mailto:{{ $email }}">
+                                            {{ Str::limit($email, 30) }}
+                                        </a>
+                                        @else
+                                        —
+                                        @endif
+                                    </td>
+
+                                    {{-- Sector --}}
+                                    <td class="py-1 px-2 text-center">
+                                        @switch($c->sector)
+                                        @case('privada')
+                                            {{ 'Privado' }} @break
+                                        @case('gobierno')
+                                            {{ 'Gobierno' }} @break
+                                        @case('persona')
+                                            {{ 'Persona' }} @break
+                                        @default
+                                            —
                                         @endswitch
-                                </span>
-                            </td>
+                                            
+                                    </td>
 
-                            {{-- Asignado a --}}
-                            <td class="py-1 px-2 text-truncate text-uppercase" title="{{ strtoupper($username) }}">
-                                {{ $username
-                                    ? Str::limit(strtoupper($username), 15)
-                                    : 'BASE GENERAL'
-                                }}
-                            </td>
-                            </tr>
-                        @endforeach
+                                    {{-- Segmento filtrado --}}
+                                    <td class="py-1 px-2 text-center">
+                                        @php $seg = mb_strtolower($c->segmento ?? ''); @endphp
+                                        @switch($seg)
+                                        @case('macasa cuentas especiales')
+                                            {{ 'Macasa Cuentas Especiales' }} @break
+                                        @case('tekne store ecommerce')
+                                            {{ 'Tekne Store E-Commerce' }} @break
+                                        @case('la plaza ecommerce')
+                                            {{ 'LaPlazaEnLinea E-Commerce' }} @break
+                                        @default
+                                            —
+                                        @endswitch
+                                    </td>
+
+                                    {{-- Ciclo Venta --}}
+                                    <td class="py-1 px-2 text-center">
+                                        <span class="badge"
+                                            style="background-color:{{ $c->ciclo_venta==='venta'? 'var(--macasa-verde)' : '#FEE028' }};
+                                                    color:{{ $c->ciclo_venta==='venta'? '#fff':'#000' }};
+                                                    font-size: var(--bs-body-font-size);
+                                                    min-width:10ch;">
+                                            
+                                                @switch($c->ciclo_venta)
+                                                    @case('venta')
+                                                        {{ 'Venta' }} @break
+                                                    @case('cotizacion')
+                                                        {{ 'Cotización' }} @break
+                                                    @default
+                                                        —
+                                                @endswitch
+                                        </span>
+                                    </td>
+
+                                    {{-- Asignado a --}}
+                                    <td class="py-1 px-2 text-truncate text-uppercase" title="{{ strtoupper($username) }}">
+                                        {{ $username
+                                            ? Str::limit(strtoupper($username), 15)
+                                            : 'BASE GENERAL'
+                                        }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
 
                 </table>
@@ -384,15 +387,22 @@
         </div> {{-- /.table-responsive --}}
 
         {{-- ───────── Paginación ───────── --}}
-        <div class="row align-items-center mb-4">
+        <div class="row align-items-center mb-3">
             {{-- Texto de totales --}}
             <div class="col-sm">
-                <p class="mb-0 text-muted small">
-                    Mostrando <strong>{{ $clientes->firstItem() }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
-                    de <strong>{{ $clientes->total() }}</strong> clientes encontrados
-                </p>
+                @if(isset($clientes))
+                    <p class="mb-0 text-muted small">
+                        Mostrando <strong>{{ $clientes->firstItem() ?? "Todos" }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
+                        de <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes encontrados
+                    </p>
+                @else
+                    <p class="mb-0 text-muted small">
+                        No hay clientes encontrados
+                    </p>
+                @endif
             </div>
 
+            @if(isset($clientes))
             {{-- Controles de paginación + “Ir a página” --}}
             <div class="col-sm-auto d-flex align-items-center">
                 <nav aria-label="Paginación de clientes">
@@ -479,6 +489,7 @@
                     <button type="submit" class="btn btn-sm btn-primary ms-1">Ir</button>
                 </form>
             </div>
+            @endif
         </div>
         {{-- ────────── Fin paginación ────────── --}}
         
@@ -505,22 +516,21 @@
 
     @push('scripts')
         <script>
-            document.getElementById('selectAll').addEventListener('click', function() {
+            //Script para preparar la petición para traspaso de cuentas
+            document.getElementById('selectAll').addEventListener('click', function () {
                 document.querySelectorAll('.cliente-checkbox').forEach(cb => cb.checked = this.checked);
             });
 
-            document.getElementById('btnAgregar')?.addEventListener('click', () => {
+            function prepararTraspaso(origen, destino) {
                 const seleccionados = document.querySelectorAll('.cliente-checkbox:checked');
                 if (seleccionados.length === 0) {
                     alert("Selecciona al menos una cuenta.");
                     return;
                 }
 
-                // Limpiar el form de traspaso
                 const form = document.getElementById('formTraspaso');
-                form.innerHTML = ''; // limpia todo, incluiremos los campos nuevamente
+                form.innerHTML = '';
 
-                // Reinsertar CSRF y datos clave
                 const csrf = document.createElement('input');
                 csrf.type = 'hidden';
                 csrf.name = '_token';
@@ -530,16 +540,15 @@
                 form.appendChild(Object.assign(document.createElement('input'), {
                     type: 'hidden',
                     name: 'origen',
-                    value: '{{ request('id_vendedor_origen') }}'
+                    value: origen
                 }));
 
                 form.appendChild(Object.assign(document.createElement('input'), {
                     type: 'hidden',
                     name: 'destino',
-                    value: '{{ request('id_vendedor_destino') }}'
+                    value: destino
                 }));
 
-                // Agregar los seleccionados
                 seleccionados.forEach(cb => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
@@ -548,15 +557,29 @@
                     form.appendChild(input);
                 });
 
-                // Mostrar el modal
                 new bootstrap.Modal(document.getElementById('confirmarModal')).show();
+            }
+
+            document.getElementById('btnAgregar')?.addEventListener('click', () => {
+                prepararTraspaso(
+                    '{{ request('id_vendedor_origen') }}',
+                    '{{ request('id_vendedor_destino') }}'
+                );
             });
 
-            document.getElementById('btnConfirmarTraspaso').addEventListener('click', () => {
+            document.getElementById('btnQuitar')?.addEventListener('click', () => {
+                prepararTraspaso(
+                    '{{ request('id_vendedor_destino') }}',
+                    '{{ request('id_vendedor_origen') }}'
+                );
+            });
+
+            document.getElementById('btnConfirmarTraspaso')?.addEventListener('click', () => {
                 document.getElementById('formTraspaso').submit();
             });
         </script>
     @endpush
+
 
 
 @endsection

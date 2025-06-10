@@ -16,7 +16,8 @@ class Nota extends Model
         'etapa',
         'contenido',
         'fecha_registro',
-        'fecha_reprogramacion'
+        'fecha_reprogramacion',
+        'es_automatico'
     ];
 
     public function cliente()
