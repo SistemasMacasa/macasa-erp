@@ -683,7 +683,7 @@ body[data-bs-theme=dark] h2,
 body[data-bs-theme=dark] h3,
 body[data-bs-theme=dark] h4,
 body[data-bs-theme=dark] h5,
-body[data-bs-theme=dark] h6{
+body[data-bs-theme=dark] h6 {
   color: #ffffff;
 }
 
@@ -736,10 +736,26 @@ body[data-sidebar="dark"] .section-card .form-label,
 body[data-sidebar="dark"] .section-card label {
   color: white;
 }
-body[data-sidebar=dark] #sidebar-menu ul li a
- {
-    color: var(--bs-sidebar-dark-menu-item-color);
+
+body[data-sidebar=dark] #sidebar-menu ul li a {
+  color: var(--bs-sidebar-dark-menu-item-color);
 }
+
+body[data-sidebar="dark"] #sidebar-menu {
+  color: var(--texto-blanco-modoDark)!important;
+}
+
+body[data-sidebar="dark"] #sidebar-menu a,
+body[data-sidebar="dark"] #sidebar-menu .menu-title,
+body[data-sidebar="dark"] #sidebar-menu .menu-item,
+body[data-sidebar="dark"] #sidebar-menu i,
+body[data-sidebar="dark"] #sidebar-menu svg,
+body[data-sidebar="dark"] #sidebar-menu .icon {
+  color: inherit !important;
+  fill: inherit !important;
+}
+
+
 /* ─────────────────────────────────────────────────────────────────────────────────
    Hover slide-in para las opciones del sidebar
    ------------------------------------------------------------------
