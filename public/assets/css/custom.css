@@ -10,13 +10,24 @@
 :root {
   --mc-azul: #425cc7;
   --mc-verde: #00ce7c;
-  --grado-minimo: #c62828;          /* Rojo Fuerte */
-  --grado-bajo: #ef5350;            /* Rojo Claro */
-  --grado-puede-mejorar: #FEE028;   /* Ámbar */
-  --grado-bien: #81c784;            /* Verde Claro */
-  --grado-muy-bien: #4caf50;        /* Verde Medio */
-  --grado-excelente: #2e7d32;       /* Verde Fuerte */
-  --sidebar-speed: 0.35s;             /* duración del ancho */
+  --grado-minimo: #c62828;
+  /* Rojo Fuerte */
+  --grado-bajo: #ef5350;
+  /* Rojo Claro */
+  --grado-puede-mejorar: #FEE028;
+  /* Ámbar */
+  --grado-bien: #81c784;
+  /* Verde Claro */
+  --grado-muy-bien: #4caf50;
+  /* Verde Medio */
+  --grado-excelente: #2e7d32;
+  /* Verde Fuerte */
+  --modo-oscuro-form: #3A3D41;
+  --modo-oscuro-control: #3A3D3F;
+  --texto-gris-modoDark: #ced4da;
+  --texto-blanco-modoDark: #ffffff;
+  --sidebar-speed: 0.35s;
+  /* duración del ancho */
   --item-max-width: 160px;
   /* ancho aproximado de tus etiquetas */
   --tabla-header-bg: #e9eef6;
@@ -24,7 +35,7 @@
   --bs-btn-bg: var(--mc-azul);
   --tabla-card-body-bg: #363a38;
   --sidebar-bg: #FBFAFF;
-  
+
   /* FUENTES */
   --fuente-titulo: 1.75rem;
   --fuent-subtitulo: 1.09375rem;
@@ -32,7 +43,7 @@
   --fuente-peq: 075rem;
 }
 
-html{
+html {
   font-size: 16px;
 }
 
@@ -81,12 +92,7 @@ body[data-bs-theme="dark"] {
   max-width: 5ch;
 }
 
-.col-10ch {
-  min-width: 10ch;
-  /* 30 caracteres */
-  max-width: 10ch;
-  /* 30 caracteres */
-}
+
 
 .col-15ch {
   min-width: 15ch;
@@ -119,15 +125,23 @@ body[data-bs-theme="dark"] {
 .text-titulo {
   font-size: var(--fuente-titulo);
 }
+
 .text-subtitulo {
   font-size: var(--fuent-subtitulo);
 }
+
 .text-normal {
   font-size: var(--fuente-normal);
 }
+
 .text-peq {
   font-size: var(--fuente-peq);
 }
+
+.ocultar-asterisco {
+  display: none !important;
+}
+
 /* Expandido (lg) */
 body[data-sidebar-size="lg"] .logo-lg {
   display: inline-block;
@@ -291,6 +305,11 @@ body[data-sidebar="dark"] .vertical-menu {
   align-items: center;
   padding-left: .75rem;
   /* pequeño respiro antes del logo */
+}
+
+body[data-sidebar="dark"] #logo-box {
+  border-right: none !important;
+  background: none !important;
 }
 
 /* Anchuras */
@@ -631,6 +650,58 @@ body:not([data-sidebar="dark"]) .section-card .form-select {
   border-color: #cfd5e3;
 }
 
+/* [ESTOS SON PORQUE ALGUNAS ETIQUETAS NO SE CAMBIAN A LA HORA DE CAMBIAR DE MODO OSCURO A CLARO */
+/* MODO CLARO */
+body:not([data-sidebar="dark"]) th,
+body:not([data-sidebar="dark"]) td,
+body:not([data-bs-theme=dark]) h1,
+body:not([data-bs-theme=dark]) h2,
+body:not([data-bs-theme=dark]) h3,
+body:not([data-bs-theme=dark]) h4,
+body:not([data-bs-theme=dark]) h5,
+body:not([data-bs-theme=dark]) h6,
+body:not([data-bs-theme=dark]) h1,
+body:not([data-bs-theme=dark]) h2,
+body:not([data-bs-theme=dark]) h3,
+body:not([data-bs-theme=dark]) h4,
+body:not([data-bs-theme=dark]) h5,
+body:not([data-bs-theme=dark]) h6 {
+  color: #000000;
+}
+
+/* MODO OSCURO */
+body[data-sidebar="dark"]th,
+body[data-sidebar="dark"] td,
+body[data-bs-theme=dark] h1,
+body[data-bs-theme=dark] h2,
+body[data-bs-theme=dark] h3,
+body[data-bs-theme=dark] h4,
+body[data-bs-theme=dark] h5,
+body[data-bs-theme=dark] h6,
+body[data-bs-theme=dark] h1,
+body[data-bs-theme=dark] h2,
+body[data-bs-theme=dark] h3,
+body[data-bs-theme=dark] h4,
+body[data-bs-theme=dark] h5,
+body[data-bs-theme=dark] h6{
+  color: #ffffff;
+}
+
+[data-bs-theme=dark] .h1,
+[data-bs-theme=dark] .h2,
+[data-bs-theme=dark] .h3,
+[data-bs-theme=dark] .h4,
+[data-bs-theme=dark] .h5,
+[data-bs-theme=dark] .h6,
+[data-bs-theme=dark] h1,
+[data-bs-theme=dark] h2,
+[data-bs-theme=dark] h3,
+[data-bs-theme=dark] h4,
+[data-bs-theme=dark] h5,
+[data-bs-theme=dark] h6 {
+  color: var(--texto-gris-modoDark);
+}
+
 /*───────────────────────────────────────────────
   DARK MODE  – paleta slate-indigo
 ───────────────────────────────────────────────*/
@@ -646,7 +717,15 @@ body[data-sidebar="dark"] .section-card-header {
 }
 
 body[data-sidebar="dark"] .card-body {
-  background: #242933;
+  background: #363a38;
+}
+
+body[data-sidebar="dark"] .form-select:disabled {
+  background: var(--modo-oscuro-form);
+}
+
+body[data-sidebar="dark"] .form-control:disabled {
+  background: var(--modo-oscuro-form);
 }
 
 /* evita “cartas blancas” */
@@ -657,7 +736,10 @@ body[data-sidebar="dark"] .section-card .form-label,
 body[data-sidebar="dark"] .section-card label {
   color: white;
 }
-
+body[data-sidebar=dark] #sidebar-menu ul li a
+ {
+    color: var(--bs-sidebar-dark-menu-item-color);
+}
 /* ─────────────────────────────────────────────────────────────────────────────────
    Hover slide-in para las opciones del sidebar
    ------------------------------------------------------------------
@@ -1323,6 +1405,16 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 #tblPedidos thead tr th,
 #tblCotizaciones thead tr th {
   background: var(--tabla-header-bg);
+}
+
+#tblCotizaciones th,
+#tblCotizaciones td {
+  padding: 5px 14px;
+}
+
+#tblPedidos th,
+#tblPedidos td {
+  padding: 5px 12px;
 }
 
 tfoot>tr>th {

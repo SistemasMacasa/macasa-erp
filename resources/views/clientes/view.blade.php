@@ -65,7 +65,7 @@
                             <h5 class="mb-0">Cuenta Empresarial</h5>
                             @if($usuario->es_admin)
                                 <button type="button" id="btnEditar"
-                                        class="btn btn-sm btn-macasa-verde btn-15ch btn-editar-cuenta"
+                                        class="btn btn-sm btn-success btn-15ch btn-editar-cuenta"
                                         style="margin-right:5ch;">
                                 <i class="fa fa-edit me-1"></i> Editar cuenta
                                 </button>
@@ -93,7 +93,7 @@
                             </div>
 
                             <div class="col campo-dato-secundario">
-                                <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
+                                <label class="form-label">Asignado a: <span class="text-danger asterisco">*</span></label>
                                 <select name="id_vendedor" class="form-select">
                                     <option value=""
                                             @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
@@ -110,7 +110,7 @@
                             </div>
 
                             <div class="col campo-dato-secundario">
-                                <label class="form-label">Sector <span class="text-danger">*</span></label>
+                                <label class="form-label">Sector <span class="text-danger asterisco">*</span></label>
                                 <select name="sector" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
                                     <option value="privada"   @selected(old('sector', $cliente->sector)=='privada')>Empresa Privada</option>
@@ -119,7 +119,7 @@
                             </div>
 
                             <div class="campo-dato-secundario">
-                                <label class="form-label">Segmento <span class="text-danger">*</span></label>
+                                <label class="form-label">Segmento <span class="text-danger asterisco">*</span></label>
                                 <select name="segmento" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
                                     <option value="macasa cuentas especiales"
@@ -152,7 +152,7 @@
 
                         <div class="row gx-3 gy-2 mb-3">
                             <div class="col campo-dato-principal">
-                                <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
+                                <label class="form-label">Nombre de la Empresa <span class="text-danger asterisco">*</span></label>
                                 <input  id="nombre" name="nombre" type="text"
                                         class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
                                         value="{{ $cliente->nombre }}" required minlength="3" maxlength="45">
@@ -170,7 +170,7 @@
 
                             {{-- Nombre(s) de Contacto --}}
                             <div class="col campo-dato-principal">
-                                <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
+                                <label class="form-label">Nombre(s) <span class="text-danger asterisco">*</span></label>
                                 <input  name="contacto[0][nombre]"
                                         value="{{ old('contacto.0.nombre', $cliente->contacto_predet?->nombre) }}"
                                         class="form-control guarda-mayus @error('contacto.0.nombre') is-invalid @enderror"
@@ -182,7 +182,7 @@
                             </div>
                             {{-- Primer Apellido --}}
                             <div class="col campo-dato-principal">
-                                <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
+                                <label class="form-label">Primer Apellido <span class="text-danger asterisco">*</span></label>
                                 <input  name="contacto[0][apellido_p]"
                                         value="{{ old('contacto.0.apellido_p', $cliente->contacto_predet?->apellido_p) }}"
                                         class="form-control guarda-mayus"
@@ -192,7 +192,7 @@
                             </div>
                             {{-- Segundo Apellido --}}
                             <div class="col campo-dato-principal">
-                                <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
+                                <label class="form-label">Segundo Apellido <span class="text-danger asterisco">*</span></label>
                                 <input  name="contacto[0][apellido_m]" 
                                         value="{{ old('contacto.0.apellido_m', $cliente->contacto_predet?->apellido_m) }}" 
                                         class="form-control guarda-mayus" 
@@ -201,7 +201,7 @@
                             </div>
                             {{-- Email --}}
                             <div class="col campo-dato-principal">
-                                <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                <label class="form-label">Correo Electrónico <span class="text-danger asterisco">*</span></label>
                                 <input name="contacto[0][email]" 
                                         value="{{ old('contacto.0.email', $cliente->contacto_predet?->email) }}" 
                                         type="email" 
@@ -212,7 +212,7 @@
                             </div>
                             {{-- Puesto --}}
                             <div class="col campo-dato-secundario">
-                                <label class="form-label">Puesto <span class="text-danger">*</span></label>
+                                <label class="form-label">Puesto <span class="text-danger asterisco">*</span></label>
                                 <input  name="contacto[0][puesto]" 
                                         value="{{ old('contacto.0.puesto', $cliente->contacto_predet?->puesto) }}" 
                                         class="form-control guarda-mayus" 
@@ -221,7 +221,7 @@
                                 @error('contacto.0.puesto') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col campo-dato-secundario">
-                                <label class="form-label">Género <span class="text-danger">*</span></label>
+                                <label class="form-label">Género <span class="text-danger asterisco">*</span></label>
                                 @php
                                     $genero = old('contacto.0.genero', $cliente->contacto_predet?->genero);
                                 @endphp
@@ -382,7 +382,7 @@
                                 </select>
                             </div>
                             <div class="col campo-dato-secundario">
-                                <label class="form-label">Asignado a: <span class="text-danger" id="asterisco">*</span></label>
+                                <label class="form-label">Asignado a: <span class="text-danger asterisco">*</span></label>
                                 <select name="id_vendedor" class="form-select">
                                     <option value=""
                                             @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
@@ -407,7 +407,7 @@
                             </div>
 
                             <div class="campo-dato-secundario">
-                                <label class="form-label">Segmento <span class="text-danger" id="asterisco">*</span></label>
+                                <label class="form-label">Segmento <span class="text-danger asterisco">*</span></label>
                                 <select name="segmento" class="form-select" required>
                                     <option value="">-- Selecciona --</option>
                                     <option value="macasa cuentas especiales"
@@ -439,7 +439,7 @@
                         <div class="row gx-3 gy-2 mb-2">
                             <div class="col campo-dato-principal">
                                 <label for="nombre" class="form-label">
-                                    Nombre(s) <span class="text-danger" id="asterisco">*</span>
+                                    Nombre(s) <span class="text-danger asterisco">*</span>
                                 </label>
                                 <input  type="text" 
                                         name="nombre" 
@@ -454,7 +454,7 @@
 
                             <div class="col campo-dato-principal">
                                 <label for="apellido_p" class="form-label">
-                                    Primer Apellido <span class="text-danger" id="asterisco">*</span>
+                                    Primer Apellido <span class="text-danger asterisco">*</span>
                                 </label>
                                 <input  type="text" 
                                         name="apellido_p" 
@@ -494,7 +494,7 @@
 
                             <!-- Género -->
                             <div class="col campo-dato-secundario">
-                                <label class="form-label">Género <span class="text-danger" id="asterisco">*</span></label>
+                                <label class="form-label">Género <span class="text-danger asterisco">*</span></label>
                                 @php
                                     $genero = old('genero', $cliente->contacto_predet?->genero);
                                 @endphp
@@ -622,7 +622,7 @@
 
         <div class="card-body p-0"> {{-- p-0 = quitamos padding extra --}}
             {{-- contenedor scroll con altura máx (ajusta a tu gusto) --}}
-            <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0px 17px; background: var(--tabla-header-bg);">
+            <div class="table-responsive" style="max-height: 380px; overflow-y: auto; background: var(--tabla-header-bg);">
                 @php
                     $totalSubtotal = $cotizaciones->sum('subtotal');
                     $totalMargen   = $cotizaciones->sum('margen');   // o lo que te pidan mostrar
@@ -682,7 +682,7 @@
 
         <div class="card-body p-0"> {{-- p-0 = quitamos padding extra --}}
             {{-- contenedor scroll con altura máx (ajusta a tu gusto) --}}
-            <div class="table-responsive" style="max-height: 380px; overflow-y: auto; padding: 0px 17px; background: var(--tabla-header-bg);">
+            <div class="table-responsive" style="max-height: 380px; overflow-y: auto; background: var(--tabla-header-bg);">
                 @php
                     $totalSubtotal = $pedidos->sum('subtotal');
                     $totalMargen   = $pedidos->sum('margen');   // o lo que te pidan mostrar
@@ -942,307 +942,314 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const MAX    = 5;
-  const telCol = document.getElementById('telefonos-col--view');
-  const celCol = document.getElementById('celulares-col--view');
-  const addTel = telCol.querySelector('.agregar-telefono');
-  const addCel = celCol.querySelector('.agregar-celular');
-  const btnEdit= document.getElementById('btnEditar');
-  const form   = document.getElementById('formCuenta');
-  if (!btnEdit || !form) return;
+    document.addEventListener('DOMContentLoaded', () => {
+    const MAX    = 5;
+    const telCol = document.getElementById('telefonos-col--view');
+    const celCol = document.getElementById('celulares-col--view');
+    const addTel = telCol.querySelector('.agregar-telefono');
+    const addCel = celCol.querySelector('.agregar-celular');
+    const btnEdit= document.getElementById('btnEditar');
+    const form   = document.getElementById('formCuenta');
+    if (!btnEdit || !form) return;
 
-  // fila 1 ⇢ incluye botón ➕ (oculto con d-none)
-const mkTelRowPlus = () => `
-  <div class="mb-2 telefono-item">
-    <label>Teléfono 1</label>
-    <div class="input-group input-group-separated">
-      <input type="text" class="form-control phone-field" placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-      <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
-      <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
-    </div>
-  </div>`;
-const mkCelRowPlus = () => `
-  <div class="mb-2 celular-item">
-    <label>Teléfono Celular 1</label>
-    <div class="input-group input-group-separated">
-      <input type="text" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
-      <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
-    </div>
-  </div>`;
-
-
-  // ——— Crea filas sin ➕ ———
-  const mkTelRow = () => `
+    // fila 1 ⇢ incluye botón ➕ (oculto con d-none)
+    const mkTelRowPlus = () => `
     <div class="mb-2 telefono-item">
-      <label></label>
-      <div class="input-group input-group-separated">
-        <input type="text" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-        <input type="text" class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
-        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-      </div>
+        <label>Teléfono 1</label>
+        <div class="input-group input-group-separated">
+        <input type="text" class="form-control phone-field" placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
+        <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
+        <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
+        </div>
     </div>`;
-  const mkCelRow = () => `
+    const mkCelRowPlus = () => `
     <div class="mb-2 celular-item">
-      <label></label>
-      <div class="input-group input-group-separated">
+        <label>Teléfono Celular 1</label>
+        <div class="input-group input-group-separated">
         <input type="text" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
-        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-      </div>
+        <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
+        </div>
     </div>`;
 
-  // ——— Actualiza nombres/textos y botones ➕/❌ ———
-  function updateRowButtons() {
-    // Teléfonos
-    telCol.querySelectorAll('.telefono-item').forEach((item, idx) => {
-      const plus  = item.querySelector('.agregar-telefono');
-      const minus = item.querySelector('.eliminar-item');
-      if (idx === 0) { plus?.classList.remove('d-none'); minus?.classList.add('d-none'); }
-      else           { plus?.classList.add('d-none');   minus?.classList.remove('d-none'); }
-    });
-    // Celulares
-    celCol.querySelectorAll('.celular-item').forEach((item, idx) => {
-      const plus  = item.querySelector('.agregar-celular');
-      const minus = item.querySelector('.eliminar-item');
-      if (idx === 0) { plus?.classList.remove('d-none'); minus?.classList.add('d-none'); }
-      else           { plus?.classList.add('d-none');   minus?.classList.remove('d-none'); }
-    });
-  }
 
-let telTimeout, celTimeout;
-function toggleLimitMessages() {
-  const telMsg = document.getElementById('tel-limit-msg');
-  const celMsg = document.getElementById('cel-limit-msg');
-  const telCount = telCol.querySelectorAll('.telefono-item').length;
-  const celCount = celCol.querySelectorAll('.celular-item').length;
+    // ——— Crea filas sin ➕ ———
+    const mkTelRow = () => `
+        <div class="mb-2 telefono-item">
+        <label></label>
+        <div class="input-group input-group-separated">
+            <input type="text" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
+            <input type="text" class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
+            <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+        </div>
+        </div>`;
+    const mkCelRow = () => `
+        <div class="mb-2 celular-item">
+        <label></label>
+        <div class="input-group input-group-separated">
+            <input type="text" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
+            <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+        </div>
+        </div>`;
 
-  // —— Teléfonos ——
-  if (telMsg) {
-    if (telCount >= MAX) {
-      // muestra y mueve al final
-      telMsg.classList.remove('d-none');
-      telCol.appendChild(telMsg);
-      clearTimeout(telTimeout);
-      telTimeout = setTimeout(() => {
-        telMsg.classList.add('d-none');
-      }, 5000);
-    } else {
-      telMsg.classList.add('d-none');
-      clearTimeout(telTimeout);
+    // ——— Actualiza nombres/textos y botones ➕/❌ ———
+    function updateRowButtons() {
+        // Teléfonos
+        telCol.querySelectorAll('.telefono-item').forEach((item, idx) => {
+        const plus  = item.querySelector('.agregar-telefono');
+        const minus = item.querySelector('.eliminar-item');
+        if (idx === 0) { plus?.classList.remove('d-none'); minus?.classList.add('d-none'); }
+        else           { plus?.classList.add('d-none');   minus?.classList.remove('d-none'); }
+        });
+        // Celulares
+        celCol.querySelectorAll('.celular-item').forEach((item, idx) => {
+        const plus  = item.querySelector('.agregar-celular');
+        const minus = item.querySelector('.eliminar-item');
+        if (idx === 0) { plus?.classList.remove('d-none'); minus?.classList.add('d-none'); }
+        else           { plus?.classList.add('d-none');   minus?.classList.remove('d-none'); }
+        });
     }
-  }
 
-  // —— Celulares ——
-  if (celMsg) {
-    if (celCount >= MAX) {
-      celMsg.classList.remove('d-none');
-      celCol.appendChild(celMsg);
-      clearTimeout(celTimeout);
-      celTimeout = setTimeout(() => {
-        celMsg.classList.add('d-none');
-      }, 5000);
-    } else {
-      celMsg.classList.add('d-none');
-      clearTimeout(celTimeout);
-    }
-  }
-}
+    let telTimeout, celTimeout;
+    function toggleLimitMessages() {
+    const telMsg = document.getElementById('tel-limit-msg');
+    const celMsg = document.getElementById('cel-limit-msg');
+    const telCount = telCol.querySelectorAll('.telefono-item').length;
+    const celCount = celCol.querySelectorAll('.celular-item').length;
 
-
-
-  function ensureFirstPlusButtons() {
-  // —— Teléfonos ——
-  const firstTel = telCol.querySelector('.telefono-item');
-  if (firstTel && !firstTel.querySelector('.agregar-telefono')) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn btn-outline-primary agregar-telefono btn-field';
-    btn.textContent = '+';
-    // lo metemos al final de la input-group
-    firstTel.querySelector('.input-group').appendChild(btn);
-  }
-  // —— Celulares ——
-  const firstCel = celCol.querySelector('.celular-item');
-  if (firstCel && !firstCel.querySelector('.agregar-celular')) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn btn-outline-primary agregar-celular btn-field';
-    btn.textContent = '+';
-    firstCel.querySelector('.input-group').appendChild(btn);
-  }
-}
-
-
-  // ——— Ajusta índices y etiquetas ———
-  const reindex = tipo => {
-    const items = (tipo === 'telefono')
-      ? telCol.querySelectorAll('.telefono-item')
-      : celCol.querySelectorAll('.celular-item');
-    items.forEach((item, i) => {
-      const idx = i + 1;
-      if (tipo === 'telefono') {
-        const [tel, ext] = item.querySelectorAll('input');
-        tel.name = `contacto[0][telefono${idx}]`;
-        ext.name = `contacto[0][ext${idx}]`;
-        item.querySelector('label').textContent = `Teléfono ${idx}`;
-      } else {
-        item.querySelector('input').name = `contacto[0][celular${idx}]`;
-        item.querySelector('label').textContent = `Teléfono Celular ${idx}`;
-      }
-    });
-    updateRowButtons();
-  };
-
-  // ——— Elimina filas vacías ———
-const removeEmptyRows = () => {
-  // borra vacías…
-  telCol.querySelectorAll('.telefono-item').forEach(el => {
-    const [tel, ext] = el.querySelectorAll('input');
-    if (!tel.value.trim() && !ext.value.trim()) el.remove();
-  });
-  celCol.querySelectorAll('.celular-item').forEach(el => {
-    if (!el.querySelector('input').value.trim()) el.remove();
-  });
-
-  // si quedó a 0, recrea fila 1 (con ➕ oculto)
-  if (telCol.querySelectorAll('.telefono-item').length === 0) {
-    telCol.insertAdjacentHTML('afterbegin', mkTelRowPlus());
-  }
-  if (celCol.querySelectorAll('.celular-item').length === 0) {
-    celCol.insertAdjacentHTML('afterbegin', mkCelRowPlus());
-  }
-
-  ensureFirstPlusButtons();
-
-  // re-indexa y ajusta botones
-  reindex('telefono');
-  reindex('celular');
-  toggleLimitMessages();
-
-};
-
-  // ——— Ocultar inputs/botones ———
-  const setEditing = (state) => {
-    /* 1. Inputs y selects */
-    form.querySelectorAll('input:not(.no-editar), select:not(.no-editar), textarea:not(.no-editar)')
-        .forEach(el => { el.disabled = !state; });
-
-    /* 2. Botones dinámicos de teléfonos / celulares */
-    const toggleBtns = (col, sel) => {
-      col.querySelectorAll(sel).forEach(btn => {
-        btn.disabled = !state;
-        btn.classList.toggle('d-none', !state);   // oculta en modo lectura
-      });
-    };
-    toggleBtns(telCol, '.agregar-telefono, .eliminar-item');
-    toggleBtns(celCol, '.agregar-celular, .eliminar-item');
-
-    /* 3. Botón Guardar */
-    const btnGuardar = document.querySelector('.btnGuardarCuenta');
-    if (btnGuardar) {
-        if (state) {
-            // Activar y poner en verde MACASA
-            btnGuardar.classList.remove('btn-secondary');
-            btnGuardar.classList.add('btn-macasa-verde');
-            btnGuardar.disabled = false;
+    // —— Teléfonos ——
+    if (telMsg) {
+        if (telCount >= MAX) {
+        // muestra y mueve al final
+        telMsg.classList.remove('d-none');
+        telCol.appendChild(telMsg);
+        clearTimeout(telTimeout);
+        telTimeout = setTimeout(() => {
+            telMsg.classList.add('d-none');
+        }, 5000);
         } else {
-            // Desactivar y poner gris Bootstrap
-            btnGuardar.classList.remove('btn-macasa-verde');
-            btnGuardar.classList.add('btn-secondary');
-            btnGuardar.disabled = true;
+        telMsg.classList.add('d-none');
+        clearTimeout(telTimeout);
         }
     }
 
-    
-  };
+    // —— Celulares ——
+    if (celMsg) {
+        if (celCount >= MAX) {
+        celMsg.classList.remove('d-none');
+        celCol.appendChild(celMsg);
+        clearTimeout(celTimeout);
+        celTimeout = setTimeout(() => {
+            celMsg.classList.add('d-none');
+        }, 5000);
+        } else {
+        celMsg.classList.add('d-none');
+        clearTimeout(celTimeout);
+        }
+    }
+    }
 
-  // ——— Lógica de Editar / Guardar ———
-  let editing = false;
-btnEdit.addEventListener('click', () => {
-  editing = !editing;
-  if (editing) {
-    // — Entrar a edición —
-    btnEdit.classList.remove('btn-macasa-verde');
-    btnEdit.classList.add('btn-secondary');
-    btnEdit.innerHTML = '<i class="fa fa-lock-open me-1"></i> Edición habilitada';
 
-    setEditing(true);
 
-    // Asegura fila 1 de celular si no existía
+    function ensureFirstPlusButtons() {
+    // —— Teléfonos ——
+    const firstTel = telCol.querySelector('.telefono-item');
+    if (firstTel && !firstTel.querySelector('.agregar-telefono')) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-outline-primary agregar-telefono btn-field';
+        btn.textContent = '+';
+        // lo metemos al final de la input-group
+        firstTel.querySelector('.input-group').appendChild(btn);
+    }
+    // —— Celulares ——
+    const firstCel = celCol.querySelector('.celular-item');
+    if (firstCel && !firstCel.querySelector('.agregar-celular')) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-outline-primary agregar-celular btn-field';
+        btn.textContent = '+';
+        firstCel.querySelector('.input-group').appendChild(btn);
+    }
+    }
+
+
+    // ——— Ajusta índices y etiquetas ———
+    const reindex = tipo => {
+        const items = (tipo === 'telefono')
+        ? telCol.querySelectorAll('.telefono-item')
+        : celCol.querySelectorAll('.celular-item');
+        items.forEach((item, i) => {
+        const idx = i + 1;
+        if (tipo === 'telefono') {
+            const [tel, ext] = item.querySelectorAll('input');
+            tel.name = `contacto[0][telefono${idx}]`;
+            ext.name = `contacto[0][ext${idx}]`;
+            item.querySelector('label').textContent = `Teléfono ${idx}`;
+        } else {
+            item.querySelector('input').name = `contacto[0][celular${idx}]`;
+            item.querySelector('label').textContent = `Teléfono Celular ${idx}`;
+        }
+        });
+        updateRowButtons();
+    };
+
+    // ——— Elimina filas vacías ———
+    const removeEmptyRows = () => {
+    // borra vacías…
+    telCol.querySelectorAll('.telefono-item').forEach(el => {
+        const [tel, ext] = el.querySelectorAll('input');
+        if (!tel.value.trim() && !ext.value.trim()) el.remove();
+    });
+    celCol.querySelectorAll('.celular-item').forEach(el => {
+        if (!el.querySelector('input').value.trim()) el.remove();
+    });
+
+    // si quedó a 0, recrea fila 1 (con ➕ oculto)
+    if (telCol.querySelectorAll('.telefono-item').length === 0) {
+        telCol.insertAdjacentHTML('afterbegin', mkTelRowPlus());
+    }
     if (celCol.querySelectorAll('.celular-item').length === 0) {
-      celCol.insertAdjacentHTML(
-        'afterbegin',
-        mkCelRow().replace('<label></label>','<label>Teléfono Celular 1</label>')
-      );
+        celCol.insertAdjacentHTML('afterbegin', mkCelRowPlus());
     }
 
     ensureFirstPlusButtons();
 
-    // Reindex para mostrar ➕/❌ correctamente
+    // re-indexa y ajusta botones
     reindex('telefono');
     reindex('celular');
     toggleLimitMessages();
 
-  } else {
-    // — Cerrar edición —
-    removeEmptyRows();        // limpia vacías y deja al menos 1 fila
+    };
+
+    // ——— Ocultar inputs/botones ———
+    const setEditing = (state) => {
+        /* 1. Inputs y selects */
+        form.querySelectorAll('input:not(.no-editar), select:not(.no-editar), textarea:not(.no-editar)')
+            .forEach(el => { el.disabled = !state; });
+
+        /* 2. Botones dinámicos de teléfonos / celulares */
+        const toggleBtns = (col, sel) => {
+        col.querySelectorAll(sel).forEach(btn => {
+            btn.disabled = !state;
+            btn.classList.toggle('d-none', !state);   // oculta en modo lectura
+        });
+        };
+        toggleBtns(telCol, '.agregar-telefono, .eliminar-item');
+        toggleBtns(celCol, '.agregar-celular, .eliminar-item');
+
+        /* 3. Botón Guardar */
+        const btnGuardar = document.querySelector('.btnGuardarCuenta');
+        if (btnGuardar) {
+            if (state) {
+                // Activar y poner en verde MACASA
+                btnGuardar.classList.remove('btn-secondary');
+                btnGuardar.classList.add('btn-success');
+                btnGuardar.disabled = false;
+            } else {
+                // Desactivar y poner gris Bootstrap
+                btnGuardar.classList.remove('btn-success');
+                btnGuardar.classList.add('btn-secondary');
+                btnGuardar.disabled = true;
+            }
+        }
+
+        
+    };
+
+    // ——— Lógica de Editar / Guardar ———
+    let editing = false;
+    btnEdit.addEventListener('click', () => {
+    editing = !editing;
+    if (editing) {
+        // — Entrar a edición —
+        btnEdit.classList.remove('btn-success');
+        btnEdit.classList.add('btn-secondary');
+        btnEdit.innerHTML = '<i class="fa fa-lock-open me-1"></i> Edición habilitada';
+        document.querySelectorAll('.asterisco').forEach (el => el.classList.add('ocultar-asterisco'));
+        setEditing(true);
+
+        // Asegura fila 1 de celular si no existía
+        if (celCol.querySelectorAll('.celular-item').length === 0) {
+        celCol.insertAdjacentHTML(
+            'afterbegin',
+            mkCelRow().replace('<label></label>','<label>Teléfono Celular 1</label>')
+        );
+        }
+
+        ensureFirstPlusButtons();
+
+        // Reindex para mostrar ➕/❌ correctamente
+        reindex('telefono');
+        reindex('celular');
+        toggleLimitMessages();
+
+    } else {
+        // — Cerrar edición —
+        removeEmptyRows();        // limpia vacías y deja al menos 1 fila
+        ensureFirstPlusButtons();
+
+        reindex('telefono');      // reposiciona y reaplica updateRowButtons
+        reindex('celular');
+        toggleLimitMessages();
+
+        setEditing(false);        // por último, oculta todos los ➕/❌ y bloquea inputs
+
+        btnEdit.classList.remove('btn-secondary');
+        btnEdit.classList.add('btn-success');
+        btnEdit.innerHTML = '<i class="fa fa-edit me-1"></i> Editar cuenta';
+        document.querySelectorAll('.asterisco').forEach(el => el.classList.remove('ocultar-asterisco'));
+
+    }
+    });
+
+
+    // ——— Añadir filas ———
+    telCol.addEventListener('click', e => {
+    if (!e.target.closest('.agregar-telefono')) return;
+    if (telCol.querySelectorAll('.telefono-item').length >= MAX) return;
+    telCol.insertAdjacentHTML('beforeend', mkTelRow()); // fila sin ➕
+    reindex('telefono');
+    toggleLimitMessages();
+
+    });
+
+    celCol.addEventListener('click', e => {
+    if (!e.target.closest('.agregar-celular')) return;
+    if (celCol.querySelectorAll('.celular-item').length >= MAX) return;
+    celCol.insertAdjacentHTML('beforeend', mkCelRow());
+    reindex('celular');
+    toggleLimitMessages();
+
+    });
+
+
+    // ——— Eliminar filas ———
+    document.addEventListener('click', e => {
+        if (!e.target.classList.contains('eliminar-item')) return;
+        const item = e.target.closest('.telefono-item, .celular-item');
+        const isTel = !!item.closest('#telefonos-col--view');
+        item.remove();
+        reindex(isTel ? 'telefono' : 'celular');
+    });
+
     ensureFirstPlusButtons();
 
-    reindex('telefono');      // reposiciona y reaplica updateRowButtons
-    reindex('celular');
-    toggleLimitMessages();
+    // Estado inicial
+        reindex('telefono');
+        reindex('celular');
+        toggleLimitMessages();
 
-    setEditing(false);        // por último, oculta todos los ➕/❌ y bloquea inputs
+        setEditing(false);
 
-    btnEdit.classList.remove('btn-secondary');
-    btnEdit.classList.add('btn-macasa-verde');
-    btnEdit.innerHTML = '<i class="fa fa-edit me-1"></i> Editar cuenta';
-
-  }
-});
-
-
-  // ——— Añadir filas ———
-telCol.addEventListener('click', e => {
-  if (!e.target.closest('.agregar-telefono')) return;
-  if (telCol.querySelectorAll('.telefono-item').length >= MAX) return;
-  telCol.insertAdjacentHTML('beforeend', mkTelRow()); // fila sin ➕
-  reindex('telefono');
-  toggleLimitMessages();
-
-});
-
-celCol.addEventListener('click', e => {
-  if (!e.target.closest('.agregar-celular')) return;
-  if (celCol.querySelectorAll('.celular-item').length >= MAX) return;
-  celCol.insertAdjacentHTML('beforeend', mkCelRow());
-  reindex('celular');
-  toggleLimitMessages();
-
-});
-
-
-  // ——— Eliminar filas ———
-  document.addEventListener('click', e => {
-    if (!e.target.classList.contains('eliminar-item')) return;
-    const item = e.target.closest('.telefono-item, .celular-item');
-    const isTel = !!item.closest('#telefonos-col--view');
-    item.remove();
-    reindex(isTel ? 'telefono' : 'celular');
-  });
-
-  ensureFirstPlusButtons();
-
-  // Estado inicial
-    reindex('telefono');
-    reindex('celular');
-    toggleLimitMessages();
-
-    setEditing(false);
-
-});
+    });
 </script>
 
+{{-- <script>
+    document.getElementById('btnEditar').addEventListener('clic', function(){
+        console.log('clci para asterisco');
+        document.getElementById('asterisco').classList.add('ocultar-asterisco');
+    });
+</script> --}}
 
 
 
