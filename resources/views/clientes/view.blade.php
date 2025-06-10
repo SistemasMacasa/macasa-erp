@@ -642,6 +642,7 @@
                     </thead>
 
                     <tbody>
+                        @php $cantidad_cotizaciones = 0; @endphp
                         @forelse ($cotizaciones as $c)
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($c['fecha'])->format('d-m-Y') }}</td>
@@ -651,6 +652,7 @@
                                 <td class="text-end">{{ number_format($c['margen'], 2) }}</td>
                                 <td class="text-end">{{ number_format($c['factor'], 2) }}%</td>
                             </tr>
+                        @php ++$cantidad_cotizaciones @endphp
                         @empty
                             <tr>
                                 <td colspan="5" class="text-center text-muted">Sin cotizaciones registradas…</td>
@@ -658,10 +660,13 @@
                         @endforelse
                     </tbody>
                     <tfoot class="table-light position-sticky bottom-0" style="border-style: none !important; z-index:1;">
-                        <tr style="border-style: none !important;">
-                            <th colspan="3" class="text-end">Totales</th>
-                            <th class="text-end">$ {{ number_format($totalSubtotal, 2) }}</th>
-                            <th class="text-end">{{ number_format($totalMargen, 2) }}</th>
+                        <tr >
+                            <th colspan="2" class="text-start">
+                                <span>{{ $cantidad_cotizaciones }} cotizaciones registradas</span>
+                            </th>
+                            <th class="text-end">Totales:</th>
+                            <th class="text-end">${{ number_format($totalSubtotal, 2) }}</th>
+                            <th class="text-end">${{ number_format($totalMargen, 2) }}</th>
                             <th class="text-end">{{ number_format($totalFactor, 2) }}%</th>
                         </tr>
                     </tfoot>
@@ -702,6 +707,7 @@
                     </thead>
 
                     <tbody>
+                        @php $cantidad_pedidos = 0; @endphp
                         @forelse ($pedidos as $p)
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($p['fecha'])->format('d-m-Y') }}</td>
@@ -711,6 +717,7 @@
                                 <td class="text-end">{{ number_format($p['margen'], 2) }}</td>
                                 <td class="text-end">{{ number_format($p['factor'], 2) }}%</td>
                             </tr>
+                            @php ++$cantidad_pedidos; @endphp
                         @empty
                             <tr>
                                 <td colspan="5" class="text-center text-muted">Sin pedidos registrados…</td>
@@ -719,7 +726,10 @@
                     </tbody>
                     <tfoot class="table-light position-sticky bottom-0" style="border-style: none !important; z-index:1;">
                         <tr style="border-style: none !important;">
-                            <th colspan="3" class="text-end">Totales</th>
+                            <th colspan="2" class="text-start">
+                                <span>{{ $cantidad_pedidos }} pedidos registrados</span>
+                            </th>
+                            <th class="text-end">Totales</th>
                             <th class="text-end">$ {{ number_format($totalSubtotal, 2) }}</th>
                             <th class="text-end">{{ number_format($totalMargen, 2) }}</th>
                             <th class="text-end">{{ number_format($totalFactor, 2) }}%</th>
@@ -735,48 +745,93 @@
     {{-- 📝 Historial de notas --}}
     <div class="card shadow-lg">
         {{-- Cabecera de la tarjeta --}}
-        <div class="card-header fw-bold" style="background-color: rgba(81, 86, 190, 0.1);">
-            Historial de notas
+        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+            <h5 class="mb-0 flex-grow-1">Historial de notas</h5>
         </div>
         <div class="card-body">
 
             {{-- Área scrolleable con historial --}}
-            <div class="form-group mb-4">
-                <textarea class="form-control" rows="10"  disabled style="resize: none; overflow-y: scroll;">
-                    @foreach ($notas as $nota)
-                    {{ \Carbon\Carbon::parse($nota->fecha_registro)->format('d-m-Y h:i A') }} - EJECUTIVO: {{ $nota->usuario->username ?? '—' }} - ETAPA: {{ strtoupper($nota->etapa) }}
+            <div class="mb-4" style="max-height: 380px; overflow-y: auto; background: #e1e1e1; border-radius: 8px; padding: 1rem;">
+                @forelse ($notas as $nota)
+                    <div class="card mb-3 shadow-sm border-0" style="background: #fff; border-radius: 8px;">
+                        <div class="card-body py-2 px-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="fw-semibold" style="font-size: 1em;">
+                                        {{ \Carbon\Carbon::parse($nota->fecha_registro)->format('d-m-Y h:i A') }}
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    {{-- Etiqueta por tipo --}}
+                                    @if($nota->es_automatico)
+                                        <span class="badge" style="background-color: #00ce7c; font-size: .85em;">Automática</span>
+                                    @else
+                                        <span class="badge" style="background-color: #425cc7; color: white; font-size: .85em;">Manual</span>
+                                    @endif
+                                    <span class="badge"
+                                        style="background-color:{{ $nota->etapa === 'venta' ? 'var(--macasa-verde)' : '#FEE028' }};
+                                               color:{{ $nota->etapa === 'venta' ? '#fff' : '#000' }};
+                                               font-size: .85em; min-width:10ch;">
+                                        @switch($nota->etapa)
+                                            @case('venta')
+                                                Venta
+                                                @break
+                                            @case('cotizacion')
+                                                Cotización
+                                                @break
+                                            @default
+                                                —
+                                        @endswitch
+                                    </span>
+                                </div>
+                            </div>
 
-                    {!! $nota->contenido !!}
-
-                    @if ($nota->fecha_reprogramacion)
-                    ========
-                    Llamada reprogramada para: {{ \Carbon\Carbon::parse($nota->fecha_reprogramacion)->format('d-m-Y') }}
-                    @endif
-
-                    ========
-
-                    @endforeach
-                </textarea>
+                            <div class="mb-2" style="font-size: 1em; color: #555;">
+                                {!! nl2br(e($nota->contenido)) !!}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center" style="font-size: .85em;">
+                                <span class="text-muted">
+                                    Ejecutivo: <strong>{{ $nota->usuario->username ?? '—' }}</strong>
+                                </span>
+                                @if ($nota->fecha_reprogramacion)
+                                    <span class="text-primary">
+                                        <i class="fa fa-calendar-alt me-1"></i>
+                                        Llamada reprogramada para: <strong>{{ \Carbon\Carbon::parse($nota->fecha_reprogramacion)->format('d-m-Y') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center text-muted py-4">Sin notas registradas…</div>
+                @endforelse
             </div>
 
             {{-- Formulario para anexar nueva nota --}}
-            <form action="{{ route('inicio') }}" method="POST">
+            <form action="{{ route('clientes.nota.store', $cliente->id_cliente) }}" method="POST">
                 @csrf
                 <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
+                <input type="hidden" name="es_automatico" value="0">
+                <input type="hidden" name="ciclo_venta" value="{{ $cliente->ciclo_venta }}">
+
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col div-20ch">
                         <label>Volver a llamar</label>
                         <input type="date" name="fecha_reprogramacion" class="form-control">
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class=" col-md-8 form-group mt-3">
+                    <div class="col-md-12 form-group mt-3">
                         <label>Nota:</label>
-                        <textarea name="contenido" rows="3" class="form-control" required></textarea>
-                    </div>
-                    <div class="col-md-4 align-items-end mt-3">
-                        <button type="submit" class="btn btn-success">Anexar nota</button>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <textarea name="contenido"
+                                      rows="3"
+                                      class="form-control"
+                                      style="resize: both; width: 50%; min-width: 200px; max-width: 100%;"
+                                      required></textarea>
+                            <button type="submit" class="btn btn-macasa-verde div-15ch" style="height: 48px; white-space: nowrap;">Anexar nota</button>
+                        </div>
                     </div>
                 </div>
             </form>

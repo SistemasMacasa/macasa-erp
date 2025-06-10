@@ -130,6 +130,7 @@ class ClienteController extends Controller
     }
     public function view($id)
     {
+
         $cliente = Cliente::with([
             'contacto_predet',
             'razon_social_predet',
@@ -358,9 +359,12 @@ class ClienteController extends Controller
                             " ha actualizado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
 
                 registrarNota(
-                    $cliente->id_cliente,
-                    $mensaje,
-                    $cliente->ciclo_venta,
+                    id_cliente: $cliente->id_cliente,
+                    contenido: $mensaje,
+                    etapa: $cliente->ciclo_venta,
+                    fecha_reprogramacion: null,
+                    es_automatico: 1,
+                    
                 );
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
@@ -463,6 +467,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
@@ -487,6 +493,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
         return redirect('clientes')->with('success', 'Cliente eliminado correctamente');
     }
@@ -587,6 +595,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
 
                 return redirect(to: '/clientes')->with('success', 'Cuenta personal creada correctamente');
@@ -785,6 +795,8 @@ class ClienteController extends Controller
                     $cliente->id_cliente,
                     $mensaje,
                     $cliente->ciclo_venta,
+                    null,
+                    1
                 );
 
                 return redirect(to: '/clientes')->with('success', 'Cliente creado correctamente');
@@ -803,20 +815,71 @@ class ClienteController extends Controller
         ->with('success', 'Cliente creado correctamente');
         }
 
+    public function storeNota(Request $request, $id)
+    {
+        $request->validate([
+            'contenido' => 'required|string',
+            'fecha_reprogramacion' => 'nullable|date',
+        ]);
+
+        $fecha_reprogramacion = $request->input('fecha_reprogramacion') ?? now()->addDays(3);
+        //Solo la llamada del helper en storeNota es manual, todas las demas son automáticas.
+        registrarNota(
+            id_cliente: $id,
+            contenido: $request->input('contenido'),
+            etapa: $request->input('ciclo_venta'),
+            fecha_reprogramacion: $fecha_reprogramacion,
+            es_automatico: $request->input('es_automatico')
+        );
+
+        return redirect()->route('clientes.view', $id)->with('success', 'Nota registrada correctamente.');
+    }
+
     /**
      * Muestra el formulario para traspasar múltiples clientes.
      */
-    public function transfer()
+    public function transfer(Request $request)
     {
-        // Ejecutivos de venta (usuarios internos)
         $vendedores = Usuario::whereNull('id_cliente')->get();
 
+        $lado = $request->input('lado'); // 'origen' o 'destino'
+        $query = Cliente::with(['primerContacto', 'vendedor']);
 
-        $clientes = Cliente::with(['primerContacto', 'vendedor'])
-            ->orderBy('id_cliente')
-            ->get();
+        // Valor correcto de ID vendedor según el lado
+        $idVendedor = match ($lado) {
+            'origen'  => $request->input('id_vendedor_origen'),
+            'destino' => $request->input('id_vendedor_destino'),
+            default   => null,
+        };
 
-        return view('clientes.transfer', compact('vendedores','clientes'));
+        if ($idVendedor === 'base') {
+            $query->where(fn($q) => $q->whereNull('id_vendedor')->orWhere('id_vendedor', 0));
+        } elseif ($idVendedor) {
+            $query->where('id_vendedor', $idVendedor);
+        }
+
+        // Resto de filtros visuales
+        if ($ciclo = $request->input('ciclo_venta')) {
+            $query->where('ciclo_venta', $ciclo);
+        }
+
+        if ($orden = $request->input('orden')) {
+            $query->orderBy($orden);
+        } else {
+            $query->orderBy('id_cliente');
+        }
+        if($request->input('lado'))
+        {
+            $perPage = is_numeric($request->input('per_page')) 
+            ? (int) $request->input('per_page') 
+            : 25;
+
+            $clientes = $query->paginate($request->input('per_page', 25))->withQueryString();
+        }else{
+            $clientes= null;
+        }
+
+        return view('clientes.transfer', compact('vendedores', 'clientes', 'lado', 'idVendedor'));
     }
 
     /**
@@ -824,20 +887,22 @@ class ClienteController extends Controller
      */
     public function transferStore(Request $request)
     {
-        $data = $request->validate([
-            'clientes' => 'required|array',
-            'clientes.*' => 'integer|exists:clientes,id_cliente',
-            'destino'  => 'required|integer|exists:usuarios,id'
-        ]);
+        $ids     = $request->input('clientes', []);
+        $origen  = $request->input('origen');
+        $destino = $request->input('destino');
 
-        // Actualizar en lote
-        Cliente::whereIn('id_cliente', $data['clientes'])
-               ->update(['id_vendedor' => $data['destino']]);
+        if (empty($ids)) {
+            return back()->with('error', 'No se seleccionó ningún cliente.');
+        }
 
-        return redirect()
-            ->route('clientes.transfer')
-            ->with('success','¡Clientes transferidos correctamente!');
+        $destinoId = ($destino === 'base' || $destino === null || $destino === '0') ? null : (int)$destino;
+
+        Cliente::whereIn('id_cliente', $ids)->update(['id_vendedor' => $destinoId]);
+
+        return redirect()->route('clientes.transfer')->with('success', count($ids) . ' cuentas traspasadas.');
     }
+
+
 
 }
 

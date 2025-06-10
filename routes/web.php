@@ -30,20 +30,18 @@ Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name
 
 Route::get('/clientes/view/{id}', [ClienteController::class, 'view'])->name('clientes.view');
 
-Route::middleware('auth')->group(function() {
-    // Mostrar formulario de transferencia
-    Route::get('/clientes/transfer', [ClienteController::class, 'transfer'])
-         ->name('clientes.transfer');
+Route::post('/clientes/{id}/nota', [ClienteController::class, 'storeNota'])->name('clientes.nota.store');
+// Mostrar formulario de transferencia
+Route::get('/clientes/transfer', [ClienteController::class, 'transfer'])
+        ->name('clientes.transfer');
 
-    // Procesar transferencia
-    Route::post('/clientes/transfer', [ClienteController::class, 'transferStore'])
-         ->name('clientes.transfer.store');
-});
+// Procesar transferencia
+Route::post('/clientes/transfer', [ClienteController::class, 'transferStore'])
+        ->name('clientes.transfer.store');
 
-//name sirve para darle un alias a la ruta y que puedes usar en todo el código de Laravel
-// por ejemplo: <a href="{{ route('clientes.create') }}">Crear Cliente</a>
 
 //CRUD Usuarios internos de SIS
+//Eric: Cambiar el ruteo, no usar resource(), definir cada ruta a mano
 Route::resource('usuarios', UsuarioController::class);
 
 //Login y Logout
@@ -54,12 +52,12 @@ Route::post('/logout', function () {
     return redirect()->route('login');
 })->name('logout');
 
+//Protección de rutas, se requiere login.
 Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['auth'])->get('/', function () {
         return view('inicio');
     })->name('inicio');
     
-    // ... y cualquier otra ruta que quieras proteger
 });
 
