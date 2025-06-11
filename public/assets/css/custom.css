@@ -245,7 +245,12 @@ body[data-sidebar="light"] label {
   background-color: var(--mc-verde);
   border-color: var(--mc-verde);
 }
-
+.btn-limpiar {
+  width: 20ch;
+}
+.caja-paginado {
+  width: 70px;
+}
 /* Botón gris desactivado */
 .btn-disabled-gris {
   background-color: #d6d6d6 !important;
@@ -444,6 +449,7 @@ body[data-sidebar-size="sm"] .vertical-menu {
   position: fixed;
   width: 70px;
   overflow: visible !important;
+  /* margin-left: 10px; */
   /* deja volar los submenús */
 }
 
@@ -639,7 +645,6 @@ body:not([data-sidebar="dark"]) .section-card {
   background: #f7f9fc;
   border: 1px solid #e1e6ef;
 }
-
 body:not([data-sidebar="dark"]) .section-card-header {
   background: var(--tabla-header-bg);
   color: var(--tabla-header-text);
@@ -665,7 +670,8 @@ body:not([data-bs-theme=dark]) h2,
 body:not([data-bs-theme=dark]) h3,
 body:not([data-bs-theme=dark]) h4,
 body:not([data-bs-theme=dark]) h5,
-body:not([data-bs-theme=dark]) h6 {
+body:not([data-bs-theme=dark]) h6,
+body:not([data-bs-theme=dark]) span{
   color: #000000;
 }
 
@@ -699,7 +705,7 @@ body[data-bs-theme=dark] h6 {
 [data-bs-theme=dark] h4,
 [data-bs-theme=dark] h5,
 [data-bs-theme=dark] h6 {
-  color: var(--texto-gris-modoDark);
+  color: var(--texto-blanco-modoDark);
 }
 
 /*───────────────────────────────────────────────
@@ -717,7 +723,7 @@ body[data-sidebar="dark"] .section-card-header {
 }
 
 body[data-sidebar="dark"] .card-body {
-  background: #363a38;
+  background: #363a38 !important;
 }
 
 body[data-sidebar="dark"] .form-select:disabled {
@@ -740,10 +746,24 @@ body[data-sidebar="dark"] .section-card label {
 body[data-sidebar=dark] #sidebar-menu ul li a {
   color: var(--bs-sidebar-dark-menu-item-color);
 }
-
+body[data-sidebar-size="sm"] #sidebar-menu .metismenu > li > a {
+  /* padding-left: 8px; */
+  transform: translateX(-10px);
+  margin-left: 10px;
+  /* opacity: 0.7; */
+}
+body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a {
+    padding: 11px 20px;
+    -webkit-transition: none;
+    transition: background-color .20s ease, color .20s ease, transform .20s ease;
+ }
 body[data-sidebar="dark"] #sidebar-menu {
   color: var(--texto-blanco-modoDark)!important;
+  /* margin-top: 15px; */
 }
+/* body[data-sidebar-size="sm"] #sidebar-menu {
+   margin-top: 39px;
+} */
 
 body[data-sidebar="dark"] #sidebar-menu a,
 body[data-sidebar="dark"] #sidebar-menu .menu-title,
@@ -770,10 +790,19 @@ body[data-sidebar="dark"] #sidebar-menu .icon {
 }
 
 #sidebar-menu .metismenu>li>a>svg {
+  width: 20px;
+  height: 20px;
+}
+body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a svg  {
+  width: 20px;
+  height: 20px;
+  margin-left: 0;
+}
+body[data-sidebar-size=sm] #sidebar-menu .icon {
   width: 20px !important;
   height: 20px !important;
+  margin-left: 0 !important;
 }
-
 /* efecto cuando el cursor pasa encima  */
 #sidebar-menu .metismenu>li>a:hover,
 #sidebar-menu .metismenu>li.mm-active>a {
@@ -1388,7 +1417,9 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 /* ───────────────────────────────────────────────
      Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */
-
+  .bg-body{
+    background-color:#f8f9fa !important;
+  }
 /* ───────── Tabla con layout fijo y altura homogénea ───────── */
 #tabla-clientes {
   table-layout: fixed;
@@ -1417,7 +1448,9 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   font-size: var(--bs-body-font-size);
   font-weight: 600;
 }
-
+.header-tabla {
+  background-color: var(--tabla-header-bg) !important;
+}
 #tblPedidos thead tr th,
 #tblCotizaciones thead tr th {
   background: var(--tabla-header-bg);
@@ -1610,7 +1643,22 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
   color: #0d6efd;
 }
 
-
+/* ───────────────────────────────────────────────
+   ESTILOS PARA NOTAS
+   ─────────────────────────────────────────────── */
+  .body-notas{
+    max-height: 380px;
+    overflow-y: auto;
+    background: #e1e1e1;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  body[data-sidebar="dark"] .body-notas{
+    background-color: #333;
+  }
+  body[data-sidebar="dark"] .text-normal {
+    color: var(--texto-blanco-modoDark);
+  }
 /* ───────────────────────────────────────────────
    Termina Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */

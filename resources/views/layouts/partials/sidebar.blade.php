@@ -3,7 +3,7 @@
         <div id="sidebar-menu">
             <ul class="metismenu list-unstyled text-white" id="side-menu">
 
-                <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem; padding: 10px 25px !important;">Menú</li>
+                {{-- <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem; padding: 10px 25px !important;">Menú</li> --}}
 
                 <li>
                     <a href="{{ route('inicio') }}">
