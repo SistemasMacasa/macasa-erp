@@ -1,14 +1,11 @@
 @extends('layouts.app')
 @section('title', 'SIS 3.0 | Mis Cuentas')
 
-
-
 @section('content')
 <div class="container-fluid">
 
     {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
-    
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
@@ -39,8 +36,6 @@
 
             <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
                 <div class="row gx-3 gy-2 justify-content-between">
-
-                    {{-- Fecha de creación --}}
 
                     {{-- Búsqueda global --}}
                     <div class="col">
@@ -177,7 +172,7 @@
                 </div>
 
 
-                <div class="row gx-3 gy-2 mt-1 justify-content-between">
+                <div class="row gx-3 gy-2 justify-content-between mt-1">
                     <div class="col" style="min-width: 172px;"></div>
                     <div class="col" style="min-width: 172px;"></div>
                     <div class="col" style="min-width: 172px;"></div>
@@ -213,7 +208,7 @@
         <div class="col">
             <p class="mb-0 text-muted small">
                 Mostrando <strong>{{ $clientes->firstItem() ?? "Todos" }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
-                de <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes encontrados
+                | Total: <strong>{{ $clientes->total() ?? "Todos" }}</strong> cuentas encontradas
             </p>
         </div>
 
@@ -445,7 +440,7 @@
         <div class="col-sm">
             <p class="mb-0 text-muted small">
                 Mostrando <strong>{{ $clientes->firstItem() }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
-                de <strong>{{ $clientes->total() }}</strong> clientes encontrados
+                | Total: <strong>{{ $clientes->total() }}</strong> cuentas encontradas
             </p>
         </div>
 

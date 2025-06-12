@@ -908,7 +908,7 @@ class ClienteController extends Controller
     // Recalls
     public function recalls(Request $request)
     {
-        $estado       = $request->input('estado', 'pendientes');
+        $estado       = $request->input('estado');
         $id_vendedor  = $request->input('id_vendedor');
         $orden        = $request->input('orden', 'nombre');
         $busqueda     = $request->input('busqueda');
@@ -920,7 +920,8 @@ class ClienteController extends Controller
                     ->pluck('nombre_completo', 'id_usuario');
 
         
-        if ($estado === 'contestados') {
+        if ($estado === 'contestados') 
+        {
             $query = Nota::with(['cliente.primerContacto', 'usuario'])
                 ->whereNotNull('fecha_reprogramacion');
 
@@ -941,12 +942,14 @@ class ClienteController extends Controller
             if ($orden === 'fecha') {
                 $query->orderByDesc('fecha_reprogramacion');
             } else {
-                $query->orderBy('cliente_id'); // fallback
+                $query->orderBy('id_cliente'); // fallback
             }
 
             $clientes = $query->paginate($perPage)->appends($request->all());
 
-        } else {
+        } 
+        elseif($estado === 'pendientes')
+        {
             $query = Cliente::with(['primerContacto', 'vendedor'])
                 ->whereNotNull('recall');
 
@@ -967,6 +970,9 @@ class ClienteController extends Controller
             $query->orderBy($orden === 'fecha' ? 'recall' : 'nombre');
 
             $clientes = $query->paginate($perPage)->appends($request->all());
+        }
+        else{
+            $clientes = [];
         }
 
         return view('clientes.recalls', compact('clientes', 'estado', 'ejecutivos'));

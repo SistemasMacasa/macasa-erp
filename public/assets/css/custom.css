@@ -96,12 +96,19 @@ body[data-bs-theme="dark"] {
   /* 30 caracteres */
 }
 
+.btn-secundario{
+  min-width: 15ch;
+}
+
 .col-5ch {
   min-width: 5ch;
   max-width: 5ch;
 }
 
-
+.col-10ch {
+  min-width: 10ch;
+  max-width: 10ch;
+}
 
 .col-15ch {
   min-width: 15ch;
@@ -113,6 +120,11 @@ body[data-bs-theme="dark"] {
 .col-20ch{
   min-width: 20ch;
   max-width: 20ch;
+}
+
+.col-25ch{
+  min-width: 25ch;
+  max-width: 25ch;
 }
 
 .campo-dato-secundario {
@@ -1466,7 +1478,6 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(1) {
   left: 0;
   z-index: 3;
   background: var(--bs-table-bg);
-
   width: 11ch;
 }
 
