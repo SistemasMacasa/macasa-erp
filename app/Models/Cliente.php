@@ -64,8 +64,14 @@ class Cliente extends Model
 
     public function direccionesEntrega()
     {
-        return $this->hasMany(Direccion::class, 'id_cliente', 'id_cliente');
+        return $this->hasMany(Direccion::class, 'id_cliente', 'id_cliente')
+                    ->whereIn('id_direccion', function ($query) {
+                        $query->select('id_direccion_entrega')
+                            ->from('contactos')
+                            ->whereNotNull('id_direccion_entrega');
+                    });
     }
+
 
     public function contacto_entrega_predet()
     {
@@ -73,7 +79,6 @@ class Cliente extends Model
                     ->where('predeterminado', 1)
                     ->whereNotNull('id_direccion_entrega');
     }
-
 
     public function notas()
     {

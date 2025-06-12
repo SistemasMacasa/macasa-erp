@@ -44,6 +44,11 @@ class Usuario extends Authenticatable
         return $this->username;
     }
 
+    public function getNombreCompletoAttribute()
+    {
+        return trim("{$this->nombre} {$this->apellido_p} {$this->apellido_m}");
+    }
+
     // 1) Un usuario interno (tipo=ERP && id_cliente==NULL) puede manejar varios clientes
     public function clientesManejados()
     {

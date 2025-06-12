@@ -1,14 +1,11 @@
 @extends('layouts.app')
 @section('title', 'SIS 3.0 | Mis Cuentas')
 
-
-
 @section('content')
     <div class="container-fluid">
 
         {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
-
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
@@ -21,7 +18,7 @@
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-primary btn-principal">
+        <a href="{{ route('clientes.recalls') }}" class="btn btn-primary btn-principal">
             <i class="fa fa-phone me-1"></i> Mis Recall's
         </a>
 
@@ -39,8 +36,6 @@
 
             <div class="card-body bg-body">
                 <div class="row gx-3 gy-2 justify-content-between">
-
-                    {{-- Fecha de creación --}}
 
                     {{-- Búsqueda global --}}
                     <div class="col">
@@ -152,12 +147,20 @@
                 </div>
 
 
-                <div class="d-flex justify-content-end gap-2 mt-3">
-                    <a href="{{ route('clientes.index') }}"
-                        class="btn btn-secondary btn-limpiar d-flex align-items-center justify-content-center ">
-                        <i class="fa fa-eraser me-1"></i>
-                        Limpiar
-                    </a>
+                <div class="row gx-3 gy-2 justify-content-between mt-1">
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col d-flex gap-2 align-items-end">
+                        <a
+                        href="{{ route('clientes.index') }}"
+                        class="btn btn-secondary d-flex align-items-center justify-content-center"
+                        style="width:50%; /* múltiplo de 5ch */"
+                        >
+                            <i class="fa fa-eraser me-1"></i>
+                            Limpiar
+                        </a>
 
                     <button type="submit"
                         class="btn btn-success btn-limpiar d-flex align-items-center justify-content-center">
@@ -174,7 +177,7 @@
     {{-- ───────── Paginación ───────── --}}
     <div class="row align-items-center mb-3">
         {{-- Texto de totales --}}
-        <div class="col-sm">
+        <div class="col">
             <p class="mb-0 text-muted small">
                 Mostrando <strong>{{ $clientes->firstItem() ?? 'Todos' }}</strong> a
                 <strong>{{ $clientes->lastItem() }}</strong>
@@ -428,7 +431,7 @@
         <div class="col-sm">
             <p class="mb-0 text-muted small">
                 Mostrando <strong>{{ $clientes->firstItem() }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
-                de <strong>{{ $clientes->total() }}</strong> clientes encontrados
+                | Total: <strong>{{ $clientes->total() }}</strong> cuentas encontradas
             </p>
         </div>
 

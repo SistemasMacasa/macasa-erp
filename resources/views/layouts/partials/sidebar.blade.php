@@ -25,7 +25,7 @@
                         </li>
                         <li><a href="{{ route('clientes.index') }}">Mis Cuentas</a></li>
                         <li><a href="{{ route('clientes.transfer') }}">Traspaso de Cuentas</a></li>
-                        <li><a href="{{ route('inicio') }}">Mis Recall's</a></li>
+                        <li><a href="{{ route('clientes.recalls') }}">Mis Recall's</a></li>
                         <li><a href="{{ route('inicio') }}">Cuentas Archivadas</a></li>
                     </ul>
                 </li>
@@ -36,7 +36,7 @@
                         <span class="menu-item">Monitor de Cotizaciones</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('inicio') }}">Monitor de Cotizaciones</a></li>
+                        <li><a href="{{ route('cotizaciones.index') }}">Monitor de Cotizaciones</a></li>
                     </ul>
                 </li>
 

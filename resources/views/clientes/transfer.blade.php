@@ -10,59 +10,83 @@
     @endsection
     <div class="container-fluid">
         <h1 class="mb-4">Traspaso de cuentas</h1>
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-7">
+            <div id="alert-transfer" class="alert alert-success d-flex align-items-center py-2 px-3 shadow-sm" role="alert" style="border-radius: 0.75rem;">
+                <i class="fa fa-check-circle me-2 fs-5 text-success"></i>
+                <div class="small">
+                <strong>¡Listo para transferir cuentas!</strong> Selecciona y mueve cuentas entre ejecutivos de forma fácil y rápida.
+                </div>
+            </div>
+            </div>
+        </div>
+        @push('scripts')
+        <script>
+            setTimeout(function() {
+            var alert = document.getElementById('alert-transfer');
+            if(alert) {
+                alert.style.transition = "opacity 0.5s";
+                alert.style.opacity = 0;
+                setTimeout(function() {
+                alert.remove();
+                }, 500);
+            }
+            }, 5000);
+        </script>
+        @endpush
         <div class="row">
             {{-- Formulario de cuentas (origen) --}}
                 <form method="GET" action="{{ route('clientes.transfer') }}" class="col-md-5">
                     <input type="hidden" name="lado" value="origen">   
                     <input type="hidden" name="id_vendedor_destino" value="{{ request('id_vendedor_destino') }}">
                  
-                    <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
-                        <div class="card-header section-card-header">
+                    <div class="card mb-4">
+                        <div class="card-header">
                             <h5>Seleccione ejecutivo de origen</h5>
                         </div>
                         <div class="card-body">
                             <div class="row gx-2 gy-2 mb-4">
-                            <div class="col div-60ch">
-                                <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
-                                <select name="id_vendedor_origen" class="form-select">
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="base" {{ request('id_vendedor_origen') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
-                                    @foreach($vendedores as $v)
-                                        <option value="{{ $v->id_usuario }}"
-                                            {{ request('id_vendedor_origen') == $v->id_usuario ? 'selected' : '' }}>
-                                            {{ strtoupper($v->username) }} - {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
-                                        </option>
-                                    @endforeach
-                                </select>                                
-                            </div>
+                                <div class="col-md-8 col-sm-12">
+                                    <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
+                                    <select name="id_vendedor_origen" class="form-select">
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="base" {{ request('id_vendedor_origen') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
+                                        @foreach($vendedores as $v)
+                                            <option value="{{ $v->id_usuario }}"
+                                                {{ request('id_vendedor_origen') == $v->id_usuario ? 'selected' : '' }}>
+                                                {{ strtoupper($v->username) }} - {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                            </option>
+                                        @endforeach
+                                    </select>                                
+                                </div>
 
-                            <div class="col div-30ch">
-                                <label for="orden" class="form-label">Ordenar por</label>
-                                <select name="orden" class="form-select">
-                                    <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
-                                    <option value="id_cliente"  {{ request('orden') == 'id_cliente' ? 'selected' : '' }}>ID Cliente</option>
-                                    <option value="nombre"      {{ request('orden') == 'nombre' ? 'selected' : '' }}>Empresa</option>
-                                    <option value="contacto"    {{ request('orden') == 'contacto' ? 'selected' : '' }}>Contacto</option>
-                                    <option value="correo"      {{ request('orden') == 'correo' ? 'selected' : '' }}>Correo</option>
-                                    <option value="sector"      {{ request('orden') == 'sector' ? 'selected' : '' }}>Sector</option>
-                                    <option value="segmento"    {{ request('orden') == 'segmento' ? 'selected' : '' }}>Segmento</option>
-                                    <option value="id_vendedor" {{ request('orden') == 'id_vendedor' ? 'selected' : '' }}>Asignado a</option>
-                                </select>
-                            </div>
+                                <div class="col-md-4">
+                                    <label for="orden" class="form-label">Ordenar por</label>
+                                    <select name="orden" class="form-select">
+                                        <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
+                                        <option value="id_cliente"  {{ request('orden') == 'id_cliente' ? 'selected' : '' }}>ID Cliente</option>
+                                        <option value="nombre"      {{ request('orden') == 'nombre' ? 'selected' : '' }}>Empresa</option>
+                                        <option value="contacto"    {{ request('orden') == 'contacto' ? 'selected' : '' }}>Contacto</option>
+                                        <option value="correo"      {{ request('orden') == 'correo' ? 'selected' : '' }}>Correo</option>
+                                        <option value="sector"      {{ request('orden') == 'sector' ? 'selected' : '' }}>Sector</option>
+                                        <option value="segmento"    {{ request('orden') == 'segmento' ? 'selected' : '' }}>Segmento</option>
+                                        <option value="id_vendedor" {{ request('orden') == 'id_vendedor' ? 'selected' : '' }}>Asignado a</option>
+                                    </select>
+                                </div>
                             
-                            <div class="col div-30ch">
-                                <label for="ver" class="form-label">Ver registros</label>
-                                <select name="per_page" id="" class="form-select">
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="5000" {{ request('per_page') == '5000' ? 'selected' : '' }}>Todos</option>
-                                    <option value="25"  {{ request('per_page') == '25' ? 'selected' : '' }}>25</option>
-                                    <option value="50"  {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
-                                    <option value="75"  {{ request('per_page') == '75' ? 'selected' : '' }}>75</option>
-                                    <option value="100" {{ request('per_page') == '100' ? 'selected' : '' }}>100</option>
-                                </select>
-                            </div>
+                                <div class="col-md-4">
+                                    <label for="ver" class="form-label">Ver registros</label>
+                                    <select name="per_page" id="" class="form-select">
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="5000" {{ request('per_page') == '5000' ? 'selected' : '' }}>Todos</option>
+                                        <option value="25"  {{ request('per_page') == '25' ? 'selected' : '' }}>25</option>
+                                        <option value="50"  {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
+                                        <option value="75"  {{ request('per_page') == '75' ? 'selected' : '' }}>75</option>
+                                        <option value="100" {{ request('per_page') == '100' ? 'selected' : '' }}>100</option>
+                                    </select>
+                                </div>
 
-                                <div class="col div-30ch">
+                                <div class="col-md-4">
                                     <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
                                     <select name="ciclo_venta" id="" class="form-select">
                                         <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
@@ -71,13 +95,16 @@
                                     </select>
                                 </div>
                             </div>
-                            <a href="{{ route('clientes.transfer') }}" class="btn btn-secondary btn-15ch ms-2">
-                                <i class="fa fa-eraser me-1"></i> Limpiar
-                            </a>
 
-                            <button type="submit" class="btn btn-success btn-15ch">
-                                <i class="fa fa-search me-1"></i> Buscar
-                            </button>
+                            {{-- Botones alineados a la derecha --}}
+                            <div class="d-flex justify-content-end gap-2 mt-3">
+                                <a href="{{ route('clientes.transfer') }}" class="btn btn-secondary">
+                                    <i class="fa fa-eraser me-1"></i> Limpiar
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fa fa-search me-1"></i> Buscar
+                                </button>
+                            </div>
 
                         </div>
                     </div>
@@ -90,31 +117,31 @@
             </div>
 
             {{-- Formulario de cuentas (destino) --}}
-                <form method="GET" action="{{ route('clientes.transfer') }}" class="col-md-5">
-                    <input type="hidden" name="lado" value="destino">   
-                    <input type="hidden" name="id_vendedor_destino" value="{{ request('id_vendedor_destino') }}">
-                 
-                    <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
-                        <div class="card-header section-card-header">
-                            <h5>Seleccione ejecutivo de origen</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row gx-2 gy-2 mb-4">
-                            <div class="col div-60ch">
+            <form method="GET" action="{{ route('clientes.transfer') }}" class="col-md-5">
+                <input type="hidden" name="lado" value="destino">   
+                <input type="hidden" name="id_vendedor_destino" value="{{ request('id_vendedor_destino') }}">
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Seleccione ejecutivo de destino</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row gx-2 gy-2 mb-4">
+                            <div class="col-md-8 col-sm-12">
                                 <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
-                                <select name="id_vendedor_origen" class="form-select">
+                                <select name="id_vendedor_destino" class="form-select">
                                     <option value="">-- Selecciona --</option>
-                                    <option value="base" {{ request('id_vendedor_origen') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
+                                    <option value="base" {{ request('id_vendedor_destino') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
                                     @foreach($vendedores as $v)
                                         <option value="{{ $v->id_usuario }}"
-                                            {{ request('id_vendedor_origen') == $v->id_usuario ? 'selected' : '' }}>
+                                            {{ request('id_vendedor_destino') == $v->id_usuario ? 'selected' : '' }}>
                                             {{ strtoupper($v->username) }} - {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
                                         </option>
                                     @endforeach
                                 </select>                                
                             </div>
 
-                            <div class="col div-30ch">
+                            <div class="col-md-4">
                                 <label for="orden" class="form-label">Ordenar por</label>
                                 <select name="orden" class="form-select">
                                     <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
@@ -127,8 +154,8 @@
                                     <option value="id_vendedor" {{ request('orden') == 'id_vendedor' ? 'selected' : '' }}>Asignado a</option>
                                 </select>
                             </div>
-                            
-                            <div class="col div-30ch">
+                        
+                            <div class="col-md-4">
                                 <label for="ver" class="form-label">Ver registros</label>
                                 <select name="per_page" id="" class="form-select">
                                     <option value="">-- Selecciona --</option>
@@ -140,25 +167,29 @@
                                 </select>
                             </div>
 
-                                <div class="col div-30ch">
-                                    <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
-                                    <select name="ciclo_venta" id="" class="form-select">
-                                        <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
-                                        <option value="cotizacion"  {{ request('ciclo_venta') == 'cotizacion' ? 'selected' : '' }}>Cotización</option>
-                                        <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
-                                    </select>
-                                </div>
+                            <div class="col-md-4">
+                                <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
+                                <select name="ciclo_venta" id="" class="form-select">
+                                    <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
+                                    <option value="cotizacion"  {{ request('ciclo_venta') == 'cotizacion' ? 'selected' : '' }}>Cotización</option>
+                                    <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
+                                </select>
                             </div>
-                            <a href="{{ route('clientes.transfer') }}" class="btn btn-secondary btn-15ch ms-2">
-                                <i class="fa fa-eraser me-1"></i>Limpiar
+                        </div>
+
+                        {{-- Botones alineados a la derecha --}}
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <a href="{{ route('clientes.transfer') }}" class="btn btn-secondary">
+                                <i class="fa fa-eraser me-1"></i> Limpiar
                             </a>
-                            <button type="submit" class="btn btn-success btn-15ch">
+                            <button type="submit" class="btn btn-success">
                                 <i class="fa fa-search me-1"></i> Buscar
                             </button>
-
                         </div>
+
                     </div>
-                </form>
+                </div>
+            </form>
         </div>
 
         {{-- ───────── Paginación ───────── --}}
@@ -383,7 +414,7 @@
                                     {{-- Ciclo Venta --}}
                                     <td class="py-1 px-2 text-center">
                                         <span class="badge"
-                                            style="background-color:{{ $c->ciclo_venta==='venta'? 'var(--macasa-verde)' : '#FEE028' }};
+                                            style="background-color:{{ $c->ciclo_venta==='venta'? 'var(--mc-verde)' : '#FEE028' }};
                                                     color:{{ $c->ciclo_venta==='venta'? '#fff':'#000' }};
                                                     font-size: var(--bs-body-font-size);
                                                     min-width:10ch;">

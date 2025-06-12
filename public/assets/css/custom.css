@@ -42,6 +42,15 @@
   --fuent-subtitulo: 1.09375rem;
   --fuente-normal: 0.875rem;
   --fuente-peq: 0.75rem;
+
+  /* FALTAN LAS SIGUIENTES VARIABLES:
+    -> --card-header-bg
+    -> --card-header-color
+    -> cambiar --tabla-header-text por --tabla-header-color
+    -> --card-body-bg
+    -> --card-body-color
+    -> 
+  */
 }
 
 html {
@@ -86,12 +95,19 @@ body[data-bs-theme="dark"] {
   /* 30 caracteres */
 }
 
+.btn-secundario{
+  min-width: 15ch;
+}
+
 .col-5ch {
   min-width: 5ch;
   max-width: 5ch;
 }
 
-
+.col-10ch {
+  min-width: 10ch;
+  max-width: 10ch;
+}
 
 .col-15ch {
   min-width: 15ch;
@@ -100,9 +116,14 @@ body[data-bs-theme="dark"] {
   /* 30 caracteres */
 }
 
-.col-20ch {
+.col-20ch{
   min-width: 20ch;
   max-width: 20ch;
+}
+
+.col-25ch{
+  min-width: 25ch;
+  max-width: 25ch;
 }
 
 .campo-dato-secundario {
@@ -1522,6 +1543,11 @@ body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-results__opti
   background: var(--tabla-header-bg);
 }
 
+#tblCotizaciones tfoot tr th,
+#tblPedidos tfoot tr th {
+  background-color: var(--tabla-header-bg);
+}
+
 #tblCotizaciones th,
 #tblCotizaciones td {
   padding: 5px 14px;
@@ -1562,7 +1588,6 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(1) {
   left: 0;
   z-index: 3;
   background: var(--bs-table-bg);
-
   width: 11ch;
 }
 

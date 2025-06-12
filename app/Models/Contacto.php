@@ -53,6 +53,7 @@ class Contacto extends Model
         return $this->belongsTo(Cliente::class, 'id_cliente', 'id_cliente');
     }
 
+    //asi he visto que lo llaman: $clientes->primerContacto->nombre_completo
     public function getNombreCompletoAttribute(): string
     {
         return trim("{$this->nombre} {$this->apellido_p} {$this->apellido_m}");

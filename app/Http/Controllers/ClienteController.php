@@ -53,8 +53,6 @@ class ClienteController extends Controller
             });
         }
 
-
-        // ⤵️  LOS QUE FALTABAN
         if ($sector = $request->input('sector')) {          // sector = 'privada' | 'gobierno' | ...
             $query->where('sector', $sector);
         }
@@ -151,6 +149,8 @@ class ClienteController extends Controller
         ])
         ->findOrFail($id);
 
+        //Eric, en el modelo Cliente hay una función del ORM llamada notas().
+        //validar si se puede cambiar este query por algo como $cliente->notas
         $notas = Nota::with('usuario')
             ->where('id_cliente', $cliente->id_cliente)
             ->orderByDesc('fecha_registro')
@@ -823,6 +823,8 @@ class ClienteController extends Controller
         ]);
 
         $fecha_reprogramacion = $request->input('fecha_reprogramacion') ?? now()->addDays(3);
+        //Actualiza el recall del cliente
+        Cliente::where('id_cliente', $id)->update(['recall' => $fecha_reprogramacion]);
         //Solo la llamada del helper en storeNota es manual, todas las demas son automáticas.
         registrarNota(
             id_cliente: $id,
@@ -902,6 +904,79 @@ class ClienteController extends Controller
         return redirect()->route('clientes.transfer')->with('success', count($ids) . ' cuentas traspasadas.');
     }
 
+
+    // Recalls
+    public function recalls(Request $request)
+    {
+        $estado       = $request->input('estado');
+        $id_vendedor  = $request->input('id_vendedor');
+        $orden        = $request->input('orden', 'nombre');
+        $busqueda     = $request->input('busqueda');
+        $perPage      = $request->input('ver', 50);
+
+        $ejecutivos = Usuario::where('estatus', 'activo')
+                    ->get()
+                    ->sortBy('nombre_completo')
+                    ->pluck('nombre_completo', 'id_usuario');
+
+        
+        if ($estado === 'contestados') 
+        {
+            $query = Nota::with(['cliente.primerContacto', 'usuario'])
+                ->whereNotNull('fecha_reprogramacion');
+
+            if ($id_vendedor) {
+                $query->whereHas('cliente', fn($q) => $q->where('id_vendedor', $id_vendedor));
+            }
+
+            if ($busqueda) {
+                $query->whereHas('cliente', function ($q) use ($busqueda) {
+                    $q->where('nombre', 'like', "%$busqueda%")
+                    ->orWhere('id_cliente', 'like', "%$busqueda%")
+                    ->orWhereHas('primerContacto', fn ($q2) =>
+                        $q2->where('telefono1', 'like', "%$busqueda%")
+                            ->orWhere('email', 'like', "%$busqueda%"));
+                });
+            }
+
+            if ($orden === 'fecha') {
+                $query->orderByDesc('fecha_reprogramacion');
+            } else {
+                $query->orderBy('id_cliente'); // fallback
+            }
+
+            $clientes = $query->paginate($perPage)->appends($request->all());
+
+        } 
+        elseif($estado === 'pendientes')
+        {
+            $query = Cliente::with(['primerContacto', 'vendedor'])
+                ->whereNotNull('recall');
+
+            if ($id_vendedor) {
+                $query->where('id_vendedor', $id_vendedor);
+            }
+
+            if ($busqueda) {
+                $query->where(function ($q) use ($busqueda) {
+                    $q->where('nombre', 'like', "%$busqueda%")
+                    ->orWhere('id_cliente', 'like', "%$busqueda%")
+                    ->orWhereHas('primerContacto', fn ($q2) =>
+                        $q2->where('telefono1', 'like', "%$busqueda%")
+                            ->orWhere('email', 'like', "%$busqueda%"));
+                });
+            }
+
+            $query->orderBy($orden === 'fecha' ? 'recall' : 'nombre');
+
+            $clientes = $query->paginate($perPage)->appends($request->all());
+        }
+        else{
+            $clientes = [];
+        }
+
+        return view('clientes.recalls', compact('clientes', 'estado', 'ejecutivos'));
+    }
 
 
 }
