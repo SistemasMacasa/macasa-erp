@@ -35,31 +35,30 @@
   --bs-btn-bg: var(--mc-azul);
   --tabla-card-body-bg: #363a38;
   --sidebar-bg: #FBFAFF;
-
+  --color-body-nota: #e1e1e1;
+    --bs-card-color: #000;
   /* FUENTES */
   --fuente-titulo: 1.75rem;
   --fuent-subtitulo: 1.09375rem;
   --fuente-normal: 0.875rem;
-  --fuente-peq: 075rem;
+  --fuente-peq: 0.75rem;
 }
 
 html {
   font-size: 16px;
 }
 
+/* Modo oscuro si estás usando data-bs-theme="dark" */
 body[data-bs-theme="dark"] {
   --tabla-header-bg: #2d3440;
   --tabla-header-text: #ffffff;
   --tabla-card-body-bg: #f8f9fa;
   --sidebar-bg: #2C302E;
-
-}
-
-/* Modo oscuro si estás usando data-bs-theme="dark" */
-[data-bs-theme="dark"] {
+  --color-body-nota: #333;
   --bs-card-color: #f1f1f1;
-  /* texto claro */
+
 }
+
 
 /*Botón hamburguesa, icono de menú lateral*/
 /* Por defecto (expandido) muestro el logo grande y oculto el pequeño */
@@ -99,6 +98,11 @@ body[data-bs-theme="dark"] {
   /* 30 caracteres */
   max-width: 15ch;
   /* 30 caracteres */
+}
+
+.col-20ch {
+  min-width: 20ch;
+  max-width: 20ch;
 }
 
 .campo-dato-secundario {
@@ -245,12 +249,15 @@ body[data-sidebar="light"] label {
   background-color: var(--mc-verde);
   border-color: var(--mc-verde);
 }
+
 .btn-limpiar {
   width: 20ch;
 }
+
 .caja-paginado {
   width: 70px;
 }
+
 /* Botón gris desactivado */
 .btn-disabled-gris {
   background-color: #d6d6d6 !important;
@@ -645,6 +652,7 @@ body:not([data-sidebar="dark"]) .section-card {
   background: #f7f9fc;
   border: 1px solid #e1e6ef;
 }
+
 body:not([data-sidebar="dark"]) .section-card-header {
   background: var(--tabla-header-bg);
   color: var(--tabla-header-text);
@@ -671,7 +679,8 @@ body:not([data-bs-theme=dark]) h3,
 body:not([data-bs-theme=dark]) h4,
 body:not([data-bs-theme=dark]) h5,
 body:not([data-bs-theme=dark]) h6,
-body:not([data-bs-theme=dark]) span{
+body:not([data-bs-theme=dark]) span,
+body:not([data-bs-theme=dark]) .text-normal {
   color: #000000;
 }
 
@@ -746,21 +755,25 @@ body[data-sidebar="dark"] .section-card label {
 body[data-sidebar=dark] #sidebar-menu ul li a {
   color: var(--bs-sidebar-dark-menu-item-color);
 }
-body[data-sidebar-size="sm"] #sidebar-menu .metismenu > li > a {
+
+body[data-sidebar-size="sm"] #sidebar-menu .metismenu>li>a {
   /* padding-left: 8px; */
   transform: translateX(-10px);
   margin-left: 10px;
   /* opacity: 0.7; */
 }
+
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a {
-    padding: 11px 20px;
-    -webkit-transition: none;
-    transition: background-color .20s ease, color .20s ease, transform .20s ease;
- }
+  padding: 11px 20px;
+  -webkit-transition: none;
+  transition: background-color .20s ease, color .20s ease, transform .20s ease;
+}
+
 body[data-sidebar="dark"] #sidebar-menu {
-  color: var(--texto-blanco-modoDark)!important;
+  color: var(--texto-blanco-modoDark) !important;
   /* margin-top: 15px; */
 }
+
 /* body[data-sidebar-size="sm"] #sidebar-menu {
    margin-top: 39px;
 } */
@@ -772,7 +785,6 @@ body[data-sidebar="dark"] #sidebar-menu i,
 body[data-sidebar="dark"] #sidebar-menu svg,
 body[data-sidebar="dark"] #sidebar-menu .icon {
   color: inherit !important;
-  fill: inherit !important;
 }
 
 
@@ -793,19 +805,22 @@ body[data-sidebar="dark"] #sidebar-menu .icon {
   width: 20px;
   height: 20px;
 }
-body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a svg  {
+
+body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a svg {
   width: 20px;
   height: 20px;
   margin-left: 0;
 }
+
 body[data-sidebar-size=sm] #sidebar-menu .icon {
   width: 20px !important;
   height: 20px !important;
   margin-left: 0 !important;
 }
+
 /* efecto cuando el cursor pasa encima  */
 #sidebar-menu .metismenu>li>a:hover,
-#sidebar-menu .metismenu>li.mm-active>a {
+#sidebar-menu .metismenu>li.mm-active>a .icon {
   transform: translateX(4px);
 }
 
@@ -936,7 +951,7 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:hover>a {
 /* ─────────────── Modal tipo cuenta - Dark Mode ─────────────── */
 body[data-sidebar="dark"] #modalTipoCuenta .modal-content {
   background-color: #1f232a;
-  color: #e3e6ed;
+  color: #ffffff;
   border: 1px solid #2e333c;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
 }
@@ -948,7 +963,7 @@ body[data-sidebar="dark"] #modalTipoCuenta .modal-header {
 }
 
 body[data-sidebar="dark"] #modalTipoCuenta .modal-title {
-  color: #b7bef5;
+  color: #ffffff;
 }
 
 body[data-sidebar="dark"] #modalTipoCuenta .modal-body {
@@ -956,7 +971,7 @@ body[data-sidebar="dark"] #modalTipoCuenta .modal-body {
 }
 
 body[data-sidebar="dark"] #modalTipoCuenta .modal-body p {
-  color: #9ca3b2;
+  color: #ffffff;
 }
 
 /* Tarjetas */
@@ -1321,6 +1336,13 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
    Select2 (Bootstrap-5 theme) – contenedor base + flex interno
    ——————————————————————————————————————————————————————— */
 
+
+
+
+
+
+
+
 /* 1) Caja exterior, igual que .form-select: */
 .select2-container--bootstrap-5 .select2-selection--multiple {
   min-height: calc(2.25rem + 2px) !important;
@@ -1330,6 +1352,13 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   border: 1px solid var(--bs-border-color) !important;
   border-radius: --bs-border-radius !important;
   background-color: var(--bs-secondary-bg) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%232c302e' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+  background-size: 16px 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   color: var(--bs-body-color) !important;
   font-size: .875rem !important;
   /* 14px */
@@ -1413,13 +1442,48 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   color: #ffffff !important;
   font-weight: 500 !important;
 }
+/* 1) Forzar que el placeholder de un Select2 múltiple se muestre */
+.select2-container--bootstrap-5 .select2-selection__rendered .select2-selection__placeholder {
+  display: inline-block !important;
+  color: #6c757d !important;        /* gris Bootstrap para placeholder */
+  opacity: 1 !important;
+  font-style: italic;               /* opcional para diferenciarlo */
+  margin-right: .5rem;              /* igual que los tags */
+}
+
+/* 2) Quitarle el “✕” que trae por defecto ese placeholder */
+.select2-container--bootstrap-5 .select2-selection__rendered 
+  .select2-selection__placeholder .select2-selection__choice__remove {
+  display: none !important;
+}
+
+body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-selection--multiple {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !important;
+}
+body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-dropdown {
+  background-color: var(--bs-secondary-bg) !important;
+  color: var(--bs-body-color) !important;
+  border: 1px solid var(--bs-border-color) !important;
+}
+
+body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-results__option {
+  color: var(--bs-body-color) !important;
+  background-color: transparent !important;
+}
+
+body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-results__option--highlighted {
+  background-color: var(--bs-primary-bg-subtle) !important;
+  color: var(--bs-primary-text) !important;
+}
+
 
 /* ───────────────────────────────────────────────
      Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */
-  .bg-body{
-    background-color:#f8f9fa !important;
-  }
+.bg-body {
+  background-color: #f8f9fa !important;
+}
+
 /* ───────── Tabla con layout fijo y altura homogénea ───────── */
 #tabla-clientes {
   table-layout: fixed;
@@ -1448,9 +1512,11 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   font-size: var(--bs-body-font-size);
   font-weight: 600;
 }
+
 .header-tabla {
   background-color: var(--tabla-header-bg) !important;
 }
+
 #tblPedidos thead tr th,
 #tblCotizaciones thead tr th {
   background: var(--tabla-header-bg);
@@ -1646,19 +1712,18 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
 /* ───────────────────────────────────────────────
    ESTILOS PARA NOTAS
    ─────────────────────────────────────────────── */
-  .body-notas{
-    max-height: 380px;
-    overflow-y: auto;
-    background: #e1e1e1;
-    border-radius: 8px;
-    padding: 1rem;
-  }
-  body[data-sidebar="dark"] .body-notas{
-    background-color: #333;
-  }
-  body[data-sidebar="dark"] .text-normal {
-    color: var(--texto-blanco-modoDark);
-  }
+.body-notas {
+  max-height: 380px;
+  overflow-y: auto;
+  background: var(--color-body-nota);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+body[data-sidebar="dark"] .text-normal {
+  color: var(--texto-blanco-modoDark);
+}
+
 /* ───────────────────────────────────────────────
    Termina Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */

@@ -745,7 +745,7 @@
     {{-- 📝 Historial de notas --}}
     <div class="card shadow-lg">
         {{-- Cabecera de la tarjeta --}}
-        <div class="card-header section-card-header section-card-header--view d-flex align-items-center">
+        <div class="card-header section-card-header section-card-header--view d-flex align-items-start">
             <h5 class="mb-0 flex-grow-1">Historial de notas</h5>
         </div>
         <div class="card-body">
@@ -815,7 +815,7 @@
                 <input type="hidden" name="ciclo_venta" value="{{ $cliente->ciclo_venta }}">
 
                 <div class="row">
-                    <div class="col div-20ch">
+                    <div class="col-20ch">
                         <label>Volver a llamar</label>
                         <input type="date" name="fecha_reprogramacion" class="form-control">
                     </div>

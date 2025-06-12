@@ -570,17 +570,12 @@ body[data-layout=horizontal] .footer {
     margin-top: -3px
 }
 
-#sidebar-menu ul li a:hover {
-    color: var(--bs-sidebar-menu-item-hover-color)
-}
-
-#sidebar-menu ul li a:hover i {
-    color: var(--bs-sidebar-menu-item-hover-color)
-}
-
-#sidebar-menu ul li a:hover svg {
+#sidebar-menu ul li a:hover i,
+#sidebar-menu ul li a:hover svg,
+#sidebar-menu ul li a:hover .icon,
+#sidebar-menu ul li a:hover .menu-item {
     color: var(--bs-sidebar-menu-item-hover-color);
-    fill: var(--bs-sidebar-menu-item-hover-effact-color)
+    /* fill: var(--bs-sidebar-menu-item-hover-effact-color); */
 }
 
 #sidebar-menu ul li .badge {
@@ -772,7 +767,6 @@ body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a i {
 
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a svg {
     color: var(--bs-sidebar-menu-item-active-color);
-    fill: rgba(var(--bs-sidebar-menu-item-active-color), .2)
 }
 
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a span {
@@ -896,7 +890,10 @@ body[data-sidebar=dark] #sidebar-menu ul li a:hover svg {
     color: var(--bs-sidebar-dark-menu-item-hover-color);
     fill: var(--bs-sidebar-menu-item-hover-effact-color)
 }
-
+body[data-sidebar=dark] #sidebar-menu ul li a:hover .icon {
+    color: var(--bs-sidebar-dark-menu-item-hover-color);
+    fill: var(--bs-sidebar-menu-item-hover-effact-color)
+}
 body[data-sidebar=dark] #sidebar-menu ul li ul.sub-menu li a {
     color: var(--bs-sidebar-dark-menu-sub-item-color)
 }
@@ -924,7 +921,6 @@ body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li
 
 body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a svg {
     color: var(--bs-sidebar-dark-menu-item-hover-color);
-    fill: rgba(var(--bs-sidebar-dark-menu-item-hover-color), .2)
 }
 
 body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>ul a {
@@ -2350,10 +2346,6 @@ body[data-layout=horizontal][data-layout-size=boxed] .navbar-header {
 
 .custom-control-label::before {
     background-color: var(--bs-tertiary-bg)
-}
-
-[data-bs-theme=dark] .form-select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ced4da' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e")
 }
 
 [data-bs-theme=dark] .form-switch .form-check-input,
