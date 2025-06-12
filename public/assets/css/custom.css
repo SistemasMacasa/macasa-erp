@@ -41,6 +41,15 @@
   --fuent-subtitulo: 1.09375rem;
   --fuente-normal: 0.875rem;
   --fuente-peq: 075rem;
+
+  /* FALTAN LAS SIGUIENTES VARIABLES:
+    -> --card-header-bg
+    -> --card-header-color
+    -> cambiar --tabla-header-text por --tabla-header-color
+    -> --card-body-bg
+    -> --card-body-color
+    -> 
+  */
 }
 
 html {
@@ -99,6 +108,11 @@ body[data-bs-theme="dark"] {
   /* 30 caracteres */
   max-width: 15ch;
   /* 30 caracteres */
+}
+
+.col-20ch{
+  min-width: 20ch;
+  max-width: 20ch;
 }
 
 .campo-dato-secundario {
@@ -1405,6 +1419,11 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 #tblPedidos thead tr th,
 #tblCotizaciones thead tr th {
   background: var(--tabla-header-bg);
+}
+
+#tblCotizaciones tfoot tr th,
+#tblPedidos tfoot tr th {
+  background-color: var(--tabla-header-bg);
 }
 
 #tblCotizaciones th,

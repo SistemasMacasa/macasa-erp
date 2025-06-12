@@ -21,7 +21,7 @@
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-primary btn-principal">
+        <a href="{{ route('clientes.recalls') }}" class="btn btn-primary btn-principal">
             <i class="fa fa-phone me-1"></i> Mis Recall's
         </a>
 
@@ -210,7 +210,7 @@
     {{-- ───────── Paginación ───────── --}}
     <div class="row align-items-center mb-3">
         {{-- Texto de totales --}}
-        <div class="col-sm">
+        <div class="col">
             <p class="mb-0 text-muted small">
                 Mostrando <strong>{{ $clientes->firstItem() ?? "Todos" }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
                 de <strong>{{ $clientes->total() ?? "Todos" }}</strong> clientes encontrados
