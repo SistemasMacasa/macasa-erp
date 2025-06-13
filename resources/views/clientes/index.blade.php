@@ -162,14 +162,13 @@
                             Limpiar
                         </a>
 
-                    <button type="submit"
-                        class="btn btn-success btn-limpiar d-flex align-items-center justify-content-center">
-                        <i class="fa fa-search me-1"></i>
-                        Buscar
-                    </button>
+                        <button type="submit"
+                            class="btn btn-success btn-limpiar d-flex align-items-center justify-content-center">
+                            <i class="fa fa-search me-1"></i>
+                            Buscar
+                        </button>
+                    </div>
                 </div>
-
-
             </div>
         </div>
     </form>
@@ -184,6 +183,7 @@
                 de <strong>{{ $clientes->total() ?? 'Todos' }}</strong> clientes encontrados
             </p>
         </div>
+    
 
         {{-- Controles de paginación + “Ir a página” --}}
         <div class="col-sm-auto d-flex align-items-center">
