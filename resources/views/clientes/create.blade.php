@@ -44,16 +44,16 @@
                         (contiene también los datos del contacto principal)
                     ─────────────────────────────────── -->
                     <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
-                    <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial">
+                    <div class="card shadow-lg mb-4">
                         <div class="card-header text-center">
-                            <h5 class="mb-0">Cuenta Empresarial</h5>
+                            <h5 class="mb-0 text-subtitulo">Cuenta Empresarial</h5>
                         </div>
 
-                        <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
+                        <div class="card-body">
                             {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
                             <div class="row gx-3 gy-2 mb-4">
                                 <div class="col campo-dato-principal">
-                                    <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Nombre de la Empresa <span class="text-danger">*</span></label>
                                     <input  id="nombre" name="nombre" type="text"
                                             class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
                                             value="{{ old('nombre') }}" required minlength="3" maxlength="45">
@@ -61,7 +61,7 @@
                                 </div>
 
                                 <div class="col campo-dato-secundario">
-                                    <label class="form-label">Asignado a: <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Asignado a: <span class="text-danger">*</span></label>
                                     <select name="id_vendedor" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="" @selected(old('id_vendedor')==='')>Base General</option>
@@ -74,7 +74,7 @@
                                 </div>
 
                                 <div class="col campo-dato-secundario">
-                                    <label class="form-label">Sector <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Sector <span class="text-danger">*</span></label>
                                     <select name="sector" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="privada">Empresa Privada</option>
@@ -83,7 +83,7 @@
                                 </div>
 
                                 <div class="col campo-dato-secundario">
-                                    <label class="form-label">Segmento <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="macasa cuentas especiales">Macasa Cuentas Especiales</option>
@@ -96,35 +96,35 @@
                             <hr>
 
                             {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
-                            <h6 class="fw-semibold mb-3">Contacto principal</h6>
+                            <h6 class="fw-semibold mb-3 text-normal">Contacto principal</h6>
 
                             <div class="row g-3 contacto-block" data-index="0">
 
                                 {{-- Nombre(s) / Apellidos --}}
                                 <div class="col campo-dato-principal">
-                                    <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Nombre(s) <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][nombre]" class="form-control guarda-mayus" minlength="2" maxlength="45" required>
                                 </div>
                                 <div class="col campo-dato-principal">
-                                    <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Primer Apellido <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][apellido_p]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
                                 <div class="col campo-dato-principal">
-                                    <label class="form-label">Segundo Apellido <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Segundo Apellido <span class="text-danger">*</span></label>
                                     <input  name="contacto[0][apellido_m]" class="form-control guarda-mayus" maxlength="27" required>
                                 </div>
 
                                 {{-- Email / Puesto / Género --}}
                                 <div class="col campo-dato-principal">
-                                    <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Correo Electrónico <span class="text-danger">*</span></label>
                                     <input name="contacto[0][email]" type="email" class="form-control guarda-minus" maxlength="50" required>
                                 </div>
                                 <div class="col campo-dato-secundario">
-                                    <label class="form-label">Puesto <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Puesto <span class="text-danger">*</span></label>
                                     <input name="contacto[0][puesto]" class="form-control guarda-mayus" maxlength="20" required>
                                 </div>
                                 <div class="col campo-dato-secundario">
-                                    <label class="form-label">Género <span class="text-danger">*</span></label>
+                                    <label class="form-label text-normal">Género <span class="text-danger">*</span></label>
                                     <select name="contacto[0][genero]" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="masculino">Masculino</option>
@@ -140,7 +140,7 @@
                                         {{-- Teléfonos fijos --}}
                                         <div class="col campo-dato-telefono" id="telefonos-col" style="padding-right: 0 !important;">
                                             <div class="mb-2 telefono-item">
-                                                <label>Teléfono 1 <span class="text-danger">*</span></label>
+                                                <label class="text-normal">Teléfono 1 <span class="text-danger">*</span></label>
 
                                                 <div class="input-group input-group-separated">
                                                 <input type="text"  name="contacto[0][telefono1]" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;" required>
@@ -153,7 +153,7 @@
                                         {{-- Celulares --}}
                                         <div class="col campo-dato-secundario" id="celulares-col">
                                             <div class="mb-2 celular-item">
-                                                <label>Teléfono Celular 1</label>
+                                                <label class="text-normal">Teléfono Celular 1</label>
 
                                                 <div class="input-group input-group-separated">
                                                 <input type="text" name="contacto[0][celular1]" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
@@ -213,15 +213,15 @@
                     <input type="hidden" name="sector" value="persona"><!-- Sector: gobierno, privada, persona -->
 
                     <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
-                    <div class="card shadow-lg mb-4 section-card section-card-cuenta-empresarial contacto-block">
+                    <div class="card shadow-lg mb-4 contacto-block">
                          <div class="card-header text-center">
-                            <h5 class="mb-0">Cuenta Personal</h5>
+                            <h5 class="mb-0 text-subtitulo">Cuenta Personal</h5>
                         </div>
-                        <div class="card-body" style="background-color: var(--bs-topbar-search-bg);">
+                        <div class="card-body">
                             <div class="row g-3">
                                 <!-- Nombre(s) del contacto = Nombre de la Cuenta -->
                                 <div class="colcampo-dato-principal">
-                                    <label for="nombre" class="form-label">
+                                    <label for="nombre" class="form-label text-normal">
                                         Nombre(s) <span class="text-danger">*</span>
                                     </label>
                                     <input  name="nombre" 
@@ -236,7 +236,7 @@
                                 </div>
                                 <!-- Apellido 1 -->
                                 <div class="col campo-dato-principal">
-                                    <label for="apellido_p" class="form-label">
+                                    <label for="apellido_p" class="form-label text-normal">
                                         Primer Apellido <span class="text-danger">*</span>
                                     </label>
                                     <input  name="apellido_p"
@@ -251,7 +251,7 @@
                                 </div>
                                 <!-- Apellido 2 -->
                                 <div class="col campo-dato-principal">
-                                    <label for="apellido_m" class="form-label">
+                                    <label for="apellido_m" class="form-label text-normal">
                                         Segundo Apellido <span class="text-danger">*</span>
                                     </label>
                                     <input  name="apellido_m"
@@ -266,7 +266,7 @@
                                 </div>
                                 <!-- Correo Electrónico -->
                                 <div class="col campo-dato-principal">
-                                    <label for="email" class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
+                                    <label for="email" class="form-label text-normal">Correo Electrónico <span class="text-danger">*</span></label>
                                     <input  name="email"
                                             type="email" 
                                             class="form-control guarda-minus"  
@@ -276,7 +276,7 @@
                                 </div>
                                 <!-- Segmento -->
                                 <div class="col campo-dato-secundario">
-                                    <label for="segmento" class="form-label">Segmento <span class="text-danger">*</span></label>
+                                    <label for="segmento" class="form-label text-normal">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" id="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="macasa cuentas especiales" @selected(old('segmento') == 'macasa cuentas especiales')>
@@ -293,7 +293,7 @@
                                 </div>
                                 <!-- Género -->
                                 <div class="col campo-dato-secundario">
-                                    <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
+                                    <label for="genero" class="form-label text-normal">Género <span class="text-danger">*</span></label>
                                     <select name="genero" id="genero" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
                                         <option value="masculino"        @selected(old('genero') == 'masculino')>Masculino</option>
@@ -303,7 +303,7 @@
                                 </div>
                                 <!-- Asignado a / id_vendedor -->
                                 <div class="col campo-dato-secundario">
-                                    <label for="nombre" class="form-label">Asignado a: <span
+                                    <label for="nombre" class="form-label text-normal">Asignado a: <span
                                             class="text-danger">*</span></label>
                                     <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
                                         required>
@@ -328,7 +328,7 @@
                                         {{-- Teléfonos fijos --}}
                                         <div class="col campo-dato-telefono" id="telefonos-col" style="padding-right: 0 !important;">
                                             <div class="mb-2 telefono-item">
-                                                <label>Teléfono 1 <span class="text-danger">*</span></label>
+                                                <label class="text-normal">Teléfono 1 <span class="text-danger">*</span></label>
 
                                                 <div class="input-group input-group-separated">
                                                 <input  name="contacto[0][telefono1]"
@@ -354,7 +354,7 @@
                                         {{-- Celulares --}}
                                         <div class="col datos-secundarios" id="celulares-col">
                                             <div class="mb-2 celular-item">
-                                                <label>Teléfono Celular 1</label>
+                                                <label class="text-normal">Teléfono Celular 1</label>
                                                 <div class="input-group input-group-separated">
                                                     <input  name="contacto[0][celular1]"
                                                             type="text" 

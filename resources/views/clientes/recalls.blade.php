@@ -26,13 +26,13 @@
     {{-- 🔎 Filtros --}}
     <div class="card mb-3 shadow">
         <div class="card-header text-center">
-            <h5 class="mb-0">Filtros</h5>
+            <h5 class="mb-0 text-subtitulo">Filtros</h5>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('clientes.recalls') }}">
                 <div class="row gx-3 gy-2 justify-content-between">
                     <div class="col">
-                        <label for="search" class="form-label"><i class="fa fa-search"></i> Búsqueda</label>
+                        <label for="search" class="form-label"><i class="fa fa-search text-normal"></i> Búsqueda</label>
                         <input  type="text" 
                                 name="busqueda" 
                                 id="busqueda" 
@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="col">
-                        <label for="estado" class="form-label">Estado de recall</label>
+                        <label for="estado" class="form-label text-normal">Estado de recall</label>
                         <select name="estado" id="estado" class="form-select">
                             <option value="" {{ request('estado')== '' ? 'selected' : '' }}>-- Selecciona --</option>
                             <option value="pendientes" {{ request('estado') == 'pendientes' ? 'selected' : '' }}>Pendientes</option>
@@ -50,14 +50,14 @@
                     </div>
 
                     <div class="col">
-                        <label class="form-label">Jefe de equipo</label>
+                        <label class="form-label text-normal">Jefe de equipo</label>
                         <select class="form-select" disabled>
                             <option value="">-- Selecciona --</option>
                         </select>
                     </div>
 
                     <div class="col">
-                        <label for="id_vendedor" class="form-label">Ejecutivo</label>
+                        <label for="id_vendedor" class="form-label text-normal">Ejecutivo</label>
                         <select name="id_vendedor" id="id_vendedor" class="form-select">
                             <option value="" {{ request('id_vendedor') == '' ? 'selected' : '' }}>-- Selecciona --</option>
                             <option value="">Todos</option>
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="col">
-                        <label for="orden" class="form-label">Ordenar por</label>
+                        <label for="orden" class="form-label text-normal">Ordenar por</label>
                         <select name="orden" id="orden" class="form-select">
                             <option value="">-- Selecciona --</option>
                             <option value="nombre" {{ request('orden') === 'nombre' ? 'selected' : '' }}>Empresa</option>
@@ -81,7 +81,7 @@
 
                 <div class="row gx-3 gy-2 justify-content-between mt-3">
                     <div class="col">
-                        <label for="ver" class="form-label">Ver registros</label>
+                        <label for="ver" class="form-label text-normal">Ver registros</label>
                         <select name="ver" id="ver" class="form-select">
                             <option value=""     {{ request('ver') === '' ? 'selected' : '' }}>-- Selecciona --</option>
                             <option value="5000" {{ request('ver') === '5000' ? 'selected' : '' }}>Todos</option>
