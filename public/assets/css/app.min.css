@@ -570,13 +570,13 @@ body[data-layout=horizontal] .footer {
     margin-top: -3px
 }
 
-#sidebar-menu ul li a:hover i,
+/* #sidebar-menu ul li a:hover i,
 #sidebar-menu ul li a:hover svg,
 #sidebar-menu ul li a:hover .icon,
 #sidebar-menu ul li a:hover .menu-item {
     color: var(--bs-sidebar-menu-item-hover-color);
-    /* fill: var(--bs-sidebar-menu-item-hover-effact-color); */
-}
+    fill: var(--bs-sidebar-menu-item-hover-effact-color);
+} */
 
 #sidebar-menu ul li .badge {
     margin-top: 4px
@@ -765,8 +765,9 @@ body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a i {
     color: #5156be
 }
 
-body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a svg {
-    color: var(--bs-sidebar-menu-item-active-color);
+body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a svg,
+body[data-sidebar-size=sm] .vertical-menu #sidebar-menu > ul > li:hover > a .icon {
+  color: var(--bs-sidebar-menu-item-active-color);
 }
 
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a span {
@@ -873,23 +874,23 @@ body[data-sidebar=dark] #sidebar-menu ul li a i {
     color: var(--bs-sidebar-dark-menu-item-icon-color)
 }
 
-body[data-sidebar=dark] #sidebar-menu ul li a svg {
+/* body[data-sidebar=dark] #sidebar-menu ul li a svg {
     color: var(--bs-sidebar-dark-menu-item-icon-color);
     fill: var(--bs-sidebar-menu-item-icon-effact-color)
-}
+} */
 
 body[data-sidebar=dark] #sidebar-menu ul li a:hover {
-    color: var(--bs-sidebar-dark-menu-item-hover-color)
+    color: var(--bs-sidebar-dark-menu-item-hover-color) !important
 }
 
 body[data-sidebar=dark] #sidebar-menu ul li a:hover i {
     color: var(--bs-sidebar-dark-menu-item-hover-color)
 }
 
-body[data-sidebar=dark] #sidebar-menu ul li a:hover svg {
+/* body[data-sidebar=dark] #sidebar-menu ul li a:hover svg {
     color: var(--bs-sidebar-dark-menu-item-hover-color);
     fill: var(--bs-sidebar-menu-item-hover-effact-color)
-}
+} */
 body[data-sidebar=dark] #sidebar-menu ul li a:hover .icon {
     color: var(--bs-sidebar-dark-menu-item-hover-color);
     fill: var(--bs-sidebar-menu-item-hover-effact-color)
@@ -919,8 +920,9 @@ body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li
     color: var(--bs-sidebar-dark-menu-item-hover-color)
 }
 
-body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a svg {
-    color: var(--bs-sidebar-dark-menu-item-hover-color);
+body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu > ul > li:hover > a svg,
+body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu > ul > li:hover > a .icon {
+  color: var(--bs-sidebar-dark-menu-item-hover-color);
 }
 
 body[data-sidebar=dark][data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>ul a {

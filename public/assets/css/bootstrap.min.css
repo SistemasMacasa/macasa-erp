@@ -16227,7 +16227,6 @@ button {
 [data-bs-theme=dark] .btn-soft-link {
     color: var(--bs-gray-200)
 }
-
 .breadcrumb-item>a {
     color: var(--bs-gray-700)
 }

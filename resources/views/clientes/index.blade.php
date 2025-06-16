@@ -279,21 +279,21 @@
                                          table-striped table-bordered">
             <thead class="text-center align-middle">
                 <tr>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc">ID
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-id">ID
                         Cliente</th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc">Empresa
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-30">Empresa
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc" >Contacto
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-25" >Contacto
                     </th>
-                    <th class="header-tabla py-1 px-2">Teléfono</th>
-                    <th class="header-tabla py-1 px-2">Correo</th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc">Sector
+                    <th class="header-tabla py-1 px-2 tabla-col-15">Teléfono</th>
+                    <th class="header-tabla py-1 px-2 tabla-col-25">Correo</th>
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-10 .tabla-col-22">Sector
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc" >Segmento
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-22" >Segmento
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc">Ciclo
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-11">Ciclo
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc">Asignado
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-15">Asignado
                         a</th>
                 </tr>
             </thead>
@@ -313,7 +313,7 @@
                         </td>
 
                         {{-- Empresa --}}
-                        <td class="py-1 px-2 text-truncate" title="{{ $c->nombre }}">
+                        <td class="py-1 px-2 text-truncate tabla-col-30" title="{{ $c->nombre }}">
                             <a href="{{ route('clientes.view', $c->id_cliente) }}"
                                 class="text-decoration-underline fw-bold text-dark">
                                 {{ Str::limit($c->nombre, 30) }}

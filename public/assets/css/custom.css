@@ -25,13 +25,14 @@
   --modo-oscuro-form: #3A3D41;
   --modo-oscuro-control: #3A3D3F;
   --texto-gris-modoDark: #ced4da;
-  --text-color: #000000;
+  --text-color: #000000 !important;
   --sidebar-speed: 0.35s;
   /* duración del ancho */
   --item-max-width: 160px;
   /* ancho aproximado de tus etiquetas */
   --card-header-bg: #e9eef6;
   --card-header-color: #000000;
+  --color-fuente: #000000;
   --card-body-bg: #f8f9fa;
   --tabla-header-bg: #e9eef6;
   --tabla-header-color: #000000;
@@ -39,8 +40,35 @@
   --bs-btn-bg: var(--mc-azul);
   --tabla-card-body-bg: #363a38;
   --sidebar-bg: #FBFAFF;
+  --sidebar-menu-item-hover-color: #5156be;
   --color-body-nota: #e1e1e1;
   --bs-card-color: #000;
+  /* MODAL TIPO CUENTA */
+  --modal-bg: #ffffff;
+  --modal-color: #000000;
+  --modal-border: 1px solid #ddd;
+  --modal-shadow: 0 0 1rem #00000099;
+  --modal-header-bg: #f8f9fa;
+  --modal-header-color: #000000;
+  --modal-body-bg: #ffffff;
+  /* Tarjeta de opciones */
+  --tipo-opcion-bg: #ffffff;
+  --tipo-opcion-border: #dee2e6;
+  --tipo-opcion-text: #000000;
+  --tipo-opcion-hover-bg: #f8f9fa;
+  --tipo-opcion-hover-border: var(--mc-azul);
+  --tipo-opcion-hover-shadow: 0 0 0 2px #7b90ff33;
+  /* rgba(123, 144, 255, 0.2) */
+  --tipo-opcion-focus-shadow: 0 0 0 3px #7b90ff4d;
+  /* rgba(123, 144, 255, 0.3) */
+
+  /* Textos secundarios dentro de cards */
+  --tipo-opcion-body-strong: #212529;
+  --tipo-opcion-body-p: #6c757d;
+
+  /* Borde para logo box */
+  --logo-box-bg: #ffffff;
+  --logo-box-border: 1px solid #eaeaea;
   /* FUENTES */
   --fuente-titulo: 1.75rem;
   --fuent-subtitulo: 1.09375rem;
@@ -65,7 +93,7 @@ body[data-bs-theme="dark"] {
   --tabla-header-bg: #2d3440;
   --tabla-header-text: #ffffff;
   --tabla-card-body-bg: #f8f9fa;
-  --text-color: #ffffff;
+  --text-color: #ffffff !important;
   --sidebar-bg: #2C302E;
   --color-body-nota: #333;
   --bs-card-color: #f1f1f1;
@@ -73,6 +101,29 @@ body[data-bs-theme="dark"] {
   --card-header-bg: #2d3440;
   --card-header-color: #ffffff;
   --tabla-header-hover-bg: #1a2733;
+  --color-fuente: #ffffff;
+  --sidebar-menu-item-hover-color: #ffffff;
+  --logo-box-bg: none;
+  --logo-box-border: none;
+  --modal-bg: #1f232a;
+  --modal-color: #ffffff;
+  --modal-border: 1px solid #2e333c;
+  --modal-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+  --modal-header-bg: transparent;
+  --modal-header-color: #ffffff;
+  --modal-body-bg: transparent;
+  --modal-body-text: #ffffff;
+
+  --tipo-opcion-bg: #2a2f38;
+  --tipo-opcion-border: #3a414e;
+  --tipo-opcion-text: #e3e6ed;
+  --tipo-opcion-hover-bg: #313844;
+  --tipo-opcion-hover-border: #7782ff;
+  --tipo-opcion-hover-shadow: 0 0 0 2px #7b90ff33;
+  --tipo-opcion-focus-shadow: 0 0 0 3px #7b90ff4d;
+
+  --tipo-opcion-body-strong: #e5e9f2;
+  --tipo-opcion-body-p: #b2b8c6;
 }
 
 
@@ -87,11 +138,11 @@ body[data-bs-theme="dark"] {
 }
 
 .form-control:disabled {
-  background-color: #e1e1e1;
+  background-color: var(--color-body-nota);
 }
 
 .form-select:disabled {
-  background-color: #e1e1e1;
+  background-color: var(--color-body-nota);
 }
 
 /* Clases globales para las medidas de botones, deben de ser en multiplos de 5ch. */
@@ -174,6 +225,10 @@ body[data-bs-theme="dark"] {
   color: var(--text-color) !important;
 }
 
+.color-fuente {
+  color: var(--text-color);
+}
+
 .ocultar-asterisco {
   display: none !important;
 }
@@ -193,13 +248,6 @@ body[data-sidebar-size="lg"] .logo-lg img {
   height: auto;
 }
 
-body[data-sidebar="light"] h5 {
-  color: var(--tabla-header-text)
-}
-
-body[data-sidebar="light"] label {
-  color: var(--tabla-header-text);
-}
 
 /* ——— base ——— */
 .icon {
@@ -319,12 +367,7 @@ body[data-sidebar-size="md"] .logo-sm img {
 
 /* Vertical menu – sidebar */
 
-body[data-sidebar="dark"] .vertical-menu {
-  background-color: var(--sidebar-bg);
-  /* Fondo oscuro */
-  color: #e3e6ed;
-  /* Texto claro */
-}
+
 
 /* =========================================================
    TOPBAR + SIDEBAR-TOGGLE  (ERP MACASA)
@@ -351,9 +394,9 @@ body[data-sidebar="dark"] .vertical-menu {
   /* pequeño respiro antes del logo */
 }
 
-body[data-sidebar="dark"] #logo-box {
-  border-right: none !important;
-  background: none !important;
+#logo-box {
+  background: var(--logo-box-bg) !important;
+  border-right: var(--logo-box-border) !important;
 }
 
 /* Anchuras */
@@ -681,102 +724,15 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li.has-arrow:hover>ul.s
   LIGHT MODE  – nada cambia, mantiene lavanda
 ───────────────────────────────────────────────*/
 
-/* [ESTOS SON PORQUE ALGUNAS ETIQUETAS NO SE CAMBIAN A LA HORA DE CAMBIAR DE MODO OSCURO A CLARO */
-/* MODO CLARO */
-/* body:not([data-sidebar="dark"]) th,
-body:not([data-sidebar="dark"]) td,
-body:not([data-bs-theme=dark]) h1,
-body:not([data-bs-theme=dark]) h2,
-body:not([data-bs-theme=dark]) h3,
-body:not([data-bs-theme=dark]) h4,
-body:not([data-bs-theme=dark]) h5,
-body:not([data-bs-theme=dark]) h6,
-body:not([data-bs-theme=dark]) h1,
-body:not([data-bs-theme=dark]) h2,
-body:not([data-bs-theme=dark]) h3,
-body:not([data-bs-theme=dark]) h4,
-body:not([data-bs-theme=dark]) h5,
-body:not([data-bs-theme=dark]) h6,
-body:not([data-bs-theme=dark]) span,
-body:not([data-bs-theme=dark]) .text-normal {
-  color: #000000;
-} */
-
-sidebar-menu ul li a svg {
-  color: #000000;
-}
-
-/* MODO OSCURO */
-body[data-sidebar="dark"]th,
-body[data-sidebar="dark"] td,
-body[data-bs-theme=dark] h1,
-body[data-bs-theme=dark] h2,
-body[data-bs-theme=dark] h3,
-body[data-bs-theme=dark] h4,
-body[data-bs-theme=dark] h5,
-body[data-bs-theme=dark] h6,
-body[data-bs-theme=dark] h1,
-body[data-bs-theme=dark] h2,
-body[data-bs-theme=dark] h3,
-body[data-bs-theme=dark] h4,
-body[data-bs-theme=dark] h5,
-body[data-bs-theme=dark] h6 {
-  color: #ffffff;
-}
-
-[data-bs-theme=dark] .h1,
-[data-bs-theme=dark] .h2,
-[data-bs-theme=dark] .h3,
-[data-bs-theme=dark] .h4,
-[data-bs-theme=dark] .h5,
-[data-bs-theme=dark] .h6,
-[data-bs-theme=dark] h1,
-[data-bs-theme=dark] h2,
-[data-bs-theme=dark] h3,
-[data-bs-theme=dark] h4,
-[data-bs-theme=dark] h5,
-[data-bs-theme=dark] h6 {
-  color: var(--texto-blanco-modoDark);
-}
-
 /*───────────────────────────────────────────────
   DARK MODE  – paleta slate-indigo
 ───────────────────────────────────────────────*/
-body[data-sidebar="dark"] .section-card {
-  background: #242933;
-  border: 1px solid #3a4150;
-}
-
-body[data-sidebar="dark"] .section-card-header {
-  background: var(--tabla-header-bg);
-  color: #e8eaf3;
-  border-bottom: 1px solid #3a4150;
-}
 
 
-body[data-sidebar="dark"] .form-select:disabled {
-  background: var(--modo-oscuro-form);
-}
-
-body[data-sidebar="dark"] .form-control:disabled {
-  background: var(--modo-oscuro-form);
-}
-
-/* evita “cartas blancas” */
-body[data-sidebar="dark"] .section-card .form-control,
-
-
-body[data-sidebar="dark"] .section-card .form-label,
-body[data-sidebar="dark"] .section-card label {
-  color: white;
-}
-
-#sidebar-menu ul li a svg {
-  color: var(--)
-}
-
-body[data-sidebar=dark] #sidebar-menu ul li a {
-  color: var(--bs-sidebar-dark-menu-item-color);
+#sidebar-menu ul li a svg,
+.icon,
+.icon-lg {
+  color: var(--color-fuente);
 }
 
 body[data-sidebar-size="sm"] #sidebar-menu .metismenu>li>a {
@@ -792,23 +748,18 @@ body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a {
   transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
 
-body[data-sidebar="dark"] #sidebar-menu {
-  color: var(--texto-blanco-modoDark) !important;
-  /* margin-top: 15px; */
+#sidebar-menu ul li a:hover i,
+#sidebar-menu ul li a:hover svg,
+#sidebar-menu ul li a:hover .icon,
+#sidebar-menu ul li a:hover .menu-item {
+  color: var(--sidebar-menu-item-hover-color);
 }
 
 /* body[data-sidebar-size="sm"] #sidebar-menu {
    margin-top: 39px;
 } */
 
-body[data-sidebar="dark"] #sidebar-menu a,
-body[data-sidebar="dark"] #sidebar-menu .menu-title,
-body[data-sidebar="dark"] #sidebar-menu .menu-item,
-body[data-sidebar="dark"] #sidebar-menu i,
-body[data-sidebar="dark"] #sidebar-menu svg,
-body[data-sidebar="dark"] #sidebar-menu .icon {
-  color: inherit !important;
-}
+
 
 
 /* ─────────────────────────────────────────────────────────────────────────────────
@@ -879,7 +830,7 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:hover>a {
 }
 
 /* Estructura general */
-#modalTipoCuenta .modal-content {
+/* #modalTipoCuenta .modal-content {
   border-radius: 0.85rem;
   border: none;
   box-shadow: 0 0 1.75rem rgba(0, 0, 0, 0.2);
@@ -919,7 +870,7 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:hover>a {
 
 #modalTipoCuenta .btn-close:hover {
   opacity: 1;
-}
+} */
 
 
 /* ───── Estilo de opciones tipo tarjeta ───── */
@@ -967,60 +918,58 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:hover>a {
   font-size: 0.875rem;
 }
 
-.card-body[data-sidebar="light"] {
-  color: black;
-}
-
 /* ─────────────── Modal tipo cuenta - Dark Mode ─────────────── */
-body[data-sidebar="dark"] #modalTipoCuenta .modal-content {
-  background-color: #1f232a;
-  color: #ffffff;
-  border: 1px solid #2e333c;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+#modalTipoCuenta .modal-content {
+  background-color: var(--modal-bg);
+  color: var(--modal-color);
+  border: var(--modal-border);
+  box-shadow: var(--modal-shadow);
 }
 
-body[data-sidebar="dark"] #modalTipoCuenta .modal-header {
-  background-color: transparent !important;
-  color: #ffffff;
-  border-bottom: none;
+#modalTipoCuenta .modal-header {
+  background-color: var(--modal-header-bg) !important;
+  color: var(--modal-header-color);
+
 }
 
-body[data-sidebar="dark"] #modalTipoCuenta .modal-title {
-  color: #ffffff;
+#modalTipoCuenta .modal-title {
+  color: var(--modal-header-color);
 }
 
-body[data-sidebar="dark"] #modalTipoCuenta .modal-body {
-  background-color: transparent;
+#modalTipoCuenta .modal-body {
+  background-color: var(--modal-body-bg);
 }
 
-body[data-sidebar="dark"] #modalTipoCuenta .modal-body p {
-  color: #ffffff;
+#modalTipoCuenta .modal-body p {
+  color: var(--color-fuente);
 }
+
 
 /* Tarjetas */
-body[data-sidebar="dark"] .tipo-opcion-card {
-  background: #2a2f38;
-  border: 1px solid #3a414e;
-  color: #e3e6ed;
+.tipo-opcion-card {
+  background: var(--tipo-opcion-bg);
+  border: 1px solid var(--tipo-opcion-border);
+  color: var(--tipo-opcion-text);
 }
 
-body[data-sidebar="dark"] .tipo-opcion-card:hover {
-  background: #313844;
-  border-color: #7782ff;
-  box-shadow: 0 0 0 2px rgba(123, 144, 255, 0.2);
+.tipo-opcion-card:hover {
+  background: var(--tipo-opcion-hover-bg);
+  border-color: var(--tipo-opcion-hover-border);
+  box-shadow: var(--tipo-opcion-hover-shadow);
 }
 
-body[data-sidebar="dark"] .tipo-opcion-card:focus {
-  box-shadow: 0 0 0 3px rgba(123, 144, 255, 0.3);
+.tipo-opcion-card:focus {
+  box-shadow: var(--tipo-opcion-focus-shadow);
 }
 
-body[data-sidebar="dark"] .opcion-card-body strong {
-  color: #e5e9f2;
+.opcion-card-body strong {
+  color: var(--tipo-opcion-body-strong);
 }
 
-body[data-sidebar="dark"] .opcion-card-body p {
-  color: #b2b8c6;
+.opcion-card-body p {
+  color: var(--tipo-opcion-body-p);
 }
+
 
 /* ─────────────── Termina Estilos del modal/popup Nueva Cuenta ─────────────────── */
 
@@ -1106,7 +1055,7 @@ body[data-sidebar="dark"] .opcion-card-body p {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   padding: 1.25rem 1.25rem;
-  color: var(--text-color);
+  color: var(--text-color) !important;
   background-color: var(--card-body-bg);
 }
 
@@ -1159,31 +1108,7 @@ body[data-sidebar="dark"] .opcion-card-body p {
 }
 
 /* Dark Sidebar Mode override */
-body[data-sidebar="dark"] .tile-agregar-contacto,
-body[data-sidebar="dark"] .tile-agregar-entrega,
-body[data-sidebar="dark"] .tile-agregar-facturacion {
-  border: 2px dashed rgba(var(--bs-white-rgb), 0.4);
-  color: var(--bs-white);
-}
 
-body[data-sidebar="dark"] .tile-agregar-contacto:hover,
-body[data-sidebar="dark"] .tile-agregar-entrega:hover,
-body[data-sidebar="dark"] .tile-agregar-facturacion:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-  background-color: rgba(var(--bs-white-rgb), 0.05);
-  border-color: var(--bs-white);
-  color: var(--bs-white);
-}
-
-body[data-sidebar="dark"] .tile-agregar-contacto:hover i,
-body[data-sidebar="dark"] .tile-agregar-contacto:hover p,
-body[data-sidebar="dark"] .tile-agregar-entrega:hover i,
-body[data-sidebar="dark"] .tile-agregar-entrega:hover p,
-body[data-sidebar="dark"] .tile-agregar-facturacion:hover i,
-body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
-  color: var(--bs-white);
-}
 
 .form-wrapper {
   /* max-width:1200px;       ajuste a gusto: 960-1200 */
@@ -1243,10 +1168,6 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   margin-left: .25rem;
 }
 
-/* Quita el borde inferior de la ÚLTIMA fila de datos */
-#tblPedidos tbody tr:last-child>* {
-  border-bottom: none !important;
-}
 
 
 
@@ -1480,30 +1401,6 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   /* igual que los tags */
 }
 
-/* 2) Quitarle el “✕” que trae por defecto ese placeholder */
-.select2-container--bootstrap-5 .select2-selection__rendered .select2-selection__placeholder .select2-selection__choice__remove {
-  display: none !important;
-}
-
-body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-selection--multiple {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !important;
-}
-
-body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-dropdown {
-  background-color: var(--bs-secondary-bg) !important;
-  color: var(--bs-body-color) !important;
-  border: 1px solid var(--bs-border-color) !important;
-}
-
-body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-results__option {
-  color: var(--bs-body-color) !important;
-  background-color: transparent !important;
-}
-
-body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-results__option--highlighted {
-  background-color: var(--bs-primary-bg-subtle) !important;
-  color: var(--bs-primary-text) !important;
-}
 
 
 /* ───────────────────────────────────────────────
@@ -1585,30 +1482,18 @@ tfoot>tr>th {
 }
 
 /* ───────── Sticky columns ───────── */
-/* ID Cliente (max 5 chars → 5ch) */
-
-body:not([data-sidebar="dark"]) #tabla-clientes th:nth-child(1),
-body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(1) {
+/* ID Cliente (max 5 chars → 5ch) - Ciclo (columna 8) */
+.tabla-col-id
+ {
   position: sticky;
   left: 0;
-  z-index: 3;
-  background: var(--bs-table-bg);
+  z-index: 2;
+  background: var(--tabla-header-bg) !important;
   width: 11ch;
 }
 
-#tabla-clientes th:nth-child(1),
-#tabla-clientes td:nth-child(1) {
-  position: sticky;
-  left: 0;
-  z-index: 3;
-  background: var(--bs-table-hover-bg);
-  width: 10ch;
-}
-
 /* Empresa (max 30 chars → 30ch) */
-
-body:not([data-sidebar="dark"]) #tabla-clientes th:nth-child(2),
-body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(2) {
+#tabla-clientes .tabla-col-30 {
   position: sticky;
   left: 0;
   z-index: 3;
@@ -1616,107 +1501,39 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(2) {
   width: 30ch;
 }
 
-#tabla-clientes th:nth-child(2),
-#tabla-clientes td:nth-child(2) {
-  position: sticky;
-  left: 5ch;
-  z-index: 2;
-  background: var(--bs-table-hover-bg);
-  width: 30ch;
+/* Contactos - correo */
+#tabla-clientes .tabla-col-25 {
+  width: 25ch;
+  background: var(--tabla-header-bg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-/* Telefono (columna 4: 10 dígitos) */
-body:not([data-sidebar="dark"]) #tabla-clientes th:nth-child(4),
-body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(4) {
-  background: var(--bs-table-bg);
+/* Telefono  (columna 4: 10 dígitos) */
+#tabla-clientes .tabla-col-15 {
+  background: var(--tabla-header-bg);
   width: 15ch;
   align-items: center;
 }
 
-#tabla-clientes th:nth-child(4),
-#tabla-clientes td:nth-child(4) {
-  background: var(--bs-table-hover-bg);
-  width: 15ch;
-  text-align: center;
-}
-
-/* Correo (columna 5: 25 caracteres) */
-body:not([data-sidebar="dark"]) #tabla-clientes th:nth-child(5),
-body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
-  width: 25ch;
-  background: var(--bs-table-bg);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-#tabla-clientes th:nth-child(5),
-#tabla-clientes td:nth-child(5) {
-  width: 25ch;
-  background: var(--bs-table-hover-bg);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
 /* Sector (columna 6: “Gobierno” → 8 caracteres) */
-#tabla-clientes th:nth-child(6),
-#tabla-clientes td:nth-child(6) {
+#tabla-clientes .tabla-col-10 {
   width: 10ch;
+  background: var(--tabla-header-bg);
   text-align: center;
   white-space: nowrap;
 }
+
 
 /* Segmento (columna 7: “Macasa Cuentas Especiales” → 25 caracteres) */
-#tabla-clientes th:nth-child(7),
-#tabla-clientes td:nth-child(7) {
+#tabla-clientes .tabla-col-22 {
   width: 22ch;
+  background: var(--tabla-header-bg);
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-
-/* Ciclo (columna 8) */
-#tabla-clientes th:nth-child(8),
-#tabla-clientes td:nth-child(8) {
-  width: 11ch;
-  /* “Cotizacion” son 10+ caracteres */
-  text-align: center;
-}
-
-/* Reducir padding de la badge para aprovechar el ancho */
-#tabla-clientes td:nth-child(8) .badge {
-  padding: .20rem .3rem;
-  min-width: auto;
-}
-
-/* Asignado a (columna 9: 25 caracteres) */
-#tabla-clientes th:nth-child(9),
-#tabla-clientes td:nth-child(9) {
-  width: 15ch;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-/* ───────── Truncado columnas “pesadas” ───────── */
-/* Contacto (max 25 chars → 25ch) */
-#tabla-clientes th:nth-child(3),
-#tabla-clientes td:nth-child(3) {
-  width: 25ch;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-#tabla-clientes td:nth-child(3) a,
-#tabla-clientes td:nth-child(5) a,
-#tabla-clientes td:nth-child(9) a {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 
 /* Flechas genéricas */
 .sort-arrow::after {
@@ -1750,9 +1567,7 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
   padding: 1rem;
 }
 
-/* body[data-sidebar="dark"] .text-normal {
-  color: var(--texto-blanco-modoDark);
-} */
+
 
 /* ───────────────────────────────────────────────
    Termina Estilos de tabla clientes/index.blade.php

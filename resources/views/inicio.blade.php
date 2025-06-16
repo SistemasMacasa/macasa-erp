@@ -15,7 +15,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <h6 class="text-normal">Cuentas Asignadas</h6>
-                    <h3>3</h3>
+                    <h3 class="color-fuente">3</h3>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <h6 class="text-normal">Pendientes para Hoy</h6>
-                    <h3>5</h3>
+                    <h3 class="color-fuente">5</h3>
                 </div>
             </div>
         </div>

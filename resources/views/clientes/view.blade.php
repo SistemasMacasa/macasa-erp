@@ -681,7 +681,7 @@
                     <tfoot class="table-light position-sticky bottom-0"
                         style="background-color: var(--tabla-header-bg) !important; border-style: none !important; z-index:1;">
                         <tr>
-                            <th colspan="2" class="text-start text-subtitulo">
+                            <th colspan="2" class="text-start text-normal">
                                 <span>{{ $cantidad_cotizaciones }} cotizaciones registradas</span>
                             </th>
                             <th class="text-end text-normal">Totales:</th>
