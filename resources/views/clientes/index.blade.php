@@ -10,7 +10,7 @@
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
 
-    <h2 class="mb-3">Mis Cuentas</h2>
+    <h2 class="mb-3 text-titulo">Mis Cuentas</h2>
 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -31,15 +31,15 @@
     <form method="GET" action="{{ route('clientes.index') }}">
         <div class="card mb-3">
             <div class="card-header text-center">
-                <h5 class="mb-0">Filtros</h5>
+                <h5 class="mb-0 text-subtitulo">Filtros</h5>
             </div>
 
-            <div class="card-body bg-body">
+            <div class="card-body">
                 <div class="row gx-3 gy-2 justify-content-between">
 
                     {{-- Búsqueda global --}}
                     <div class="col">
-                        <label for="search" class="form-label"><i class="fa fa-search"></i> Búsqueda</label>
+                        <label for="search" class="form-label"><i class="fa fa-search text-normal"></i> Búsqueda</label>
                         <div class="input-group">
                             <input type="text" name="search" id="search" class="form-control"
                                 placeholder="Cliente, email, ID…" value="{{ request('search') }}" maxlength="25">
@@ -48,7 +48,7 @@
 
                     {{-- Ejecutivos (multi-select con Select2) --}}
                     <div class="col">
-                        <label for="ejecutivos" class="form-label">Ejecutivo(s)</label>
+                        <label for="ejecutivos" class="form-label text-normal">Ejecutivo(s)</label>
                         <select id="ejecutivos" name="ejecutivos[]" placeholder="Todos" class="form-select select2"
                             {{-- ← SIN "form-select" --}} multiple data-placeholder="Seleccione uno o varios ejecutivos">
                             <option value="base_general"
@@ -67,7 +67,7 @@
 
                     {{-- Sector --}}
                     <div class="col">
-                        <label for="sector" class="form-label">Sector</label>
+                        <label for="sector" class="form-label text-normal">Sector</label>
                         <select name="sector" id="sector" class="form-select">
                             <option value="">Todos</option>
                             @foreach ($sectores as $s)
@@ -79,7 +79,7 @@
 
                     {{-- Segmento --}}
                     <div class="col">
-                        <label for="segmento" class="form-label">Segmento</label>
+                        <label for="segmento" class="form-label text-normal">Segmento</label>
                         <select name="segmento" id="segmento" class="form-select">
                             <option value="">Todos</option>
                             @foreach ($segmentos as $s)
@@ -101,7 +101,7 @@
 
                     {{-- Ciclo de venta --}}
                     <div class="col">
-                        <label for="cycle" class="form-label">Ciclo de venta</label>
+                        <label for="cycle" class="form-label text-normal">Ciclo de venta</label>
                         <select name="cycle" id="cycle" class="form-select">
                             <option value="">Todos</option>
                             @foreach ($ciclos as $ciclo)
@@ -130,7 +130,7 @@
 
                     {{-- Registros por página --}}
                     <div class="col">
-                        <label for="perPage" class="form-label">Ver registros</label>
+                        <label for="perPage" class="form-label text-normal">Ver registros</label>
                         <select name="perPage" id="perPage" class="form-select">
                             <option value="all" {{ request('perPage') == 'all' ? 'selected' : '' }}>Todos</option>
 

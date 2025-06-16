@@ -5514,14 +5514,6 @@ fieldset:disabled .btn {
     border-top: 0
 }
 
-.card-body {
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
-    color: var(--bs-card-color)
-}
-
 .card-title {
     margin-bottom: var(--bs-card-title-spacer-y);
     color: var(--bs-card-title-color)
@@ -6621,7 +6613,7 @@ fieldset:disabled .btn {
     width: 1em;
     height: 1em;
     padding: .25em .25em;
-    color: var(--bs-btn-close-color);
+    /* color: var(--bs-btn-close-color); */
     background: transparent var(--bs-btn-close-bg) center/1em auto no-repeat;
     border: 0;
     border-radius: .25rem;
@@ -15239,20 +15231,6 @@ h6 {
     color: #313533
 }
 
-[data-bs-theme=dark] .h1,
-[data-bs-theme=dark] .h2,
-[data-bs-theme=dark] .h3,
-[data-bs-theme=dark] .h4,
-[data-bs-theme=dark] .h5,
-[data-bs-theme=dark] .h6,
-[data-bs-theme=dark] h1,
-[data-bs-theme=dark] h2,
-[data-bs-theme=dark] h3,
-[data-bs-theme=dark] h4,
-[data-bs-theme=dark] h5,
-[data-bs-theme=dark] h6 {
-    color: var(--bs-gray-400)
-}
 
 a {
     text-decoration: none !important

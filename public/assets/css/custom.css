@@ -30,13 +30,17 @@
   /* duración del ancho */
   --item-max-width: 160px;
   /* ancho aproximado de tus etiquetas */
+  --card-header-bg: #e9eef6;
+  --card-header-color: #000000;
+  --card-body-bg: #f8f9fa;
   --tabla-header-bg: #e9eef6;
-  --tabla-header-text: #000000;
+  --tabla-header-color: #000000;
+  --tabla-header-hover-bg: #eef6ff;
   --bs-btn-bg: var(--mc-azul);
   --tabla-card-body-bg: #363a38;
   --sidebar-bg: #FBFAFF;
   --color-body-nota: #e1e1e1;
-    --bs-card-color: #000;
+  --bs-card-color: #000;
   /* FUENTES */
   --fuente-titulo: 1.75rem;
   --fuent-subtitulo: 1.09375rem;
@@ -47,7 +51,6 @@
     -> --card-header-bg
     -> --card-header-color
     -> cambiar --tabla-header-text por --tabla-header-color
-    -> --card-body-bg
     -> --card-body-color
     -> 
   */
@@ -66,7 +69,10 @@ body[data-bs-theme="dark"] {
   --sidebar-bg: #2C302E;
   --color-body-nota: #333;
   --bs-card-color: #f1f1f1;
-
+  --card-body-bg: #363a38;
+  --card-header-bg: #2d3440;
+  --card-header-color: #ffffff;
+  --tabla-header-hover-bg: #1a2733;
 }
 
 
@@ -96,7 +102,7 @@ body[data-bs-theme="dark"] {
   /* 30 caracteres */
 }
 
-.btn-secundario{
+.btn-secundario {
   min-width: 15ch;
 }
 
@@ -117,12 +123,12 @@ body[data-bs-theme="dark"] {
   /* 30 caracteres */
 }
 
-.col-20ch{
+.col-20ch {
   min-width: 20ch;
   max-width: 20ch;
 }
 
-.col-25ch{
+.col-25ch {
   min-width: 25ch;
   max-width: 25ch;
 }
@@ -150,18 +156,22 @@ body[data-bs-theme="dark"] {
 
 .text-titulo {
   font-size: var(--fuente-titulo);
+  color: var(--text-color) !important;
 }
 
 .text-subtitulo {
   font-size: var(--fuent-subtitulo);
+  color: var(--text-color) !important;
 }
 
 .text-normal {
   font-size: var(--fuente-normal);
+  color: var(--text-color) !important;
 }
 
 .text-peq {
   font-size: var(--fuente-peq);
+  color: var(--text-color) !important;
 }
 
 .ocultar-asterisco {
@@ -670,24 +680,10 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li.has-arrow:hover>ul.s
 /*───────────────────────────────────────────────
   LIGHT MODE  – nada cambia, mantiene lavanda
 ───────────────────────────────────────────────*/
-body:not([data-sidebar="dark"]) .section-card {
-  background: #f7f9fc;
-  border: 1px solid #e1e6ef;
-}
-
-body:not([data-sidebar="dark"]) .section-card-header {
-  background: var(--tabla-header-bg);
-  color: var(--tabla-header-text);
-}
-
-body:not([data-sidebar="dark"]) .section-card .form-control,
-body:not([data-sidebar="dark"]) .section-card .form-select {
-  border-color: #cfd5e3;
-}
 
 /* [ESTOS SON PORQUE ALGUNAS ETIQUETAS NO SE CAMBIAN A LA HORA DE CAMBIAR DE MODO OSCURO A CLARO */
 /* MODO CLARO */
-body:not([data-sidebar="dark"]) th,
+/* body:not([data-sidebar="dark"]) th,
 body:not([data-sidebar="dark"]) td,
 body:not([data-bs-theme=dark]) h1,
 body:not([data-bs-theme=dark]) h2,
@@ -704,9 +700,9 @@ body:not([data-bs-theme=dark]) h6,
 body:not([data-bs-theme=dark]) span,
 body:not([data-bs-theme=dark]) .text-normal {
   color: #000000;
-}
+} */
 
-sidebar-menu ul li a svg{
+sidebar-menu ul li a svg {
   color: #000000;
 }
 
@@ -757,9 +753,6 @@ body[data-sidebar="dark"] .section-card-header {
   border-bottom: 1px solid #3a4150;
 }
 
-body[data-sidebar="dark"] .card-body {
-  background: #363a38 !important;
-}
 
 body[data-sidebar="dark"] .form-select:disabled {
   background: var(--modo-oscuro-form);
@@ -778,7 +771,7 @@ body[data-sidebar="dark"] .section-card label {
   color: white;
 }
 
-#sidebar-menu ul li a svg{
+#sidebar-menu ul li a svg {
   color: var(--)
 }
 
@@ -1063,8 +1056,8 @@ body[data-sidebar="dark"] .opcion-card-body p {
 /* Este ya es el predeterminado para todas las cards */
 
 .card-header {
-  background-color: var(--tabla-header-bg);
-  color: var(--tabla-header-text);
+  background-color: var(--card-header-bg);
+  color: var(--card-header-color);
   display: flex;
   flex-direction: column;
   /* por defecto columna */
@@ -1095,11 +1088,6 @@ body[data-sidebar="dark"] .opcion-card-body p {
   /* igual que otros botones sm */
 }
 
-
-
-
-
-
 .card-header-filtros {
   background-color: rgba(66, 92, 199, 0.1);
   font-weight: 700;
@@ -1113,7 +1101,14 @@ body[data-sidebar="dark"] .opcion-card-body p {
   /* espacio debajo */
 }
 
-
+.card-body {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1.25rem 1.25rem;
+  color: var(--text-color);
+  background-color: var(--card-body-bg);
+}
 
 /* Base común para ambos tiles */
 .tile-agregar-contacto,
@@ -1235,7 +1230,7 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
 }
 
 #tblPedidos thead th:hover {
-  background: #eef6ff;
+  background: var(--tabla-header-hover-bg);
   /* azul clarito */
 }
 
@@ -1472,24 +1467,28 @@ body[data-sidebar="dark"] .tile-agregar-facturacion:hover p {
   color: #ffffff !important;
   font-weight: 500 !important;
 }
+
 /* 1) Forzar que el placeholder de un Select2 múltiple se muestre */
 .select2-container--bootstrap-5 .select2-selection__rendered .select2-selection__placeholder {
   display: inline-block !important;
-  color: #6c757d !important;        /* gris Bootstrap para placeholder */
+  color: #6c757d !important;
+  /* gris Bootstrap para placeholder */
   opacity: 1 !important;
-  font-style: italic;               /* opcional para diferenciarlo */
-  margin-right: .5rem;              /* igual que los tags */
+  font-style: italic;
+  /* opcional para diferenciarlo */
+  margin-right: .5rem;
+  /* igual que los tags */
 }
 
 /* 2) Quitarle el “✕” que trae por defecto ese placeholder */
-.select2-container--bootstrap-5 .select2-selection__rendered 
-  .select2-selection__placeholder .select2-selection__choice__remove {
+.select2-container--bootstrap-5 .select2-selection__rendered .select2-selection__placeholder .select2-selection__choice__remove {
   display: none !important;
 }
 
 body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-selection--multiple {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>") !important;
 }
+
 body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-dropdown {
   background-color: var(--bs-secondary-bg) !important;
   color: var(--bs-body-color) !important;
@@ -1510,9 +1509,6 @@ body[data-sidebar="dark"] .select2-container--bootstrap-5 .select2-results__opti
 /* ───────────────────────────────────────────────
      Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */
-.bg-body {
-  background-color: #f8f9fa !important;
-}
 
 /* ───────── Tabla con layout fijo y altura homogénea ───────── */
 #tabla-clientes {
@@ -1754,9 +1750,9 @@ body:not([data-sidebar="dark"]) #tabla-clientes td:nth-child(5) {
   padding: 1rem;
 }
 
-body[data-sidebar="dark"] .text-normal {
+/* body[data-sidebar="dark"] .text-normal {
   color: var(--texto-blanco-modoDark);
-}
+} */
 
 /* ───────────────────────────────────────────────
    Termina Estilos de tabla clientes/index.blade.php

@@ -46,7 +46,7 @@
     </div>
 
 <!-- Comunicados -->
-<div class="card mt-4" style="background: linear-gradient(to right, #e3f2fd, #ffffff); border: none;">
+<div class="card mt-4">
     <div class="card-body position-relative p-4">
         <h5 class="text-center text-primary mb-4 fw-bold text-subtitulo">Comunicados</h5>
 
