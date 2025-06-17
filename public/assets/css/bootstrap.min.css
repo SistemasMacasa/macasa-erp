@@ -473,7 +473,7 @@ th,
 thead,
 tr {
     border-color: inherit;
-    border-style: solid;
+    /* border-style: solid !important; */
     border-width: 0
 }
 

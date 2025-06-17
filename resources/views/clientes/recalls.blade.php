@@ -99,26 +99,24 @@
                 </div>
 
                 <div class="row gx-3 gy-2 justify-content-between mt-1">
-                    <div class="col"></div>
-                    <div class="col"></div>
-                    <div class="col"></div>
-                    <div class="col"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;"></div>
 
                     <div class="col d-flex gap-2 align-items-end">
                         <a
                         href="{{ route('clientes.recalls') }}"
-                        class="btn btn-secondary d-flex align-items-center justify-content-center"
-                        style="width:50%; /* múltiplo de 5ch */"
-                        >
+                        class="btn btn-secondary d-flex align-items-center justify-content-center flex-fill"
+                        style="width: 50%;">
                             <i class="fa fa-eraser me-1"></i>
                             Limpiar
                         </a>
 
                         <button
                         type="submit"
-                        class="btn btn-success d-flex align-items-center justify-content-center"
-                        style="width:50%; /* múltiplo de 5ch */"
-                        >
+                        class="btn btn-success d-flex align-items-center justify-content-center flex-fill"
+                        style="width: 50%;">
                             <i class="fa fa-search me-1"></i>
                             Buscar
                         </button>

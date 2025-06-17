@@ -220,7 +220,7 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <!-- Nombre(s) del contacto = Nombre de la Cuenta -->
-                                <div class="colcampo-dato-principal">
+                                <div class="col campo-dato-principal">
                                     <label for="nombre" class="form-label text-normal">
                                         Nombre(s) <span class="text-danger">*</span>
                                     </label>

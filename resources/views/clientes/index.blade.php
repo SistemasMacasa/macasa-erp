@@ -163,7 +163,8 @@
                         </a>
 
                         <button type="submit"
-                            class="btn btn-success btn-limpiar d-flex align-items-center justify-content-center">
+                            class="btn btn-success btn-limpiar d-flex align-items-center justify-content-center"
+                            style="width: 50%;">
                             <i class="fa fa-search me-1"></i>
                             Buscar
                         </button>
@@ -281,19 +282,19 @@
                 <tr>
                     <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-id">ID
                         Cliente</th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-30">Empresa
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-empresa">Empresa
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-25" >Contacto
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-contacto" >Contacto
                     </th>
-                    <th class="header-tabla py-1 px-2 tabla-col-15">Teléfono</th>
-                    <th class="header-tabla py-1 px-2 tabla-col-25">Correo</th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-10 .tabla-col-22">Sector
+                    <th class="header-tabla py-1 px-2 tabla-col-telefono">Teléfono</th>
+                    <th class="header-tabla py-1 px-2 tabla-col-correo">Correo</th>
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-10 .tabla-col-sector">Sector
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-22" >Segmento
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-segmento" >Segmento
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-11">Ciclo
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-ciclo">Ciclo
                     </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-15">Asignado
+                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-asignado">Asignado
                         a</th>
                 </tr>
             </thead>
@@ -313,7 +314,7 @@
                         </td>
 
                         {{-- Empresa --}}
-                        <td class="py-1 px-2 text-truncate tabla-col-30" title="{{ $c->nombre }}">
+                        <td class="py-1 px-2 text-truncate tabla-col-empresa" title="{{ $c->nombre }}">
                             <a href="{{ route('clientes.view', $c->id_cliente) }}"
                                 class="text-decoration-underline fw-bold text-dark">
                                 {{ Str::limit($c->nombre, 30) }}

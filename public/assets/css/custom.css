@@ -547,6 +547,7 @@ body[data-sidebar-size="sm"] .vertical-menu {
 .vertical-menu ul.metismenu>li>a .menu-item {
   display: inline-block;
   /* para poder animar anchura */
+  color: var(--color-fuente);
   white-space: nowrap;
   overflow: hidden;
   /* recorta el texto */
@@ -1493,7 +1494,7 @@ tfoot>tr>th {
 }
 
 /* Empresa (max 30 chars → 30ch) */
-#tabla-clientes .tabla-col-30 {
+ .tabla-col-empresa {
   position: sticky;
   left: 0;
   z-index: 3;
@@ -1501,8 +1502,8 @@ tfoot>tr>th {
   width: 30ch;
 }
 
-/* Contactos - correo */
-#tabla-clientes .tabla-col-25 {
+/* Contactos */
+.tabla-col-contacto {
   width: 25ch;
   background: var(--tabla-header-bg);
   text-overflow: ellipsis;
@@ -1511,14 +1512,21 @@ tfoot>tr>th {
 }
 
 /* Telefono  (columna 4: 10 dígitos) */
-#tabla-clientes .tabla-col-15 {
+.tabla-col-telefono {
   background: var(--tabla-header-bg);
   width: 15ch;
   align-items: center;
 }
+.tabla-col-correo {
+  width: 25ch;
+  background: var(--tabla-header-bg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
 /* Sector (columna 6: “Gobierno” → 8 caracteres) */
-#tabla-clientes .tabla-col-10 {
+.tabla-col-sector {
   width: 10ch;
   background: var(--tabla-header-bg);
   text-align: center;
@@ -1527,14 +1535,26 @@ tfoot>tr>th {
 
 
 /* Segmento (columna 7: “Macasa Cuentas Especiales” → 25 caracteres) */
-#tabla-clientes .tabla-col-22 {
+.tabla-col-segmento {
   width: 22ch;
   background: var(--tabla-header-bg);
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-
+.tabla-col-ciclo
+ {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--tabla-header-bg) !important;
+  width: 11ch;
+}
+.tabla-col-asignado {
+  background: var(--tabla-header-bg);
+  width: 15ch;
+  align-items: center;
+}
 /* Flechas genéricas */
 .sort-arrow::after {
   content: "⇅";
