@@ -180,7 +180,7 @@
             <p class="mb-0 text-muted small">
                 Mostrando <strong>{{ $clientes->firstItem() ?? 'Todos' }}</strong> a
                 <strong>{{ $clientes->lastItem() }}</strong>
-                de <strong>{{ $clientes->total() ?? 'Todos' }}</strong> clientes encontrados
+                | Total: <strong>{{ $clientes->total() ?? 'Todos' }}</strong> cuentas encontradas
             </p>
         </div>
     

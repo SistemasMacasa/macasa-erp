@@ -2,17 +2,30 @@
 @section('title', 'SIS 3.0 | Traspaso de cuentas')
 
 @section('content')
-    {{-- 🧭 Migas de pan --}}
-    @section('breadcrumb')
-
-    <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
-    <li class="breadcrumb-item active">Traspaso de cuentas</li>
-    @endsection
     <div class="container-fluid">
-        <h1 class="mb-4">Traspaso de cuentas</h1>
-        <div class="row justify-content-center mb-3">
+
+        {{-- 🧭 Migas de pan --}}
+        @section('breadcrumb')
+            <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
+            <li class="breadcrumb-item active">Traspaso de cuentas</li>
+        @endsection
+
+        <h2 class="mb-3 text-titulo">Traspaso de cuentas</h2>
+
+        {{-- 🎛 Botonera --}}
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
+                <i class="fa fa-arrow-left me-1"></i> Regresar
+            </a>
+
+            <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal">
+                <i class="fa fa-phone me-1"></i> Mis Cuentas
+            </a>
+        </div>
+
+        <div id="alert-transfer" class="row justify-content-center">
             <div class="col-md-7">
-            <div id="alert-transfer" class="alert alert-success d-flex align-items-center py-2 px-3 shadow-sm" role="alert" style="border-radius: 0.75rem;">
+            <div class="alert alert-success d-flex align-items-center py-2 px-3 shadow-sm" role="alert" style="border-radius: 0.75rem;">
                 <i class="fa fa-check-circle me-2 fs-5 text-success"></i>
                 <div class="small">
                 <strong>¡Listo para transferir cuentas!</strong> Selecciona y mueve cuentas entre ejecutivos de forma fácil y rápida.
