@@ -39,7 +39,7 @@
             <i class="fa fa-list me-1"></i> Mis Cuentas
         </a>
 
-        <a href="{{ route('cotizaciones.create', ['cliente' => $cliente->id]) }}" class="btn btn-primary btn-principal">
+        <a href="{{ route('cotizaciones.create', ['cliente' => $cliente->id_cliente]) }}" class="btn btn-primary btn-principal">
             <i class="fa fa-file-invoice-dollar me-1"></i> Levantar Cotización
         </a>
 

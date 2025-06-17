@@ -15,19 +15,17 @@ class Direccion extends Model
     public $incrementing = true;
     protected $keyType = 'int';
     protected $fillable = [
-        'id_cliente',        
-        'id_direccion_entrega',   
-        'id_direccion_facturacion', 
-        'tipo',               //  entrega | factura
-        'nombre',
-        'calle',
-        'num_ext',
+        'id_cliente', 
+        'nombre', 
+        'tipo', 
+        'calle', 
+        'num_ext', 
         'num_int',
-        'colonia',
-        'id_ciudad',
-        'id_estado',
+        'colonia', 
+        'cp', 
+        'id_ciudad', 
+        'id_estado', 
         'id_pais',
-        'cp',
     ];
 
     /* Relaciones */

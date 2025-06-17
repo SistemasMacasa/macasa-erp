@@ -101,7 +101,6 @@ class ClienteController extends Controller
             'ciclos',
         ));
     }
-
     public function create(Request $request)
     {
         $tipo           = $request->input('tipo', 'moral'); // por defecto: moral
@@ -814,7 +813,6 @@ class ClienteController extends Controller
         return redirect()->route('clientes.index', ['page' => $ultimaPagina])
         ->with('success', 'Cliente creado correctamente');
         }
-
     public function storeNota(Request $request, $id)
     {
         $request->validate([
@@ -836,7 +834,6 @@ class ClienteController extends Controller
 
         return redirect()->route('clientes.view', $id)->with('success', 'Nota registrada correctamente.');
     }
-
     /**
      * Muestra el formulario para traspasar múltiples clientes.
      */
@@ -883,7 +880,6 @@ class ClienteController extends Controller
 
         return view('clientes.transfer', compact('vendedores', 'clientes', 'lado', 'idVendedor'));
     }
-
     /**
      * Procesa el traspaso: actualiza id_vendedor de los clientes seleccionados.
      */
@@ -903,80 +899,40 @@ class ClienteController extends Controller
 
         return redirect()->route('clientes.transfer')->with('success', count($ids) . ' cuentas traspasadas.');
     }
-
-
     // Recalls
     public function recalls(Request $request)
     {
-        $estado       = $request->input('estado');
-        $id_vendedor  = $request->input('id_vendedor');
-        $orden        = $request->input('orden', 'nombre');
-        $busqueda     = $request->input('busqueda');
-        $perPage      = $request->input('ver', 50);
+        $id_vendedor = $request->input('id_vendedor');
+        $busqueda    = $request->input('busqueda');
+        $perPage     = $request->input('ver', 50);
 
         $ejecutivos = Usuario::where('estatus', 'activo')
-                    ->get()
-                    ->sortBy('nombre_completo')
-                    ->pluck('nombre_completo', 'id_usuario');
+                        ->get()
+                        ->sortBy('nombre_completo')
+                        ->pluck('nombre_completo', 'id_usuario');
 
-        
-        if ($estado === 'contestados') 
-        {
-            $query = Nota::with(['cliente.primerContacto', 'usuario'])
-                ->whereNotNull('fecha_reprogramacion');
+        $query = Cliente::with(['primerContacto', 'vendedor'])
+            ->whereNotNull('recall');
 
-            if ($id_vendedor) {
-                $query->whereHas('cliente', fn($q) => $q->where('id_vendedor', $id_vendedor));
-            }
-
-            if ($busqueda) {
-                $query->whereHas('cliente', function ($q) use ($busqueda) {
-                    $q->where('nombre', 'like', "%$busqueda%")
-                    ->orWhere('id_cliente', 'like', "%$busqueda%")
-                    ->orWhereHas('primerContacto', fn ($q2) =>
-                        $q2->where('telefono1', 'like', "%$busqueda%")
-                            ->orWhere('email', 'like', "%$busqueda%"));
-                });
-            }
-
-            if ($orden === 'fecha') {
-                $query->orderByDesc('fecha_reprogramacion');
-            } else {
-                $query->orderBy('id_cliente'); // fallback
-            }
-
-            $clientes = $query->paginate($perPage)->appends($request->all());
-
-        } 
-        elseif($estado === 'pendientes')
-        {
-            $query = Cliente::with(['primerContacto', 'vendedor'])
-                ->whereNotNull('recall');
-
-            if ($id_vendedor) {
-                $query->where('id_vendedor', $id_vendedor);
-            }
-
-            if ($busqueda) {
-                $query->where(function ($q) use ($busqueda) {
-                    $q->where('nombre', 'like', "%$busqueda%")
-                    ->orWhere('id_cliente', 'like', "%$busqueda%")
-                    ->orWhereHas('primerContacto', fn ($q2) =>
-                        $q2->where('telefono1', 'like', "%$busqueda%")
-                            ->orWhere('email', 'like', "%$busqueda%"));
-                });
-            }
-
-            $query->orderBy($orden === 'fecha' ? 'recall' : 'nombre');
-
-            $clientes = $query->paginate($perPage)->appends($request->all());
-        }
-        else{
-            $clientes = [];
+        if ($id_vendedor) {
+            $query->where('id_vendedor', $id_vendedor);
         }
 
-        return view('clientes.recalls', compact('clientes', 'estado', 'ejecutivos'));
+        if ($busqueda) {
+            $query->where(function ($q) use ($busqueda) {
+                $q->where('nombre', 'like', "%$busqueda%")
+                ->orWhere('id_cliente', 'like', "%$busqueda%")
+                ->orWhereHas('primerContacto', fn ($q2) =>
+                    $q2->where('telefono1', 'like', "%$busqueda%")
+                        ->orWhere('email', 'like', "%$busqueda%"));
+            });
+        }
+
+        $clientes = $query->orderBy('recall')->paginate($perPage)->appends($request->all());
+
+        return view('clientes.recalls', compact('clientes', 'ejecutivos'));
     }
+
 
 
 }
