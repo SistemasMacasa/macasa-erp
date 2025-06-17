@@ -41,6 +41,10 @@ Route::post('/clientes/transfer', [ClienteController::class, 'transferStore'])
         ->name('clientes.transfer.store');
 
 Route::get('/clientes/recalls', [ClienteController::class, 'recalls'])->name('clientes.recalls');
+
+Route::get('/clientes/archivadas', [ClienteController::class, 'archivadas'])
+    ->name('clientes.archivadas');
+    
 //CRUD Usuarios internos de SIS
 //Eric: Cambiar el ruteo, no usar resource(), definir cada ruta a mano
 Route::resource('usuarios', UsuarioController::class);

@@ -63,7 +63,7 @@
                                 <div class="col campo-dato-secundario">
                                     <label class="form-label text-normal">Asignado a: <span class="text-danger">*</span></label>
                                     <select name="id_vendedor" class="form-select" required>
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="" @selected(old('id_vendedor')==='')>Base General</option>
                                         @foreach($vendedores as $v)
                                             <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor')==$v->id_usuario)>
@@ -76,7 +76,7 @@
                                 <div class="col campo-dato-secundario">
                                     <label class="form-label text-normal">Sector <span class="text-danger">*</span></label>
                                     <select name="sector" class="form-select" required>
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="privada">Empresa Privada</option>
                                         <option value="gobierno">Empresa Gobierno</option>
                                     </select>
@@ -85,7 +85,7 @@
                                 <div class="col campo-dato-secundario">
                                     <label class="form-label text-normal">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" class="form-select" required>
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="macasa cuentas especiales">Macasa Cuentas Especiales</option>
                                         <option value="macasa ecommerce">Macasa E-commerce</option>
                                         <option value="tekne store ecommerce">Tekne Store E-commerce</option>
@@ -126,7 +126,7 @@
                                 <div class="col campo-dato-secundario">
                                     <label class="form-label text-normal">Género <span class="text-danger">*</span></label>
                                     <select name="contacto[0][genero]" class="form-select" required>
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="masculino">Masculino</option>
                                         <option value="femenino">Femenino</option>
                                         <option value="no-especificado">No especificado</option>
@@ -278,7 +278,7 @@
                                 <div class="col campo-dato-secundario">
                                     <label for="segmento" class="form-label text-normal">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" id="segmento" class="form-select" required>
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="macasa cuentas especiales" @selected(old('segmento') == 'macasa cuentas especiales')>
                                             Macasa Cuentas Especiales
                                         </option>
@@ -295,7 +295,7 @@
                                 <div class="col campo-dato-secundario">
                                     <label for="genero" class="form-label text-normal">Género <span class="text-danger">*</span></label>
                                     <select name="genero" id="genero" class="form-select" required>
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="masculino"        @selected(old('genero') == 'masculino')>Masculino</option>
                                         <option value="femenino"         @selected(old('genero') == 'femenino')>Femenino</option>
                                         <option value="no-especificado"  @selected(old('genero') == 'no-especificado')>No Especificado</option>
@@ -307,7 +307,7 @@
                                             class="text-danger">*</span></label>
                                     <select name="id_vendedor" id="id_vendedor" class="form-select" style=""
                                         required>
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
 
                                         {{-- Base General = NULL --}}
                                         <option value="" @selected(old('id_vendedor') === '')>Base General</option>

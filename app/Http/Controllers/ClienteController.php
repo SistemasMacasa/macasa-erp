@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Cliente;
@@ -20,7 +21,8 @@ class ClienteController extends Controller
     public function index(Request $request)
     {
         // 1) consulta base + relaciones
-        $query = Cliente::with(['primerContacto', 'vendedor']);
+        $query = Cliente::with(['primerContacto', 'vendedor'])
+            ->where('estatus', 'activo');
 
         /* ---------- Filtros ---------- */
 
@@ -28,17 +30,15 @@ class ClienteController extends Controller
         if ($term = $request->input('search')) {
             $query->where(function ($q) use ($term) {
                 $q->where('nombre', 'like', "%{$term}%")
-                   ->orWhere('id_cliente', 'like', "%{$term}%")
-                   ->orWhereHas('primerContacto', fn ($q2) =>
-                        $q2->where('telefono1', 'like', "%{$term}%"));
+                    ->orWhere('id_cliente', 'like', "%{$term}%")
+                    ->orWhereHas('primerContacto', fn($q2) =>
+                    $q2->where('telefono1', 'like', "%{$term}%"));
             });
         }
 
         // Ejecutivos
-        if ($ejecutivos = $request->input('ejecutivos')) 
-        {
-            $query->where(function ($q) use ($ejecutivos) 
-            {
+        if ($ejecutivos = $request->input('ejecutivos')) {
+            $query->where(function ($q) use ($ejecutivos) {
                 // Si se seleccionó "Base General", filtramos por id_vendedor NULL
                 if (in_array('base_general', $ejecutivos)) {
                     $q->orWhereNull('id_vendedor');
@@ -83,7 +83,7 @@ class ClienteController extends Controller
         }
 
         $clientes = $query->paginate($perPage)
-                        ->appends($request->all());   // conserva filtros
+            ->appends($request->all());   // conserva filtros
 
         /* ---------- Catálogos para los <select> ---------- */
         $vendedores = Usuario::whereNull('id_cliente')->get();
@@ -146,7 +146,7 @@ class ClienteController extends Controller
             // 'contacto_entrega_predet.direccion_entrega.estado',
             // 'contacto_entrega_predet.direccion_entrega.pais',
         ])
-        ->findOrFail($id);
+            ->findOrFail($id);
 
         //Eric, en el modelo Cliente hay una función del ORM llamada notas().
         //validar si se puede cambiar este query por algo como $cliente->notas
@@ -176,7 +176,7 @@ class ClienteController extends Controller
         // ===== Dummy de historial mientras no hay modelo Pedido =====
         $pedidos = collect([
             ['fecha' => '2025-04-02', 'id' => 'MP21023', 'razon' => 'ACME S.A. de C.V.',      'subtotal' => 15230.50, 'margen' => 2800.00, 'factor' => 18.4],
-            ['fecha' => '2025-03-17', 'id' => 'MP20976', 'razon' => 'Tech México S.A.',        'subtotal' =>  8650.00, 'margen' => 1910.00, 'factor'=> 20.4],
+            ['fecha' => '2025-03-17', 'id' => 'MP20976', 'razon' => 'Tech México S.A.',        'subtotal' =>  8650.00, 'margen' => 1910.00, 'factor' => 20.4],
             ['fecha' => '2025-02-28', 'id' => 'MP20911', 'razon' => 'Comercial XYZ S. de R.L', 'subtotal' => 43120.90, 'margen' => 6550.00, 'factor' => 15.2],
             ['fecha' => '2025-04-10', 'id' => 'MP21034', 'razon' => 'Distribuidora ABC S.A.',  'subtotal' => 12345.67, 'margen' => 2450.00, 'factor' => 19.8],
             ['fecha' => '2025-03-25', 'id' => 'MP20987', 'razon' => 'Global Tech Solutions',   'subtotal' =>  9876.54, 'margen' => 2020.00, 'factor' => 35.4],
@@ -234,49 +234,50 @@ class ClienteController extends Controller
         ];
         //Navegación entre clientes/cuentas eje
         $prevId = Cliente::where('id_cliente', '<', $cliente->id_cliente)
-                 ->orderByDesc('id_cliente')
-                 ->value('id_cliente');   // devuelve null si no hay anterior
+            ->orderByDesc('id_cliente')
+            ->value('id_cliente');   // devuelve null si no hay anterior
 
         $nextId = Cliente::where('id_cliente', '>', $cliente->id_cliente)
-                 ->orderBy('id_cliente')
-                 ->value('id_cliente');   // devuelve null si no hay siguiente
+            ->orderBy('id_cliente')
+            ->value('id_cliente');   // devuelve null si no hay siguiente
 
         $usuario = auth()->user();
 
-        return view('clientes.view',
-                    compact(
-                  'cliente',
-                 'notas', 
-                            'pedidos',
-                            'vendedores',
-                            'metodos_pago',
-                            'formas_pago',
-                            'usos_cfdi',
-                            'ciudades',
-                            'estados',
-                            'paises',
-                            'regimen_fiscales',
-                            'prevId',
-                            'nextId',
-                            'sectores',
-                            'usuario',
-                            'cotizaciones'
-                        ));
+        return view(
+            'clientes.view',
+            compact(
+                'cliente',
+                'notas',
+                'pedidos',
+                'vendedores',
+                'metodos_pago',
+                'formas_pago',
+                'usos_cfdi',
+                'ciudades',
+                'estados',
+                'paises',
+                'regimen_fiscales',
+                'prevId',
+                'nextId',
+                'sectores',
+                'usuario',
+                'cotizaciones'
+            )
+        );
     }
     public function update(Request $request, $id)
     {
         // Actualiza los datos de un cliente existente desde clientes.view
-    
-        if($request->sector == "privada" || $request->sector == "gobierno")
-        {
-            if(auth()->user()->es_admin != 1) {
+
+        if ($request->sector == "privada" || $request->sector == "gobierno") {
+            if (auth()->user()->es_admin != 1) {
                 return redirect()->back()->with('error', 'No tienes permiso para actualizar este cliente.');
             }
 
             $request->merge([
                 'contacto' => collect($request->input('contacto', []))
                     ->map(function ($c) {
-                        foreach (range(1,5) as $i) {
+                        foreach (range(1, 5) as $i) {
                             foreach (['telefono', 'celular', 'ext'] as $campo) {
                                 $key = "{$campo}{$i}";
                                 $c[$key] = isset($c[$key]) ? preg_replace('/\D/', '', $c[$key]) : null;
@@ -316,7 +317,7 @@ class ClienteController extends Controller
 
 
             // Actualizar el cliente en la BD
-            try{
+            try {
                 $cliente = Cliente::findOrFail($id);
                 $cliente->update([
                     'estatus'       => $data['estatus'],
@@ -354,8 +355,8 @@ class ClienteController extends Controller
                 $contacto->save();
 
                 //registrarNota es una función Helper, está definida en app/Helpers/
-                $mensaje = "El usuario " . auth()->user()->nombre." ".auth()->user()->apellido_p." ".auth()->user()->apellido_m .
-                            " ha actualizado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
+                $mensaje = "El usuario " . auth()->user()->nombre . " " . auth()->user()->apellido_p . " " . auth()->user()->apellido_m .
+                    " ha actualizado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
 
                 registrarNota(
                     id_cliente: $cliente->id_cliente,
@@ -363,26 +364,23 @@ class ClienteController extends Controller
                     etapa: $cliente->ciclo_venta,
                     fecha_reprogramacion: null,
                     es_automatico: 1,
-                    
+
                 );
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
-                                 ->with('success', 'Cliente empresarial actualizado correctamente');
-
-            }catch (Exception $e) {
+                    ->with('success', 'Cliente empresarial actualizado correctamente');
+            } catch (Exception $e) {
                 return redirect('clientes')->with('error', 'Error al actualizar el cliente: ' . $e->getMessage());
             }
-
-        }elseif($request->sector == "persona")
-        {
-            if(auth()->user()->es_admin != 1) {
+        } elseif ($request->sector == "persona") {
+            if (auth()->user()->es_admin != 1) {
                 return redirect()->back()->with('error', 'No tienes permiso para actualizar este cliente.');
             }
 
             $request->merge([
                 'contacto' => collect($request->input('contacto', []))
                     ->map(function ($c) {
-                        foreach (range(1,5) as $i) {
+                        foreach (range(1, 5) as $i) {
                             foreach (['telefono', 'celular', 'ext'] as $campo) {
                                 $key = "{$campo}{$i}";
                                 $c[$key] = isset($c[$key]) ? preg_replace('/\D/', '', $c[$key]) : null;
@@ -407,7 +405,7 @@ class ClienteController extends Controller
                 'email'                  => 'nullable|email|max:120',
                 'segmento'               => 'nullable|string|max:100',
                 'genero'                 => 'nullable|string|max:17',
-                   ];
+            ];
             // ── Teléfonos / Extensiones / Celulares (1‒5) ───────────────────────────
             for ($i = 1; $i <= 5; $i++) {
                 $rules["contacto.0.telefono{$i}"] = 'nullable|digits:10';
@@ -416,8 +414,7 @@ class ClienteController extends Controller
             }
             $request->validate($rules);
             // Actualizar el cliente en la BD
-            try
-            {
+            try {
                 $cliente = Cliente::findOrFail($id);
                 $cliente->update([
                     'nombre'        => $request->input('nombre'),
@@ -458,9 +455,9 @@ class ClienteController extends Controller
                 $contacto->save();
 
                 //registrarNota es una función Helper, está definida en app/Helpers/
-                $mensaje = "El usuario ".auth()->user()->nombre." ".
-                            auth()->user()->apellido_p."".auth()->user()->apellido_m .
-                            " ha actualizado la cuenta personal [{$cliente->id_cliente}] -> {$cliente->nombre}.";
+                $mensaje = "El usuario " . auth()->user()->nombre . " " .
+                    auth()->user()->apellido_p . "" . auth()->user()->apellido_m .
+                    " ha actualizado la cuenta personal [{$cliente->id_cliente}] -> {$cliente->nombre}.";
 
                 registrarNota(
                     $cliente->id_cliente,
@@ -471,7 +468,7 @@ class ClienteController extends Controller
                 );
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
-                                 ->with('success', 'Cliente personal actualizado correctamente');
+                    ->with('success', 'Cliente personal actualizado correctamente');
             } catch (Exception $e) {
                 return redirect('clientes')->with('error', 'Error al actualizar el cliente: ' . $e->getMessage());
             }
@@ -485,16 +482,16 @@ class ClienteController extends Controller
         $cliente->delete();
 
         //registrarNota es una función Helper, está definida en app/Helpers/
-                $mensaje = "El usuario " . auth()->user()->nombre_completo .
-                            " ha creado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
+        $mensaje = "El usuario " . auth()->user()->nombre_completo .
+            " ha creado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
 
-                registrarNota(
-                    $cliente->id_cliente,
-                    $mensaje,
-                    $cliente->ciclo_venta,
-                    null,
-                    1
-                );
+        registrarNota(
+            $cliente->id_cliente,
+            $mensaje,
+            $cliente->ciclo_venta,
+            null,
+            1
+        );
         return redirect('clientes')->with('success', 'Cliente eliminado correctamente');
     }
     public function store(Request $request)
@@ -502,8 +499,7 @@ class ClienteController extends Controller
         //Guarda los datos de un cliente nuevo desde clientes.index
         \Log::info('Tipo recibido:', ['tipo' => $request->input('tipo')]);
 
-        if ($request->input('sector') == 'persona') 
-        { // SI ES FISICA
+        if ($request->input('sector') == 'persona') { // SI ES FISICA
             $rules = [
                 /* === Cuenta Personal === */
                 'nombre'        => 'required|string|max:60',
@@ -515,7 +511,7 @@ class ClienteController extends Controller
                 'estatus'       => 'required|string|max:100',
                 'tipo'          => 'required|string|max:100',
                 'sector'        => 'nullable|string|max:100',
-            
+
                 // Datos personales …
                 'email'                  => 'nullable|email|max:120',
                 'segmento'               => 'nullable|string|max:100',
@@ -526,12 +522,11 @@ class ClienteController extends Controller
             ];
             $request->validate($rules);
 
-            
+
             // Guardar en la base de datos
-            try
-            {
-                 // GUARDAR CUENTA EJE PERSONAL
-                 $cliente = Cliente::create([
+            try {
+                // GUARDAR CUENTA EJE PERSONAL
+                $cliente = Cliente::create([
                     'nombre'      => $request->input('nombre'),
                     'apellido_p'  => $request->input('apellido_p'),
                     'apellido_m'  => $request->input('apellido_m'),
@@ -548,14 +543,14 @@ class ClienteController extends Controller
                 // Crear contacto principal (obligatorio)
                 $contactos = $request->input('contacto', []);
                 $contacto = $contactos[0] ?? null; // solo un contacto
-                  
+
                 // Normaliza phones/exts
-                foreach (range(1,5) as $n) {
+                foreach (range(1, 5) as $n) {
                     $contacto["telefono$n"] = digits_only($contacto["telefono$n"] ?? null);
                     $contacto["celular$n"]  = digits_only($contacto["celular$n"]  ?? null);
                     $contacto["ext$n"]      = digits_only($contacto["ext$n"]      ?? null);
                 }
-            
+
                 Contacto::create([
                     'id_cliente'  => $cliente->id_cliente,
                     'nombre'      => $request->input('nombre'),
@@ -564,7 +559,7 @@ class ClienteController extends Controller
                     'email'       => $request->input('email'),
                     'genero'      => $request->input('genero'),
                     'puesto'      => null, // o define si vendrá después
-                
+
                     'telefono1'   => $contacto['telefono1'] ?? null,
                     'ext1'        => $contacto['ext1']      ?? null,
                     'telefono2'   => $contacto['telefono2'] ?? null,
@@ -575,20 +570,20 @@ class ClienteController extends Controller
                     'ext4'        => $contacto['ext4']      ?? null,
                     'telefono5'   => $contacto['telefono5'] ?? null,
                     'ext5'        => $contacto['ext5']      ?? null,
-                
+
                     'celular1'    => $contacto['celular1']  ?? null,
                     'celular2'    => $contacto['celular2']  ?? null,
                     'celular3'    => $contacto['celular3']  ?? null,
                     'celular4'    => $contacto['celular4']  ?? null,
                     'celular5'    => $contacto['celular5']  ?? null,
-                
+
                     'predeterminado' => 1,
                 ]);
-                
+
 
                 //registrarNota es una función Helper, está definida en app/Helpers/
                 $mensaje = "El usuario " . auth()->user()->nombre_completo .
-                            " ha creado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
+                    " ha creado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
 
                 registrarNota(
                     $cliente->id_cliente,
@@ -599,40 +594,36 @@ class ClienteController extends Controller
                 );
 
                 return redirect(to: '/clientes')->with('success', 'Cuenta personal creada correctamente');
-
-            }
-            catch (Exception $e){
+            } catch (Exception $e) {
                 return redirect('')->with('error', $e->getMessage());
             }
-            
-
         } else // SI ES EMPRESA
         {
             $rules = [
                 /* -------- Cuenta -------- */
-                'nombre'      => ['required','string','max:100'],
-                'sector'      => ['required','string','max:100'],
-                'segmento'    => ['required','string','max:100'],
-                'id_vendedor' => ['required','integer'],
-            
+                'nombre'      => ['required', 'string', 'max:100'],
+                'sector'      => ['required', 'string', 'max:100'],
+                'segmento'    => ['required', 'string', 'max:100'],
+                'id_vendedor' => ['required', 'integer'],
+
                 /* -------- Contacto(s) ---- */
-                'contacto.*.nombre'      => ['nullable','string','max:60'],
-                'contacto.*.apellido_p'  => ['nullable','string','max:27'],
-                'contacto.*.apellido_m'  => ['nullable','string','max:27'],
-                'contacto.*.email'       => ['nullable','email','max:120'],
-                'contacto.*.puesto'      => ['nullable','string','max:60'],
-            
+                'contacto.*.nombre'      => ['nullable', 'string', 'max:60'],
+                'contacto.*.apellido_p'  => ['nullable', 'string', 'max:27'],
+                'contacto.*.apellido_m'  => ['nullable', 'string', 'max:27'],
+                'contacto.*.email'       => ['nullable', 'email', 'max:120'],
+                'contacto.*.puesto'      => ['nullable', 'string', 'max:60'],
+
                 // Teléfonos / celulares  –  10 dígitos exactos o nulo
-                'contacto.*.telefono*'   => ['nullable','string'],
-                'contacto.*.celular*'    => ['nullable','string'],
-            
+                'contacto.*.telefono*'   => ['nullable', 'string'],
+                'contacto.*.celular*'    => ['nullable', 'string'],
+
                 // Extensiones 1-6 dígitos
-                'contacto.*.ext*'        => ['nullable','regex:/^\d{1,7}$/'],
+                'contacto.*.ext*'        => ['nullable', 'regex:/^\d{1,7}$/'],
             ];
             $request->validate($rules);
 
-            
-            
+
+
 
             // Guardar en la base de datos
             // Para crear una cuenta eje, se necesitan los datos de la cuenta y al menos un contacto.
@@ -652,19 +643,17 @@ class ClienteController extends Controller
 
                 // Crear contacto principal (obligatorio)
                 $contactos = $request->input('contacto', []);  // trae un array de arrays: [ 0 => [...], 1 => [...], ... ]
-                if (count($contactos) > 0) 
-                {
-                    foreach ($contactos as $cont) 
-                    {
+                if (count($contactos) > 0) {
+                    foreach ($contactos as $cont) {
                         if (empty($cont['nombre'])) continue;        // ficha vacía
-                    
+
                         // Normaliza phones/exts
-                        foreach (range(1,5) as $n) {
+                        foreach (range(1, 5) as $n) {
                             $cont["telefono$n"] = digits_only($cont["telefono$n"] ?? null);
                             $cont["celular$n"]  = digits_only($cont["celular$n"]  ?? null);
                             $cont["ext$n"]      = digits_only($cont["ext$n"]      ?? null);
                         }
-                    
+
                         Contacto::create([
                             'id_cliente' => $cliente->id_cliente,
                             'nombre'     => $cont['nombre'],
@@ -673,13 +662,18 @@ class ClienteController extends Controller
                             'email'      => $cont['email']      ?? null,
                             'puesto'     => $cont['puesto']     ?? null,
                             'genero'     => $cont['genero']     ?? null,
-                    
+
                             // teléfono/ext celular limpias
-                            'telefono1'  => $cont['telefono1'],  'ext1' => $cont['ext1'],
-                            'telefono2'  => $cont['telefono2'],  'ext2' => $cont['ext2'],
-                            'telefono3'  => $cont['telefono3'],  'ext3' => $cont['ext3'],
-                            'telefono4'  => $cont['telefono4'],  'ext4' => $cont['ext4'],
-                            'telefono5'  => $cont['telefono5'],  'ext5' => $cont['ext5'],
+                            'telefono1'  => $cont['telefono1'],
+                            'ext1' => $cont['ext1'],
+                            'telefono2'  => $cont['telefono2'],
+                            'ext2' => $cont['ext2'],
+                            'telefono3'  => $cont['telefono3'],
+                            'ext3' => $cont['ext3'],
+                            'telefono4'  => $cont['telefono4'],
+                            'ext4' => $cont['ext4'],
+                            'telefono5'  => $cont['telefono5'],
+                            'ext5' => $cont['ext5'],
                             'celular1'   => $cont['celular1'],   // …igual 1-5
                             'celular2'   => $cont['celular2'],
                             'celular3'   => $cont['celular3'],
@@ -689,7 +683,6 @@ class ClienteController extends Controller
                             'predeterminado' => 1, // solo el primer contacto, quitar si este formulario va a soportar muchos contactos iniciales.
                         ]);
                     }
-                    
                 }
 
                 // GUARDAR DATOS DE ENTREGA - CONTACTO + DIRECCION (opcional)
@@ -788,7 +781,7 @@ class ClienteController extends Controller
 
                 //registrarNota es una función Helper, está definida en app/Helpers/
                 $mensaje = "El usuario " . auth()->user()->nombre_completo .
-                            " ha creado la cuenta personal [{$cliente->id_cliente}]  {$cliente->nombre}.";
+                    " ha creado la cuenta personal [{$cliente->id_cliente}]  {$cliente->nombre}.";
 
                 registrarNota(
                     $cliente->id_cliente,
@@ -811,8 +804,8 @@ class ClienteController extends Controller
 
 
         return redirect()->route('clientes.index', ['page' => $ultimaPagina])
-        ->with('success', 'Cliente creado correctamente');
-        }
+            ->with('success', 'Cliente creado correctamente');
+    }
     public function storeNota(Request $request, $id)
     {
         $request->validate([
@@ -867,15 +860,14 @@ class ClienteController extends Controller
         } else {
             $query->orderBy('id_cliente');
         }
-        if($request->input('lado'))
-        {
-            $perPage = is_numeric($request->input('per_page')) 
-            ? (int) $request->input('per_page') 
-            : 25;
+        if ($request->input('lado')) {
+            $perPage = is_numeric($request->input('per_page'))
+                ? (int) $request->input('per_page')
+                : 25;
 
             $clientes = $query->paginate($request->input('per_page', 25))->withQueryString();
-        }else{
-            $clientes= null;
+        } else {
+            $clientes = null;
         }
 
         return view('clientes.transfer', compact('vendedores', 'clientes', 'lado', 'idVendedor'));
@@ -907,9 +899,9 @@ class ClienteController extends Controller
         $perPage     = $request->input('ver', 50);
 
         $ejecutivos = Usuario::where('estatus', 'activo')
-                        ->get()
-                        ->sortBy('nombre_completo')
-                        ->pluck('nombre_completo', 'id_usuario');
+            ->get()
+            ->sortBy('nombre_completo')
+            ->pluck('nombre_completo', 'id_usuario');
 
         $query = Cliente::with(['primerContacto', 'vendedor'])
             ->whereNotNull('recall');
@@ -932,9 +924,88 @@ class ClienteController extends Controller
 
         return view('clientes.recalls', compact('clientes', 'ejecutivos'));
     }
+    public function archivadas(Request $request)
+    {
+        // 1) consulta base + relaciones
+        $query = Cliente::with(['primerContacto', 'vendedor'])
+            ->where('estatus', 'inactivo');
+        /* ---------- Filtros ---------- */
 
+        // Búsqueda global
+        if ($term = $request->input('search')) {
+            $query->where(function ($q) use ($term) {
+                $q->where('nombre', 'like', "%{$term}%")
+                    ->orWhere('id_cliente', 'like', "%{$term}%")
+                    ->orWhereHas('primerContacto', fn($q2) =>
+                    $q2->where('telefono1', 'like', "%{$term}%"));
+            });
+        }
 
+        // Ejecutivos
+        if ($ejecutivos = $request->input('ejecutivos')) {
+            $query->where(function ($q) use ($ejecutivos) {
+                // Si se seleccionó "Base General", filtramos por id_vendedor NULL
+                if (in_array('base_general', $ejecutivos)) {
+                    $q->orWhereNull('id_vendedor');
+                }
 
+                // IDs reales de ejecutivos (ignoramos "base_general")
+                $ids = array_filter($ejecutivos, fn($id) => $id !== 'base_general');
+
+                if (!empty($ids)) {
+                    $q->orWhereIn('id_vendedor', $ids);
+                }
+            });
+        }
+
+        if ($sector = $request->input('sector')) {          // sector = 'privada' | 'gobierno' | ...
+            $query->where('sector', $sector);
+        }
+
+        if ($segmento = $request->input('segmento')) {      // segmento = 'macasa cuentas especiales' | …
+            $query->where('segmento', $segmento);
+        }
+
+        // Ciclo de venta
+        if ($cycle = $request->input('cycle')) {            // cycle = 'cotizacion' | 'venta'
+            $query->where('ciclo_venta', $cycle);
+        }
+
+        /* ---------- Orden y paginación ---------- */
+        $query->orderBy(
+            $request->input('order', 'id_cliente'),
+            $request->input('direction', 'asc')
+        );
+
+        // 6) Paginación dinámica
+        $perPageParam = $request->input('perPage', 25);
+
+        if ($perPageParam === 'all') {
+            // “Todos”  ⇒  ponemos como tamaño de página el total de registros
+            $perPage = $query->count() ?: 1;   // evita división por cero
+        } else {
+            $perPage = (int) $perPageParam;    // 10, 25, 50, 100…
+        }
+
+        $clientes = $query->paginate($perPage)
+            ->appends($request->all());   // conserva filtros
+
+        /* ---------- Catálogos para los <select> ---------- */
+        $vendedores = Usuario::whereNull('id_cliente')->get();
+
+        // Los sacamos directo de la tabla para que no se “desincronicen”
+        $sectores   = Cliente::select('sector')->distinct()->pluck('sector');
+        $segmentos  = Cliente::select('segmento')->distinct()->pluck('segmento');
+        $ciclos     = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
+
+        return view('clientes.archivadas', compact(
+            'clientes',
+            'vendedores',
+            'sectores',
+            'segmentos',
+            'ciclos',
+        ));
+    }
 }
 
 /**

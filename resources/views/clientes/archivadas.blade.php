@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'SIS 3.0 | Mis Cuentas')
+@section('title', 'SIS 3.0 | Cuentas Archivadas')
 
 @section('content')
     <div class="container-fluid">
@@ -7,11 +7,11 @@
         {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
-        <li class="breadcrumb-item active">Mis Cuentas</li>
+        <li class="breadcrumb-item active">Cuentas Archivadas</li>
     @endsection
 
-    <h2 class="mb-3 text-titulo">Mis Cuentas</h2>
- 
+    <h2 class="mb-3 text-titulo">Cuentas Archivadas</h2>
+
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
         <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">

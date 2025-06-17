@@ -26,7 +26,7 @@
                         <li><a href="{{ route('clientes.index') }}">Mis Cuentas</a></li>
                         <li><a href="{{ route('clientes.transfer') }}">Traspaso de Cuentas</a></li>
                         <li><a href="{{ route('clientes.recalls') }}">Mis Recall's</a></li>
-                        <li><a href="{{ route('inicio') }}">Cuentas Archivadas</a></li>
+                        <li><a href="{{ route('clientes.archivadas') }}">Cuentas Archivadas</a></li>
                     </ul>
                 </li>
 
