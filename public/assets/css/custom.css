@@ -67,7 +67,7 @@
   --tipo-opcion-body-p: #6c757d;
 
   /* Borde para logo box */
-  --logo-box-bg: #ffffff;
+  --logo-box-bg: #fbfaff;
   --logo-box-border: 1px solid #eaeaea;
   /* FUENTES */
   --fuente-titulo: 1.75rem;
@@ -75,13 +75,6 @@
   --fuente-normal: 0.875rem;
   --fuente-peq: 0.75rem;
 
-  /* FALTAN LAS SIGUIENTES VARIABLES:
-    -> --card-header-bg
-    -> --card-header-color
-    -> cambiar --tabla-header-text por --tabla-header-color
-    -> --card-body-color
-    -> 
-  */
 }
 
 html {
@@ -1380,13 +1373,14 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li:hover>a {
   font-size: .875rem !important;
   /* 14px */
   line-height: 1.5 !important;
-  color: var(--bs-body-color) !important;
+  color: var(--color-fuente) !important;
+  background-color: var(--modal-bg);
 }
 
 .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--selected,
 .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option[aria-selected=true]:not(.select2-results__option--highlighted) {
   background-color: #5156be !important;
-  color: #ffffff !important;
+  color: var(--text-color) !important;
   font-weight: 500 !important;
 }
 
