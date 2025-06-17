@@ -42,14 +42,6 @@
                     </div>
 
                     <div class="col">
-                        <label for="estado" class="form-label text-normal">Estado de recall</label>
-                        <select name="estado" id="estado" class="form-select">
-                            <option value="" {{ request('estado')== '' ? 'selected' : '' }}>-- Selecciona --</option>
-                            <option value="pendientes" {{ request('estado') == 'pendientes' ? 'selected' : '' }}>Pendientes</option>
-                            <option value="contestados" {{ request('estado') == 'contestados' ? 'selected' : '' }}>Contestados</option></select>
-                    </div>
-
-                    <div class="col">
                         <label class="form-label text-normal">Jefe de equipo</label>
                         <select class="form-select" disabled>
                             <option value="">-- Selecciona --</option>
@@ -70,17 +62,6 @@
                     </div>
 
                     <div class="col">
-                        <label for="orden" class="form-label text-normal">Ordenar por</label>
-                        <select name="orden" id="orden" class="form-select">
-                            <option value="">-- Selecciona --</option>
-                            <option value="nombre" {{ request('orden') === 'nombre' ? 'selected' : '' }}>Empresa</option>
-                            <option value="fecha"  {{ request('orden') === 'fecha' ? 'selected' : '' }}>Fecha</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row gx-3 gy-2 justify-content-between mt-3">
-                    <div class="col">
                         <label for="ver" class="form-label text-normal">Ver registros</label>
                         <select name="ver" id="ver" class="form-select">
                             <option value=""     {{ request('ver') === '' ? 'selected' : '' }}>-- Selecciona --</option>
@@ -91,11 +72,6 @@
                             <option value="500"  {{ request('ver') === '500' ? 'selected' : '' }}>500</option>
                         </select>
                     </div>
-                    <div class="col"></div>
-                    <div class="col"></div>
-                    <div class="col"></div>
-                    <div class="col"></div>
-
                 </div>
 
                 <div class="row gx-3 gy-2 justify-content-between mt-1">
@@ -237,63 +213,72 @@
 
     {{-- 📋 Resultados --}}
     <div class="table-responsive mb-3 shadow-lg">
-        <table id="tabla-recalls" class="table table-striped table-hover table-bordered align-middle table-nowrap">
+        <table  id="tabla-recalls" 
+                class="table table-striped table-hover table-bordered align-middle table-nowrap"
+                data-sorteable="recalls">
             <thead class="text-center align-middle">
                 <tr>
-                    <th class="col-10ch py-1 px-2" style="background-color: var( --tabla-header-bg);">Cliente</th>
-                    <th class="campo-dato-secundario py-1 px-2" style="background-color: var( --tabla-header-bg);">Empresa</th>
-                    <th class="col-25ch py-1 px-2" style="background-color: var( --tabla-header-bg);">Contacto</th>
-                    <th class="col-15ch py-1 px-2" style="background-color: var( --tabla-header-bg);">Teléfono</th>
-                    <th class="col-20ch py-1 px-2" style="background-color: var( --tabla-header-bg);">Email</th>
-                    <th class="col-10ch py-1 px-2 text-truncate" style="background-color: var( --tabla-header-bg);">Recall</th>
-                    <th class="col-15ch py-1 px-2" style="background-color: var( --tabla-header-bg);">Asignado A</th>
+                    <th class="col-10ch py-1 px-2 filtro-asc-desc"               style="background-color: var( --tabla-header-bg);">Cliente</th>
+                    <th class="col campo-dato-secundario py-1 px-2 filtro-asc-desc" style="background-color: var( --tabla-header-bg);">Empresa</th>
+                    <th class="col-25ch py-1 px-2 filtro-asc-desc"               style="background-color: var( --tabla-header-bg);">Contacto</th>
+                    <th class="col-15ch py-1 px-2 filtro-asc-desc"               style="background-color: var( --tabla-header-bg);">Teléfono</th>
+                    <th class="col-20ch py-1 px-2 filtro-asc-desc"               style="background-color: var( --tabla-header-bg);">Email</th>
+                    <th class="col-10ch py-1 px-2 filtro-asc-desc text-truncate" style="background-color: var( --tabla-header-bg);">Recall</th>
+                    <th class="col-15ch py-1 px-2 filtro-asc-desc"               style="background-color: var( --tabla-header-bg);">Asignado A</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($clientes as $r)
+                @forelse ($clientes as $cliente)
+                    @php
+                        // cacheamos el contacto principal para no llamar dos veces
+                        $pc = $cliente->primerContacto;
+                    @endphp
                     <tr>
                         {{-- Cliente ID --}}
-                        <td class="col-10ch py-1 px-2 text-truncate text-center" title="{{ $estado === 'contestados' ? $r->cliente->id_cliente : $r->id_cliente }}">
-                            {{ $estado === 'contestados' ? $r->cliente->id_cliente : $r->id_cliente }}
+                        <td class="col-10ch py-1 px-2 text-center">
+                            {{ $cliente?->id_cliente }}
                         </td>
+
                         {{-- Empresa --}}
                         <td class="campo-dato-secundario py-1 px-2 text-truncate">
-                            <a href="{{ route('clientes.view', $estado === 'contestados' ? $r->cliente->id_cliente : $r->id_cliente) }}">
-                                {{ $estado === 'contestados' ? $r->cliente->nombre : $r->nombre }}
-                            </a>
+                            {{ $cliente->nombre }}
                         </td>
+
                         {{-- Contacto --}}
                         <td class="col-25ch py-1 px-2 text-truncate">
-                            @php
-                                $contacto = $estado === 'contestados'
-                                    ? $r->cliente->primerContacto
-                                    : $r->primerContacto;
-                            @endphp
-                            {{ $contacto->nombre ?? '—' }} {{ $contacto->apellido_p ?? '' }}
-                        </td >
-                        {{-- Telefono --}}
-                        <td class="col-15ch py-1 px-2 text-truncate text-center phone-field">
-                            {{ $contacto->telefono1 ?? '—' }}
+                            {{ $pc?->nombre }} {{ $pc?->apellido_p }}
                         </td>
+
+                        {{-- Teléfono --}}
+                        <td class="py-1 px-2 text-truncate">
+                            {{ $pc?->telefono1 ?? '—' }}
+                        </td>
+
                         {{-- Email --}}
-                        <td class="col-20ch py-1 px-2 text-truncate">
-                            {{ $contacto->email ?? '—' }}
+                        <td class="py-1 px-2 text-truncate">
+                            {{ $pc?->email ?? '—' }}
                         </td>
-                        {{-- Próxima llamada --}}
-                        <td class="col-10ch py-1 px-2 text-center">
-                            {{ $estado === 'contestados' ? $r->fecha_reprogramacion : $r->recall }}
+
+                        {{-- Próxima llamada (recall) --}}
+                        <td class="py-1 px-2 text-truncate">
+                            {{ $cliente->recall }}
                         </td>
-                        {{-- Asignado a --}}
-                        <td class="col-15ch py-1 px-2">
-                            {{ $estado === 'contestados' ? strtoupper($r->usuario->username)  ?? '—' : strtoupper($r->vendedor->username) ?? '—' }}
+
+                        {{-- Asignado A --}}
+                        <td class="py-1 px-2 text-truncate">
+                            {{ $cliente->vendedor?->username ?? '—' }}
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center text-muted">Sin registros por mostrar</td>
+                        <td colspan="7" class="text-center text-muted">
+                            No hay recalls pendientes
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
+
+
     
         </table>
     </div>
@@ -405,4 +390,84 @@
 
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ╭───────────────────────────────────────────────╮
+    // |  1.  Encuentra tablas con data-sortable       |
+    // ╰───────────────────────────────────────────────╯
+    document.querySelectorAll('table[data-sortable="recalls"]').forEach(table => {
+
+        const tbody = table.tBodies[0];
+        const ths   = Array.from(table.tHead.querySelectorAll('th.filtro-asc-desc'));
+        const dir   = {};                         // Guarda dirección por índice
+
+        ths.forEach(th => {
+            const col = th.cellIndex;             // Índice real de columna
+
+            // Crea flecha ▲▼ — un solo span
+            const arrow = document.createElement('span');
+            arrow.className = 'sort-arrow ms-1';
+            arrow.innerHTML = '▲';                 // Inicio neutro
+            th.appendChild(arrow);
+            th.style.cursor = 'pointer';
+
+            th.addEventListener('click', () => {
+
+                // Alterna dirección
+                dir[col] = dir[col] === 'asc' ? 'desc' : 'asc';
+
+                // Obtiene filas y las ordena
+                const rows = Array.from(tbody.rows);
+                rows.sort((a, b) => {
+                    const A = a.cells[col].innerText.trim();
+                    const B = b.cells[col].innerText.trim();
+
+                    let res = 0;
+
+                    switch (th.dataset.type) {
+                        case 'number':
+                            res = (parseFloat(A.replace(/[^\d.-]/g, '')) || 0)
+                                - (parseFloat(B.replace(/[^\d.-]/g, '')) || 0);
+                            break;
+
+                        case 'date':
+                            res = (parseDate(A) - parseDate(B));
+                            break;
+
+                        default: // text
+                            res = A.localeCompare(B, undefined, {
+                                numeric: true,
+                                sensitivity: 'base'
+                            });
+                    }
+                    return dir[col] === 'asc' ? res : -res;
+                });
+
+                // Reinserta filas en el nuevo orden
+                rows.forEach(r => tbody.appendChild(r));
+
+                // Actualiza flechas
+                ths.forEach(t => t.querySelector('.sort-arrow')
+                                   .textContent = '▲');
+                arrow.textContent = dir[col] === 'asc' ? '▲' : '▼';
+            });
+        });
+
+        // ───── helper: parsea fechas comunes ─────
+        function parseDate(str) {
+            // YYYY-MM-DD
+            if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+                return new Date(str);
+            }
+            // DD/MM/YYYY  o  DD-MM-YYYY
+            const m = str.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
+            if (m) return new Date(`${m[3]}-${m[2]}-${m[1]}`);
+            return new Date(NaN); // fecha inválida
+        }
+    });
+});
+</script>
+
 @endsection

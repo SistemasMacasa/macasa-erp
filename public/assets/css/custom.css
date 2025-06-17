@@ -1580,7 +1580,7 @@ tfoot>tr>th {
    ESTILOS PARA NOTAS
    ─────────────────────────────────────────────── */
 .body-notas {
-  max-height: 380px;
+  max-height: 535px;
   overflow-y: auto;
   background: var(--color-body-nota);
   border-radius: 8px;

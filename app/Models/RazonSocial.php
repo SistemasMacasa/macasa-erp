@@ -12,14 +12,18 @@ class RazonSocial extends Model
     protected $fillable = [
         'nombre',
         'id_cliente',
-        'rfc',
+        'RFC',
         'id_metodo_pago',
         'id_forma_pago',
         'id_regimen_fiscal',
         'id_direccion_facturacion',
+        'id_uso_cfdi',
+        'saldo',
         'limite_credito',
         'dias_credito',
-        'saldo',
+        'created_at',
+        'updated_at',
+        'predeterminado'
     ];
 
     public function direccion_facturacion()

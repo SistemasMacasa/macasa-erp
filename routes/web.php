@@ -6,6 +6,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CotizacionController;
 
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
@@ -63,6 +64,9 @@ Route::middleware(['auth'])->group(function () {
 
 
 // === Cotizaciones ===
-Route::get('/cotizaciones', [\App\Http\Controllers\CotizacionController::class, 'index'])->name('cotizaciones.index');
-Route::get('/cotizaciones/create', [\App\Http\Controllers\CotizacionController::class, 'create'])->name('cotizaciones.create');
+Route::get('/cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
+Route::get('/cotizaciones/create/{cliente}', [CotizacionController::class, 'create'])->name('cotizaciones.create');
 
+//Guardar Dirección de factura mediante AJAX
+Route::post('/ajax/direccion-factura', [CotizacionController::class, 'storeRazonSocialFactura'])
+     ->name('ajax.direccion.factura');
