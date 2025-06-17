@@ -64,12 +64,13 @@
                 <div class="card shadow-lg mb-4">
                     <div class="card-header card-header--row">
                         <h5 class="mb-0 text-subtitulo">Cuenta Empresarial</h5>
-                        @if ($usuario->es_admin)
+                        @role(['administrador', 'desarrollador'])
                             <button type="button" id="btnEditar"
                                 class="btn btn-sm btn-success btn-15ch btn-editar-cuenta" style="margin-right:5ch;">
                                 <i class="fa fa-edit me-1"></i> Editar cuenta
                             </button>
-                        @endif
+                        @endrole
+
                     </div>
 
 

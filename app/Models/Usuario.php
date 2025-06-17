@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
+
 
 
 //Hay dos tipos de usuarios: Internos y Externos
@@ -15,8 +17,21 @@ use Illuminate\Notifications\Notifiable;
 // Prohibido: tener un usuario interno con id_cliente
 // Prohibido: tener un usuario externo como vendedor de otro usuario externo
 
+
+// //Los permisos se validan en controlador o vista:
+//        dd( auth()->user()->hasRole('desarrollador') );
+//        dd( auth()->user()->can('clientes.index'));
+            // @role('administrador')
+            //     <!-- contenido visible solo a admins -->
+            // @endrole
+
+            // @can('cotizaciones.create')
+            //     <a href="#">Nueva cotización</a>
+            // @endcan
+
 class Usuario extends Authenticatable
 {
+    use HasRoles;
     use Notifiable;
 
     protected $table = 'usuarios';

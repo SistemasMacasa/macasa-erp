@@ -11,7 +11,7 @@
     @endsection
 
     <h2 class="mb-3 text-titulo">Mis Cuentas</h2>
-
+ 
     {{-- 🎛 Botonera --}}
     <div class="d-flex flex-wrap gap-2 mb-3">
         <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
