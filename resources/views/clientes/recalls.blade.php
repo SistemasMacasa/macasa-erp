@@ -241,7 +241,7 @@
 
                         {{-- Empresa --}}
                         <td class="campo-dato-secundario py-1 px-2 text-truncate">
-                            {{ $cliente->nombre }}
+                           <a class="text-decoration-underline fw-bold text-dark" href="{{ route("clientes.view", $cliente?->id_cliente) }}"> {{ $cliente?->nombre }} </a> 
                         </td>
 
                         {{-- Contacto --}}
@@ -261,12 +261,12 @@
 
                         {{-- Próxima llamada (recall) --}}
                         <td class="py-1 px-2 text-truncate">
-                            {{ $cliente->recall }}
+                            {{ $cliente?->recall }}
                         </td>
 
                         {{-- Asignado A --}}
                         <td class="py-1 px-2 text-truncate">
-                            {{ $cliente->vendedor?->username ?? '—' }}
+                            {{ $cliente?->vendedor?->username ?? '—' }}
                         </td>
                     </tr>
                 @empty
