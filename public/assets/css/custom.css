@@ -140,16 +140,41 @@ body[data-bs-theme="dark"] {
 
 /* Clases globales para las medidas de botones, deben de ser en multiplos de 5ch. */
 
-
+/* 
 .btn-principal {
-  min-width: 30ch;
-  /* 30 caracteres */
+  min-width: 20ch;
+  flex: 0 1 auto; 
 }
+
+@media (max-width: 1162px) {
+  .btn-principal {
+  flex: 1 1 0;
+  min-width: 0;
+  }
+}
+@media (min-width: 1320px) {
+  .btn-principal {
+    min-width: 30ch !important;
+  }
+} */
+
+
 
 .btn-secundario {
   min-width: 15ch;
 }
 
+/* @media (max-width: 768px) {
+  .btn-secundario {
+    min-width: 20ch;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-principal {
+    min-width: 12ch;
+  }
+} */
 .col-5ch {
   min-width: 5ch;
   max-width: 5ch;
@@ -177,11 +202,27 @@ body[data-bs-theme="dark"] {
   max-width: 25ch;
 }
 
+/* RESPONSIVIDAD */
+.row>.col.responsive {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* .d-flex > .responsive {
+  flex: 1 1 0;
+  min-width: 0;
+} */
 .campo-dato-secundario {
-  min-width: 30ch;
+  min-width: 25ch;
   /* 30 caracteres */
-  max-width: 30ch;
+  max-width: 20ch;
   /* 30 caracteres */
+}
+
+@media (min-width: 1920px) {
+  .campo-dato-secundario {
+    min-width: 30ch !important;
+  }
 }
 
 .campo-dato-telefono {
@@ -1478,8 +1519,7 @@ tfoot>tr>th {
 
 /* ───────── Sticky columns ───────── */
 /* ID Cliente (max 5 chars → 5ch) - Ciclo (columna 8) */
-.tabla-col-id
- {
+.tabla-col-id {
   position: sticky;
   left: 0;
   z-index: 2;
@@ -1488,7 +1528,7 @@ tfoot>tr>th {
 }
 
 /* Empresa (max 30 chars → 30ch) */
- .tabla-col-empresa {
+.tabla-col-empresa {
   position: sticky;
   left: 0;
   z-index: 3;
@@ -1511,6 +1551,7 @@ tfoot>tr>th {
   width: 15ch;
   align-items: center;
 }
+
 .tabla-col-correo {
   width: 25ch;
   background: var(--tabla-header-bg);
@@ -1536,19 +1577,21 @@ tfoot>tr>th {
   white-space: nowrap;
   overflow: hidden;
 }
-.tabla-col-ciclo
- {
+
+.tabla-col-ciclo {
   position: sticky;
   left: 0;
   z-index: 2;
   background: var(--tabla-header-bg) !important;
   width: 11ch;
 }
+
 .tabla-col-asignado {
   background: var(--tabla-header-bg);
   width: 15ch;
   align-items: center;
 }
+
 /* Flechas genéricas */
 .sort-arrow::after {
   content: "⇅";
