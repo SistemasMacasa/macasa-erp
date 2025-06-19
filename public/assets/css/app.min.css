@@ -543,7 +543,7 @@ body[data-layout=horizontal] .footer {
     padding: .62rem 1.5rem;
     color: var(--bs-sidebar-menu-item-color);
     position: relative;
-    font-size: .9rem;
+    font-size: .95rem;
     -webkit-transition: all .4s;
     transition: all .4s;
     font-weight: 500
@@ -587,7 +587,7 @@ body[data-layout=horizontal] .footer {
 }
 
 #sidebar-menu ul li ul.sub-menu li a {
-    padding: .4rem 1.5rem .4rem 3.3rem;
+    padding: .4rem 1.5rem .1rem 3.3rem;
     font-size: .85rem;
     color: var(--bs-sidebar-menu-sub-item-color)
 }
@@ -792,7 +792,7 @@ body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>ul ul {
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>ul a {
     -webkit-box-shadow: none;
     box-shadow: none;
-    padding: 8px 20px;
+    padding: 5px 20px;
     position: relative;
     width: 190px;
     z-index: 6;

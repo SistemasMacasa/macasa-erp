@@ -139,14 +139,39 @@ body[data-bs-theme="dark"] {
 }
 
 /* Clases globales para las medidas de botones, deben de ser en multiplos de 5ch. */
-
-/* 
-.btn-principal {
-  min-width: 20ch;
-  flex: 0 1 auto; 
+.row-fluid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
 }
 
-@media (max-width: 1162px) {
+
+@media (max-width: 1164px) {
+  .row-fluid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+
+  .row-fluid > .col-md-2 {
+    flex: 1 1 0 !important;
+    max-width: 100% !important;
+    min-width: 0;
+  }
+}
+.text-boton-peq{
+  font-size: 0.69rem;
+  color: #ffffff;
+}
+
+
+
+/* .btn-principal {
+  min-width: 20ch;
+   
+} */
+
+/* @media (max-width: 1162px) {
   .btn-principal {
   flex: 1 1 0;
   min-width: 0;
@@ -522,7 +547,7 @@ body:not([data-sidebar="dark"]) .search-input {
 
 /* 3) Interacción */
 .search-input:focus {
-  border-color: var(--azul-macasa);
+  border-color: var(--mc-azul);
   background: #fff;
   box-shadow: 0 0 0 2px rgba(108, 92, 231, .15);
   outline: 0;
@@ -538,7 +563,7 @@ body:not([data-sidebar="dark"]) .search-input {
 }
 
 [data-bs-theme="dark"] .search-input:focus {
-  border-color: var(--azul-macasa);
+  border-color: var(--mc-azul);
   background: #343a40;
   box-shadow: 0 0 0 2px rgba(108, 92, 231, .25);
 }
@@ -837,6 +862,15 @@ body[data-sidebar-size=sm] #sidebar-menu .icon {
 #sidebar-menu .metismenu ul.sub-menu li>a {
   transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
+ul.sub-menu li a::before {
+    content: "›"; /* También puedes probar: "→", "»", etc. */
+    display: inline-block;
+    margin-right: 0.5rem;
+    color: var(--mc-azul); /* o el color que quieras */
+    font-size: 0.9em;
+}
+
+
 
 #sidebar-menu .metismenu ul.sub-menu li>a:hover,
 #sidebar-menu .metismenu ul.sub-menu li.mm-active>a {

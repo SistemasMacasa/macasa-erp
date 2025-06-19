@@ -13,17 +13,18 @@
     <h2 class="mb-3 text-titulo">Mis Cuentas</h2>
 
     {{-- 🎛 Botonera --}}
-    <div class="d-flex flex-wrap gap-2 mb-3">
-        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
+    <div class=" row-fluid gap-2 mb-3">
+        <a href="{{ url()->previous() }}" class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center ">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
-        <a href="{{ route('clientes.recalls') }}" class="btn btn-primary btn-principal">
-            <i class="fa fa-phone me-1"></i> Mis Recall's
+        <a href="{{ route('clientes.recalls') }}" class=" col-md-2 btn btn-primary d-flex align-items-center justify-content-center">
+            <i class="fa fa-list me-1"></i> Mis Recall's
         </a>
 
-        <a href="{{ route('inicio') }}" class="btn btn-primary btn-principal">
-            <i class="fa fa-check me-1"></i> Enviar carta de presentación
+        <a href="{{ route('inicio') }}"
+            class="col-md-2 btn btn-primary btn-principal">
+             <i class="fa fa-check me-1"></i><span class="text-boton-peq">Enviar carta de presentación</span>
         </a>
     </div>
 
@@ -35,10 +36,10 @@
             </div>
 
             <div class="card-body">
-                <div class="row gx-3 gy-2 justify-content-between">
+                <div class="row gx-3 gy-2 ">
 
                     {{-- Búsqueda global --}}
-                    <div class="col">
+                    <div class="col-md-2">
                         <label for="search" class="form-label"><i class="fa fa-search text-normal"></i> Búsqueda</label>
                         <div class="input-group">
                             <input type="text" name="search" id="search" class="form-control"
@@ -47,7 +48,7 @@
                     </div>
 
                     {{-- Ejecutivos (multi-select con Select2) --}}
-                    <div class="col">
+                    <div class="col-md-2">
                         <label for="ejecutivos" class="form-label text-normal">Ejecutivo(s)</label>
                         <select id="ejecutivos" name="ejecutivos[]" placeholder="Todos" class="form-select select2"
                             {{-- ← SIN "form-select" --}} multiple data-placeholder="Seleccione uno o varios ejecutivos">
@@ -66,7 +67,7 @@
                     </div>
 
                     {{-- Sector --}}
-                    <div class="col">
+                    <div class="col-md-2">
                         <label for="sector" class="form-label text-normal">Sector</label>
                         <select name="sector" id="sector" class="form-select">
                             <option value="">Todos</option>
@@ -78,7 +79,7 @@
                     </div>
 
                     {{-- Segmento --}}
-                    <div class="col">
+                    <div class="col-md-2">
                         <label for="segmento" class="form-label text-normal">Segmento</label>
                         <select name="segmento" id="segmento" class="form-select">
                             <option value="">Todos</option>
@@ -100,7 +101,7 @@
 
 
                     {{-- Ciclo de venta --}}
-                    <div class="col">
+                    <div class="col-md-2">
                         <label for="cycle" class="form-label text-normal">Ciclo de venta</label>
                         <select name="cycle" id="cycle" class="form-select">
                             <option value="">Todos</option>
@@ -129,7 +130,7 @@
                 <div class="row gx-3 gy-2 justify-content-between mt-3">
 
                     {{-- Registros por página --}}
-                    <div class="col">
+                    <div class="col-md-2">
                         <label for="perPage" class="form-label text-normal">Ver registros</label>
                         <select name="perPage" id="perPage" class="form-select">
                             <option value="all" {{ request('perPage') == 'all' ? 'selected' : '' }}>Todos</option>
@@ -274,7 +275,7 @@
     {{-- ────────── Fin paginación ────────── --}}
 
     {{-- 📋 Tabla responsiva --}}
-    <div class="table-responsive mb-3 shadow-lg">
+    <div class="table-responsive mb-3">
         <table id="tabla-clientes"
             class="table align-middle table-hover table-nowrap
                                          table-striped table-bordered">

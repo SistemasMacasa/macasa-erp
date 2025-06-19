@@ -23,19 +23,20 @@
 
 
     {{-- 🎛 Botonera --}}
-    <div class=" row gap-2 mb-3">
-        <a href="{{ url()->previous() }}" class="col-md-2 btn btn-secondary btn-principal">
+    <div class=" row-fluid gap-2 mb-3">
+        <a href="{{ url()->previous() }}" class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center ">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
 
-        <button type="submit" class="col-md-2 btn btn-secondary btn-principal btnGuardarCuenta" disabled form="formCuenta"
+        <button type="submit" class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center
+            btnGuardarCuenta" disabled form="formCuenta"
             style="opacity: 1;">
             <i class="fa fa-save me-1"></i> Guardar
         </button>
 
 
-        <a href="{{ route('clientes.index') }}" class=" col-md-2 btn btn-primary btn-principal">
+        <a href="{{ route('clientes.index') }}" class=" col-md-2 btn btn-primary d-flex align-items-center justify-content-center">
             <i class="fa fa-list me-1"></i> Mis Cuentas
         </a>
 
@@ -44,7 +45,7 @@
             <i class="fa fa-file-invoice-dollar me-1"></i> Levantar Cotización
         </a>
 
-        <button type="button" class="col-md-2 btn btn-primary btn-principal" data-bs-toggle="modal"
+        <button type="button" class="col-md-2 btn btn-primary d-flex align-items-center justify-content-center" data-bs-toggle="modal"
             data-bs-target="#modalContactos">
             <i class="fa fa-address-book me-1"></i> Libreta de Contactos
         </button>
@@ -77,14 +78,14 @@
                     <div class="card-body">
                         {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
                         <div class="row gx-3 gy-2 mb-2 align-items-end">
-                            <div class="col responsive campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Estatus</label>
                                 <select id="selectEstatus" name="estatus" class="form-select" disabled>
                                     <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
                                     <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
                                 </select>
                             </div>
-                            <div class="col responsive campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Ciclo de Venta</label>
                                 <select name="ciclo_venta" class="form-select" disabled>
                                     <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
@@ -92,7 +93,7 @@
                                 </select>
                             </div>
 
-                            <div class="col responsive campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Asignado a: <span
                                         class="text-danger asterisco">*</span></label>
                                 <select name="id_vendedor" class="form-select">
@@ -108,7 +109,7 @@
                                 </select>
                             </div>
 
-                            <div class="col responsive campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Sector <span class="text-danger asterisco">*</span></label>
                                 <select name="sector" class="form-select" required>
                                     <option value="" disabled selected>-- Selecciona --</option>
@@ -117,7 +118,7 @@
                                 </select>
                             </div>
 
-                            <div class="col responsive campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Segmento <span class="text-danger asterisco">*</span></label>
                                 <select name="segmento" class="form-select" required>
                                     <option value="" disabled selected>-- Selecciona --</option>
@@ -133,7 +134,7 @@
                                 </select>
                             </div>
 
-                            <div class="col responsive campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Origen de la Cuenta</label>
                                 <select name="tipo" class="form-select" disabled>
                                     <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
@@ -147,7 +148,7 @@
 
 
                         <div class="row gx-3 gy-2 mb-3">
-                            <div class="col campo-dato-principal">
+                            <div class="col-md-4">
                                 <label class="form-label">Nombre de la Empresa <span
                                         class="text-danger asterisco">*</span></label>
                                 <input id="nombre" name="nombre" type="text"
@@ -157,8 +158,6 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
-
                         </div>
 
                         {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
@@ -168,7 +167,7 @@
                             {{-- Ojo: El operador ?-> es para navegación segura --}}
 
                             {{-- Nombre(s) de Contacto --}}
-                            <div class="col campo-dato-principal">
+                            <div class="col-md-4">
                                 <label class="form-label">Nombre(s) <span
                                         class="text-danger asterisco">*</span></label>
                                 <input name="contacto[0][nombre]"
@@ -181,7 +180,7 @@
 
                             </div>
                             {{-- Primer Apellido --}}
-                            <div class="col campo-dato-principal">
+                            <div class="col-md-4">
                                 <label class="form-label">Primer Apellido <span
                                         class="text-danger asterisco">*</span></label>
                                 <input name="contacto[0][apellido_p]"
@@ -192,7 +191,7 @@
                                 @enderror
                             </div>
                             {{-- Segundo Apellido --}}
-                            <div class="col campo-dato-principal">
+                            <div class="col-md-4">
                                 <label class="form-label">Segundo Apellido <span
                                         class="text-danger asterisco">*</span></label>
                                 <input name="contacto[0][apellido_m]"
@@ -200,7 +199,7 @@
                                     class="form-control guarda-mayus" maxlength="27" required>
                             </div>
                             {{-- Email --}}
-                            <div class="col campo-dato-principal">
+                            <div class="col-md-4">
                                 <label class="form-label">Correo Electrónico <span
                                         class="text-danger asterisco">*</span></label>
                                 <input name="contacto[0][email]"
@@ -211,7 +210,7 @@
                                 @enderror
                             </div>
                             {{-- Puesto --}}
-                            <div class="col campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Puesto <span class="text-danger asterisco">*</span></label>
                                 <input name="contacto[0][puesto]"
                                     value="{{ old('contacto.0.puesto', $cliente->contacto_predet?->puesto) }}"
@@ -220,7 +219,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col campo-dato-secundario">
+                            <div class="col-md-2">
                                 <label class="form-label">Género <span class="text-danger asterisco">*</span></label>
                                 @php
                                     $genero = old('contacto.0.genero', $cliente->contacto_predet?->genero);

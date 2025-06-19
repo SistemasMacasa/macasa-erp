@@ -212,7 +212,7 @@
     </div>
 
     {{-- 📋 Resultados --}}
-    <div class="table-responsive mb-3 shadow-lg">
+    <div class="table-responsive mb-3">
         <table  id="tabla-recalls" 
                 class="table table-striped table-hover table-bordered align-middle table-nowrap"
                 data-sorteable="recalls">
