@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estados', function (Blueprint $table) {
-            $table->id('id_estado');
-            $table->unsignedBigInteger('id_pais');
-            $table->string('clave',10)->unique();
-            $table->string('nombre',100);
-            $table->foreign('id_pais')->references('id_pais')->on('paises');
+        Schema::create('roles', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('guard_name');
+            $table->timestamps();
+
+            $table->unique(['name', 'guard_name'], 'roles_name_guard_unique');
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estados');
+        Schema::dropIfExists('roles');
     }
 };

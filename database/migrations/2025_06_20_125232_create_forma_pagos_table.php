@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paises', function (Blueprint $table) {
-            $table->id('id_pais');
-            $table->string('clave',10)->unique();
-            $table->string('nombre',100);
+        Schema::create('forma_pagos', function (Blueprint $table) {
+            $table->integer('id_forma_pago', true);
+            $table->string('clave', 100)->nullable();
+            $table->string('nombre', 100)->nullable();
         });
     }
 
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paises');
+        Schema::dropIfExists('forma_pagos');
     }
 };

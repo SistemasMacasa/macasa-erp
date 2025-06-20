@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('razones_sociales', function (Blueprint $table) {
-            $table->timestamps();   // agrega created_at y updated_at
+        Schema::table('asistencias', function (Blueprint $table) {
+            $table->foreign(['id_usuario'], 'fk_asistencias_id_usuario')->references(['id_usuario'])->on('usuarios')->onUpdate('restrict')->onDelete('restrict');
         });
-        
     }
 
     /**
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('razones_sociales', function (Blueprint $table) {
-            //
+        Schema::table('asistencias', function (Blueprint $table) {
+            $table->dropForeign('fk_asistencias_id_usuario');
         });
     }
 };
