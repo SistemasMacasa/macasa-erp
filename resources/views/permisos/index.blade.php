@@ -28,11 +28,11 @@
         </button>
 
         {{-- Botón Modal catálogo de permisos --}}
-        <button type="button"
+        <button id="btnCatalogoPermisos"
                 class="btn btn-primary btn-principal"
                 data-bs-toggle="modal"
-                data-bs-target="#modalPermisos">
-            <i class="fa fa-key me-1"></i> Catálogo de permisos
+                data-bs-target="#modalCatalogoPermisos">
+          <i class="fa fa-key me-1"></i> Catálogo de permisos
         </button>
     </div>
 
@@ -44,9 +44,9 @@
             </div>
 
             <div class="card-body">
-                <div class="row gx-3 gy-2 justify-content-between">
+                <div class="row gx-3 gy-2 ">
                     {{-- Ejecutivos --}}
-                    <div class="col">
+                    <div class="col-md-2">
                         <label for="ejecutivo" class="form-label text-normal">Ejecutivo</label>
                         <select name="ejecutivo"
                                 id="ejecutivo"
@@ -56,14 +56,14 @@
                             @foreach ($usuarios as $u)
                                 <option value="{{ $u->id_usuario }}"
                                         {{ request('ejecutivo') == $u->id_usuario ? 'selected' : '' }}>
-                                    {{ $u->username }}
+                                    {{ $u->NombreCompleto }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
                     {{-- Acciones --}}
-                    <div class="col d-flex align-items-end gap-2">
+                    <div class="col-md-2 d-flex align-items-end gap-2">
                         <a href="{{ route('permisos.index') }}"
                            class="btn btn-secondary"
                            style="width: 50%;">
@@ -84,21 +84,21 @@
     {{-- 📋 Tabla de usuarios con roles / permisos --}}
     <div class="table-responsive mb-3 shadow-lg">
         <table class="table table-striped table-hover table-bordered align-middle">
-            <thead class="text-center align-middle">
+            <thead class="text-center">
                 <tr>
-                    <th class="header-tabla py-1 px-2">#</th>
-                    <th class="header-tabla py-1 px-2">Usuario</th>
-                    <th class="header-tabla py-1 px-2">Rol(es)</th>
-                    <th class="header-tabla py-1 px-2">Permisos directos</th>
-                    <th class="header-tabla py-1 px-2">Acciones</th>
+                    <th class="header-tabla col-5ch">#</th>
+                    <th class="header-tabla col-15ch">Usuario</th>
+                    <th class="header-tabla col-15ch">Rol(es)</th>
+                    <th class="header-tabla col-15ch">Permisos directos</th>
+                    <th class="header-tabla col-10ch">Acciones</th>
                 </tr>
             </thead>
             <tbody id="listaUsuarios">
                 @foreach ($usuarios as $u)
                     <tr data-id="{{ $u->id_usuario }}" data-username="{{ $u->username }}" data-nombre="{{ $u->NombreCompleto }}">
                         {{-- ID de usuario --}}
-                        <td class="py-1 px-2 text-center">{{ $u->id_usuario }}</td>
-                        <td class="py-1 px-2">{{ $u->username }}</td>
+                        <td class="text-center">{{ $u->id_usuario }}</td>
+                        <td class="">{{ $u->NombreCompleto }}</td>
 
                         {{-- Roles --}}
                         <td data-roles>
@@ -115,7 +115,7 @@
                         </td>
 
                         {{-- Permisos directos (sin rol) --}}
-                        <td class="py-1 px-2" data-permisos>
+                        <td class="" data-permisos>
                             @forelse ($u->getDirectPermissions() as $p)
                                 <span class="badge bg-secondary me-1">
                                 {{ $p->name }}
@@ -141,12 +141,6 @@
                                     class="btn btn-sm btn-outline-success"
                                     data-btn-asignar>
                                 <i class="fa fa-plus"></i> Permisos
-                            </button>
-
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-primary"
-                                    data-btn-permisos>
-                                <i class="fa fa-cog me-1"></i> Permisos
                             </button>
                         </td>
 
@@ -209,14 +203,6 @@
 </div>
 
 
-{{-- Botón disparador --}}
-<button id="btnCatalogoPermisos"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#modalCatalogoPermisos">
-  <i class="fa fa-key me-1"></i> Catálogo de permisos
-</button>
-
 {{-- Modal Catálogo de Permisos --}}
 <div class="modal fade" id="modalCatalogoPermisos" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -238,24 +224,28 @@
         <div class="row">
           {{-- 2A) Tabla de permisos --}}
           <div class="col-md-6">
-            <table class="table table-hover" id="tablaPermisosCatalogo">
-              <thead>
-                <tr>
-                  <th>Permiso</th>
-                  <th>Roles</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+            <div id="tablaPermisosCatalogo-wrapper">
+              <table class="table table-hover" id="tablaPermisosCatalogo">
+                <thead>
+                  <tr>
+                    <th>Permiso</th>
+                    <th>Roles</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
 
           {{-- 2B) (Opcional) roles que usan el permiso --}}
           <div class="col-md-6">
             <h6>Roles con permiso: <span id="permCatSelectedName">–</span></h6>
-            <ul id="listaRolesConPermiso" class="list-group mb-3"
-                style="max-height:300px; overflow:auto;"></ul>
+            <div id="listaRolesConPermiso-wrapper">
+              <ul id="listaRolesConPermiso" class="list-group mb-3"></ul>
+            </div>
           </div>
+
         </div>
 
       </div>
@@ -526,11 +516,12 @@
             const tr       = btn.closest('tr');
             const uid      = tr.dataset.id;
             const username = tr.dataset.username;
+            const nombre   = tr.dataset.nombre;
             const permis   = btn.dataset.permisoRemove;
 
             permisoRemoveUid.value     = uid;
             permisoRemovePerm.value    = permis;
-            permisoRemoveText.innerHTML = `¿Quitar el permiso <strong>${permis}</strong> del usuario <strong>${username}</strong>?`;
+            permisoRemoveText.innerHTML = `¿Quitar el permiso <strong>${permis}</strong> del usuario <strong>${nombre}</strong>?`;
             permisoRemoveModal.show();
         });
 
@@ -622,11 +613,12 @@
             const tr       = btn.closest('tr');
             const uid      = tr.dataset.id;
             const username = tr.dataset.username;
+            const nombre   = tr.dataset.nombre;
             const rolName  = btn.dataset.rolRemove;
 
             rolRemoveUid.value    = uid;
             rolRemoveName.value   = rolName;
-            rolRemoveText.innerHTML = `¿Quitar el rol <strong>${rolName}</strong> al usuario <strong>${username}</strong>?`;
+            rolRemoveText.innerHTML = `¿Quitar el rol <strong>${rolName}</strong> al usuario <strong>${nombre}</strong>?`;
             rolRemoveModal.show();
         });
 
@@ -822,25 +814,130 @@
         });
     </script>
 
-    <script>
+
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-  const csrf     = document.querySelector('meta[name="csrf-token"]').content;
-  const btnOpen  = document.getElementById('btnCatalogoPermisos');
-  const modal    = new bootstrap.Modal('#modalCatalogoPermisos');
-  const tblBody  = document.querySelector('#tablaPermisosCatalogo tbody');
+  const csrf  = document.querySelector('meta[name="csrf-token"]').content;
 
-  const inpNew   = document.getElementById('nuevoPermName');
-  const btnCreate= document.getElementById('btnCrearPermiso');
+  // ─── Referencias del modal ──────────────────────────────
+  const btnOpen   = document.getElementById('btnCatalogoPermisos');
+  const modal     = new bootstrap.Modal('#modalCatalogoPermisos');
+  const tblBody   = document.querySelector('#tablaPermisosCatalogo tbody');
 
-  const spanName = document.getElementById('permCatSelectedName');
-  const listRoles= document.getElementById('listaRolesConPermiso');
+  const inpNew    = document.getElementById('nuevoPermName');
+  const btnCreate = document.getElementById('btnCrearPermiso');
 
-  // 1) Abrir modal y listar permisos
+  const spanName  = document.getElementById('permCatSelectedName');
+  const listRoles = document.getElementById('listaRolesConPermiso');
+
+  // Helpers
+  const rutaList  = '{{ route("permisos.catalogo.index") }}';
+  const rutaStore = '{{ route("permisos.catalogo.store") }}';
+  const rutaShowRoles = '{{ route("permisos.catalogo.roles",["permission"=>0]) }}';        // /0 -> id
+  const rutaDelPerm  = '{{ route("permisos.catalogo.destroy",["permission"=>0]) }}';        // /0 -> id
+  const rutaDelRel   = '{{ route("permisos.catalogo.removerRol",["permission"=>0,"role"=>0]) }}';// /0/0 -> perm/role
+
+  // ─── 1) Abrir modal y cargar permisos ───────────────────
   btnOpen.addEventListener('click', async () => {
-    const res   = await fetch('{{ route("permisos.catalogo.index") }}');
+    const res   = await fetch(rutaList);
     const perms = await res.json();
 
-    tblBody.innerHTML = perms.map(p=>`
+    tblBody.innerHTML = perms.map(p => filaPermisoHTML(p)).join('');
+    limpiarDetalle();
+    modal.show();
+  });
+
+  // ─── 2) Crear permiso ───────────────────────────────────
+  btnCreate.addEventListener('click', async () => {
+    const name = inpNew.value.trim();
+    if (!name) return alert('Escribe un nombre de permiso');
+
+    const fd = new FormData();  fd.append('name', name);  fd.append('_token', csrf);
+    const res = await fetch(rutaStore, { method:'POST', body: fd });
+    if (!res.ok) return alert('Error al crear permiso');
+
+    const { perm } = await res.json();
+    tblBody.insertAdjacentHTML('beforeend', filaPermisoHTML(perm));
+    inpNew.value = '';
+  });
+
+  // ─── 3) Delegación en la tabla (ver / eliminar) ─────────
+  tblBody.addEventListener('click', async e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    const tr      = btn.closest('tr');
+    const permId  = tr.dataset.id;
+    const action  = btn.dataset.action;
+
+    // Ver roles
+    if (action === 'select') {
+      // marcas selección
+      tblBody.querySelectorAll('tr').forEach(r=>r.classList.remove('table-active','selected'));
+      tr.classList.add('table-active','selected');
+
+      spanName.textContent = tr.children[0].textContent;
+
+      const resRoles = await fetch(rutaShowRoles.replace('/0', '/'+permId));
+      const roles    = await resRoles.json();  // [{id,name},…]
+
+      listRoles.innerHTML = roles.length
+        ? roles.map(r => itemRolHTML(r)).join('')
+        : '<li class="list-group-item text-muted">—</li>';
+
+      return;
+    }
+
+    // Eliminar permiso
+    if (action === 'delete') {
+      if (!confirm('¿Eliminar este permiso?')) return;
+
+      const res = await fetch(rutaDelPerm.replace('/0','/'+permId), {
+        method:'DELETE',
+        headers:{'X-CSRF-TOKEN':csrf}
+      });
+      if (res.status === 409) {
+        const { message } = await res.json();
+        return alert(message);
+      }
+      if (!res.ok) return alert('Error al eliminar');
+
+      tr.remove();
+      if (tr.classList.contains('selected')) limpiarDetalle();
+    }
+  });
+
+  // ─── 4) Quitar permiso de un rol desde la lista ─────────
+  listRoles.addEventListener('click', async e => {
+    const icon = e.target.closest('i[data-role-id]');
+    if (!icon) return;
+
+    const roleId = icon.dataset.roleId;
+    const permTr = tblBody.querySelector('tr.selected');
+    if (!permTr) return;
+
+    const permId = permTr.dataset.id;
+    if (!confirm('¿Quitar este permiso de este rol?')) return;
+
+    const res = await fetch(
+      rutaDelRel.replace('/0/0', `/${permId}/roles/${roleId}`),
+      { method:'DELETE', headers:{'X-CSRF-TOKEN':csrf}}
+    );
+    const json = await res.json();
+    if (!json.ok) return alert(json.message || 'Error al quitar');
+
+    // contador tabla
+    permTr.children[1].textContent = json.roles_count;
+
+    // repinta lista
+    listRoles.innerHTML = json.roles_with.length
+      ? json.roles_with.map(name => itemRolHTML({id:null,name})).join('')
+      : '<li class="list-group-item text-muted">—</li>';
+  });
+
+  // ─── Helpers HTML ───────────────────────────────────────
+  function filaPermisoHTML(p){
+    return `
       <tr data-id="${p.id}">
         <td>${p.name}</td>
         <td>${p.roles_count}</td>
@@ -853,79 +950,23 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="fa fa-trash"></i>
           </button>
         </td>
-      </tr>`).join('');
+      </tr>`;
+  }
 
-    spanName.textContent = '–';
-    listRoles.innerHTML = '';
-    modal.show();
-  });
-
-  // 2) Crear permiso
-  btnCreate.addEventListener('click', async () => {
-    const name = inpNew.value.trim();
-    if (!name) return alert('Escribe un nombre de permiso');
-    const fd = new FormData(); fd.append('name',name); fd.append('_token',csrf);
-
-    const res = await fetch('{{ route("permisos.catalogo.store") }}',{
-      method:'POST',body:fd
-    });
-    if (!res.ok) return alert('Error al crear permiso');
-    const { perm } = await res.json();
-
-    tblBody.insertAdjacentHTML('beforeend', `
-      <tr data-id="${perm.id}">
-        <td>${perm.name}</td>
-        <td>0</td>
-        <td>
-          <button data-action="select" class="btn btn-sm btn-outline-primary">
-            <i class="fa fa-eye"></i>
-          </button>
-          <button data-action="delete" class="btn btn-sm btn-outline-danger">
-            <i class="fa fa-trash"></i>
-          </button>
-        </td>
-      </tr>`);
-    inpNew.value = '';
-  });
-
-  // 3) Delegación en la tabla
-  tblBody.addEventListener('click', async e => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-
-    const tr  = btn.closest('tr');
-    const id  = tr.dataset.id;
-    const act = btn.dataset.action;
-
-    if (act === 'select') {
-      spanName.textContent = tr.children[0].textContent;
-      // opcional: listar roles que tienen el permiso
-      // Omitimos fetch aquí si no lo necesitas
-      listRoles.innerHTML = `<li class="list-group-item">
-        Roles que usan: ${tr.children[1].textContent}
+  function itemRolHTML(r){
+    return `
+      <li class="list-group-item d-flex justify-content-between">
+        ${r.name}
+        <i class="fa fa-times text-danger"
+           style="cursor:pointer"
+           data-role-id="${r.id ?? ''}"></i>
       </li>`;
-      return;
-    }
+  }
 
-    if (act === 'delete') {
-      if (!confirm('¿Seguro que deseas eliminar este permiso?')) return;
-      const url = '{{ route("permisos.catalogo.destroy",["permission"=>0]) }}'.replace('/0','/'+id);
-      const res = await fetch(url, {
-        method:'DELETE',
-        headers:{ 'X-CSRF-TOKEN':csrf }
-      });
-      if (res.status === 409) {
-        const { message } = await res.json();
-        return alert(message);
-      }
-      if (!res.ok) return alert('Error al eliminar permiso');
-      tr.remove();
-      if (spanName.textContent === tr.children[0].textContent) {
-        spanName.textContent = '–';
-        listRoles.innerHTML = '';
-      }
-    }
-  });
+  function limpiarDetalle(){
+    spanName.textContent = '–';
+    listRoles.innerHTML  = '';
+  }
 });
 </script>
 

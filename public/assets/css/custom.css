@@ -1581,8 +1581,13 @@ tfoot>tr>th {
   padding: 1rem;
 }
 
-
-
 /* ───────────────────────────────────────────────
    Termina Estilos de tabla clientes/index.blade.php
    ─────────────────────────────────────────────── */
+
+
+#tablaPermisosCatalogo-wrapper,
+#listaRolesConPermiso-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+}

@@ -147,4 +147,31 @@ class PermisoController extends Controller
         return response()->json(['ok'=>true]);
     }
 
+    public function removerPermisoDeRol(Permission $permission, Role $role)
+    {
+        if ($role->hasPermissionTo($permission)) {
+            $role->revokePermissionTo($permission);
+        }
+
+        // Devolver:
+        //  roles_count actualizado para la tabla
+        //  lista de roles que aún tienen este permiso
+        $rolesWith = $permission->roles()->pluck('name');
+
+        return response()->json([
+            'ok'           => true,
+            'roles_count'  => $permission->roles()->count(),
+            'roles_with'   => $rolesWith,
+        ]);
+    }
+
+    public function rolesForPermission(Permission $permission)
+    {
+        // Devuelve id y name de cada rol
+        return $permission->roles->map(fn(Role $r)=>[
+            'id'   => $r->id,
+            'name' => $r->name,
+        ]);
+    }
+
 }

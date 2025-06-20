@@ -90,6 +90,17 @@ Route::middleware(['auth', 'permission:permisos.index'])->group(function () {
     Route::delete('permisos-catalogo/{permission}', 
         [PermisoController::class,'destroyPermisoCatalog'])
         ->name('permisos.catalogo.destroy'); 
+    // Quitar un permiso de un rol desde el catálogo de permisos
+    Route::delete(
+    'permisos-catalogo/{permission}/roles/{role}',
+    [PermisoController::class,'removerPermisoDeRol']
+    )->name('permisos.catalogo.removerRol');
+
+    // GET /api/permisos-catalogo/{permission}/roles
+    Route::get('permisos-catalogo/{permission}/roles', 
+        [PermisoController::class,'rolesForPermission'])
+        ->name('permisos.catalogo.roles');
+
 });
 
 Route::get('api/permisos-usuario/{id}', [PermisoController::class, 'permisosUsuario'])
