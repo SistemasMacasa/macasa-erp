@@ -152,7 +152,7 @@ class ClienteController extends Controller
         //validar si se puede cambiar este query por algo como $cliente->notas
         $notas = Nota::with('usuario')
             ->where('id_cliente', $cliente->id_cliente)
-            ->orderByDesc('fecha_registro')
+            ->orderBy('fecha_registro')
             ->get();
 
         $cotizaciones = collect([

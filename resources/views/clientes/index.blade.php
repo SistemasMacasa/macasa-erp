@@ -11,7 +11,7 @@
     @endsection
 
     <h2 class="mb-3 text-titulo">Mis Cuentas</h2>
-
+ 
     {{-- 🎛 Botonera --}}
     <div class=" row-fluid gap-2 mb-3">
         <a href="{{ url()->previous() }}" class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center ">

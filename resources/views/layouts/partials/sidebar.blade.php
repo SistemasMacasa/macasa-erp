@@ -83,6 +83,7 @@
                         <li><a href="{{ route('inicio') }}">Mis proveedores</a></li>
                         <li><a href="{{ route('usuarios.index') }}">Usuarios de SIS</a></li>
                         <li><a href="{{ route('inicio') }}">Asistencia</a></li>
+                        <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
                     </ul>
                 </li>
 

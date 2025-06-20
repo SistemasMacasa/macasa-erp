@@ -7,6 +7,7 @@
     <title>@yield('title', 'MACASA')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- =======================================
          HOJAS DE ESTILO (en orden de dependencia)
