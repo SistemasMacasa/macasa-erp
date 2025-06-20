@@ -19,6 +19,10 @@ class PermisoController extends Controller
         }
 
         $usuarios = $query->with(['roles', 'permissions'])->get();
+        //Role y Permission son modelos de Spatie\Permission
+        //están en config/permission.php
+        //Spatie\Permission\Models\Role;
+        //Spatie\Permission\Models\Permission;
         $roles    = Role::all();
         $permisos = Permission::orderBy('name')->get();
 
@@ -61,6 +65,86 @@ class PermisoController extends Controller
             'permisos' => $u->getDirectPermissions()->pluck('name'),
             'heredados'=> $u->getPermissionsViaRoles()->pluck('name'),
         ];
+    }
+
+    //  GET /api/roles-usuario/{id}
+    public function rolesUsuario($id)
+    {
+        $u = Usuario::findOrFail($id);
+
+        return [
+            // sólo nombres directos de rol
+            'roles'    => $u->getRoleNames(),  
+            // catálogo completo de roles
+            'catalogo' => Role::pluck('name'),
+        ];
+    }
+
+    //  POST /roles/asignar
+    public function asignarRol(Request $r)
+    {
+        $u    = Usuario::findOrFail($r->usuario_id);
+        $rol  = $r->input('rol');
+
+        if (! $u->hasRole($rol)) {
+            $u->assignRole($rol);
+        }
+
+        return ['ok' => true, 'roles' => $u->getRoleNames()];
+    }
+
+    //  POST /roles/remover
+    public function removerRol(Request $r)
+    {
+        $u   = Usuario::findOrFail($r->usuario_id);
+        $rol = $r->input('rol');
+
+        if ($u->hasRole($rol)) {
+            $u->removeRole($rol);
+        }
+
+        return ['ok' => true, 'roles' => $u->getRoleNames()];
+    }
+
+     // GET /api/permisos-catalogo
+    public function catalogPermisos()
+    {
+        $perms = Permission::withCount('roles')->get();
+        return response()->json(
+            $perms->map(fn($p)=>[
+              'id'          => $p->id,
+              'name'        => $p->name,
+              'roles_count' => $p->roles_count,
+            ])
+        );
+    }
+
+    // POST /api/permisos-catalogo
+    public function storePermiso(Request $req)
+    {
+        $req->validate(['name'=>'required|unique:permissions,name']);
+        $p = Permission::create(['name'=>$req->name,'guard_name'=>'web']);
+        return response()->json([
+            'ok'=>true,
+            'perm'=>[
+              'id'          => $p->id,
+              'name'        => $p->name,
+              'roles_count' => 0
+            ]
+        ]);
+    }
+
+    // DELETE /api/permisos-catalogo/{permission}
+    public function destroyPermisoCatalog(Permission $permission)
+    {
+        if ($permission->roles()->count()>0) {
+            return response()->json([
+               'ok'=>false,
+               'message'=>"No se puede eliminar: asignado a {$permission->roles()->count()} roles"
+            ],409);
+        }
+        $permission->delete();
+        return response()->json(['ok'=>true]);
     }
 
 }
