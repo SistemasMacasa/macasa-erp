@@ -20,53 +20,58 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('inicio');
 
-    //CRUD Clientes (Cuentas Eje)
+});
+
+Route::middleware(['auth', 'permission:Nueva Cuenta'])->group(function () {
     //create
     Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
-    //read
-    Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
     Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
-    //update
-    Route::get('/clientes/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
-    Route::put('/clientes/update/{id}', [ClienteController::class, 'update'])->name('clientes.update');
-    //delete
-    Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name('clientes.delete');
-
-    Route::get('/clientes/view/{id}', [ClienteController::class, 'view'])->name('clientes.view');
-
-    Route::post('/clientes/{id}/nota', [ClienteController::class, 'storeNota'])->name('clientes.nota.store');
-    // Mostrar formulario de transferencia
-    Route::get('/clientes/transfer', [ClienteController::class, 'transfer'])
-        ->name('clientes.transfer');
-
-    // Procesar transferencia
-    Route::post('/clientes/transfer', [ClienteController::class, 'transferStore'])
-        ->name('clientes.transfer.store');
-
-    Route::get('/clientes/recalls', [ClienteController::class, 'recalls'])->name('clientes.recalls');
-
-    Route::get('/clientes/archivadas', [ClienteController::class, 'archivadas'])
-        ->name('clientes.archivadas');
-
-    //CRUD Usuarios internos de SIS
-    //Eric: Cambiar el ruteo, no usar resource(), definir cada ruta a mano
-    Route::resource('usuarios', UsuarioController::class);
-
-
-    //Inicio de Sesión
-    Route::middleware(['auth'])->get('/', function () {
-        return view('inicio');
-    })->name('inicio');
-
-    // === Cotizaciones ===
-    Route::get('/cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
-    Route::get('/cotizaciones/create/{cliente}', [CotizacionController::class, 'create'])->name('cotizaciones.create');
-
-    //Guardar Dirección de factura mediante AJAX
-    Route::post('/ajax/direccion-factura', [CotizacionController::class, 'storeRazonSocialFactura'])
-        ->name('ajax.direccion.factura');
 
 });
+
+Route::middleware(['auth', 'permission:Mis Cuentas'])->group(callback: function () {
+    Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+});
+//update
+Route::get('/clientes/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
+Route::put('/clientes/update/{id}', [ClienteController::class, 'update'])->name('clientes.update');
+//delete
+Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name('clientes.delete');
+
+Route::get('/clientes/view/{id}', [ClienteController::class, 'view'])->name('clientes.view');
+
+Route::post('/clientes/{id}/nota', [ClienteController::class, 'storeNota'])->name('clientes.nota.store');
+// Mostrar formulario de transferencia
+Route::get('/clientes/transfer', [ClienteController::class, 'transfer'])
+    ->name('clientes.transfer');
+
+// Procesar transferencia
+Route::post('/clientes/transfer', [ClienteController::class, 'transferStore'])
+    ->name('clientes.transfer.store');
+
+Route::get('/clientes/recalls', [ClienteController::class, 'recalls'])->name('clientes.recalls');
+
+Route::get('/clientes/archivadas', [ClienteController::class, 'archivadas'])
+    ->name('clientes.archivadas');
+
+//CRUD Usuarios internos de SIS
+//Eric: Cambiar el ruteo, no usar resource(), definir cada ruta a mano
+Route::resource('usuarios', UsuarioController::class);
+
+
+//Inicio de Sesión
+Route::middleware(['auth'])->get('/', function () {
+    return view('inicio');
+})->name('inicio');
+
+// === Cotizaciones ===
+Route::get('/cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
+Route::get('/cotizaciones/create/{cliente}', [CotizacionController::class, 'create'])->name('cotizaciones.create');
+
+//Guardar Dirección de factura mediante AJAX
+Route::post('/ajax/direccion-factura', [CotizacionController::class, 'storeRazonSocialFactura'])
+    ->name('ajax.direccion.factura');
+
 
 //Login y Logout
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -81,24 +86,32 @@ Route::middleware(['auth', 'permission:permisos.index'])->group(function () {
     Route::get('/permisos', [PermisoController::class, 'index'])->name('permisos.index');
     Route::post('/permisos/asignar', [PermisoController::class, 'asignarPermiso'])->name('permisos.asignar');
     Route::post('/permisos/remover', [PermisoController::class, 'removerPermiso'])->name('permisos.remover');
-    Route::get('permisos-catalogo', 
-        [PermisoController::class,'catalogPermisos'])
+    Route::get(
+        'permisos-catalogo',
+        [PermisoController::class, 'catalogPermisos']
+    )
         ->name('permisos.catalogo.index');
-    Route::post('permisos-catalogo', 
-        [PermisoController::class,'storePermiso'])
+    Route::post(
+        'permisos-catalogo',
+        [PermisoController::class, 'storePermiso']
+    )
         ->name('permisos.catalogo.store');
-    Route::delete('permisos-catalogo/{permission}', 
-        [PermisoController::class,'destroyPermisoCatalog'])
-        ->name('permisos.catalogo.destroy'); 
+    Route::delete(
+        'permisos-catalogo/{permission}',
+        [PermisoController::class, 'destroyPermisoCatalog']
+    )
+        ->name('permisos.catalogo.destroy');
     // Quitar un permiso de un rol desde el catálogo de permisos
     Route::delete(
-    'permisos-catalogo/{permission}/roles/{role}',
-    [PermisoController::class,'removerPermisoDeRol']
+        'permisos-catalogo/{permission}/roles/{role}',
+        [PermisoController::class, 'removerPermisoDeRol']
     )->name('permisos.catalogo.removerRol');
 
     // GET /api/permisos-catalogo/{permission}/roles
-    Route::get('permisos-catalogo/{permission}/roles', 
-        [PermisoController::class,'rolesForPermission'])
+    Route::get(
+        'permisos-catalogo/{permission}/roles',
+        [PermisoController::class, 'rolesForPermission']
+    )
         ->name('permisos.catalogo.roles');
 
 });
@@ -122,20 +135,20 @@ Route::middleware('auth')->group(function () {
 });
 
 //Roles
-Route::middleware(['auth', 'permission:roles.index'])->group(function(){
+Route::middleware(['auth', 'permission:roles.index'])->group(function () {
 
     // Carga listado de roles con conteos (JSON)
-    Route::get('/api/roles', [RoleController::class,'index'])->name('api.roles');
+    Route::get('/api/roles', [RoleController::class, 'index'])->name('api.roles');
 
     // Crear un nuevo rol
-    Route::post('/roles', [RoleController::class,'store'])->name('roles.store');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
 
     // Eliminar rol
-    Route::delete('/roles/{role}', [RoleController::class,'destroy'])->name('roles.destroy');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
     // Cargar permisos de un rol
-    Route::get('/api/roles/{role}/permisos', [RoleController::class,'permisos'])->name('api.roles.permisos');
+    Route::get('/api/roles/{role}/permisos', [RoleController::class, 'permisos'])->name('api.roles.permisos');
 
     // Sincronizar permisos de un rol
-    Route::post('/roles/{role}/permisos', [RoleController::class,'syncPermisos'])->name('roles.permisos.sync');
+    Route::post('/roles/{role}/permisos', [RoleController::class, 'syncPermisos'])->name('roles.permisos.sync');
 });
