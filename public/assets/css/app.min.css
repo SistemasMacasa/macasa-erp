@@ -540,10 +540,10 @@ body[data-layout=horizontal] .footer {
 
 #sidebar-menu ul li a {
     display: block;
-    padding: .62rem 1.5rem;
+    padding: .50rem 1.5rem;
     color: var(--bs-sidebar-menu-item-color);
     position: relative;
-    font-size: .95rem;
+    font-size: .90rem;
     -webkit-transition: all .4s;
     transition: all .4s;
     font-weight: 500

@@ -87,12 +87,18 @@ class UsuarioController extends Controller
         $datos['estatus'] = $request->estatus ?? $usuario->estatus;
         $datos['es_admin'] = $request->has('es_admin') ? 1 : 0;
 
-
-        $usuario->update($datos);
-        return redirect()->route('usuarios.index')->with('success', 'Se editó el usuario exitosamente');
+        try {
+            if ($usuario->update($datos)) {
+                return redirect()->route('usuarios.index')->with('success', 'Se editó el usuario exitosamente');
+            } else {
+                return redirect()->back()->with('error', 'No se pudo actualizar el usuario.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al editar el usuario: ' . $e->getMessage());
+        }
     }
 
-    public function destroy(Usuario $usuario)
+    public function delete(Usuario $usuario)
     {
         $usuario->delete();
 

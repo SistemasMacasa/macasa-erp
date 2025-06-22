@@ -3,8 +3,7 @@
         <div id="sidebar-menu">
             <ul class="metismenu list-unstyled text-white" id="side-menu">
 
-                {{-- <li class="menu-title" data-key="t-menu" style="font-size: 0.9rem; padding: 10px 25px !important;">Menú</li> --}}
-
+                {{-- ═══ Inicio (siempre visible para usuarios autenticados) ═══ --}}
                 <li>
                     <a href="{{ route('inicio') }}">
                         <i data-feather="home"></i>
@@ -12,82 +11,141 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow">
-                        <span class="icon icon-crm" ></span>
-                        <span class="menu-item">CRM</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalTipoCuenta">
-                                Nueva Cuenta
-                            </a>
-                        </li>
-                        <li><a href="{{ route('clientes.index') }}">Mis Cuentas</a></li>
-                        <li><a href="{{ route('clientes.transfer') }}">Traspaso de Cuentas</a></li>
-                        <li><a href="{{ route('clientes.recalls') }}">Mis Recall's</a></li>
-                        <li><a href="{{ route('clientes.archivadas') }}">Cuentas Archivadas</a></li>
-                    </ul>
-                </li>
+                {{-- ═══ CRM ═══════════════════════════════════════════════════ --}}
+                @canany(['Nueva Cuenta', 'Mis Cuentas', 'Traspaso de Cuentas', 'Mis Recalls', 'Cuentas Archivadas'])
+                    <li>
+                        <a href="javascript:void(0);" class="has-arrow">
+                            <span class="icon icon-crm"></span>
+                            <span class="menu-item">CRM</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
 
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow">
-                        <span class="icon icon-cotizaciones"></span>
-                        <span class="menu-item">Monitor de Cotizaciones</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('cotizaciones.index') }}">Monitor de Cotizaciones</a></li>
-                    </ul>
-                </li>
+                            @can('Nueva Cuenta')
+                                <li>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalTipoCuenta">
+                                        Nueva Cuenta
+                                    </a>
+                                </li>
+                            @endcan
 
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow">
-                        <span class="icon icon-ventas"></span>
-                        <span class="menu-item">Monitor de Ventas</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('inicio') }}">Monitor de Ventas</a></li>
-                        <li><a href="{{ route('inicio') }}">Metas de Venta</a></li>
-                        <li><a href="{{ route('inicio') }}">Permisos</a></li>
-                    </ul>
-                </li>
+                            @can('Mis Cuentas')
+                                <li><a href="{{ route('clientes.index') }}">Mis Cuentas</a></li>
+                            @endcan
 
-                <li>
-                    <a href="{{ route('inicio') }}">
-                        <span class="icon icon-cobranza"></span>
-                        <span class="menu-item">Monitor de Cobranza</span>
-                    </a>
-                </li>
+                            @can('Traspaso de Cuentas')
+                                <li><a href="{{ route('clientes.transfer') }}">Traspaso de Cuentas</a></li>
+                            @endcan
 
-                <li>
-                    <a href="{{ route('inicio') }}">
-                        <i data-feather="globe"></i>
-                        <span class="menu-item">E-Commerce</span>
-                    </a>
-                </li>
+                            @can('Mis Recalls')
+                                <li><a href="{{ route('clientes.recalls') }}">Mis Recall's</a></li>
+                            @endcan
 
-                <li>
-                    <a href="{{ route('inicio') }}">
-                        <span class="icon icon-marketing"></span>
-                        <span class="menu-item">Marketing</span>
-                    </a>
-                </li>
+                            @can('Cuentas Archivadas')
+                                <li><a href="{{ route('clientes.archivadas') }}">Cuentas Archivadas</a></li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcanany
 
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="settings"></i>
-                        <span class="menu-item">Administración</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('inicio') }}">Alta de Proveedor</a></li>
-                        <li><a href="{{ route('inicio') }}">Mis proveedores</a></li>
-                        <li><a href="{{ route('usuarios.index') }}">Usuarios de SIS</a></li>
-                        <li><a href="{{ route('inicio') }}">Asistencia</a></li>
-                        <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
-                    </ul>
-                </li>
+                {{-- ═══ Monitor de Cotizaciones ═══════════════════════════════ --}}
+                @can('Monitor de Cotizaciones')
+                    <li>
+                        <a href="javascript:void(0);" class="has-arrow">
+                            <span class="icon icon-cotizaciones"></span>
+                            <span class="menu-item">Monitor de Cotizaciones</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="{{ route('cotizaciones.index') }}">Monitor de Cotizaciones</a></li>
+                        </ul>
+                    </li>
+                @endcan
+
+                {{-- ═══ Monitor de Ventas ═════════════════════════════════════ --}}
+                @canany(['Monitor de Ventas', 'Metas de Venta', 'Permisos'])
+                    <li>
+                        <a href="javascript:void(0);" class="has-arrow">
+                            <span class="icon icon-ventas"></span>
+                            <span class="menu-item">Monitor de Ventas</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @can('Monitor de Ventas')
+                                <li><a href="{{ route('inicio') }}">Monitor de Ventas</a></li>
+                            @endcan
+                            @can('Metas de Venta')
+                                <li><a href="{{ route('inicio') }}">Metas de Venta</a></li>
+                            @endcan
+                            @can('Permisos')
+                                <li><a href="{{ route('inicio') }}">Permisos</a></li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcanany
+
+                {{-- ═══ Monitor de Cobranza ════════════════════════════════════ --}}
+                @can('Monitor de Cobranza')
+                    <li>
+                        <a href="{{ route('inicio') }}">
+                            <span class="icon icon-cobranza"></span>
+                            <span class="menu-item">Monitor de Cobranza</span>
+                        </a>
+                    </li>
+                @endcan
+
+                {{-- ═══ E-Commerce ════════════════════════════════════════════ --}}
+                @can('E Commerce')
+                    <li>
+                        <a href="{{ route('inicio') }}">
+                            <i data-feather="globe"></i>
+                            <span class="menu-item">E-Commerce</span>
+                        </a>
+                    </li>
+                @endcan
+
+                {{-- ═══ Marketing ═════════════════════════════════════════════ --}}
+                @can('Marketing')
+                    <li>
+                        <a href="{{ route('inicio') }}">
+                            <span class="icon icon-marketing"></span>
+                            <span class="menu-item">Marketing</span>
+                        </a>
+                    </li>
+                @endcan
+
+                {{-- ═══ Administración ═══════════════════════════════════════ --}}
+                @canany(['Alta de Proveedor', 'Mis proveedores', 'Usuarios de SIS', 'Asistencia', 'Permisos'])
+                    <li>
+                        <a href="javascript:void(0);" class="has-arrow">
+                            <i data-feather="settings"></i>
+                            <span class="menu-item">Administración</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+
+                            @can('Alta de Proveedor')
+                                <li><a href="{{ route('inicio') }}">Alta de Proveedor</a></li>
+                            @endcan
+
+                            @can('Mis proveedores')
+                                <li><a href="{{ route('inicio') }}">Mis proveedores</a></li>
+                            @endcan
+
+                            @can('Usuarios de SIS')
+                                <li><a href="{{ route('usuarios.index') }}">Usuarios de SIS</a></li>
+                            @endcan
+
+                            @can('Asistencia')
+                                <li><a href="{{ route('inicio') }}">Asistencia</a></li>
+                            @endcan
+
+                            @can('Permisos')
+                                <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcanany
 
             </ul>
+
+
             <div class="card sidebar-alert border-0 text-center mx-4 mb-0 mt-5">
                 <div class="card-body">
                     <img src="{{ asset('assets/images/construction.png') }}" alt="En construcción" height="80">
@@ -123,7 +181,8 @@
                             <a href="{{ route('clientes.create', ['tipo' => 'moral']) }}" class="tipo-opcion-card">
                                 <div class="opcion-card-body">
                                     <strong>Cuenta Empresarial</strong>
-                                    <p class="mb-0 text-muted small">Para empresas privadas e instituciones de gobierno	</p>
+                                    <p class="mb-0 text-muted small">Para empresas privadas e instituciones de gobierno
+                                    </p>
                                 </div>
                             </a>
                         </div>
@@ -131,7 +190,8 @@
                             <a href="{{ route('clientes.create', ['tipo' => 'fisica']) }}" class="tipo-opcion-card">
                                 <div class="opcion-card-body">
                                     <strong>Cuenta Personal</strong>
-                                    <p class="mb-0 text-muted small">Para personas físicas y profesionales independientes</p>
+                                    <p class="mb-0 text-muted small">Para personas físicas y profesionales
+                                        independientes</p>
                                 </div>
                             </a>
                         </div>

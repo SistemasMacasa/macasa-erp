@@ -78,7 +78,7 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 16px !important;
 }
 
 /* Modo oscuro si estás usando data-bs-theme="dark" */
@@ -798,12 +798,12 @@ body[data-sidebar-size="sm"] .vertical-menu ul.metismenu>li.has-arrow:hover>ul.s
 body[data-sidebar-size="sm"] #sidebar-menu .metismenu>li>a {
   /* padding-left: 8px; */
   transform: translateX(-10px);
-  margin-left: 10px;
+  margin-left: 22px;
   /* opacity: 0.7; */
 }
 
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a {
-  padding: 11px 20px;
+    padding: .56rem 0.8rem;
   -webkit-transition: none;
   transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
