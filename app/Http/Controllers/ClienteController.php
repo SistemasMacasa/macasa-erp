@@ -20,9 +20,17 @@ class ClienteController extends Controller
 {
     public function index(Request $request)
     {
-        // 1) consulta base + relaciones
-        $query = Cliente::with(['primerContacto', 'vendedor'])
-            ->where('estatus', 'activo');
+        if (auth()->user()->hasRole('Ejecutivo')) {
+            $query = Cliente::with(['primerContacto', 'vendedor'])
+                ->where('estatus', 'activo')
+                ->where('id_vendedor', auth()->user()->id_usuario);
+
+        } else {
+            // 1) consulta base + relaciones
+            $query = Cliente::with(['primerContacto', 'vendedor'])
+                ->where('estatus', 'activo');
+        }
+
 
         /* ---------- Filtros ---------- */
 
@@ -32,7 +40,7 @@ class ClienteController extends Controller
                 $q->where('nombre', 'like', "%{$term}%")
                     ->orWhere('id_cliente', 'like', "%{$term}%")
                     ->orWhereHas('primerContacto', fn($q2) =>
-                    $q2->where('telefono1', 'like', "%{$term}%"));
+                        $q2->where('telefono1', 'like', "%{$term}%"));
             });
         }
 
@@ -89,9 +97,9 @@ class ClienteController extends Controller
         $vendedores = Usuario::whereNull('id_cliente')->get();
 
         // Los sacamos directo de la tabla para que no se “desincronicen”
-        $sectores   = Cliente::select('sector')->distinct()->pluck('sector');
-        $segmentos  = Cliente::select('segmento')->distinct()->pluck('segmento');
-        $ciclos     = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
+        $sectores = Cliente::select('sector')->distinct()->pluck('sector');
+        $segmentos = Cliente::select('segmento')->distinct()->pluck('segmento');
+        $ciclos = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
 
         return view('clientes.index', compact(
             'clientes',
@@ -103,13 +111,13 @@ class ClienteController extends Controller
     }
     public function create(Request $request)
     {
-        $tipo           = $request->input('tipo', 'moral'); // por defecto: moral
-        $vendedores     = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos
-        $metodos_pago   = MetodoPago::pluck('nombre', 'id_metodo_pago');
-        $formas_pago    = FormaPago::pluck('nombre', 'id_forma_pago');
-        $usos_cfdi      = UsoCfdi::pluck('nombre', 'id_uso_cfdi');
-        $ciudades       = Ciudad::pluck('nombre', 'id_ciudad');
-        $estados        = Estado::pluck('nombre', 'id_estado');
+        $tipo = $request->input('tipo', 'moral'); // por defecto: moral
+        $vendedores = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos
+        $metodos_pago = MetodoPago::pluck('nombre', 'id_metodo_pago');
+        $formas_pago = FormaPago::pluck('nombre', 'id_forma_pago');
+        $usos_cfdi = UsoCfdi::pluck('nombre', 'id_uso_cfdi');
+        $ciudades = Ciudad::pluck('nombre', 'id_ciudad');
+        $estados = Estado::pluck('nombre', 'id_estado');
         $paises = [
             '1' => 'México',
             '2' => 'Estados Unidos',
@@ -121,7 +129,7 @@ class ClienteController extends Controller
     }
     public function edit($id)
     {
-        $cliente    = Cliente::findOrFail($id);
+        $cliente = Cliente::findOrFail($id);
         $vendedores = Usuario::whereNull('id_cliente')->get(); // usuarios internos
         return view('clientes.edit', compact('cliente', 'vendedores'));
     }
@@ -156,71 +164,71 @@ class ClienteController extends Controller
             ->get();
 
         $cotizaciones = collect([
-            ['fecha' => '2025-04-01', 'id' => 'MC200123', 'razon' => 'ACME S.A. de C.V.',         'subtotal' => 12500.00, 'margen' => 2500.00, 'factor' => 20.4],
-            ['fecha' => '2025-04-03', 'id' => 'MC200124', 'razon' => 'Tech México S.A.',           'subtotal' => 9800.00,  'margen' => 1800.00, 'factor' => 18.3],
-            ['fecha' => '2025-04-05', 'id' => 'MC200125', 'razon' => 'Comercial XYZ S. de R.L',    'subtotal' => 15400.50, 'margen' => 3200.00, 'factor' => 21.2],
-            ['fecha' => '2025-04-07', 'id' => 'MC200126', 'razon' => 'Distribuidora ABC S.A.',     'subtotal' => 11200.00, 'margen' => 2100.00, 'factor' => 19.0],
-            ['fecha' => '2025-04-09', 'id' => 'MC200127', 'razon' => 'Global Tech Solutions',      'subtotal' => 8700.00,  'margen' => 1700.00, 'factor' => 19.5],
-            ['fecha' => '2025-04-11', 'id' => 'MC200128', 'razon' => 'Innovaciones S.A. de C.V.',  'subtotal' => 14300.00, 'margen' => 3500.00, 'factor' => 24],
-            ['fecha' => '2025-04-13', 'id' => 'MC200129', 'razon' => 'Servicios Integrales MX',    'subtotal' => 7600.00,  'margen' => 1200.00, 'factor' => 15.8],
-            ['fecha' => '2025-04-15', 'id' => 'MC200130', 'razon' => 'Corporativo Delta',          'subtotal' => 9900.00,  'margen' => 2200.00, 'factor' => 22.2],
-            ['fecha' => '2025-04-17', 'id' => 'MC200131', 'razon' => 'Grupo Empresarial Omega',    'subtotal' => 15800.00, 'margen' => 4100.00, 'factor' => 25.9],
-            ['fecha' => '2025-04-19', 'id' => 'MC200132', 'razon' => 'Soluciones Avanzadas',       'subtotal' => 13400.00, 'margen' => 3300.00, 'factor' => 24.6],
-            ['fecha' => '2025-04-21', 'id' => 'MC200133', 'razon' => 'TechnoWorld S.A.',           'subtotal' => 10500.00, 'margen' => 2100.00, 'factor' => 20],
-            ['fecha' => '2025-04-23', 'id' => 'MC200134', 'razon' => 'Comercializadora Alfa',      'subtotal' => 12000.00, 'margen' => 3000.00, 'factor' => 25],
-            ['fecha' => '2025-04-25', 'id' => 'MC200135', 'razon' => 'Distribuciones Beta',        'subtotal' => 8800.00,  'margen' => 1400.00, 'factor' => 15.9],
-            ['fecha' => '2025-04-27', 'id' => 'MC200136', 'razon' => 'Innovación Global',          'subtotal' => 16000.00, 'margen' => 4800.00, 'factor' => 30],
-            ['fecha' => '2025-04-29', 'id' => 'MC200137', 'razon' => 'Corporativo Gamma',          'subtotal' => 14500.00, 'margen' => 3500.00, 'factor' => 24.1],
+            ['fecha' => '2025-04-01', 'id' => 'MC200123', 'razon' => 'ACME S.A. de C.V.', 'subtotal' => 12500.00, 'margen' => 2500.00, 'factor' => 20.4],
+            ['fecha' => '2025-04-03', 'id' => 'MC200124', 'razon' => 'Tech México S.A.', 'subtotal' => 9800.00, 'margen' => 1800.00, 'factor' => 18.3],
+            ['fecha' => '2025-04-05', 'id' => 'MC200125', 'razon' => 'Comercial XYZ S. de R.L', 'subtotal' => 15400.50, 'margen' => 3200.00, 'factor' => 21.2],
+            ['fecha' => '2025-04-07', 'id' => 'MC200126', 'razon' => 'Distribuidora ABC S.A.', 'subtotal' => 11200.00, 'margen' => 2100.00, 'factor' => 19.0],
+            ['fecha' => '2025-04-09', 'id' => 'MC200127', 'razon' => 'Global Tech Solutions', 'subtotal' => 8700.00, 'margen' => 1700.00, 'factor' => 19.5],
+            ['fecha' => '2025-04-11', 'id' => 'MC200128', 'razon' => 'Innovaciones S.A. de C.V.', 'subtotal' => 14300.00, 'margen' => 3500.00, 'factor' => 24],
+            ['fecha' => '2025-04-13', 'id' => 'MC200129', 'razon' => 'Servicios Integrales MX', 'subtotal' => 7600.00, 'margen' => 1200.00, 'factor' => 15.8],
+            ['fecha' => '2025-04-15', 'id' => 'MC200130', 'razon' => 'Corporativo Delta', 'subtotal' => 9900.00, 'margen' => 2200.00, 'factor' => 22.2],
+            ['fecha' => '2025-04-17', 'id' => 'MC200131', 'razon' => 'Grupo Empresarial Omega', 'subtotal' => 15800.00, 'margen' => 4100.00, 'factor' => 25.9],
+            ['fecha' => '2025-04-19', 'id' => 'MC200132', 'razon' => 'Soluciones Avanzadas', 'subtotal' => 13400.00, 'margen' => 3300.00, 'factor' => 24.6],
+            ['fecha' => '2025-04-21', 'id' => 'MC200133', 'razon' => 'TechnoWorld S.A.', 'subtotal' => 10500.00, 'margen' => 2100.00, 'factor' => 20],
+            ['fecha' => '2025-04-23', 'id' => 'MC200134', 'razon' => 'Comercializadora Alfa', 'subtotal' => 12000.00, 'margen' => 3000.00, 'factor' => 25],
+            ['fecha' => '2025-04-25', 'id' => 'MC200135', 'razon' => 'Distribuciones Beta', 'subtotal' => 8800.00, 'margen' => 1400.00, 'factor' => 15.9],
+            ['fecha' => '2025-04-27', 'id' => 'MC200136', 'razon' => 'Innovación Global', 'subtotal' => 16000.00, 'margen' => 4800.00, 'factor' => 30],
+            ['fecha' => '2025-04-29', 'id' => 'MC200137', 'razon' => 'Corporativo Gamma', 'subtotal' => 14500.00, 'margen' => 3500.00, 'factor' => 24.1],
         ]);
 
         // ===== Dummy de historial mientras no hay modelo Pedido =====
         $pedidos = collect([
-            ['fecha' => '2025-04-02', 'id' => 'MP21023', 'razon' => 'ACME S.A. de C.V.',      'subtotal' => 15230.50, 'margen' => 2800.00, 'factor' => 18.4],
-            ['fecha' => '2025-03-17', 'id' => 'MP20976', 'razon' => 'Tech México S.A.',        'subtotal' =>  8650.00, 'margen' => 1910.00, 'factor' => 20.4],
+            ['fecha' => '2025-04-02', 'id' => 'MP21023', 'razon' => 'ACME S.A. de C.V.', 'subtotal' => 15230.50, 'margen' => 2800.00, 'factor' => 18.4],
+            ['fecha' => '2025-03-17', 'id' => 'MP20976', 'razon' => 'Tech México S.A.', 'subtotal' => 8650.00, 'margen' => 1910.00, 'factor' => 20.4],
             ['fecha' => '2025-02-28', 'id' => 'MP20911', 'razon' => 'Comercial XYZ S. de R.L', 'subtotal' => 43120.90, 'margen' => 6550.00, 'factor' => 15.2],
-            ['fecha' => '2025-04-10', 'id' => 'MP21034', 'razon' => 'Distribuidora ABC S.A.',  'subtotal' => 12345.67, 'margen' => 2450.00, 'factor' => 19.8],
-            ['fecha' => '2025-03-25', 'id' => 'MP20987', 'razon' => 'Global Tech Solutions',   'subtotal' =>  9876.54, 'margen' => 2020.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-10', 'id' => 'MP21034', 'razon' => 'Distribuidora ABC S.A.', 'subtotal' => 12345.67, 'margen' => 2450.00, 'factor' => 19.8],
+            ['fecha' => '2025-03-25', 'id' => 'MP20987', 'razon' => 'Global Tech Solutions', 'subtotal' => 9876.54, 'margen' => 2020.00, 'factor' => 35.4],
             ['fecha' => '2025-02-15', 'id' => 'MP20899', 'razon' => 'Innovaciones S.A. de C.V.', 'subtotal' => 25678.90, 'margen' => 4450.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-05', 'id' => 'MP21028', 'razon' => 'Servicios Integrales MX', 'subtotal' =>  7654.32, 'margen' => 1660.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-12', 'id' => 'MP20965', 'razon' => 'Corporativo Delta',       'subtotal' => 18900.00, 'margen' => 3200.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-05', 'id' => 'MP21028', 'razon' => 'Servicios Integrales MX', 'subtotal' => 7654.32, 'margen' => 1660.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-12', 'id' => 'MP20965', 'razon' => 'Corporativo Delta', 'subtotal' => 18900.00, 'margen' => 3200.00, 'factor' => 35.4],
             ['fecha' => '2025-02-20', 'id' => 'MP20905', 'razon' => 'Grupo Empresarial Omega', 'subtotal' => 34210.75, 'margen' => 5050.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-08', 'id' => 'MP21031', 'razon' => 'Soluciones Avanzadas',    'subtotal' => 11234.56, 'margen' => 2050.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-30', 'id' => 'MP20992', 'razon' => 'TechnoWorld S.A.',        'subtotal' =>  6543.21, 'margen' => 1500.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-10', 'id' => 'MP20888', 'razon' => 'Comercializadora Alfa',   'subtotal' => 27890.12, 'margen' => 4600.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-12', 'id' => 'MP21036', 'razon' => 'Distribuciones Beta',     'subtotal' =>  8765.43, 'margen' => 1780.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-20', 'id' => 'MP20980', 'razon' => 'Innovación Global',       'subtotal' => 14567.89, 'margen' => 2750.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-25', 'id' => 'MP20910', 'razon' => 'Corporativo Gamma',       'subtotal' => 39876.54, 'margen' => 6100.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-08', 'id' => 'MP21031', 'razon' => 'Soluciones Avanzadas', 'subtotal' => 11234.56, 'margen' => 2050.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-30', 'id' => 'MP20992', 'razon' => 'TechnoWorld S.A.', 'subtotal' => 6543.21, 'margen' => 1500.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-10', 'id' => 'MP20888', 'razon' => 'Comercializadora Alfa', 'subtotal' => 27890.12, 'margen' => 4600.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-12', 'id' => 'MP21036', 'razon' => 'Distribuciones Beta', 'subtotal' => 8765.43, 'margen' => 1780.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-20', 'id' => 'MP20980', 'razon' => 'Innovación Global', 'subtotal' => 14567.89, 'margen' => 2750.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-25', 'id' => 'MP20910', 'razon' => 'Corporativo Gamma', 'subtotal' => 39876.54, 'margen' => 6100.00, 'factor' => 35.4],
             ['fecha' => '2025-04-15', 'id' => 'MP21040', 'razon' => 'Servicios Empresariales', 'subtotal' => 13456.78, 'margen' => 2500.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-10', 'id' => 'MP20954', 'razon' => 'Tech Solutions MX',       'subtotal' =>  9876.54, 'margen' => 2100.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-05', 'id' => 'MP20877', 'razon' => 'Comercial Delta',         'subtotal' => 31234.56, 'margen' => 4530.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-18', 'id' => 'MP21045', 'razon' => 'Distribuidora Zeta',      'subtotal' =>  7654.32, 'margen' => 1710.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-05', 'id' => 'MP20943', 'razon' => 'Global Innovators',       'subtotal' => 16789.01, 'margen' => 2980.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-20', 'id' => 'MP21050', 'razon' => 'Alpha Solutions',         'subtotal' => 14500.00, 'margen' => 2750.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-22', 'id' => 'MP20995', 'razon' => 'Beta Enterprises',        'subtotal' =>  9800.00, 'margen' => 1950.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-18', 'id' => 'MP20920', 'razon' => 'Gamma Corp.',             'subtotal' => 32000.00, 'margen' => 4800.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-25', 'id' => 'MP21060', 'razon' => 'Delta Innovations',       'subtotal' => 12000.00, 'margen' => 2200.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-28', 'id' => 'MP21000', 'razon' => 'Epsilon Group',           'subtotal' =>  8700.00, 'margen' => 1830.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-12', 'id' => 'MP20890', 'razon' => 'Zeta Solutions',          'subtotal' => 25000.00, 'margen' => 4000.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-22', 'id' => 'MP21055', 'razon' => 'Omega Enterprises',       'subtotal' => 13500.00, 'margen' => 2600.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-15', 'id' => 'MP20970', 'razon' => 'Sigma Tech',              'subtotal' =>  9400.00, 'margen' => 1950.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-08', 'id' => 'MP20885', 'razon' => 'Lambda Corp.',            'subtotal' => 31000.00, 'margen' => 4600.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-28', 'id' => 'MP21070', 'razon' => 'Theta Innovations',       'subtotal' => 11000.00, 'margen' => 2000.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-18', 'id' => 'MP20985', 'razon' => 'Iota Enterprises',        'subtotal' =>  8900.00, 'margen' => 1920.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-22', 'id' => 'MP20930', 'razon' => 'Kappa Solutions',         'subtotal' => 27000.00, 'margen' => 4200.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-30', 'id' => 'MP21080', 'razon' => 'Lambda Innovations',      'subtotal' => 14000.00, 'margen' => 2650.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-25', 'id' => 'MP20998', 'razon' => 'Mu Enterprises',          'subtotal' =>  9200.00, 'margen' => 1850.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-28', 'id' => 'MP20945', 'razon' => 'Nu Corp.',                'subtotal' => 29000.00, 'margen' => 4500.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-18', 'id' => 'MP21048', 'razon' => 'Xi Solutions',            'subtotal' => 12500.00, 'margen' => 2350.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-12', 'id' => 'MP20968', 'razon' => 'Omicron Group',           'subtotal' =>  8800.00, 'margen' => 1870.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-15', 'id' => 'MP20908', 'razon' => 'Pi Enterprises',          'subtotal' => 26000.00, 'margen' => 4300.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-10', 'id' => 'MP20954', 'razon' => 'Tech Solutions MX', 'subtotal' => 9876.54, 'margen' => 2100.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-05', 'id' => 'MP20877', 'razon' => 'Comercial Delta', 'subtotal' => 31234.56, 'margen' => 4530.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-18', 'id' => 'MP21045', 'razon' => 'Distribuidora Zeta', 'subtotal' => 7654.32, 'margen' => 1710.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-05', 'id' => 'MP20943', 'razon' => 'Global Innovators', 'subtotal' => 16789.01, 'margen' => 2980.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-20', 'id' => 'MP21050', 'razon' => 'Alpha Solutions', 'subtotal' => 14500.00, 'margen' => 2750.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-22', 'id' => 'MP20995', 'razon' => 'Beta Enterprises', 'subtotal' => 9800.00, 'margen' => 1950.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-18', 'id' => 'MP20920', 'razon' => 'Gamma Corp.', 'subtotal' => 32000.00, 'margen' => 4800.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-25', 'id' => 'MP21060', 'razon' => 'Delta Innovations', 'subtotal' => 12000.00, 'margen' => 2200.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-28', 'id' => 'MP21000', 'razon' => 'Epsilon Group', 'subtotal' => 8700.00, 'margen' => 1830.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-12', 'id' => 'MP20890', 'razon' => 'Zeta Solutions', 'subtotal' => 25000.00, 'margen' => 4000.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-22', 'id' => 'MP21055', 'razon' => 'Omega Enterprises', 'subtotal' => 13500.00, 'margen' => 2600.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-15', 'id' => 'MP20970', 'razon' => 'Sigma Tech', 'subtotal' => 9400.00, 'margen' => 1950.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-08', 'id' => 'MP20885', 'razon' => 'Lambda Corp.', 'subtotal' => 31000.00, 'margen' => 4600.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-28', 'id' => 'MP21070', 'razon' => 'Theta Innovations', 'subtotal' => 11000.00, 'margen' => 2000.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-18', 'id' => 'MP20985', 'razon' => 'Iota Enterprises', 'subtotal' => 8900.00, 'margen' => 1920.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-22', 'id' => 'MP20930', 'razon' => 'Kappa Solutions', 'subtotal' => 27000.00, 'margen' => 4200.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-30', 'id' => 'MP21080', 'razon' => 'Lambda Innovations', 'subtotal' => 14000.00, 'margen' => 2650.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-25', 'id' => 'MP20998', 'razon' => 'Mu Enterprises', 'subtotal' => 9200.00, 'margen' => 1850.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-28', 'id' => 'MP20945', 'razon' => 'Nu Corp.', 'subtotal' => 29000.00, 'margen' => 4500.00, 'factor' => 35.4],
+            ['fecha' => '2025-04-18', 'id' => 'MP21048', 'razon' => 'Xi Solutions', 'subtotal' => 12500.00, 'margen' => 2350.00, 'factor' => 35.4],
+            ['fecha' => '2025-03-12', 'id' => 'MP20968', 'razon' => 'Omicron Group', 'subtotal' => 8800.00, 'margen' => 1870.00, 'factor' => 35.4],
+            ['fecha' => '2025-02-15', 'id' => 'MP20908', 'razon' => 'Pi Enterprises', 'subtotal' => 26000.00, 'margen' => 4300.00, 'factor' => 35.4],
         ]);
 
-        $vendedores     = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos
-        $metodos_pago   = MetodoPago::pluck('nombre', 'id_metodo_pago');
-        $formas_pago    = FormaPago::pluck('nombre', 'id_forma_pago');
-        $usos_cfdi      = UsoCfdi::pluck('nombre', 'id_uso_cfdi');
-        $ciudades       = Ciudad::pluck('nombre', 'id_ciudad');
-        $estados        = Estado::pluck('nombre', 'id_estado');
+        $vendedores = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos
+        $metodos_pago = MetodoPago::pluck('nombre', 'id_metodo_pago');
+        $formas_pago = FormaPago::pluck('nombre', 'id_forma_pago');
+        $usos_cfdi = UsoCfdi::pluck('nombre', 'id_uso_cfdi');
+        $ciudades = Ciudad::pluck('nombre', 'id_ciudad');
+        $estados = Estado::pluck('nombre', 'id_estado');
         $paises = [
             '1' => 'México',
             '2' => 'Estados Unidos',
@@ -232,14 +240,32 @@ class ClienteController extends Controller
             '2' => 'gobierno',
             '3' => 'persona',
         ];
-        //Navegación entre clientes/cuentas eje
-        $prevId = Cliente::where('id_cliente', '<', $cliente->id_cliente)
-            ->orderByDesc('id_cliente')
-            ->value('id_cliente');   // devuelve null si no hay anterior
+        // Navegación entre clientes/cuentas eje
+        if (auth()->user()->hasRole('Ejecutivo')) {
+            // Solo navegar si el cliente pertenece al ejecutivo autenticado
+            if ($cliente->id_vendedor == auth()->user()->id_usuario) {
+                $prevId = Cliente::where('id_vendedor', auth()->user()->id_usuario)
+                    ->where('id_cliente', '<', $cliente->id_cliente)
+                    ->orderByDesc('id_cliente')
+                    ->value('id_cliente');
 
-        $nextId = Cliente::where('id_cliente', '>', $cliente->id_cliente)
-            ->orderBy('id_cliente')
-            ->value('id_cliente');   // devuelve null si no hay siguiente
+                $nextId = Cliente::where('id_vendedor', auth()->user()->id_usuario)
+                    ->where('id_cliente', '>', $cliente->id_cliente)
+                    ->orderBy('id_cliente')
+                    ->value('id_cliente');
+            } else {
+                $prevId = null;
+                $nextId = null;
+            }
+        } else {
+            $prevId = Cliente::where('id_cliente', '<', $cliente->id_cliente)
+                ->orderByDesc('id_cliente')
+                ->value('id_cliente');
+
+            $nextId = Cliente::where('id_cliente', '>', $cliente->id_cliente)
+                ->orderBy('id_cliente')
+                ->value('id_cliente');
+        }
 
         $usuario = auth()->user();
 
@@ -289,27 +315,27 @@ class ClienteController extends Controller
 
             // ── Reglas base ──────────────────────────────────────────────────────────
             $rules = [
-                'estatus'     => 'nullable|string|max:100',
+                'estatus' => 'nullable|string|max:100',
                 'ciclo_venta' => 'nullable|string|max:100',
-                'tipo'        => 'nullable|string|max:100',
-                'nombre'      => 'nullable|string|max:60',
+                'tipo' => 'nullable|string|max:100',
+                'nombre' => 'nullable|string|max:60',
                 'id_vendedor' => 'nullable|integer',
-                'sector'      => 'nullable|string|max:100',
-                'segmento'    => 'nullable|string|max:100',
+                'sector' => 'nullable|string|max:100',
+                'segmento' => 'nullable|string|max:100',
 
-                'contacto.0.nombre'      => 'nullable|string|max:60',
-                'contacto.0.apellido_p'  => 'nullable|string|max:27',
-                'contacto.0.apellido_m'  => 'nullable|string|max:27',
-                'contacto.0.email'       => 'nullable|email|max:120',
-                'contacto.0.puesto'      => 'nullable|string|max:60',
-                'contacto.0.genero'      => 'nullable|string|max:17',
+                'contacto.0.nombre' => 'nullable|string|max:60',
+                'contacto.0.apellido_p' => 'nullable|string|max:27',
+                'contacto.0.apellido_m' => 'nullable|string|max:27',
+                'contacto.0.email' => 'nullable|email|max:120',
+                'contacto.0.puesto' => 'nullable|string|max:60',
+                'contacto.0.genero' => 'nullable|string|max:17',
             ];
 
             // ── Teléfonos / Extensiones / Celulares (1‒5) ───────────────────────────
             for ($i = 1; $i <= 5; $i++) {
                 $rules["contacto.0.telefono{$i}"] = 'nullable|digits:10';
-                $rules["contacto.0.celular{$i}"]  = 'nullable|digits:10';
-                $rules["contacto.0.ext{$i}"]      = 'nullable|digits_between:1,7';
+                $rules["contacto.0.celular{$i}"] = 'nullable|digits:10';
+                $rules["contacto.0.ext{$i}"] = 'nullable|digits_between:1,7';
             }
 
             // ── Validamos ───────────────────────────────────────────────────────────
@@ -320,37 +346,37 @@ class ClienteController extends Controller
             try {
                 $cliente = Cliente::findOrFail($id);
                 $cliente->update([
-                    'estatus'       => $data['estatus'],
-                    'nombre'        => $data['nombre'],
-                    'ciclo_venta'   => $data['ciclo_venta'],
-                    'tipo'          => $data['tipo'],
-                    'id_vendedor'   => $data['id_vendedor'],
-                    'sector'        => $data['sector'],
-                    'segmento'      => $data['segmento'],
+                    'estatus' => $data['estatus'],
+                    'nombre' => $data['nombre'],
+                    'ciclo_venta' => $data['ciclo_venta'],
+                    'tipo' => $data['tipo'],
+                    'id_vendedor' => $data['id_vendedor'],
+                    'sector' => $data['sector'],
+                    'segmento' => $data['segmento'],
                 ]);
 
                 // Actualizar el contacto principal
 
                 $contacto = Contacto::updateOrCreate(
                     [
-                        'id_cliente'     => $cliente->id_cliente,
+                        'id_cliente' => $cliente->id_cliente,
                         'predeterminado' => 1
                     ],
                     [ // ➊ datos “de cabecera”
-                        'nombre'      => $data['contacto'][0]['nombre']  ?? null,
-                        'apellido_p'  => $data['contacto'][0]['apellido_p'] ?? null,
-                        'apellido_m'  => $data['contacto'][0]['apellido_m'] ?? null,
-                        'email'       => $data['contacto'][0]['email'] ?? null,
-                        'puesto'      => $data['contacto'][0]['puesto'] ?? null,
-                        'genero'      => $data['contacto'][0]['genero'] ?? null,
+                        'nombre' => $data['contacto'][0]['nombre'] ?? null,
+                        'apellido_p' => $data['contacto'][0]['apellido_p'] ?? null,
+                        'apellido_m' => $data['contacto'][0]['apellido_m'] ?? null,
+                        'email' => $data['contacto'][0]['email'] ?? null,
+                        'puesto' => $data['contacto'][0]['puesto'] ?? null,
+                        'genero' => $data['contacto'][0]['genero'] ?? null,
                     ]
                 );
 
                 // ➋ teléfonos / extensiones
                 for ($i = 1; $i <= 5; $i++) {
                     $contacto->{"telefono$i"} = digits_only($data['contacto'][0]["telefono$i"] ?? null);
-                    $contacto->{"ext$i"}      = digits_only($data['contacto'][0]["ext$i"]      ?? null);
-                    $contacto->{"celular$i"}  = digits_only($data['contacto'][0]["celular$i"]  ?? null);
+                    $contacto->{"ext$i"} = digits_only($data['contacto'][0]["ext$i"] ?? null);
+                    $contacto->{"celular$i"} = digits_only($data['contacto'][0]["celular$i"] ?? null);
                 }
                 $contacto->save();
 
@@ -391,41 +417,41 @@ class ClienteController extends Controller
             ]);
 
             $rules = [
-                'nombre'        => 'required|string|max:60',
-                'apellido_p'    => 'required|string|max:27',
-                'apellido_m'    => 'nullable|string|max:27',
-                'id_vendedor'   => 'nullable|integer',
+                'nombre' => 'required|string|max:60',
+                'apellido_p' => 'required|string|max:27',
+                'apellido_m' => 'nullable|string|max:27',
+                'id_vendedor' => 'nullable|integer',
 
-                'ciclo_venta'   => 'nullable|string|max:100',
-                'estatus'       => 'required|string|max:100',
-                'tipo'          => 'nullable|string|max:100',
-                'sector'        => 'nullable|string|max:100',
+                'ciclo_venta' => 'nullable|string|max:100',
+                'estatus' => 'required|string|max:100',
+                'tipo' => 'nullable|string|max:100',
+                'sector' => 'nullable|string|max:100',
 
                 // Datos personales …
-                'email'                  => 'nullable|email|max:120',
-                'segmento'               => 'nullable|string|max:100',
-                'genero'                 => 'nullable|string|max:17',
+                'email' => 'nullable|email|max:120',
+                'segmento' => 'nullable|string|max:100',
+                'genero' => 'nullable|string|max:17',
             ];
             // ── Teléfonos / Extensiones / Celulares (1‒5) ───────────────────────────
             for ($i = 1; $i <= 5; $i++) {
                 $rules["contacto.0.telefono{$i}"] = 'nullable|digits:10';
-                $rules["contacto.0.celular{$i}"]  = 'nullable|digits:10';
-                $rules["contacto.0.ext{$i}"]      = 'nullable|digits_between:1,7';
+                $rules["contacto.0.celular{$i}"] = 'nullable|digits:10';
+                $rules["contacto.0.ext{$i}"] = 'nullable|digits_between:1,7';
             }
             $request->validate($rules);
             // Actualizar el cliente en la BD
             try {
                 $cliente = Cliente::findOrFail($id);
                 $cliente->update([
-                    'nombre'        => $request->input('nombre'),
-                    'apellido_p'    => $request->input('apellido_p'),
-                    'apellido_m'    => $request->input('apellido_m'),
-                    'ciclo_venta'   => $request->input('ciclo_venta'),
-                    'estatus'       => $request->input('estatus'),
-                    'tipo'          => $request->input('tipo'),
-                    'sector'        => $request->input('sector'),
-                    'segmento'      => $request->input('segmento'),
-                    'id_vendedor'   => $request->filled('id_vendedor')
+                    'nombre' => $request->input('nombre'),
+                    'apellido_p' => $request->input('apellido_p'),
+                    'apellido_m' => $request->input('apellido_m'),
+                    'ciclo_venta' => $request->input('ciclo_venta'),
+                    'estatus' => $request->input('estatus'),
+                    'tipo' => $request->input('tipo'),
+                    'sector' => $request->input('sector'),
+                    'segmento' => $request->input('segmento'),
+                    'id_vendedor' => $request->filled('id_vendedor')
                         ? $request->input('id_vendedor')
                         : null,
                 ]);
@@ -433,24 +459,24 @@ class ClienteController extends Controller
                 // Actualizar el contacto principal
                 $contacto = Contacto::updateOrCreate(
                     [
-                        'id_cliente'     => $cliente->id_cliente,
+                        'id_cliente' => $cliente->id_cliente,
                         'predeterminado' => 1
                     ],
                     [
-                        'nombre'      => $request->input('nombre'),
-                        'apellido_p'  => $request->input('apellido_p'),
-                        'apellido_m'  => $request->input('apellido_m'),
-                        'email'       => $request->input('email'),
-                        'puesto'      => null, // Cuentas personales no manejan puesto
-                        'genero'      => $request->input('genero'),
+                        'nombre' => $request->input('nombre'),
+                        'apellido_p' => $request->input('apellido_p'),
+                        'apellido_m' => $request->input('apellido_m'),
+                        'email' => $request->input('email'),
+                        'puesto' => null, // Cuentas personales no manejan puesto
+                        'genero' => $request->input('genero'),
                     ]
                 );
 
                 // ➋ teléfonos / extensiones
                 for ($i = 1; $i <= 5; $i++) {
                     $contacto->{"telefono$i"} = digits_only($request->input("contacto.0.telefono$i"));
-                    $contacto->{"ext$i"}      = digits_only($request->input("contacto.0.ext$i"));
-                    $contacto->{"celular$i"}  = digits_only($request->input("contacto.0.celular$i"));
+                    $contacto->{"ext$i"} = digits_only($request->input("contacto.0.ext$i"));
+                    $contacto->{"celular$i"} = digits_only($request->input("contacto.0.celular$i"));
                 }
                 $contacto->save();
 
@@ -502,40 +528,42 @@ class ClienteController extends Controller
         if ($request->input('sector') == 'persona') { // SI ES FISICA
             $rules = [
                 /* === Cuenta Personal === */
-                'nombre'        => 'required|string|max:60',
-                'apellido_p'    => 'required|string|max:27',
-                'apellido_m'    => 'nullable|string|max:27',
-                'id_vendedor'   => 'required|integer',
+                'nombre' => 'required|string|max:60',
+                'apellido_p' => 'required|string|max:27',
+                'apellido_m' => 'nullable|string|max:27',
+                'id_vendedor' => 'nullable|integer|exists:usuarios,id_usuario',
 
-                'ciclo_venta'   => 'nullable|string|max:100',
-                'estatus'       => 'required|string|max:100',
-                'tipo'          => 'required|string|max:100',
-                'sector'        => 'nullable|string|max:100',
+                'ciclo_venta' => 'nullable|string|max:100',
+                'estatus' => 'required|string|max:100',
+                'tipo' => 'required|string|max:100',
+                'sector' => 'nullable|string|max:100',
 
                 // Datos personales …
-                'email'                  => 'nullable|email|max:120',
-                'segmento'               => 'nullable|string|max:100',
-                'genero'                 => 'nullable|string|max:17',
-                'contacto.0.telefono*'   => 'nullable|digits:10',
-                'contacto.0.celular*'    => 'nullable|digits:10',
-                'contacto.0.ext*'        => 'nullable|digits_between:1,6',
+                'email' => 'nullable|email|max:120',
+                'segmento' => 'nullable|string|max:100',
+                'genero' => 'nullable|string|max:17',
+                'contacto.0.telefono*' => 'nullable|digits:10',
+                'contacto.0.celular*' => 'nullable|digits:10',
+                'contacto.0.ext*' => 'nullable|digits_between:1,6',
             ];
             $request->validate($rules);
 
+            $datos = $request->all();
+            $datos['id_vendedor'] = $request->filled('id_vendedor') ? (int) $request->input('id_vendedor') : null;
 
             // Guardar en la base de datos
             try {
                 // GUARDAR CUENTA EJE PERSONAL
                 $cliente = Cliente::create([
-                    'nombre'      => $request->input('nombre'),
-                    'apellido_p'  => $request->input('apellido_p'),
-                    'apellido_m'  => $request->input('apellido_m'),
+                    'nombre' => $request->input('nombre'),
+                    'apellido_p' => $request->input('apellido_p'),
+                    'apellido_m' => $request->input('apellido_m'),
                     'ciclo_venta' => $request->input('ciclo_venta'),
-                    'estatus'     => $request->input('estatus'),
-                    'tipo'        => $request->input('tipo'),
-                    'sector'      => $request->input('sector'),
-                    'segmento'    => $request->input('segmento'),
-                    'id_vendedor' => $request->filled('id_vendedor')
+                    'estatus' => $request->input('estatus'),
+                    'tipo' => $request->input('tipo'),
+                    'sector' => $request->input('sector'),
+                    'segmento' => $request->input('segmento'),
+                    'id_vendedor' => $datos['id_vendedor']
                         ? $request->input('id_vendedor')
                         : null,
                 ]);
@@ -547,42 +575,42 @@ class ClienteController extends Controller
                 // Normaliza phones/exts
                 foreach (range(1, 5) as $n) {
                     $contacto["telefono$n"] = digits_only($contacto["telefono$n"] ?? null);
-                    $contacto["celular$n"]  = digits_only($contacto["celular$n"]  ?? null);
-                    $contacto["ext$n"]      = digits_only($contacto["ext$n"]      ?? null);
+                    $contacto["celular$n"] = digits_only($contacto["celular$n"] ?? null);
+                    $contacto["ext$n"] = digits_only($contacto["ext$n"] ?? null);
                 }
 
                 Contacto::create([
-                    'id_cliente'  => $cliente->id_cliente,
-                    'nombre'      => $request->input('nombre'),
-                    'apellido_p'  => $request->input('apellido_p'),
-                    'apellido_m'  => $request->input('apellido_m'),
-                    'email'       => $request->input('email'),
-                    'genero'      => $request->input('genero'),
-                    'puesto'      => null, // o define si vendrá después
+                    'id_cliente' => $cliente->id_cliente,
+                    'nombre' => $request->input('nombre'),
+                    'apellido_p' => $request->input('apellido_p'),
+                    'apellido_m' => $request->input('apellido_m'),
+                    'email' => $request->input('email'),
+                    'genero' => $request->input('genero'),
+                    'puesto' => null, // o define si vendrá después
 
-                    'telefono1'   => $contacto['telefono1'] ?? null,
-                    'ext1'        => $contacto['ext1']      ?? null,
-                    'telefono2'   => $contacto['telefono2'] ?? null,
-                    'ext2'        => $contacto['ext2']      ?? null,
-                    'telefono3'   => $contacto['telefono3'] ?? null,
-                    'ext3'        => $contacto['ext3']      ?? null,
-                    'telefono4'   => $contacto['telefono4'] ?? null,
-                    'ext4'        => $contacto['ext4']      ?? null,
-                    'telefono5'   => $contacto['telefono5'] ?? null,
-                    'ext5'        => $contacto['ext5']      ?? null,
+                    'telefono1' => $contacto['telefono1'] ?? null,
+                    'ext1' => $contacto['ext1'] ?? null,
+                    'telefono2' => $contacto['telefono2'] ?? null,
+                    'ext2' => $contacto['ext2'] ?? null,
+                    'telefono3' => $contacto['telefono3'] ?? null,
+                    'ext3' => $contacto['ext3'] ?? null,
+                    'telefono4' => $contacto['telefono4'] ?? null,
+                    'ext4' => $contacto['ext4'] ?? null,
+                    'telefono5' => $contacto['telefono5'] ?? null,
+                    'ext5' => $contacto['ext5'] ?? null,
 
-                    'celular1'    => $contacto['celular1']  ?? null,
-                    'celular2'    => $contacto['celular2']  ?? null,
-                    'celular3'    => $contacto['celular3']  ?? null,
-                    'celular4'    => $contacto['celular4']  ?? null,
-                    'celular5'    => $contacto['celular5']  ?? null,
+                    'celular1' => $contacto['celular1'] ?? null,
+                    'celular2' => $contacto['celular2'] ?? null,
+                    'celular3' => $contacto['celular3'] ?? null,
+                    'celular4' => $contacto['celular4'] ?? null,
+                    'celular5' => $contacto['celular5'] ?? null,
 
                     'predeterminado' => 1,
                 ]);
 
 
                 //registrarNota es una función Helper, está definida en app/Helpers/
-                $mensaje = "El usuario " . auth()->user()->nombre_completo .
+                $mensaje = "El usuario " . auth()->user()->NombreCompleto .
                     " ha creado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
 
                 registrarNota(
@@ -601,24 +629,24 @@ class ClienteController extends Controller
         {
             $rules = [
                 /* -------- Cuenta -------- */
-                'nombre'      => ['required', 'string', 'max:100'],
-                'sector'      => ['required', 'string', 'max:100'],
-                'segmento'    => ['required', 'string', 'max:100'],
-                'id_vendedor' => ['required', 'integer'],
+                'nombre' => ['required', 'string', 'max:100'],
+                'sector' => ['required', 'string', 'max:100'],
+                'segmento' => ['required', 'string', 'max:100'],
+                'id_vendedor' => ['nullable', 'integer', 'exists:usuarios,id_usuario'],
 
                 /* -------- Contacto(s) ---- */
-                'contacto.*.nombre'      => ['nullable', 'string', 'max:60'],
-                'contacto.*.apellido_p'  => ['nullable', 'string', 'max:27'],
-                'contacto.*.apellido_m'  => ['nullable', 'string', 'max:27'],
-                'contacto.*.email'       => ['nullable', 'email', 'max:120'],
-                'contacto.*.puesto'      => ['nullable', 'string', 'max:60'],
+                'contacto.*.nombre' => ['nullable', 'string', 'max:60'],
+                'contacto.*.apellido_p' => ['nullable', 'string', 'max:27'],
+                'contacto.*.apellido_m' => ['nullable', 'string', 'max:27'],
+                'contacto.*.email' => ['nullable', 'email', 'max:120'],
+                'contacto.*.puesto' => ['nullable', 'string', 'max:60'],
 
                 // Teléfonos / celulares  –  10 dígitos exactos o nulo
-                'contacto.*.telefono*'   => ['nullable', 'string'],
-                'contacto.*.celular*'    => ['nullable', 'string'],
+                'contacto.*.telefono*' => ['nullable', 'string'],
+                'contacto.*.celular*' => ['nullable', 'string'],
 
                 // Extensiones 1-6 dígitos
-                'contacto.*.ext*'        => ['nullable', 'regex:/^\d{1,7}$/'],
+                'contacto.*.ext*' => ['nullable', 'regex:/^\d{1,7}$/'],
             ];
             $request->validate($rules);
 
@@ -630,12 +658,12 @@ class ClienteController extends Controller
             try {
                 // GUARDAR CUENTA EJE EMPRESARIAL
                 $cliente = Cliente::create([
-                    'nombre'      => $request->input('nombre'),
+                    'nombre' => $request->input('nombre'),
                     'ciclo_venta' => $request->input('ciclo_venta'),
-                    'estatus'     => $request->input('estatus'),
-                    'tipo'        => $request->input('tipo'),
-                    'sector'      => $request->input('sector'),
-                    'segmento'    => $request->input('segmento'),
+                    'estatus' => $request->input('estatus'),
+                    'tipo' => $request->input('tipo'),
+                    'sector' => $request->input('sector'),
+                    'segmento' => $request->input('segmento'),
                     'id_vendedor' => $request->filled('id_vendedor')
                         ? $request->input('id_vendedor')
                         : null,
@@ -645,40 +673,41 @@ class ClienteController extends Controller
                 $contactos = $request->input('contacto', []);  // trae un array de arrays: [ 0 => [...], 1 => [...], ... ]
                 if (count($contactos) > 0) {
                     foreach ($contactos as $cont) {
-                        if (empty($cont['nombre'])) continue;        // ficha vacía
+                        if (empty($cont['nombre']))
+                            continue;        // ficha vacía
 
                         // Normaliza phones/exts
                         foreach (range(1, 5) as $n) {
                             $cont["telefono$n"] = digits_only($cont["telefono$n"] ?? null);
-                            $cont["celular$n"]  = digits_only($cont["celular$n"]  ?? null);
-                            $cont["ext$n"]      = digits_only($cont["ext$n"]      ?? null);
+                            $cont["celular$n"] = digits_only($cont["celular$n"] ?? null);
+                            $cont["ext$n"] = digits_only($cont["ext$n"] ?? null);
                         }
 
                         Contacto::create([
                             'id_cliente' => $cliente->id_cliente,
-                            'nombre'     => $cont['nombre'],
+                            'nombre' => $cont['nombre'],
                             'apellido_p' => $cont['apellido_p'] ?? null,
                             'apellido_m' => $cont['apellido_m'] ?? null,
-                            'email'      => $cont['email']      ?? null,
-                            'puesto'     => $cont['puesto']     ?? null,
-                            'genero'     => $cont['genero']     ?? null,
+                            'email' => $cont['email'] ?? null,
+                            'puesto' => $cont['puesto'] ?? null,
+                            'genero' => $cont['genero'] ?? null,
 
                             // teléfono/ext celular limpias
-                            'telefono1'  => $cont['telefono1'],
+                            'telefono1' => $cont['telefono1'],
                             'ext1' => $cont['ext1'],
-                            'telefono2'  => $cont['telefono2'],
+                            'telefono2' => $cont['telefono2'],
                             'ext2' => $cont['ext2'],
-                            'telefono3'  => $cont['telefono3'],
+                            'telefono3' => $cont['telefono3'],
                             'ext3' => $cont['ext3'],
-                            'telefono4'  => $cont['telefono4'],
+                            'telefono4' => $cont['telefono4'],
                             'ext4' => $cont['ext4'],
-                            'telefono5'  => $cont['telefono5'],
+                            'telefono5' => $cont['telefono5'],
                             'ext5' => $cont['ext5'],
-                            'celular1'   => $cont['celular1'],   // …igual 1-5
-                            'celular2'   => $cont['celular2'],
-                            'celular3'   => $cont['celular3'],
-                            'celular4'   => $cont['celular4'],
-                            'celular5'   => $cont['celular5'],
+                            'celular1' => $cont['celular1'],   // …igual 1-5
+                            'celular2' => $cont['celular2'],
+                            'celular3' => $cont['celular3'],
+                            'celular4' => $cont['celular4'],
+                            'celular5' => $cont['celular5'],
 
                             'predeterminado' => 1, // solo el primer contacto, quitar si este formulario va a soportar muchos contactos iniciales.
                         ]);
@@ -839,9 +868,9 @@ class ClienteController extends Controller
 
         // Valor correcto de ID vendedor según el lado
         $idVendedor = match ($lado) {
-            'origen'  => $request->input('id_vendedor_origen'),
+            'origen' => $request->input('id_vendedor_origen'),
             'destino' => $request->input('id_vendedor_destino'),
-            default   => null,
+            default => null,
         };
 
         if ($idVendedor === 'base') {
@@ -877,26 +906,28 @@ class ClienteController extends Controller
      */
     public function transferStore(Request $request)
     {
-        $ids     = $request->input('clientes', []);
-        $origen  = $request->input('origen');
+        $ids = $request->input('clientes', []);
+        $origen = $request->input('origen');
         $destino = $request->input('destino');
 
         if (empty($ids)) {
             return back()->with('error', 'No se seleccionó ningún cliente.');
         }
 
-        $destinoId = ($destino === 'base' || $destino === null || $destino === '0') ? null : (int)$destino;
+        $destinoId = ($destino === 'base' || $destino === null || $destino === '0') ? null : (int) $destino;
 
         Cliente::whereIn('id_cliente', $ids)->update(['id_vendedor' => $destinoId]);
 
-        return redirect()->route('clientes.transfer')->with('success', count($ids) . ' cuentas traspasadas.');
+        return redirect()->route('clientes.transfer')
+            ->with('success', count($ids) . ' cuentas traspasadas.');
+
     }
     // Recalls
     public function recalls(Request $request)
     {
         $id_vendedor = $request->input('id_vendedor');
-        $busqueda    = $request->input('busqueda');
-        $perPage     = $request->input('ver', 50);
+        $busqueda = $request->input('busqueda');
+        $perPage = $request->input('ver', 50);
 
         $ejecutivos = Usuario::where('estatus', 'activo')
             ->get()
@@ -904,10 +935,15 @@ class ClienteController extends Controller
             ->pluck('nombre_completo', 'id_usuario');
 
         $query = Cliente::with(['primerContacto', 'vendedor'])
-            ->whereNotNull('recall');
+            ->whereNotNull('recall')
+            ->whereDate('recall', today());
 
         if ($id_vendedor) {
             $query->where('id_vendedor', $id_vendedor);
+        }
+
+        if (auth()->user()->hasRole('Ejecutivo')) {
+            $query->where('id_vendedor', auth()->user()->id_usuario);
         }
 
         if ($busqueda) {
@@ -915,8 +951,8 @@ class ClienteController extends Controller
                 $q->where('nombre', 'like', "%$busqueda%")
                     ->orWhere('id_cliente', 'like', "%$busqueda%")
                     ->orWhereHas('primerContacto', fn($q2) =>
-                    $q2->where('telefono1', 'like', "%$busqueda%")
-                        ->orWhere('email', 'like', "%$busqueda%"));
+                        $q2->where('telefono1', 'like', "%$busqueda%")
+                            ->orWhere('email', 'like', "%$busqueda%"));
             });
         }
 
@@ -924,6 +960,7 @@ class ClienteController extends Controller
 
         return view('clientes.recalls', compact('clientes', 'ejecutivos'));
     }
+
     public function archivadas(Request $request)
     {
         // 1) consulta base + relaciones
@@ -937,7 +974,7 @@ class ClienteController extends Controller
                 $q->where('nombre', 'like', "%{$term}%")
                     ->orWhere('id_cliente', 'like', "%{$term}%")
                     ->orWhereHas('primerContacto', fn($q2) =>
-                    $q2->where('telefono1', 'like', "%{$term}%"));
+                        $q2->where('telefono1', 'like', "%{$term}%"));
             });
         }
 
@@ -994,9 +1031,9 @@ class ClienteController extends Controller
         $vendedores = Usuario::whereNull('id_cliente')->get();
 
         // Los sacamos directo de la tabla para que no se “desincronicen”
-        $sectores   = Cliente::select('sector')->distinct()->pluck('sector');
-        $segmentos  = Cliente::select('segmento')->distinct()->pluck('segmento');
-        $ciclos     = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
+        $sectores = Cliente::select('sector')->distinct()->pluck('sector');
+        $segmentos = Cliente::select('segmento')->distinct()->pluck('segmento');
+        $ciclos = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
 
         return view('clientes.archivadas', compact(
             'clientes',
@@ -1013,7 +1050,8 @@ class ClienteController extends Controller
  */
 function digits_only(?string $v): ?string
 {
-    if ($v === null)   return null;
+    if ($v === null)
+        return null;
     $clean = preg_replace('/\D/', '', $v);
     return $clean === '' ? null : $clean;
 }

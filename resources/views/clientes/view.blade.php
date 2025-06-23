@@ -851,7 +851,7 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center" style="font-size: .85em;">
                                 <span class="text-muted">
-                                    Ejecutivo: <strong>{{ $nota->usuario->username ?? '—' }}</strong>
+                                    Ejecutivo: <strong>{{ $nota->usuario->NombreCompleto ?? '—' }}</strong>
                                 </span>
                                 @if ($nota->fecha_reprogramacion)
                                     <span class="text-primary">
@@ -875,12 +875,65 @@
                     <input type="hidden" name="es_automatico" value="0">
                     <input type="hidden" name="ciclo_venta" value="{{ $cliente->ciclo_venta }}">
 
-                    <div class="row">
-                        <div class="col col-20ch">
-                            <label>Volver a llamar</label>
-                            <input type="date" name="fecha_reprogramacion" class="form-control">
+                    <div class="row align-items-end g-2 mb-3">
+                        <div class="col-auto">
+                            <label class="form-label mb-1">Volver a llamar</label>
+                            <div class="d-flex align-items-center gap-2 flex-nowrap">
+                                <div style="min-width: 180px; max-width: 180px; position: relative;">
+                                    <input type="date" name="fecha_reprogramacion" class="form-control" id="fechaReprogramacion" style="width: 100;">
+                                    <span id="fechaReprogramacionTexto" class="form-text small text-muted position-absolute start-0 mt-1"
+                                        style="display: none; pointer-events: none; background: #fff; width: 100%; z-index: 2;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto d-flex align-items-end" style="padding-bottom: 2px;">
+                            <a href="{{ route('clientes.recalls') }}" class="btn btn-primary" style="min-width: 120px;">
+                                Mis Recall's
+                            </a>
                         </div>
                     </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const input = document.getElementById('fechaReprogramacion');
+                            const texto = document.getElementById('fechaReprogramacionTexto');
+                            const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+                            const meses = [
+                                'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                                'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+                            ];
+
+                            function mostrarTextoFecha(fechaStr) {
+                                if (!fechaStr) {
+                                    texto.style.display = 'none';
+                                    texto.textContent = '';
+                                    return;
+                                }
+                                // Ajuste de zona horaria para evitar desfase de día
+                                const partes = fechaStr.split('-');
+                                const fecha = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
+                                if (isNaN(fecha)) {
+                                    texto.style.display = 'none';
+                                    texto.textContent = '';
+                                    return;
+                                }
+                                const diaSemana = dias[fecha.getUTCDay()];
+                                const dia = fecha.getUTCDate();
+                                const mes = meses[fecha.getUTCMonth()];
+                                const anio = fecha.getUTCFullYear();
+                                texto.textContent = `${diaSemana}, ${dia} de ${mes} de ${anio}`;
+                                texto.style.display = '';
+                            }
+
+                            input.addEventListener('change', function () {
+                                mostrarTextoFecha(this.value);
+                            });
+
+                            // Si ya hay valor al cargar
+                            if (input.value) {
+                                mostrarTextoFecha(input.value);
+                            }
+                        });
+                    </script>
 
                     <div class="row">
                         <div class="col-md-12 form-group mt-3">

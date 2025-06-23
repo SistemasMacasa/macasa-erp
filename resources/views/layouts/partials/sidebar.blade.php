@@ -12,7 +12,7 @@
                 </li>
 
                 {{-- ═══ CRM ═══════════════════════════════════════════════════ --}}
-                @canany(['Nueva Cuenta', 'Mis Cuentas', 'Traspaso de Cuentas', 'Mis Recalls', 'Cuentas Archivadas'])
+                @canany(['Nueva Cuenta', 'Mis Cuentas', 'Traspaso de Cuenta', 'Mis Recalls', 'Cuentas Archivadas'])
                     <li>
                         <a href="javascript:void(0);" class="has-arrow">
                             <span class="icon icon-crm"></span>
@@ -32,7 +32,7 @@
                                 <li><a href="{{ route('clientes.index') }}">Mis Cuentas</a></li>
                             @endcan
 
-                            @can('Traspaso de Cuentas')
+                            @can('Traspaso de Cuenta')
                                 <li><a href="{{ route('clientes.transfer') }}">Traspaso de Cuentas</a></li>
                             @endcan
 
@@ -147,7 +147,7 @@
 
 
             <div class="card sidebar-alert border-0 text-center mx-4 mb-0 mt-5">
-                <div class="card-body">
+                <div class="card-body" style="background-color: var(--card-header-bg);">
                     <img src="{{ asset('assets/images/construction.png') }}" alt="En construcción" height="80">
                     <div class="mt-4">
                         <h5 class="alertcard-title font-size-16">¡SIS en desarrollo!</h5>

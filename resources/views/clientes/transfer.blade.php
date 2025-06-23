@@ -51,7 +51,7 @@
             {{-- Formulario de cuentas (origen) --}}
                 <form method="GET" action="{{ route('clientes.transfer') }}" class="col-md-5">
                     <input type="hidden" name="lado" value="origen">   
-                    <input type="hidden" name="id_vendedor_destino" value="{{ request('id_vendedor_destino') }}">
+                    <input type="hidden" name="id_vendedor_origen" value="{{ request('id_vendedor_origen') }}">
                  
                     <div class="card mb-4">
                         <div class="card-header">
@@ -631,22 +631,30 @@
                     form.appendChild(input);
                 });
 
+                if (!destino || destino === 'base') {
+                    alert("Selecciona un ejecutivo destino distinto de BASE GENERAL.");
+                    return;
+                }
+                if (origen === destino) {
+                    alert("El origen y destino deben ser distintos.");
+                    return;
+                }
+
+
                 new bootstrap.Modal(document.getElementById('confirmarModal')).show();
             }
 
+            const selOri = document.querySelector('select[name="id_vendedor_origen"]');
+            const selDes = document.querySelector('select[name="id_vendedor_destino"]');
+
             document.getElementById('btnAgregar')?.addEventListener('click', () => {
-                prepararTraspaso(
-                    '{{ request('id_vendedor_origen') }}',
-                    '{{ request('id_vendedor_destino') }}'
-                );
+                prepararTraspaso(selOri.value, selDes.value);  // origen → destino
             });
 
             document.getElementById('btnQuitar')?.addEventListener('click', () => {
-                prepararTraspaso(
-                    '{{ request('id_vendedor_destino') }}',
-                    '{{ request('id_vendedor_origen') }}'
-                );
+                prepararTraspaso(selDes.value, selOri.value);  // destino → origen
             });
+
 
             document.getElementById('btnConfirmarTraspaso')?.addEventListener('click', () => {
                 document.getElementById('formTraspaso').submit();
