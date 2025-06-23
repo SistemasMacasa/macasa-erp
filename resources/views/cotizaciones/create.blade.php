@@ -184,7 +184,7 @@
         <div class="card-body">
         </div>
     </div>
-</div>
+</div> <!-- End container-fluid -->
 
 
 <!-- Modal: Directorio de direcciones de facturación -->
@@ -401,66 +401,67 @@
   </div>
 </div>
 
+@push('scripts')
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('formNuevaRazonSocialFactura');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('formNuevaRazonSocialFactura');
 
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const datos = new FormData(form);
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            const datos = new FormData(form);
 
-    const resp = await fetch('{{ route('ajax.direccion.factura') }}', {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        'Accept': 'application/json'           // ← pide JSON de Laravel
-      },
-      body: datos
-    });
+            const resp = await fetch('{{ route('ajax.direccion.factura') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'           // ← pide JSON de Laravel
+            },
+            body: datos
+            });
 
-    if (!resp.ok) {
-      const contentType = resp.headers.get('Content-Type') || '';
-      if (contentType.includes('application/json')) {
-        const err = await resp.json();
-        console.error('Error JSON:', err);
-        alert('❌ ' + (err.error || JSON.stringify(err.errors) || 'Error al guardar'));
-      } else {
-        const text = await resp.text();
-        console.error('Error HTML:', text);
-        alert('❌ Error inesperado. Revisa consola.');
-      }
-      return;
-    }
+            if (!resp.ok) {
+            const contentType = resp.headers.get('Content-Type') || '';
+            if (contentType.includes('application/json')) {
+                const err = await resp.json();
+                console.error('Error JSON:', err);
+                alert('❌ ' + (err.error || JSON.stringify(err.errors) || 'Error al guardar'));
+            } else {
+                const text = await resp.text();
+                console.error('Error HTML:', text);
+                alert('❌ Error inesperado. Revisa consola.');
+            }
+            return;
+            }
 
-    const { razon_social: razon, direccion: dir } = await resp.json();
+            const { razon_social: razon, direccion: dir } = await resp.json();
 
-    // Cierra modal
-    bootstrap.Modal.getInstance(
-      document.getElementById('modalCrearDireccionFactura')
-    ).hide();
+            // Cierra modal
+            bootstrap.Modal.getInstance(
+            document.getElementById('modalCrearDireccionFactura')
+            ).hide();
 
-    // Rellena formulario principal
-    document.querySelector('[name="razon_social"]').value   = razon.nombre;
-    document.querySelector('[name="rfc"]').value            = razon.rfc;
-    document.querySelector('[name="uso_cfdi"]').value       = razon.id_uso_cfdi;
-    document.querySelector('[name="metodo_pago"]').value    = razon.id_metodo_pago;
-    document.querySelector('[name="forma_pago"]').value     = razon.id_forma_pago;
-    document.querySelector('[name="regimen_fiscal"]').value = razon.id_regimen_fiscal;
+            // Rellena formulario principal
+            document.querySelector('[name="razon_social"]').value   = razon.nombre;
+            document.querySelector('[name="rfc"]').value            = razon.rfc;
+            document.querySelector('[name="uso_cfdi"]').value       = razon.id_uso_cfdi;
+            document.querySelector('[name="metodo_pago"]').value    = razon.id_metodo_pago;
+            document.querySelector('[name="forma_pago"]').value     = razon.id_forma_pago;
+            document.querySelector('[name="regimen_fiscal"]').value = razon.id_regimen_fiscal;
 
-    document.querySelector('[name="calle"]').value    = dir.calle || '';
-    document.querySelector('[name="num_ext"]').value  = dir.num_ext || '';
-    document.querySelector('[name="num_int"]').value  = dir.num_int || '';
-    document.querySelector('[name="colonia"]').value  = dir.colonia || '';
-    document.querySelector('[name="cp"]').value       = dir.cp || '';
-    document.querySelector('[name="municipio"]').value= dir.municipio || '';
-    document.querySelector('[name="estado"]').value   = dir.estado || '';
-    document.querySelector('[name="pais"]').value     = dir.pais || 'MÉXICO';
-    document.querySelector('[name="notas"]').value    = dir.notas || '';
-  });
-});
-</script>
+            document.querySelector('[name="calle"]').value    = dir.calle || '';
+            document.querySelector('[name="num_ext"]').value  = dir.num_ext || '';
+            document.querySelector('[name="num_int"]').value  = dir.num_int || '';
+            document.querySelector('[name="colonia"]').value  = dir.colonia || '';
+            document.querySelector('[name="cp"]').value       = dir.cp || '';
+            document.querySelector('[name="municipio"]').value= dir.municipio || '';
+            document.querySelector('[name="estado"]').value   = dir.estado || '';
+            document.querySelector('[name="pais"]').value     = dir.pais || 'MÉXICO';
+            document.querySelector('[name="notas"]').value    = dir.notas || '';
+        });
+        });
+    </script>
 
-
+@endpush
 
 @endsection
