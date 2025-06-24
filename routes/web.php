@@ -66,6 +66,9 @@ Route::middleware(['auth', 'permission:Archivar Cuenta'])->group(callback: funct
 
     //Archivar y Borrar Cuenta
     Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name('clientes.delete');
+    //Archivar Cuenta desde clientes/trasnfer
+    Route::post('clientes/archive', [ClienteController::class, 'archive'])
+     ->name('clientes.archive');
 
 });
 
@@ -254,3 +257,4 @@ Route::middleware(['auth', 'permission:Eliminar Usuario'])->group(function () {
     Route::get('/usuarios/delete', [UsuarioController::class, 'delete'])->name('usuarios.delete');
 
 });
+

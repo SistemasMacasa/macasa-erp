@@ -864,7 +864,8 @@ class ClienteController extends Controller
         $vendedores = Usuario::whereNull('id_cliente')->get();
 
         $lado = $request->input('lado'); // 'origen' o 'destino'
-        $query = Cliente::with(['primerContacto', 'vendedor']);
+        $query = Cliente::with(['primerContacto', 'vendedor'])
+                    ->where('estatus', 'activo');
 
         // Valor correcto de ID vendedor según el lado
         $idVendedor = match ($lado) {
@@ -922,6 +923,24 @@ class ClienteController extends Controller
             ->with('success', count($ids) . ' cuentas traspasadas.');
 
     }
+    //Archivado de Cuentas de Clientes desde Traspaso de Cuentas
+    public function archive(Request $request)
+    {
+        $ids = $request->input('selected_clients', []);
+        if (empty($ids)) {
+            return redirect()
+                ->route('clientes.transfer', $request->query())
+                ->with('warning', 'No seleccionaste ninguna cuenta.');
+        }
+
+        Cliente::whereIn('id_cliente', $ids)
+            ->update(['estatus' => 'inactivo']);
+
+        return redirect()
+            ->route('clientes.transfer', $request->query())
+            ->with('success', 'Cuentas archivadas correctamente.');
+    }
+
     // Recalls
     public function recalls(Request $request)
     {
