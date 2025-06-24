@@ -11,6 +11,7 @@ use App\Models\MetodoPago;
 use App\Models\FormaPago;
 use App\Models\RegimenFiscal;
 use App\Models\RazonSocial;
+use App\Models\Pais;
 
 
 class CotizacionController extends Controller
@@ -46,6 +47,10 @@ class CotizacionController extends Controller
             ->where('tipo', 'entrega')
             ->orderBy('id_cliente')
             ->get();
+        
+        $paises = Pais::whereIn('nombre', ['México', 'Estados Unidos', 'Canadá'])
+              ->orderByRaw("FIELD(nombre, 'México', 'Estados Unidos', 'Canadá')")
+              ->get();
 
         return view('cotizaciones.create', 
                     compact(
@@ -57,7 +62,8 @@ class CotizacionController extends Controller
                                   'direcciones_facturacion', 
                                   'direcciones_entrega', 
                                   'direccion_facturacion', 
-                                  'direccion_entrega'
+                                  'direccion_entrega',
+                                  'paises'
                                 ));
     }
     public function storeRazonSocialFactura(Request $request)
@@ -80,7 +86,7 @@ class CotizacionController extends Controller
                 'cp'                   => 'nullable|string|max:10',
                 'municipio'            => 'nullable|string|max:100',
                 'estado'               => 'nullable|string|max:100',
-                'pais'                 => 'nullable|string|max:100',
+                'pais'                 => 'nullable|integer|max:100',
                 'notas'                => 'nullable|string|max:255',
             ]);
 
@@ -95,9 +101,9 @@ class CotizacionController extends Controller
                     'num_int'    => $data['num_int'] ?? null,
                     'colonia'    => $data['colonia'] ?? null,
                     'cp'         => $data['cp'] ?? null,
-                    'municipio'  => $data['municipio'] ?? null,
+                    'id_ciudad'  => $data['municipio'] ?? null,
                     'estado'     => $data['estado'] ?? null,
-                    'pais'       => $data['pais'] ?? 'MÉXICO',
+                    'id_pais'    => $data['pais'] ?? 'MÉXICO',
                     'notas'      => $data['notas'] ?? null,
                 ]);
 
