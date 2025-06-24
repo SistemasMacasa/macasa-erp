@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             PermissionsTableSeeder::class,
             RolesTableSeeder::class,
             RolePermissionSeeder::class, // Este será el que asigne los permisos a cada rol
+            EstadosFromColoniasSeeder::class,
         ]);
     }
 }
