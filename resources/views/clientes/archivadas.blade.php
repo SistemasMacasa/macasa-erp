@@ -7,7 +7,7 @@
         {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
-        <li class="breadcrumb-item active">Mis Cuentas</li>
+        <li class="breadcrumb-item active">Cuentas Archivadas</li>
     @endsection
 
     <h2 class="mb-3 text-titulo">Cuentas Archivadas</h2>
@@ -30,7 +30,7 @@
     </div>
 
     {{-- 🔎 Buscador --}}
-    <form method="GET" action="{{ route('clientes.index') }}">
+    <form method="GET" action="{{ route('clientes.archivadas') }}">
         <div class="card mb-3">
             <div class="card-header text-center">
                 <h5 class="mb-0 text-subtitulo">Filtros</h5>
@@ -132,7 +132,7 @@
                 <div class="row gx-3 gy-2 justify-content-between mt-3">
 
                     {{-- Registros por página --}}
-                    <div class="col-md-2">
+                    <div class="col-xxl-2">
                         <label for="perPage" class="form-label text-normal">Ver registros</label>
                         <select name="perPage" id="perPage" class="form-select">
                             <option value="all" {{ request('perPage') == 'all' ? 'selected' : '' }}>Todos</option>
@@ -143,8 +143,25 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col"></div>
-                    <div class="col"></div>
+
+                    {{-- ① Toggle ON/OFF multiselección --}}
+                    <div class="col-xxl-2 col-xl-6 mt-4 d-flex align-items-center">
+                        <label class="switch">
+                        <input type="checkbox" id="toggleBulk">
+                        <span class="slider round"></span>
+                        </label>
+                        <span class="ms-2">Modo Restaurar</span>
+                    </div>
+
+                    <div class="col-xxl-2 mt-4 d-flex">
+                        {{-- BOTÓN RESTAURAR --}}
+                        <button type="submit"
+                                id="btnRestore"
+                                form="formRestore"
+                                class="btn btn-success me-2 d-none">
+                        <i class="fa fa-undo me-1"></i> RESTAURAR CUENTAS
+                        </button>
+                    </div>
                     <div class="col"></div>
                     <div class="col"></div>
                 </div>
@@ -154,9 +171,12 @@
                     <div class="col" style="min-width: 172px;"></div>
                     <div class="col" style="min-width: 172px;"></div>
                     <div class="col" style="min-width: 172px;"></div>
-                    <div class="col" style="min-width: 172px;"></div>
+                    <div class="col" style="min-width: 172px;">
+                        
+                    </div>
                     <div class="col d-flex gap-2 align-items-end">
-                        <a href="{{ route('clientes.index') }}"
+
+                        <a href="{{ route('clientes.archivadas') }}"
                             class="btn btn-secondary d-flex align-items-center justify-content-center"
                             style="width:50%; /* múltiplo de 5ch */">
                             <i class="fa fa-eraser me-1"></i>
@@ -274,165 +294,187 @@
     </div>
     {{-- ────────── Fin paginación ────────── --}}
 
-    {{-- 📋 Tabla responsiva --}}
-    <div class="table-responsive mb-3">
-        <table id="tabla-clientes"
-            class="table align-middle table-hover table-nowrap
-                                         table-striped table-bordered">
-            <thead class="text-center align-middle">
-                <tr>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-id">ID
-                        Cliente</th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-empresa">Empresa
-                    </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-contacto">Contacto
-                    </th>
-                    <th class="header-tabla py-1 px-2 tabla-col-telefono">Teléfono</th>
-                    <th class="header-tabla py-1 px-2 tabla-col-correo">Correo</th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-sector">Sector
-                    </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-segmento">Segmento
-                    </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-ciclo">Ciclo
-                    </th>
-                    <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-asignado">Asignado
-                        a</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                @foreach ($clientes as $c)
-                    @php
-                        $pc = $c->primerContacto;
-                        $tel = optional($pc)->telefono1;
-                        $email = optional($pc)->email;
-                        $username = $c->vendedor->username ?? '';
-                    @endphp
+    <form id="formRestore" method="POST" action="{{ route('clientes.restaurar-multiples') }}">
+        @csrf
+                        
+        {{-- 📋 Tabla responsiva --}}
+        <div class="table-responsive mb-3">
+            <table id="tabla-clientes"
+                class="table align-middle table-hover table-nowrap
+                                            table-striped table-bordered">
+                <thead class="text-center align-middle">
                     <tr>
-                        {{-- ID Cliente --}}
-                        <td class="py-1 px-2 text-truncate text-center" title="{{ $c->id_cliente }}">
-                            {{ Str::limit($c->id_cliente, 6) }}
-                        </td>
+                        <th class="header-tabla col-select col-5ch text-center p-1"  style="width: 5ch;">
+                            {{-- ① Checkbox para seleccionar todo --}}
+                            <input type="checkbox" id="selectAll" class="client-checkbox">
+                        </th>
+                        <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-id">ID
+                            Cliente</th>
+                        <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-empresa">Empresa
+                        </th>
+                        <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-contacto">Contacto
+                        </th>
+                        <th class="header-tabla py-1 px-2 tabla-col-telefono">Teléfono</th>
+                        <th class="header-tabla py-1 px-2 tabla-col-correo">Correo</th>
+                        <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-sector">Sector
+                        </th>
+                        <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-segmento">Segmento
+                        </th>
+                        <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-ciclo">Ciclo
+                        </th>
+                        <th class="header-tabla py-1 px-2 filtro-asc-desc tabla-col-asignado">Asignado
+                            a</th>
+                    </tr>
+                </thead>
 
-                        {{-- Empresa --}}
-                        <td class="py-1 px-2 text-truncate tabla-col-empresa" title="{{ $c->nombre }}">
-                            <a href="{{ route('clientes.view', $c->id_cliente) }}"
-                                class="text-decoration-underline fw-bold text-dark">
-                                {{ Str::limit($c->nombre, 30) }}
-                            </a>
-                        </td>
+                <tbody>
+                    @forelse ($clientes as $c)
+                        @php
+                            $pc = $c->primerContacto;
+                            $tel = optional($pc)->telefono1;
+                            $email = optional($pc)->email;
+                            $username = $c->vendedor->username ?? '';
+                        @endphp
+                        <tr>
+                            <td class="col-select col-5ch text-center p-1">
+                                <input type="checkbox"
+                                    class="bulk-item client-checkbox"
+                                    name="ids[]"
+                                    value="{{ $c->id_cliente }}">
+                            </td>
 
-                        {{-- Contacto --}}
-                        <td class="py-1 px-2 text-truncate" title="{{ optional($pc)->nombre_completo }}">
-                            @if (optional($pc)->nombre_completo)
-                                {{ Str::limit($pc->nombre_completo, 25) }}
-                            @else
-                                —
-                            @endif
-                        </td>
+                            {{-- ID Cliente --}}
+                            <td class="py-1 px-2 text-truncate text-center" title="{{ $c->id_cliente }}">
+                                {{ Str::limit($c->id_cliente, 6) }}
+                            </td>
 
-                        {{-- Teléfono (sin truncar) --}}
-                        <td class="py-1 px-2 text-center">
-                            @if ($tel)
-                                <a class="phone-field" href="tel:{{ $tel }}">{{ $tel }}</a>
-                            @else
-                                —
-                            @endif
-                        </td>
-
-                        {{-- Correo --}}
-                        <td class="py-1 px-2 text-truncate" title="{{ $email }}">
-                            @if ($email)
-                                <a href="mailto:{{ $email }}">
-                                    {{ Str::limit($email, 30) }}
+                            {{-- Empresa --}}
+                            <td class="py-1 px-2 text-truncate tabla-col-empresa" title="{{ $c->nombre }}">
+                                <a href="{{ route('clientes.view', $c->id_cliente) }}"
+                                    class="text-decoration-underline fw-bold text-dark">
+                                    {{ Str::limit($c->nombre, 30) }}
                                 </a>
-                            @else
-                                —
-                            @endif
-                        </td>
+                            </td>
 
-                        {{-- Sector --}}
-                        <td class="py-1 px-2 text-center">
-                            @switch($c->sector)
-                                @case('privada')
-                                    {{ 'Privado' }}
-                                @break
-
-                                @case('gobierno')
-                                    {{ 'Gobierno' }}
-                                @break
-
-                                @case('persona')
-                                    {{ 'Persona' }}
-                                @break
-
-                                @default
+                            {{-- Contacto --}}
+                            <td class="py-1 px-2 text-truncate" title="{{ optional($pc)->nombre_completo }}">
+                                @if (optional($pc)->nombre_completo)
+                                    {{ Str::limit($pc->nombre_completo, 25) }}
+                                @else
                                     —
-                            @endswitch
+                                @endif
+                            </td>
 
-                        </td>
-
-                        {{-- Segmento filtrado --}}
-                        <td class="py-1 px-2 text-center">
-                            @php $seg = mb_strtolower($c->segmento ?? ''); @endphp
-                            @switch($seg)
-                                @case('macasa cuentas especiales')
-                                    {{ 'Macasa Cuentas Especiales' }}
-                                @break
-
-                                @case('tekne store ecommerce')
-                                    {{ 'Tekne Store E-Commerce' }}
-                                @break
-
-                                @case('la plaza ecommerce')
-                                    {{ 'LaPlazaEnLinea E-Commerce' }}
-                                @break
-
-                                @default
+                            {{-- Teléfono (sin truncar) --}}
+                            <td class="py-1 px-2 text-center">
+                                @if ($tel)
+                                    <a class="phone-field" href="tel:{{ $tel }}">{{ $tel }}</a>
+                                @else
                                     —
-                            @endswitch
-                        </td>
+                                @endif
+                            </td>
 
-                        {{-- Ciclo Venta --}}
-                        <td class="py-1 px-2 text-center">
-                            <span class="badge"
-                                style="background-color:{{ $c->ciclo_venta === 'venta' ? 'var(--mc-verde)' : '#FEE028' }};
-                                    color:{{ $c->ciclo_venta === 'venta' ? '#fff' : '#000' }};
-                                    font-size: var(--bs-body-font-size);
-                                    min-width:10ch;">
+                            {{-- Correo --}}
+                            <td class="py-1 px-2 text-truncate" title="{{ $email }}">
+                                @if ($email)
+                                    <a href="mailto:{{ $email }}">
+                                        {{ Str::limit($email, 30) }}
+                                    </a>
+                                @else
+                                    —
+                                @endif
+                            </td>
 
-                                @switch($c->ciclo_venta)
-                                    @case('venta')
-                                        {{ 'Venta' }}
+                            {{-- Sector --}}
+                            <td class="py-1 px-2 text-center">
+                                @switch($c->sector)
+                                    @case('privada')
+                                        {{ 'Privado' }}
                                     @break
 
-                                    @case('cotizacion')
-                                        {{ 'Cotización' }}
+                                    @case('gobierno')
+                                        {{ 'Gobierno' }}
+                                    @break
+
+                                    @case('persona')
+                                        {{ 'Persona' }}
                                     @break
 
                                     @default
                                         —
                                 @endswitch
-                            </span>
-                        </td>
 
-                        {{-- Asignado a --}}
-                        <td class="py-1 px-2 text-truncate text-uppercase" title="{{ strtoupper($username) }}">
-                            {{ $username ? Str::limit(strtoupper($username), 15) : 'BASE GENERAL' }}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
+                            </td>
 
-        </table>
-    </div> {{-- /.table-responsive --}}
+                            {{-- Segmento filtrado --}}
+                            <td class="py-1 px-2 text-center">
+                                @php $seg = mb_strtolower($c->segmento ?? ''); @endphp
+                                @switch($seg)
+                                    @case('macasa cuentas especiales')
+                                        {{ 'Macasa Cuentas Especiales' }}
+                                    @break
+
+                                    @case('tekne store ecommerce')
+                                        {{ 'Tekne Store E-Commerce' }}
+                                    @break
+
+                                    @case('la plaza ecommerce')
+                                        {{ 'LaPlazaEnLinea E-Commerce' }}
+                                    @break
+
+                                    @default
+                                        —
+                                @endswitch
+                            </td>
+
+                            {{-- Ciclo Venta --}}
+                            <td class="py-1 px-2 text-center">
+                                <span class="badge"
+                                    style="background-color:{{ $c->ciclo_venta === 'venta' ? 'var(--mc-verde)' : '#FEE028' }};
+                                        color:{{ $c->ciclo_venta === 'venta' ? '#fff' : '#000' }};
+                                        font-size: var(--bs-body-font-size);
+                                        min-width:10ch;">
+
+                                    @switch($c->ciclo_venta)
+                                        @case('venta')
+                                            {{ 'Venta' }}
+                                        @break
+
+                                        @case('cotizacion')
+                                            {{ 'Cotización' }}
+                                        @break
+
+                                        @default
+                                            —
+                                    @endswitch
+                                </span>
+                            </td>
+
+                            {{-- Asignado a --}}
+                            <td class="py-1 px-2 text-truncate text-uppercase" title="{{ strtoupper($username) }}">
+                                {{ $username ? Str::limit(strtoupper($username), 15) : 'BASE GENERAL' }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-3">
+                                No se encontraron cuentas archivadas con los filtros seleccionados.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+
+            </table>
+        </div> {{-- /.table-responsive --}}
+    </form>
 
     {{-- ───────── Paginación ───────── --}}
     <div class="row align-items-center mb-4">
         {{-- Texto de totales --}}
         <div class="col-sm">
             <p class="mb-0 text-muted small">
-                Mostrando <strong>{{ $clientes->firstItem() }}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
+                Mostrando <strong>{{ $clientes->firstItem() ?? 'Todos'}}</strong> a <strong>{{ $clientes->lastItem() }}</strong>
                 | Total: <strong>{{ $clientes->total() }}</strong> cuentas encontradas
             </p>
         </div>
@@ -526,7 +568,9 @@
 </div>
 
 
+@push('scripts')
 
+    
 <script>
     //Filtros ASC/DESC en cabecera de la tabla pincipal
     document.addEventListener('DOMContentLoaded', () => {
@@ -581,5 +625,31 @@
         });
     });
 </script>
+
+<script>
+  const toggle = document.getElementById('toggleBulk');
+  const htmlEl = document.documentElement;
+  const btnRestore = document.getElementById('btnRestore');
+  const selectAll = document.getElementById('selectAll');
+  const items = () => document.querySelectorAll('.bulk-item');
+
+  toggle.addEventListener('change', () => {
+    const titleEl = document.querySelector('.text-titulo');
+    titleEl.textContent = toggle.checked ? 'Restaurar Cuentas Archivadas' : 'Cuentas Archivadas';    const on = toggle.checked;
+    // clase visual (verde)
+    htmlEl.classList.toggle('selection-mode', on);
+    // mostramos/ocultamos checkboxes y botón
+    document.querySelectorAll('.col-select')
+            .forEach(c => c.style.display = on ? 'table-cell' : 'none');
+    btnRestore.classList.toggle('d-none', !on);
+    if (!on) items().forEach(i => i.checked = false);
+  });
+
+  selectAll.addEventListener('change', () => {
+    items().forEach(i => i.checked = selectAll.checked);
+  });
+</script>
+
+@endpush
 
 @endsection

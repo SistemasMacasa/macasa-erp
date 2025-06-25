@@ -72,6 +72,14 @@ Route::middleware(['auth', 'permission:Archivar Cuenta'])->group(callback: funct
 
 });
 
+Route::middleware(['auth', 'permission:Restaurar Cuenta'])->group(callback: function () {
+    //Restaurar Cuenta desde clientes/archivadas
+    Route::post('clientes/restaurar-multiples', [ClienteController::class, 'restaurarMultiples'])
+     ->name('clientes.restaurar-multiples');
+
+
+});
+
 Route::middleware(['auth', 'permission:Ver Cuenta'])->group(callback: function () {
 
     //Ver Cuenta

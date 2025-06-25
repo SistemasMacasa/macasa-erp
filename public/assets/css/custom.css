@@ -74,7 +74,8 @@
   --fuent-subtitulo: 1.09375rem;
   --fuente-normal: 0.875rem;
   --fuente-peq: 0.75rem;
-
+  --modo-archivado-body-bg: #ffaeae;
+  --modo-archivado-sidebar-bg: #fd6c6c;
 }
 
 html {
@@ -106,7 +107,6 @@ body[data-bs-theme="dark"] {
   --modal-header-color: #ffffff;
   --modal-body-bg: transparent;
   --modal-body-text: #ffffff;
-
   --tipo-opcion-bg: #2a2f38;
   --tipo-opcion-border: #3a414e;
   --tipo-opcion-text: #e3e6ed;
@@ -114,9 +114,10 @@ body[data-bs-theme="dark"] {
   --tipo-opcion-hover-border: #7782ff;
   --tipo-opcion-hover-shadow: 0 0 0 2px #7b90ff33;
   --tipo-opcion-focus-shadow: 0 0 0 3px #7b90ff4d;
-
   --tipo-opcion-body-strong: #e5e9f2;
   --tipo-opcion-body-p: #b2b8c6;
+  --modo-archivado-body-bg: #8d0c2a;
+  --modo-archivado-sidebar-bg: #5d1f25;
 }
 
 
@@ -201,8 +202,8 @@ body[data-bs-theme="dark"] {
   }
 } */
 .col-5ch {
-  min-width: 5ch;
-  max-width: 5ch;
+  min-width: 5ch !important;
+  max-width: 5ch !important;
 }
 
 .col-10ch {
@@ -1678,9 +1679,7 @@ tfoot>tr>th {
 }
 
 /* Cuando entres en modo archivado, este background ayuda a reforzar la acción */
-.archivar-mode {
-  background-color: var(--bs-danger-bg-subtle) !important;
-}
+
 
   /* Ajuste visual de los checkboxes */
   .client-checkbox {
@@ -1763,12 +1762,63 @@ body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
 }
 
 /* === MODO ARCHIVADO (clase en <html>) ========================= */
-.archivar-mode body                { background:var(--bs-danger-bg-subtle)!important; }
-.archivar-mode .vertical-menu      { background:#f8d7da!important; }
-.archivar-mode #logo-box           { background:#f8d7da!important; }
-.archivar-mode #page-topbar        { background:#f8d7da!important; }
+.archivar-mode body                { background:var(--modo-archivado-body-bg)!important; }
+.archivar-mode .vertical-menu      { background:var(--modo-archivado-sidebar-bg)!important; border-color: var(--modo-archivado-sidebar-bg)!important ; }
+.archivar-mode #logo-box           { background:var(--modo-archivado-sidebar-bg)!important; }
+.archivar-mode #page-topbar        { background:var(--modo-archivado-body-bg)!important; border-color: var(--modo-archivado-sidebar-bg)!important;}
 .archivar-mode .bg-light-subtle    { background:rgba(var(--bs-danger-rgb),.2)!important; }
 
 /* Columnas: por defecto vemos solo traspaso */
 .col-archivar { display:none; }
 .col-traspaso { display:table-cell; }
+
+
+/* contenedor switch exactamente como en clientes/transfer */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  transition: background-color .3s;
+}
+.slider:before {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background-color: white;
+  transition: transform .3s;
+}
+input:checked + .slider { background-color: var(--bs-success); }
+input:checked + .slider:before { transform: translateX(22px); }
+.slider.round      { border-radius: 28px; }
+.slider.round:before { border-radius: 50%; }
+
+/* Ajuste visual de los checkboxes */
+.client-checkbox {
+  margin: 0;
+  transform: scale(1.2);
+}
+
+/* Modo multiselección: fondo verde suave */
+.selection-mode body {
+  background-color: var(--bs-success-bg-subtle) !important;
+}
+.selection-mode .vertical-menu,
+.selection-mode #logo-box,
+.selection-mode #page-topbar,
+.selection-mode .bg-light-subtle {
+  background-color: rgba(var(--bs-success-rgb), .2) !important;
+}
+
+/* Columnas: por defecto ocultas */
+.col-select { display: none; }

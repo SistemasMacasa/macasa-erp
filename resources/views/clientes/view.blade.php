@@ -799,7 +799,8 @@
 
 
     {{-- 📝 Historial de notas --}}
-    <div class="card">
+    <div class="card" id="historialNotas">
+    
         {{-- Cabecera de la tarjeta --}}
         <div class="card-header d-flex">
             <h5 class="mb-0 flex-grow-1">Historial de notas</h5>

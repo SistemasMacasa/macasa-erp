@@ -52,10 +52,13 @@
                         <label for="ejecutivos" class="form-label text-normal">Ejecutivo(s)</label>
                         <select id="ejecutivos" name="ejecutivos[]" placeholder="Todos" class="form-select select2"
                             {{-- ← SIN "form-select" --}} multiple data-placeholder="Seleccione uno o varios ejecutivos">
-                            <option value="base_general"
-                                {{ in_array('base_general', request('ejecutivos', [])) ? 'selected' : '' }}>
-                                Base General
-                            </option>
+                            @hasanyrole('Administrador|Desarrollador')
+                               
+                                <option value="base_general"
+                                    {{ in_array('base_general', request('ejecutivos', [])) ? 'selected' : '' }}>
+                                    Base General
+                                </option>
+                            @endhasanyrole
 
                             @foreach ($vendedores as $v)
                                 <option value="{{ $v->id_usuario }}"
@@ -301,7 +304,7 @@
             </thead>
 
             <tbody>
-                @foreach ($clientes as $c)
+                @forelse ($clientes as $c)
                     @php
                         $pc = $c->primerContacto;
                         $tel = optional($pc)->telefono1;
@@ -421,7 +424,13 @@
                             {{ $username ? Str::limit(strtoupper($username), 15) : 'BASE GENERAL' }}
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-3">
+                            No se encontraron cuentas que coincidan con los filtros aplicados.
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
 
         </table>

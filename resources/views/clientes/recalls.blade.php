@@ -41,14 +41,14 @@
                         <div class="col-md-3 col-lg-2">
                             <label class="form-label text-normal">Jefe de equipo</label>
                             <select class="form-select" disabled>
-                                <option value="">-- Selecciona --</option>
+                                <option value="" selected disabled>-- Selecciona --</option>
                             </select>
                         </div>
 
                         <div class="col-md-3 col-lg-2">
                             <label for="id_vendedor" class="form-label text-normal">Ejecutivo</label>
                             <select name="id_vendedor" id="id_vendedor" class="form-select">
-                                <option value="" {{ request('id_vendedor') == '' ? 'selected' : '' }}>-- Selecciona --
+                                <option value="" {{ request('id_vendedor') == '' ? 'selected' : '' }} selected disabled>-- Selecciona --
                                 </option>
                                 <option value="">Todos</option>
                                 @foreach($ejecutivos as $id => $nombre)
@@ -63,7 +63,7 @@
                         <div class="col-md-3 col-lg-2">
                             <label for="ver" class="form-label text-normal">Ver registros</label>
                             <select name="ver" id="ver" class="form-select">
-                                <option value="" {{ request('ver') === '' ? 'selected' : '' }}>-- Selecciona --</option>
+                                <option value="" {{ request('ver') === '' ? 'selected' : '' }} selected disabled>-- Selecciona --</option>
                                 <option value="5000" {{ request('ver') === '5000' ? 'selected' : '' }}>Todos</option>
                                 <option value="25" {{ request('ver') === '25' ? 'selected' : '' }}>25</option>
                                 <option value="50" {{ request('ver') === '50' ? 'selected' : '' }}>50</option>
@@ -240,7 +240,7 @@
                             {{-- Empresa --}}
                             <td class="campo-dato-secundario py-1 px-2 text-truncate">
                                 <a class="text-decoration-underline fw-bold text-dark"
-                                    href="{{ route("clientes.view", $cliente?->id_cliente) }}"> {{ $cliente?->nombre }} </a>
+                                    href="{{ route('clientes.view', $cliente?->id_cliente) }}#historialNotas"> {{ $cliente?->nombre }} </a>
                             </td>
 
                             {{-- Contacto --}}
@@ -265,7 +265,7 @@
 
                             {{-- Asignado A --}}
                             <td class="py-1 px-2 text-truncate">
-                                {{ $cliente?->vendedor?->NombreCompleto ?? '—' }}
+                                {{ $cliente?->vendedor?->NombreCompleto ?? 'BASE GENERAL' }}
                             </td>
                         </tr>
                     @empty

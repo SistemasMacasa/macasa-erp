@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Cliente;
@@ -15,6 +16,9 @@ use App\Models\MetodoPago;
 use App\Models\UsoCfdi;
 use App\Models\RegimenFiscal;
 use App\Models\Nota;
+use Illuminate\Validation\Rules\Can;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class ClienteController extends Controller
 {
@@ -93,9 +97,19 @@ class ClienteController extends Controller
         $clientes = $query->paginate($perPage)
             ->appends($request->all());   // conserva filtros
 
-        /* ---------- Catálogos para los <select> ---------- */
-        $vendedores = Usuario::whereNull('id_cliente')->get();
-
+        if(auth()->user()->hasRole('Ejecutivo')) {
+            // Si es un ejecutivo, solo mostramos a el mismo como vendedor
+           
+            $vendedores = Usuario::where('id_usuario', auth()->user()->id_usuario)
+                ->whereNull('id_cliente')
+                ->where('estatus', 'activo')
+                ->get();
+        } else {
+            // Si no es un ejecutivo, mostramos todos los vendedores
+            $vendedores = Usuario::whereNull('id_cliente')
+                ->where('estatus', 'activo')
+                ->get();
+        }
         // Los sacamos directo de la tabla para que no se “desincronicen”
         $sectores = Cliente::select('sector')->distinct()->pluck('sector');
         $segmentos = Cliente::select('segmento')->distinct()->pluck('segmento');
@@ -854,7 +868,7 @@ class ClienteController extends Controller
             es_automatico: $request->input('es_automatico')
         );
 
-        return redirect()->route('clientes.view', $id)->with('success', 'Nota registrada correctamente.');
+        return redirect()->route('clientes.view', $id)->with('success', 'Nota registrada correctamente.')->withFragment('historialNotas');
     }
     /**
      * Muestra el formulario para traspasar múltiples clientes.
@@ -919,6 +933,22 @@ class ClienteController extends Controller
 
         Cliente::whereIn('id_cliente', $ids)->update(['id_vendedor' => $destinoId]);
 
+        // Registra UNA nota por cliente (recomendado para trazabilidad)
+        foreach ($ids as $idCliente) {
+            registrarNota(
+                id_cliente           : $idCliente,
+                contenido            : sprintf(
+                    'El usuario %s traspasó la cuenta del vendedor %s al vendedor %s.',
+                    auth()->user()->nombre_completo,
+                    $origen  ?: 'BASE GENERAL',
+                    $destino ?: 'BASE GENERAL'
+                ),
+                etapa                : $request->input('ciclo_venta'),   // opcional
+                fecha_reprogramacion : today(),                          // si aplica
+                es_automatico        : true                              // o null
+            );
+        }
+
         return redirect()->route('clientes.transfer')
             ->with('success', count($ids) . ' cuentas traspasadas.');
 
@@ -935,6 +965,19 @@ class ClienteController extends Controller
 
         Cliente::whereIn('id_cliente', $ids)
             ->update(['estatus' => 'inactivo']);
+
+        // Registra nota por cada cuenta
+        foreach ($ids as $idCliente) {
+            registrarNota(
+                id_cliente           : $idCliente,
+                contenido            : sprintf(
+                    'El usuario %s archivó esta cuenta.',
+                    auth()->user()->nombre_completo
+                ),
+                etapa                : 'inactivo',  // o la etapa que uses
+                es_automatico        : true
+            );
+        }
 
         return redirect()
             ->route('clientes.transfer', $request->query())
@@ -1062,6 +1105,31 @@ class ClienteController extends Controller
             'ciclos',
         ));
     }
+
+    public function restaurarMultiples(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return back()->with('error', 'Selecciona al menos una cuenta.');
+        }
+        Cliente::whereIn('id_cliente', $ids)
+            ->update(['estatus' => 'activo']);
+
+        /* Nota automática para cada cliente restaurado */
+        foreach ($ids as $idCliente) {
+            registrarNota(
+                id_cliente    : $idCliente,
+                contenido     : sprintf(
+                    'El usuario %s restauró esta cuenta.',
+                    auth()->user()->nombre_completo
+                ),
+                etapa         : 'activo',   // o la etapa que corresponda
+                es_automatico : true
+            );
+        }
+        return back()->with('success', 'Cuentas restauradas correctamente.');
+    }
+
 }
 
 /**
