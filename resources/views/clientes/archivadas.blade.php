@@ -10,7 +10,7 @@
         <li class="breadcrumb-item active">Mis Cuentas</li>
     @endsection
 
-    <h2 class="mb-3 text-titulo">Mis Cuentas</h2>
+    <h2 class="mb-3 text-titulo">Cuentas Archivadas</h2>
 
     {{-- 🎛 Botonera --}}
     <div class=" row-fluid gap-2 mb-3">

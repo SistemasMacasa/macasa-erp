@@ -23,7 +23,7 @@
         </a>
 
         <a href="{{ route('inicio') }}"
-            class="col-md-2 btn btn-primary btn-principal">
+            class="col-md-2 btn btn-primary btn-principal disabled" >
              <i class="fa fa-check me-1"></i><span class="text-boton-peq">Enviar carta de presentación</span>
         </a>
     </div>

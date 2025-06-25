@@ -59,7 +59,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row gx-2 gy-2 mb-4">
-                                <div class="col-md-8 col-sm-12">
+                                <div class="col-xxl-8 col-xl-12">
                                     <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
                                     <select name="id_vendedor_origen" class="form-select">
                                         <option value="">-- Selecciona --</option>
@@ -73,7 +73,7 @@
                                     </select>                                
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-xxl-4 col-xl-6">
                                     <label for="orden" class="form-label">Ordenar por</label>
                                     <select name="orden" class="form-select">
                                         <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
@@ -87,7 +87,7 @@
                                     </select>
                                 </div>
                             
-                                <div class="col-md-4">
+                                <div class="col-xxl-4 col-xl-6">
                                     <label for="ver" class="form-label">Ver registros</label>
                                     <select name="per_page" id="" class="form-select">
                                         <option value="">-- Selecciona --</option>
@@ -99,7 +99,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-xxl-4 col-xl-6">
                                     <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
                                     <select name="ciclo_venta" id="" class="form-select">
                                         <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
@@ -111,7 +111,7 @@
                 
 
                                 {{-- ① Toggle ON/OFF --}}
-                                <div class="col-md-4 mb-3">
+                                <div class="col-xxl-4 col-xl-6 mt-4 d-flex align-items-center">
                                 <label class="switch">
                                     <input type="checkbox" id="archiveToggle">
                                     <span class="slider round"></span>
@@ -163,7 +163,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row gx-2 gy-2 mb-4">
-                            <div class="col-md-8 col-sm-12">
+                            <div class="col-xxl-8 col-lg-12">
                                 <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
                                 <select name="id_vendedor_destino" class="form-select">
                                     <option value="">-- Selecciona --</option>
@@ -177,7 +177,7 @@
                                 </select>                                
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4 col-lg-6">
                                 <label for="orden" class="form-label">Ordenar por</label>
                                 <select name="orden" class="form-select">
                                     <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
@@ -191,7 +191,7 @@
                                 </select>
                             </div>
                         
-                            <div class="col-md-4">
+                            <div class="col-xxl-4 col-lg-6">
                                 <label for="ver" class="form-label">Ver registros</label>
                                 <select name="per_page" id="" class="form-select">
                                     <option value="">-- Selecciona --</option>
@@ -203,7 +203,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4 col-lg-6">
                                 <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
                                 <select name="ciclo_venta" id="" class="form-select">
                                     <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
