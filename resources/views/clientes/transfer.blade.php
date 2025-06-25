@@ -14,11 +14,11 @@
 
         {{-- 🎛 Botonera --}}
         <div class="d-flex flex-wrap gap-2 mb-3">
-            <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
+            <a href="{{ url()->previous() }}" class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 btn btn-secondary btn-principal">
                 <i class="fa fa-arrow-left me-1"></i> Regresar
             </a>
 
-            <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal">
+            <a href="{{ route('clientes.index') }}" class="col-xxl-2 col-xl-2 col-lg-2 btn btn-primary btn-principal">
                 <i class="fa fa-phone me-1"></i> Mis Cuentas
             </a>
         </div>
@@ -62,7 +62,7 @@
                                 <div class="col-md-8 col-sm-12">
                                     <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
                                     <select name="id_vendedor_origen" class="form-select">
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="base" {{ request('id_vendedor_origen') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
                                         @foreach($vendedores as $v)
                                             <option value="{{ $v->id_usuario }}"
@@ -76,7 +76,7 @@
                                 <div class="col-md-4">
                                     <label for="orden" class="form-label">Ordenar por</label>
                                     <select name="orden" class="form-select">
-                                        <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
+                                        <option value=""            {{ request('orden') == '' ? 'selected' : '' }} disabled selected>-- Selecciona -- </option>
                                         <option value="id_cliente"  {{ request('orden') == 'id_cliente' ? 'selected' : '' }}>ID Cliente</option>
                                         <option value="nombre"      {{ request('orden') == 'nombre' ? 'selected' : '' }}>Empresa</option>
                                         <option value="contacto"    {{ request('orden') == 'contacto' ? 'selected' : '' }}>Contacto</option>
@@ -90,7 +90,7 @@
                                 <div class="col-md-4">
                                     <label for="ver" class="form-label">Ver registros</label>
                                     <select name="per_page" id="" class="form-select">
-                                        <option value="">-- Selecciona --</option>
+                                        <option value="" disabled selected>-- Selecciona --</option>
                                         <option value="5000" {{ request('per_page') == '5000' ? 'selected' : '' }}>Todos</option>
                                         <option value="25"  {{ request('per_page') == '25' ? 'selected' : '' }}>25</option>
                                         <option value="50"  {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
@@ -102,7 +102,7 @@
                                 <div class="col-md-4">
                                     <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
                                     <select name="ciclo_venta" id="" class="form-select">
-                                        <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
+                                        <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }} disabled selected>-- Selecciona --</option>
                                         <option value="cotizacion"  {{ request('ciclo_venta') == 'cotizacion' ? 'selected' : '' }}>Cotización</option>
                                         <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
                                     </select>
@@ -143,7 +143,7 @@
                             <div class="col-md-8 col-sm-12">
                                 <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
                                 <select name="id_vendedor_destino" class="form-select">
-                                    <option value="">-- Selecciona --</option>
+                                    <option value="" disabled selected>-- Selecciona --</option>
                                     <option value="base" {{ request('id_vendedor_destino') == 'base' ? 'selected' : '' }}>BASE GENERAL</option>
                                     @foreach($vendedores as $v)
                                         <option value="{{ $v->id_usuario }}"
@@ -157,7 +157,7 @@
                             <div class="col-md-4">
                                 <label for="orden" class="form-label">Ordenar por</label>
                                 <select name="orden" class="form-select">
-                                    <option value=""            {{ request('orden') == '' ? 'selected' : '' }}>-- Selecciona -- </option>
+                                    <option value=""            {{ request('orden') == '' ? 'selected' : '' }} disabled selected>-- Selecciona -- </option>
                                     <option value="id_cliente"  {{ request('orden') == 'id_cliente' ? 'selected' : '' }}>ID Cliente</option>
                                     <option value="nombre"      {{ request('orden') == 'nombre' ? 'selected' : '' }}>Empresa</option>
                                     <option value="contacto"    {{ request('orden') == 'contacto' ? 'selected' : '' }}>Contacto</option>
@@ -171,7 +171,7 @@
                             <div class="col-md-4">
                                 <label for="ver" class="form-label">Ver registros</label>
                                 <select name="per_page" id="" class="form-select">
-                                    <option value="">-- Selecciona --</option>
+                                    <option value="" disabled selected>-- Selecciona --</option>
                                     <option value="5000" {{ request('per_page') == '5000' ? 'selected' : '' }}>Todos</option>
                                     <option value="25"  {{ request('per_page') == '25' ? 'selected' : '' }}>25</option>
                                     <option value="50"  {{ request('per_page') == '50' ? 'selected' : '' }}>50</option>
@@ -183,7 +183,7 @@
                             <div class="col-md-4">
                                 <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
                                 <select name="ciclo_venta" id="" class="form-select">
-                                    <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }}>-- Selecciona --</option>
+                                    <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }} disabled selected>-- Selecciona --</option>
                                     <option value="cotizacion"  {{ request('ciclo_venta') == 'cotizacion' ? 'selected' : '' }}>Cotización</option>
                                     <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
                                 </select>
@@ -313,7 +313,7 @@
         {{-- ────────── Fin paginación ────────── --}}
 
         {{-- 📋 Tabla responsiva --}}
-        <div class="table-responsive mb-3 shadow-lg">
+        <div class="table-responsive mb-3">
             <form id="formTraspaso" method="POST" action="{{ route('clientes.transfer.store') }}">
             @csrf
             <input type="hidden" name="origen" value="{{ request('id_vendedor_origen') }}">

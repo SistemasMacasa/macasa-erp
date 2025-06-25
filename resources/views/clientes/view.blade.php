@@ -24,19 +24,22 @@
 
     {{-- 🎛 Botonera --}}
     <div class=" row-fluid gap-2 mb-3">
-        <a href="{{ url()->previous() }}" class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center ">
+        <a href="{{ url()->previous() }}"
+            class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center ">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
 
-        <button type="submit" class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center
-            btnGuardarCuenta" disabled form="formCuenta"
-            style="opacity: 1;">
+        <button type="submit"
+            class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center
+            btnGuardarCuenta"
+            disabled form="formCuenta" style="opacity: 1;">
             <i class="fa fa-save me-1"></i> Guardar
         </button>
 
 
-        <a href="{{ route('clientes.index') }}" class=" col-md-2 btn btn-primary d-flex align-items-center justify-content-center">
+        <a href="{{ route('clientes.index') }}"
+            class=" col-md-2 btn btn-primary d-flex align-items-center justify-content-center">
             <i class="fa fa-list me-1"></i> Mis Cuentas
         </a>
 
@@ -45,8 +48,8 @@
             <i class="fa fa-file-invoice-dollar me-1"></i> Levantar Cotización
         </a>
 
-        <button type="button" class="col-md-2 btn btn-primary d-flex align-items-center justify-content-center" data-bs-toggle="modal"
-            data-bs-target="#modalContactos">
+        <button type="button" class="col-md-2 btn btn-primary d-flex align-items-center justify-content-center"
+            data-bs-toggle="modal" data-bs-target="#modalContactos">
             <i class="fa fa-address-book me-1"></i> Libreta de Contactos
         </button>
 
@@ -54,592 +57,634 @@
 
     @if ($cliente->sector === 'privada' || $cliente->sector === 'gobierno')
 
-    @cannot('Editar Cuenta')
-        <fieldset disabled>
-    @endcannot
-        <!-- ╭━━━━━━━━━━━━━━━━━━ Ficha persona Moral (Privada o Gobierno) ━━━━━━━━━━━━━━╮ -->
-        <form id="formCuenta" action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST"
-            autocomplete="off">
-            @csrf
-            @method('PUT')
-            <div class="form-wrapper" style="margin-right: auto;">
+        @cannot('Editar Cuenta')
+            <fieldset disabled>
+            @endcannot
+            <!-- ╭━━━━━━━━━━━━━━━━━━ Ficha persona Moral (Privada o Gobierno) ━━━━━━━━━━━━━━╮ -->
+            <form id="formCuenta" action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST"
+                autocomplete="off">
+                @csrf
+                @method('PUT')
+                <div class="form-wrapper" style="margin-right: auto;">
 
-                {{-- ── Tarjeta: Cuenta Empresarial ─────────────────────────── --}}
+                    {{-- ── Tarjeta: Cuenta Empresarial ─────────────────────────── --}}
 
-                <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
-                <div class="card mb-4">
-                    <div class="card-header card-header--row">
-                        <h5 class="mb-0 text-subtitulo">Cuenta Empresarial</h5>
-                        @can(['Editar Cuenta'])
-                            <button type="button" id="btnEditar"
-                                class="btn btn-sm btn-success btn-15ch btn-editar-cuenta" style="margin-right:5ch;">
-                                <i class="fa fa-edit me-1"></i> Editar cuenta
-                            </button>
-                        @endcan
+                    <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
+                    <div class="card mb-4">
+                        <div class="card-header card-header--row">
+                            <h5 class="mb-0 text-subtitulo">Cuenta Empresarial</h5>
+                            @can(['Editar Cuenta'])
+                                <button type="button" id="btnEditar"
+                                    class="btn btn-sm btn-success btn-15ch btn-editar-cuenta" style="margin-right:5ch;">
+                                    <i class="fa fa-edit me-1"></i> Editar cuenta
+                                </button>
+                            @endcan
 
-                    </div>
+                        </div>
 
 
-                    <div class="card-body">
-                        {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
-                        <div class="row gx-3 gy-2 mb-2 align-items-end">
-                            <div class="col-md-2">
-                                <label class="form-label">Estatus</label>
-                                <select id="selectEstatus" name="estatus" class="form-select" disabled>
-                                    <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
-                                    <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">Ciclo de Venta</label>
-                                <select name="ciclo_venta" class="form-select" disabled>
-                                    <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
-                                    <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
-                                </select>
-                            </div>
+                        <div class="card-body">
+                            {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
+                            <div class="row gx-3 gy-2 mb-2 align-items-end">
+                                <div class="col-md-2">
+                                    <label class="form-label">Estatus</label>
+                                    <select id="selectEstatus" name="estatus" class="form-select" disabled>
+                                        <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
+                                        <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Ciclo de Venta</label>
+                                    <select name="ciclo_venta" class="form-select" disabled>
+                                        <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
+                                        <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-md-2">
-                                <label class="form-label">Asignado a: <span
-                                        class="text-danger asterisco">*</span></label>
-                                <select name="id_vendedor" class="form-select">
-                                    <option value="" @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
-                                        Base General
-                                    </option>
-
-                                    @foreach ($vendedores as $v)
-                                        <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor', $cliente->id_vendedor) == $v->id_usuario)>
-                                            {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                <div class="col-md-2">
+                                    <label class="form-label">
+                                        Asignado a:
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <select name="id_vendedor" class="form-select">
+                                        <option value="" @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
+                                            Base General
                                         </option>
-                                    @endforeach
-                                </select>
+
+                                        @foreach ($vendedores as $v)
+                                            <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor', $cliente->id_vendedor) == $v->id_usuario)>
+                                                {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
+                                <div class="col-md-2">
+                                    <label class="form-label">Sector
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <select name="sector" class="form-select" required>
+                                        <option value="" disabled selected>-- Selecciona --</option>
+                                        <option value="privada" @selected(old('sector', $cliente->sector) == 'privada')>Empresa Privada</option>
+                                        <option value="gobierno" @selected(old('sector', $cliente->sector) == 'gobierno')>Empresa Gobierno</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="form-label">Segmento
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <select name="segmento" class="form-select" required>
+                                        <option value="" disabled selected>-- Selecciona --</option>
+                                        <option value="macasa cuentas especiales" @selected(old('segmento', $cliente->segmento) == 'macasa cuentas especiales')>Macasa
+                                            Cuentas Especiales</option>
+                                        <option value="tekne store ecommerce" @selected(old('segmento', $cliente->segmento) == 'tekne store ecommerce')>Tekne Store
+                                            E-Commerce</option>
+                                        <option value="la plaza ecommerce" @selected(old('segmento', $cliente->segmento) == 'la plaza ecommerce')>LaPlazaEnLinea
+                                            E-Commerce</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="form-label">Origen de la Cuenta</label>
+                                    <select name="tipo" class="form-select" disabled>
+                                        <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
+                                        <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="col-md-2">
-                                <label class="form-label">Sector <span class="text-danger asterisco">*</span></label>
-                                <select name="sector" class="form-select" required>
-                                    <option value="" disabled selected>-- Selecciona --</option>
-                                    <option value="privada" @selected(old('sector', $cliente->sector) == 'privada')>Empresa Privada</option>
-                                    <option value="gobierno" @selected(old('sector', $cliente->sector) == 'gobierno')>Empresa Gobierno</option>
-                                </select>
+                            <hr>
+
+
+
+                            <div class="row gx-3 gy-2 mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Nombre de la Empresa
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <input id="nombre" name="nombre" type="text"
+                                        class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
+                                        value="{{ $cliente->nombre }}" required minlength="3" maxlength="45">
+                                    @error('nombre')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
 
-                            <div class="col-md-2">
-                                <label class="form-label">Segmento <span class="text-danger asterisco">*</span></label>
-                                <select name="segmento" class="form-select" required>
-                                    <option value="" disabled selected>-- Selecciona --</option>
-                                    <option value="macasa cuentas especiales" @selected(old('segmento', $cliente->segmento) == 'macasa cuentas especiales')>
-                                        Macasa Cuentas Especiales
-                                    </option>
-                                    <option value="tekne store ecommerce" @selected(old('segmento', $cliente->segmento) == 'tekne store ecommerce')>
-                                        Tekne Store E-Commerce
-                                    </option>
-                                    <option value="la plaza ecommerce" @selected(old('segmento', $cliente->segmento) == 'la plaza ecommerce')>
-                                        LaPlazaEnLinea E-Commerce
-                                    </option>
-                                </select>
-                            </div>
+                            {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
+                            <h6 class="fw-semibold mb-3">Contacto principal</h6>
 
-                            <div class="col-md-2">
-                                <label class="form-label">Origen de la Cuenta</label>
-                                <select name="tipo" class="form-select" disabled>
-                                    <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
-                                    <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
-                                </select>
-                            </div>
-                        </div>
+                            <div class="row g-3 contacto-block" data-index="0">
+                                {{-- Ojo: El operador ?-> es para navegación segura --}}
 
-                        <hr>
+                                {{-- Nombre(s) de Contacto --}}
+                                <div class="col-md-4">
+                                    <label class="form-label">Nombre(s)
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <input name="contacto[0][nombre]"
+                                        value="{{ old('contacto.0.nombre', $cliente->contacto_predet?->nombre) }}"
+                                        class="form-control guarda-mayus @error('contacto.0.nombre') is-invalid @enderror"
+                                        minlength="2" maxlength="45" required>
+                                    @error('contacto.0.nombre')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
 
+                                </div>
+                                {{-- Primer Apellido --}}
+                                <div class="col-md-4">
+                                    <label class="form-label">Primer Apellido
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <input name="contacto[0][apellido_p]"
+                                        value="{{ old('contacto.0.apellido_p', $cliente->contacto_predet?->apellido_p) }}"
+                                        class="form-control guarda-mayus" maxlength="27" required>
+                                    @error('contacto.0.apellido_p')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                {{-- Segundo Apellido --}}
+                                <div class="col-md-4">
+                                    <label class="form-label">Segundo Apellido
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <input name="contacto[0][apellido_m]"
+                                        value="{{ old('contacto.0.apellido_m', $cliente->contacto_predet?->apellido_m) }}"
+                                        class="form-control guarda-mayus" maxlength="27" required>
+                                </div>
+                                {{-- Email --}}
+                                <div class="col-md-4">
+                                    <label class="form-label">Correo Electronico
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <input name="contacto[0][email]"
+                                        value="{{ old('contacto.0.email', $cliente->contacto_predet?->email) }}"
+                                        type="email" class="form-control guarda-minus" maxlength="50" required>
+                                    @error('contacto.0.email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                {{-- Puesto --}}
+                                <div class="col-md-2">
+                                    <label class="form-label">Puesto
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    <input name="contacto[0][puesto]"
+                                        value="{{ old('contacto.0.puesto', $cliente->contacto_predet?->puesto) }}"
+                                        class="form-control guarda-mayus" maxlength="20" required>
+                                    @error('contacto.0.puesto')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Género
+                                        @can('Editar Cuenta')
+                                            <span class="text-danger asterisco">*</span>
+                                        @endcan
+                                    </label>
+                                    @php
+                                        $genero = old('contacto.0.genero', $cliente->contacto_predet?->genero);
+                                    @endphp
 
+                                    <select name="contacto[0][genero]" class="form-select" required>
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="masculino" @selected($genero == 'masculino')>Masculino</option>
+                                        <option value="femenino" @selected($genero == 'femenino')>Femenino</option>
+                                        <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado
+                                        </option>
+                                    </select>
+                                </div>
 
-                        <div class="row gx-3 gy-2 mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Nombre de la Empresa <span
-                                        class="text-danger asterisco">*</span></label>
-                                <input id="nombre" name="nombre" type="text"
-                                    class="form-control guarda-mayus @error('nombre') is-invalid @enderror"
-                                    value="{{ $cliente->nombre }}" required minlength="3" maxlength="45">
-                                @error('nombre')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
-                        <h6 class="fw-semibold mb-3">Contacto principal</h6>
-
-                        <div class="row g-3 contacto-block" data-index="0">
-                            {{-- Ojo: El operador ?-> es para navegación segura --}}
-
-                            {{-- Nombre(s) de Contacto --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Nombre(s) <span
-                                        class="text-danger asterisco">*</span></label>
-                                <input name="contacto[0][nombre]"
-                                    value="{{ old('contacto.0.nombre', $cliente->contacto_predet?->nombre) }}"
-                                    class="form-control guarda-mayus @error('contacto.0.nombre') is-invalid @enderror"
-                                    minlength="2" maxlength="45" required>
-                                @error('contacto.0.nombre')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-
-                            </div>
-                            {{-- Primer Apellido --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Primer Apellido <span
-                                        class="text-danger asterisco">*</span></label>
-                                <input name="contacto[0][apellido_p]"
-                                    value="{{ old('contacto.0.apellido_p', $cliente->contacto_predet?->apellido_p) }}"
-                                    class="form-control guarda-mayus" maxlength="27" required>
-                                @error('contacto.0.apellido_p')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            {{-- Segundo Apellido --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Segundo Apellido <span
-                                        class="text-danger asterisco">*</span></label>
-                                <input name="contacto[0][apellido_m]"
-                                    value="{{ old('contacto.0.apellido_m', $cliente->contacto_predet?->apellido_m) }}"
-                                    class="form-control guarda-mayus" maxlength="27" required>
-                            </div>
-                            {{-- Email --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Correo Electrónico <span
-                                        class="text-danger asterisco">*</span></label>
-                                <input name="contacto[0][email]"
-                                    value="{{ old('contacto.0.email', $cliente->contacto_predet?->email) }}"
-                                    type="email" class="form-control guarda-minus" maxlength="50" required>
-                                @error('contacto.0.email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            {{-- Puesto --}}
-                            <div class="col-md-2">
-                                <label class="form-label">Puesto <span class="text-danger asterisco">*</span></label>
-                                <input name="contacto[0][puesto]"
-                                    value="{{ old('contacto.0.puesto', $cliente->contacto_predet?->puesto) }}"
-                                    class="form-control guarda-mayus" maxlength="20" required>
-                                @error('contacto.0.puesto')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">Género <span class="text-danger asterisco">*</span></label>
+                                {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
                                 @php
-                                    $genero = old('contacto.0.genero', $cliente->contacto_predet?->genero);
+                                    // helpers
+                                    $hasTel = fn($i) => !empty($cliente->contacto_predet->{'telefono' . $i}) ||
+                                        !empty($cliente->contacto_predet->{'ext' . $i});
+                                    $hasCel = fn($i) => !empty($cliente->contacto_predet->{'celular' . $i});
                                 @endphp
 
-                                <select name="contacto[0][genero]" class="form-select" required>
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="masculino" @selected($genero == 'masculino')>Masculino</option>
-                                    <option value="femenino" @selected($genero == 'femenino')>Femenino</option>
-                                    <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado
-                                    </option>
-                                </select>
-                            </div>
+                                <div id="telefonos-cel-wrapper--view">
+                                    <div class="row">
 
-                            {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
-                            @php
-                                // helpers
-                                $hasTel = fn($i) => !empty($cliente->contacto_predet->{'telefono' . $i}) ||
-                                    !empty($cliente->contacto_predet->{'ext' . $i});
-                                $hasCel = fn($i) => !empty($cliente->contacto_predet->{'celular' . $i});
-                            @endphp
+                                        {{-- Teléfonos fijos --}}
+                                        <div class="col campo-dato-telefono" id="telefonos-col--view"
+                                            style="padding-right: 0px !important;">
 
-                            <div id="telefonos-cel-wrapper--view">
-                                <div class="row">
-
-                                    {{-- Teléfonos fijos --}}
-                                    <div class="col campo-dato-telefono" id="telefonos-col--view"
-                                        style="padding-right: 0px !important;">
-
-                                        {{-- Teléfono fila 1 --}}
-                                        <div class="mb-2 telefono-item">
-                                            <label>Teléfono 1</label>
-                                            <div class="input-group input-group-separated">
-                                                <input name="contacto[0][telefono1]" class="form-control phone-field"
-                                                    value="{{ old('contacto.0.telefono1', $cliente->contacto_predet?->telefono1) }}"
-                                                    placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-                                                @error('contacto.0.telefono1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <input name="contacto[0][ext1]"
-                                                    class="form-control ext-field div-10ch"
-                                                    value="{{ old('contacto.0.ext1', $cliente->contacto_predet?->ext1) }}"
-                                                    placeholder="Ext." maxlength="7">
-                                                @error('contacto.0.ext1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <button type="button"
-                                                    class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
-                                            </div>
-                                        </div>
-
-                                        @for ($i = 2; $i <= 5; $i++)
-                                            @continue(!$hasTel($i))
+                                            {{-- Teléfono fila 1 --}}
                                             <div class="mb-2 telefono-item">
-                                                <label>Teléfono {{ $i }}</label>
+                                                <label>Teléfono 1</label>
                                                 <div class="input-group input-group-separated">
-                                                    <input type="text"
-                                                        name="contacto[0][telefono{{ $i }}]"
-                                                        value="{{ old('contacto.0.telefono' . $i, $cliente->contacto_predet?->{'telefono' . $i}) }}"
+                                                    <input name="contacto[0][telefono1]"
                                                         class="form-control phone-field"
+                                                        value="{{ old('contacto.0.telefono1', $cliente->contacto_predet?->telefono1) }}"
+                                                        placeholder="Teléfono"
                                                         style="min-width: 16ch; max-width: 16ch;">
-                                                    @error('contacto.0.telefono' . $i)
+                                                    @error('contacto.0.telefono1')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
-                                                    <input type="text" name="contacto[0][ext{{ $i }}]"
-                                                        value="{{ old('contacto.0.ext' . $i, $cliente->contacto_predet?->{'ext' . $i}) }}"
-                                                        class="form-control ext-field div-10ch" maxlength="7">
-                                                    @error('contacto.0.ext' . $i)
+                                                    <input name="contacto[0][ext1]"
+                                                        class="form-control ext-field div-10ch"
+                                                        value="{{ old('contacto.0.ext1', $cliente->contacto_predet?->ext1) }}"
+                                                        placeholder="Ext." maxlength="7">
+                                                    @error('contacto.0.ext1')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                     <button type="button"
-                                                        class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                        class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
                                                 </div>
                                             </div>
-                                        @endfor
-                                        <small id="tel-limit-msg" class="text-danger mt-1 d-none">
-                                            Solo puedes agregar hasta 5 teléfonos.
-                                        </small>
+
+                                            @for ($i = 2; $i <= 5; $i++)
+                                                @continue(!$hasTel($i))
+                                                <div class="mb-2 telefono-item">
+                                                    <label>Teléfono {{ $i }}</label>
+                                                    <div class="input-group input-group-separated">
+                                                        <input type="text"
+                                                            name="contacto[0][telefono{{ $i }}]"
+                                                            value="{{ old('contacto.0.telefono' . $i, $cliente->contacto_predet?->{'telefono' . $i}) }}"
+                                                            class="form-control phone-field"
+                                                            style="min-width: 16ch; max-width: 16ch;">
+                                                        @error('contacto.0.telefono' . $i)
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        <input type="text"
+                                                            name="contacto[0][ext{{ $i }}]"
+                                                            value="{{ old('contacto.0.ext' . $i, $cliente->contacto_predet?->{'ext' . $i}) }}"
+                                                            class="form-control ext-field div-10ch" maxlength="7">
+                                                        @error('contacto.0.ext' . $i)
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                            <small id="tel-limit-msg" class="text-danger mt-1 d-none">
+                                                Solo puedes agregar hasta 5 teléfonos.
+                                            </small>
 
 
-                                    </div>
-
-                                    {{-- Celulares --}}
-                                    <div class="col campo-dato-secundario" id="celulares-col--view"
-                                        style="padding-right: 0px !important;">
-                                        {{-- Celular fila 1 --}}
-                                        <div class="mb-2 celular-item campo-dato-secundario">
-                                            <label>Teléfono Celular 1</label>
-                                            <div class="input-group input-group-separated">
-                                                <input name="contacto[0][celular1]" type="text"
-                                                    placeholder="Celular"
-                                                    value="{{ old('contacto.0.celular1', $cliente->contacto_predet?->celular1) }}"
-                                                    class="form-control phone-field"
-                                                    style="min-width: 16ch; max-width: 16ch;">
-                                                @error('contacto.0.celular1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <button type="button"
-                                                    class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
-                                            </div>
                                         </div>
-                                        @for ($i = 2; $i <= 5; $i++)
-                                            @continue(!$hasCel($i))
-                                            <div class="mb-2 celular-item">
-                                                <label>Teléfono Celular {{ $i }}</label>
-                                                <div class="input-group input-group-separated campo-dato-secundario">
-                                                    <input type="text"
-                                                        name="contacto[0][celular{{ $i }}]"
-                                                        value="{{ old('contacto.0.celular' . $i, $cliente->contacto_predet?->{'celular' . $i}) }}"
+
+                                        {{-- Celulares --}}
+                                        <div class="col campo-dato-secundario" id="celulares-col--view"
+                                            style="padding-right: 0px !important;">
+                                            {{-- Celular fila 1 --}}
+                                            <div class="mb-2 celular-item campo-dato-secundario">
+                                                <label>Teléfono Celular 1</label>
+                                                <div class="input-group input-group-separated">
+                                                    <input name="contacto[0][celular1]" type="text"
+                                                        placeholder="Celular"
+                                                        value="{{ old('contacto.0.celular1', $cliente->contacto_predet?->celular1) }}"
                                                         class="form-control phone-field"
                                                         style="min-width: 16ch; max-width: 16ch;">
-                                                    @error('contacto.0.celular' . $i)
+                                                    @error('contacto.0.celular1')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                     <button type="button"
-                                                        class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                        class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
                                                 </div>
                                             </div>
-                                        @endfor
-                                        <small id="cel-limit-msg" class="text-danger mt-1 d-none">
-                                            Solo puedes agregar hasta 5 celulares.
-                                        </small>
+                                            @for ($i = 2; $i <= 5; $i++)
+                                                @continue(!$hasCel($i))
+                                                <div class="mb-2 celular-item">
+                                                    <label>Teléfono Celular {{ $i }}</label>
+                                                    <div
+                                                        class="input-group input-group-separated campo-dato-secundario">
+                                                        <input type="text"
+                                                            name="contacto[0][celular{{ $i }}]"
+                                                            value="{{ old('contacto.0.celular' . $i, $cliente->contacto_predet?->{'celular' . $i}) }}"
+                                                            class="form-control phone-field"
+                                                            style="min-width: 16ch; max-width: 16ch;">
+                                                        @error('contacto.0.celular' . $i)
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                            <small id="cel-limit-msg" class="text-danger mt-1 d-none">
+                                                Solo puedes agregar hasta 5 celulares.
+                                            </small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div> <!-- /card-body -->
+                        </div> <!-- /card-body -->
+
+                    </div>
+
+                    <!-- ─────────────────────────────── Fin tarjeta ─────────────────────────────── -->
 
                 </div>
+            </form>
 
-                <!-- ─────────────────────────────── Fin tarjeta ─────────────────────────────── -->
-
-            </div>
-        </form>
-
-    @cannot('Editar Cuenta')
-        </fieldset>
-    @endcannot
+            @cannot('Editar Cuenta')
+            </fieldset>
+        @endcannot
     @elseif($cliente->sector === 'persona')
+        @cannot('Editar Cuenta')
+            <fieldset disabled>
+            @endcannot
 
-    @cannot('Editar Cuenta')
-        <fieldset disabled>
-    @endcannot
+            <!-- ╭━━━━━━━━━━━━━━━━━━ Ficha persona Fisica (Persona) ━━━━━━━━━━━━━━╮ -->
+            <form id="formCuenta" action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST"
+                autocomplete="off">
+                @csrf
+                @method('PUT')
+                <div class="form-wrapper" style="margin-right: auto;">
 
-        <!-- ╭━━━━━━━━━━━━━━━━━━ Ficha persona Fisica (Persona) ━━━━━━━━━━━━━━╮ -->
-        <form id="formCuenta" action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST"
-            autocomplete="off">
-            @csrf
-            @method('PUT')
-            <div class="form-wrapper" style="margin-right: auto;">
+                    {{-- ── Tarjeta: Cuenta Personal ─────────────────────────── --}}
 
-                {{-- ── Tarjeta: Cuenta Personal ─────────────────────────── --}}
+                    <!-- Valores por defecto / lógica de negocio -->
+                    <input type="hidden" name="sector" value="persona">
 
-                <!-- Valores por defecto / lógica de negocio -->
-                <input type="hidden" name="sector" value="persona">
+                    <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
+                    <div class="card mb-4 section-card section-card-cuenta-empresarial">
+                        <div class="card-header card-header--row">
+                            <h5 class="mb-0 flex-grow-1">Cuenta&nbsp;Personal</h5>
 
-                <!-- ╭━━━━━━━━━━ Datos Generales ━━━━━━━━━━╮ -->
-                <div class="card mb-4 section-card section-card-cuenta-empresarial">
-                    <div class="card-header card-header--row">
-                        <h5 class="mb-0 flex-grow-1">Cuenta&nbsp;Personal</h5>
-
-                        @if ($usuario->es_admin)
-                            <button type="button" id="btnEditar"
-                                class="btn btn-sm btn-success ms-auto btn-editar-cuenta" style="margin-right:5ch;">
-                                <i class="fa fa-edit me-1"></i> Editar cuenta
-                            </button>
-                        @endif
-                    </div>
-                    <div class="card-body">
-                        <div class="row gx-3 gy-2 mb-2">
-                            <div class="col campo-dato-secundario">
-                                <label class="form-label">Estatus</label>
-                                <select id="selectEstatus" name="estatus" class="form-select">
-                                    <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
-                                    <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
-                                </select>
-                            </div>
-                            <div class="col campo-dato-secundario">
-                                <label class="form-label">Ciclo de Venta</label>
-                                <select name="ciclo_venta" class="form-select" disabled>
-                                    <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
-                                    <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
-                                </select>
-                            </div>
-                            <div class="col campo-dato-secundario">
-                                <label class="form-label">Asignado a: <span
-                                        class="text-danger asterisco">*</span></label>
-                                <select name="id_vendedor" class="form-select">
-                                    <option value="" @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
-                                        Base General
-                                    </option>
-
-                                    @foreach ($vendedores as $v)
-                                        <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor', $cliente->id_vendedor) == $v->id_usuario)>
-                                            {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col campo-dato-secundario">
-                                <label class="form-label">Sector <span class="text-danger">*</span></label>
-                                <select name="sector" class="form-select" required>
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="privada" @selected(old('sector', $cliente->sector) == 'persona')>Persona</option>
-                                </select>
-                            </div>
-
-                            <div class="campo-dato-secundario">
-                                <label class="form-label">Segmento <span
-                                        class="text-danger asterisco">*</span></label>
-                                <select name="segmento" class="form-select" required>
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="macasa cuentas especiales" @selected(old('segmento', $cliente->segmento) == 'macasa cuentas especiales')>
-                                        Macasa Cuentas Especiales
-                                    </option>
-                                    <option value="tekne store ecommerce" @selected(old('segmento', $cliente->segmento) == 'tekne store ecommerce')>
-                                        Tekne Store E-Commerce
-                                    </option>
-                                    <option value="la plaza ecommerce" @selected(old('segmento', $cliente->segmento) == 'la plaza ecommerce')>
-                                        LaPlazaEnLinea E-Commerce
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col campo-dato-secundario">
-                                <label class="form-label">Origen de la Cuenta</label>
-                                <select name="tipo" class="form-select" disabled>
-                                    <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
-                                    <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
-                                </select>
-                            </div>
-
-
+                            @if ($usuario->es_admin)
+                                <button type="button" id="btnEditar"
+                                    class="btn btn-sm btn-success ms-auto btn-editar-cuenta"
+                                    style="margin-right:5ch;">
+                                    <i class="fa fa-edit me-1"></i> Editar cuenta
+                                </button>
+                            @endif
                         </div>
-                        <hr>
-                        <div class="row gx-3 gy-2 mb-2">
-                            <div class="col campo-dato-principal">
-                                <label for="nombre" class="form-label">
-                                    Nombre(s) <span class="text-danger asterisco">*</span>
-                                </label>
-                                <input type="text" name="nombre" id="nombre"
-                                    class="form-control guarda-mayus"
-                                    value="{{ old('nombre', $cliente->contacto_predet?->nombre) }}" required
-                                    minlength="3" maxlength="40">
-                                @error('nombre')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="card-body">
+                            <div class="row gx-3 gy-2 mb-2">
+                                <div class="col campo-dato-secundario">
+                                    <label class="form-label">Estatus</label>
+                                    <select id="selectEstatus" name="estatus" class="form-select">
+                                        <option value="activo" @selected(old('estatus', $cliente->estatus) === 'activo')>Activo</option>
+                                        <option value="inactivo" @selected(old('estatus', $cliente->estatus) === 'inactivo')>Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="col campo-dato-secundario">
+                                    <label class="form-label">Ciclo de Venta</label>
+                                    <select name="ciclo_venta" class="form-select" disabled>
+                                        <option value="cotizacion" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'cotizacion')>Cotización</option>
+                                        <option value="venta" @selected(old('ciclo_venta', $cliente->ciclo_venta) === 'venta')>Venta</option>
+                                    </select>
+                                </div>
+                                <div class="col campo-dato-secundario">
+                                    <label class="form-label">Asignado a: <span
+                                            class="text-danger asterisco">*</span></label>
+                                    <select name="id_vendedor" class="form-select">
+                                        <option value="" @selected(old('id_vendedor', $cliente->id_vendedor) === '')>
+                                            Base General
+                                        </option>
 
-                            <div class="col campo-dato-principal">
-                                <label for="apellido_p" class="form-label">
-                                    Primer Apellido <span class="text-danger asterisco">*</span>
-                                </label>
-                                <input type="text" name="apellido_p" id="apellido_p"
-                                    class="form-control guarda-mayus"
-                                    value="{{ old('apellido_p', $cliente->contacto_predet?->apellido_p) }}" required
-                                    minlength="3" maxlength="27">
-                                @error('apellido_p')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                        @foreach ($vendedores as $v)
+                                            <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor', $cliente->id_vendedor) == $v->id_usuario)>
+                                                {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                            <div class="col campo-dato-principal">
-                                <label for="apellido_m" class="form-label">
-                                    Segundo Apellido <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="apellido_m" id="apellido_m"
-                                    class="form-control guarda-mayus"
-                                    value="{{ old('apellido_m', $cliente->contacto_predet?->apellido_m) }}" required
-                                    maxlength="27">
-                                @error('apellido_m')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                <div class="col campo-dato-secundario">
+                                    <label class="form-label">Sector <span class="text-danger">*</span></label>
+                                    <select name="sector" class="form-select" required>
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="privada" @selected(old('sector', $cliente->sector) == 'persona')>Persona</option>
+                                    </select>
+                                </div>
 
-                            <!-- Correo Electrónico -->
-                            <div class="col campo-dato-principal">
-                                <label for="email" class="form-label">Correo Electrónico <span
-                                        class="text-danger">*</span></label>
-                                <input name="email" type="email" class="form-control guarda-minus"
-                                    maxlength="40" value="{{ old('email', $cliente->contacto_predet?->email) }}"
-                                    required>
-                            </div>
+                                <div class="campo-dato-secundario">
+                                    <label class="form-label">Segmento <span
+                                            class="text-danger asterisco">*</span></label>
+                                    <select name="segmento" class="form-select" required>
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="macasa cuentas especiales" @selected(old('segmento', $cliente->segmento) == 'macasa cuentas especiales')>
+                                            Macasa Cuentas Especiales
+                                        </option>
+                                        <option value="tekne store ecommerce" @selected(old('segmento', $cliente->segmento) == 'tekne store ecommerce')>
+                                            Tekne Store E-Commerce
+                                        </option>
+                                        <option value="la plaza ecommerce" @selected(old('segmento', $cliente->segmento) == 'la plaza ecommerce')>
+                                            LaPlazaEnLinea E-Commerce
+                                        </option>
+                                    </select>
+                                </div>
 
-                            <!-- Género -->
-                            <div class="col campo-dato-secundario">
-                                <label class="form-label">Género <span class="text-danger asterisco">*</span></label>
+                                <div class="col campo-dato-secundario">
+                                    <label class="form-label">Origen de la Cuenta</label>
+                                    <select name="tipo" class="form-select" disabled>
+                                        <option value="erp" @selected(old('tipo', $cliente->tipo) === 'erp')>SIS</option>
+                                        <option value="crm" @selected(old('tipo', $cliente->tipo) === 'ecommerce')>E-Commerce</option>
+                                    </select>
+                                </div>
+
+
+                            </div>
+                            <hr>
+                            <div class="row gx-3 gy-2 mb-2">
+                                <div class="col campo-dato-principal">
+                                    <label for="nombre" class="form-label">
+                                        Nombre(s) <span class="text-danger asterisco">*</span>
+                                    </label>
+                                    <input type="text" name="nombre" id="nombre"
+                                        class="form-control guarda-mayus"
+                                        value="{{ old('nombre', $cliente->contacto_predet?->nombre) }}" required
+                                        minlength="3" maxlength="40">
+                                    @error('nombre')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col campo-dato-principal">
+                                    <label for="apellido_p" class="form-label">
+                                        Primer Apellido <span class="text-danger asterisco">*</span>
+                                    </label>
+                                    <input type="text" name="apellido_p" id="apellido_p"
+                                        class="form-control guarda-mayus"
+                                        value="{{ old('apellido_p', $cliente->contacto_predet?->apellido_p) }}"
+                                        required minlength="3" maxlength="27">
+                                    @error('apellido_p')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col campo-dato-principal">
+                                    <label for="apellido_m" class="form-label">
+                                        Segundo Apellido <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="apellido_m" id="apellido_m"
+                                        class="form-control guarda-mayus"
+                                        value="{{ old('apellido_m', $cliente->contacto_predet?->apellido_m) }}"
+                                        required maxlength="27">
+                                    @error('apellido_m')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Correo Electrónico -->
+                                <div class="col campo-dato-principal">
+                                    <label for="email" class="form-label">Correo Electrónico <span
+                                            class="text-danger">*</span></label>
+                                    <input name="email" type="email" class="form-control guarda-minus"
+                                        maxlength="40" value="{{ old('email', $cliente->contacto_predet?->email) }}"
+                                        required>
+                                </div>
+
+                                <!-- Género -->
+                                <div class="col campo-dato-secundario">
+                                    <label class="form-label">Género <span
+                                            class="text-danger asterisco">*</span></label>
+                                    @php
+                                        $genero = old('genero', $cliente->contacto_predet?->genero);
+                                    @endphp
+                                    <select name="genero" class="form-select" required>
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="masculino" @selected($genero == 'masculino')>Masculino</option>
+                                        <option value="femenino" @selected($genero == 'femenino')>Femenino</option>
+                                        <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado
+                                        </option>
+                                    </select>
+                                </div>
+
+
+
+                                {{-- Contacto Principal ─ Teléfonos PERSONAL --}}
+                                {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
                                 @php
-                                    $genero = old('genero', $cliente->contacto_predet?->genero);
+                                    // helpers
+                                    $hasTel = fn($i) => !empty($cliente->contacto_predet->{'telefono' . $i}) ||
+                                        !empty($cliente->contacto_predet->{'ext' . $i});
+                                    $hasCel = fn($i) => !empty($cliente->contacto_predet->{'celular' . $i});
                                 @endphp
-                                <select name="genero" class="form-select" required>
-                                    <option value="">-- Selecciona --</option>
-                                    <option value="masculino" @selected($genero == 'masculino')>Masculino</option>
-                                    <option value="femenino" @selected($genero == 'femenino')>Femenino</option>
-                                    <option value="no-especificado" @selected($genero == 'no-especificado')>No especificado
-                                    </option>
-                                </select>
-                            </div>
 
+                                <div id="telefonos-cel-wrapper--view">
+                                    <div class="row">
 
+                                        {{-- Teléfonos fijos --}}
+                                        <div class="col campo-dato-telefono" id="telefonos-col--view"
+                                            style="padding-right: 0px !important;">
 
-                            {{-- Contacto Principal ─ Teléfonos PERSONAL --}}
-                            {{-- ───── Teléfonos / Celulares  (VIEW) ───── --}}
-                            @php
-                                // helpers
-                                $hasTel = fn($i) => !empty($cliente->contacto_predet->{'telefono' . $i}) ||
-                                    !empty($cliente->contacto_predet->{'ext' . $i});
-                                $hasCel = fn($i) => !empty($cliente->contacto_predet->{'celular' . $i});
-                            @endphp
-
-                            <div id="telefonos-cel-wrapper--view">
-                                <div class="row">
-
-                                    {{-- Teléfonos fijos --}}
-                                    <div class="col campo-dato-telefono" id="telefonos-col--view"
-                                        style="padding-right: 0px !important;">
-
-                                        {{-- Teléfono fila 1 --}}
-                                        <div class="mb-2 telefono-item">
-                                            <label>Teléfono 1</label>
-                                            <div class="input-group input-group-separated">
-                                                <input name="contacto[0][telefono1]" class="form-control phone-field"
-                                                    value="{{ old('contacto.0.telefono1', $cliente->contacto_predet?->telefono1) }}"
-                                                    placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-                                                @error('contacto.0.telefono1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <input name="contacto[0][ext1]"
-                                                    class="form-control ext-field div-10ch"
-                                                    value="{{ old('contacto.0.ext1', $cliente->contacto_predet?->ext1) }}"
-                                                    placeholder="Ext." maxlength="7">
-                                                @error('contacto.0.ext1')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <button type="button"
-                                                    class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
-                                            </div>
-                                        </div>
-
-                                        @for ($i = 2; $i <= 5; $i++)
-                                            @continue(!$hasTel($i))
+                                            {{-- Teléfono fila 1 --}}
                                             <div class="mb-2 telefono-item">
-                                                <label>Teléfono {{ $i }}</label>
+                                                <label>Teléfono 1</label>
                                                 <div class="input-group input-group-separated">
-                                                    <input type="text"
-                                                        name="contacto[0][telefono{{ $i }}]"
-                                                        value="{{ old('contacto.0.telefono' . $i, $cliente->contacto_predet?->{'telefono' . $i}) }}"
+                                                    <input name="contacto[0][telefono1]"
                                                         class="form-control phone-field"
+                                                        value="{{ old('contacto.0.telefono1', $cliente->contacto_predet?->telefono1) }}"
+                                                        placeholder="Teléfono"
                                                         style="min-width: 16ch; max-width: 16ch;">
-                                                    <input type="text" name="contacto[0][ext{{ $i }}]"
-                                                        value="{{ old('contacto.0.ext' . $i, $cliente->contacto_predet?->{'ext' . $i}) }}"
-                                                        class="form-control ext-field div-10ch" maxlength="7">
+                                                    @error('contacto.0.telefono1')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                    <input name="contacto[0][ext1]"
+                                                        class="form-control ext-field div-10ch"
+                                                        value="{{ old('contacto.0.ext1', $cliente->contacto_predet?->ext1) }}"
+                                                        placeholder="Ext." maxlength="7">
+                                                    @error('contacto.0.ext1')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
                                                     <button type="button"
-                                                        class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                        class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
                                                 </div>
                                             </div>
-                                        @endfor
-                                        <small id="tel-limit-msg" class="text-danger mt-1 d-none">
-                                            Solo puedes agregar hasta 5 teléfonos.
-                                        </small>
+
+                                            @for ($i = 2; $i <= 5; $i++)
+                                                @continue(!$hasTel($i))
+                                                <div class="mb-2 telefono-item">
+                                                    <label>Teléfono {{ $i }}</label>
+                                                    <div class="input-group input-group-separated">
+                                                        <input type="text"
+                                                            name="contacto[0][telefono{{ $i }}]"
+                                                            value="{{ old('contacto.0.telefono' . $i, $cliente->contacto_predet?->{'telefono' . $i}) }}"
+                                                            class="form-control phone-field"
+                                                            style="min-width: 16ch; max-width: 16ch;">
+                                                        <input type="text"
+                                                            name="contacto[0][ext{{ $i }}]"
+                                                            value="{{ old('contacto.0.ext' . $i, $cliente->contacto_predet?->{'ext' . $i}) }}"
+                                                            class="form-control ext-field div-10ch" maxlength="7">
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                            <small id="tel-limit-msg" class="text-danger mt-1 d-none">
+                                                Solo puedes agregar hasta 5 teléfonos.
+                                            </small>
 
 
-                                    </div>
-
-                                    {{-- Celulares --}}
-                                    <div class="col campo-dato-secundario" id="celulares-col--view"
-                                        style="padding-right: 0px !important;">
-                                        {{-- Celular fila 1 --}}
-                                        <div class="mb-2 celular-item campo-dato-secundario">
-                                            <label>Teléfono Celular 1</label>
-                                            <div class="input-group input-group-separated">
-                                                <input type="text" name="contacto[0][celular1]"
-                                                    placeholder="Celular"
-                                                    value="{{ old('contacto.0.celular1', $cliente->contacto_predet?->celular1) }}"
-                                                    class="form-control phone-field"
-                                                    style="min-width: 16ch; max-width: 16ch;">
-                                                <button type="button"
-                                                    class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
-                                            </div>
                                         </div>
-                                        @for ($i = 2; $i <= 5; $i++)
-                                            @continue(!$hasCel($i))
-                                            <div class="mb-2 celular-item">
-                                                <label>Teléfono Celular {{ $i }}</label>
-                                                <div class="input-group input-group-separated campo-dato-secundario">
-                                                    <input type="text"
-                                                        name="contacto[0][celular{{ $i }}]"
-                                                        value="{{ old('contacto.0.celular' . $i, $cliente->contacto_predet?->{'celular' . $i}) }}"
+
+                                        {{-- Celulares --}}
+                                        <div class="col campo-dato-secundario" id="celulares-col--view"
+                                            style="padding-right: 0px !important;">
+                                            {{-- Celular fila 1 --}}
+                                            <div class="mb-2 celular-item campo-dato-secundario">
+                                                <label>Teléfono Celular 1</label>
+                                                <div class="input-group input-group-separated">
+                                                    <input type="text" name="contacto[0][celular1]"
+                                                        placeholder="Celular"
+                                                        value="{{ old('contacto.0.celular1', $cliente->contacto_predet?->celular1) }}"
                                                         class="form-control phone-field"
                                                         style="min-width: 16ch; max-width: 16ch;">
                                                     <button type="button"
-                                                        class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                        class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
                                                 </div>
                                             </div>
-                                        @endfor
-                                        <small id="cel-limit-msg" class="text-danger mt-1 d-none">
-                                            Solo puedes agregar hasta 5 celulares.
-                                        </small>
+                                            @for ($i = 2; $i <= 5; $i++)
+                                                @continue(!$hasCel($i))
+                                                <div class="mb-2 celular-item">
+                                                    <label>Teléfono Celular {{ $i }}</label>
+                                                    <div
+                                                        class="input-group input-group-separated campo-dato-secundario">
+                                                        <input type="text"
+                                                            name="contacto[0][celular{{ $i }}]"
+                                                            value="{{ old('contacto.0.celular' . $i, $cliente->contacto_predet?->{'celular' . $i}) }}"
+                                                            class="form-control phone-field"
+                                                            style="min-width: 16ch; max-width: 16ch;">
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger eliminar-item btn-field d-none">X</button>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                            <small id="cel-limit-msg" class="text-danger mt-1 d-none">
+                                                Solo puedes agregar hasta 5 celulares.
+                                            </small>
+                                        </div>
                                     </div>
                                 </div>
+
+
                             </div>
 
-
                         </div>
-
                     </div>
+
                 </div>
+            </form>
 
-            </div>
-        </form>
-
-    @cannot('Editar Cuenta')
-        </fieldset>
-    @endcannot
+            @cannot('Editar Cuenta')
+            </fieldset>
+        @endcannot
     @endif
 
     {{-- Historial de cotizaciones ------------------------------------------------- --}}
@@ -880,8 +925,10 @@
                             <label class="form-label mb-1">Volver a llamar</label>
                             <div class="d-flex align-items-center gap-2 flex-nowrap">
                                 <div style="min-width: 180px; max-width: 180px; position: relative;">
-                                    <input type="date" name="fecha_reprogramacion" class="form-control" id="fechaReprogramacion" style="width: 100;">
-                                    <span id="fechaReprogramacionTexto" class="form-text small text-muted position-absolute start-0 mt-1"
+                                    <input type="date" name="fecha_reprogramacion" class="form-control"
+                                        id="fechaReprogramacion" style="width: 100;">
+                                    <span id="fechaReprogramacionTexto"
+                                        class="form-text small text-muted position-absolute start-0 mt-1"
                                         style="display: none; pointer-events: none; background: #fff; width: 100%; z-index: 2;"></span>
                                 </div>
                             </div>
@@ -892,48 +939,7 @@
                             </a>
                         </div>
                     </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const input = document.getElementById('fechaReprogramacion');
-                            const texto = document.getElementById('fechaReprogramacionTexto');
-                            const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-                            const meses = [
-                                'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-                                'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
-                            ];
 
-                            function mostrarTextoFecha(fechaStr) {
-                                if (!fechaStr) {
-                                    texto.style.display = 'none';
-                                    texto.textContent = '';
-                                    return;
-                                }
-                                // Ajuste de zona horaria para evitar desfase de día
-                                const partes = fechaStr.split('-');
-                                const fecha = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
-                                if (isNaN(fecha)) {
-                                    texto.style.display = 'none';
-                                    texto.textContent = '';
-                                    return;
-                                }
-                                const diaSemana = dias[fecha.getUTCDay()];
-                                const dia = fecha.getUTCDate();
-                                const mes = meses[fecha.getUTCMonth()];
-                                const anio = fecha.getUTCFullYear();
-                                texto.textContent = `${diaSemana}, ${dia} de ${mes} de ${anio}`;
-                                texto.style.display = '';
-                            }
-
-                            input.addEventListener('change', function () {
-                                mostrarTextoFecha(this.value);
-                            });
-
-                            // Si ya hay valor al cargar
-                            if (input.value) {
-                                mostrarTextoFecha(input.value);
-                            }
-                        });
-                    </script>
 
                     <div class="row">
                         <div class="col-md-12 form-group mt-3">
@@ -1136,7 +1142,7 @@
             });
         });
     </script>
-    
+
     <script>
         //Eric: Comentario, considerar poner un script para la tabla de cotizaciones.
         // Script para ordenar tabla de pedidos
@@ -1211,7 +1217,7 @@
         });
     </script>
 
-    @can('Editar Cuenta') 
+    @can('Editar Cuenta')
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const MAX = 5;
@@ -1530,5 +1536,48 @@
             });
         </script>
     @endcan
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('fechaReprogramacion');
+            const texto = document.getElementById('fechaReprogramacionTexto');
+            const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+            const meses = [
+                'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+            ];
+
+            function mostrarTextoFecha(fechaStr) {
+                if (!fechaStr) {
+                    texto.style.display = 'none';
+                    texto.textContent = '';
+                    return;
+                }
+                // Ajuste de zona horaria para evitar desfase de día
+                const partes = fechaStr.split('-');
+                const fecha = new Date(Date.UTC(partes[0], partes[1] - 1, partes[2]));
+                if (isNaN(fecha)) {
+                    texto.style.display = 'none';
+                    texto.textContent = '';
+                    return;
+                }
+                const diaSemana = dias[fecha.getUTCDay()];
+                const dia = fecha.getUTCDate();
+                const mes = meses[fecha.getUTCMonth()];
+                const anio = fecha.getUTCFullYear();
+                texto.textContent = `${diaSemana}, ${dia} de ${mes} de ${anio}`;
+                texto.style.display = '';
+            }
+
+            input.addEventListener('change', function() {
+                mostrarTextoFecha(this.value);
+            });
+
+            // Si ya hay valor al cargar
+            if (input.value) {
+                mostrarTextoFecha(input.value);
+            }
+        });
+    </script>
 
 @endpush

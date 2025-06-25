@@ -116,8 +116,8 @@ class ClienteController extends Controller
         $metodos_pago = MetodoPago::pluck('nombre', 'id_metodo_pago');
         $formas_pago = FormaPago::pluck('nombre', 'id_forma_pago');
         $usos_cfdi = UsoCfdi::pluck('nombre', 'id_uso_cfdi');
-        $ciudades = Ciudad::pluck('nombre', 'id_ciudad');
-        $estados = Estado::pluck('nombre', 'id_estado');
+        $ciudades = Ciudad::pluck('n_mnpio', 'id_ciudad');
+        $estados = Estado::pluck('d_estado', 'id_estado');
         $paises = [
             '1' => 'México',
             '2' => 'Estados Unidos',
@@ -227,8 +227,8 @@ class ClienteController extends Controller
         $metodos_pago = MetodoPago::pluck('nombre', 'id_metodo_pago');
         $formas_pago = FormaPago::pluck('nombre', 'id_forma_pago');
         $usos_cfdi = UsoCfdi::pluck('nombre', 'id_uso_cfdi');
-        $ciudades = Ciudad::pluck('nombre', 'id_ciudad');
-        $estados = Estado::pluck('nombre', 'id_estado');
+        $ciudades = Ciudad::pluck('n_mnpio', 'id_ciudad');
+        $estados = Estado::pluck('d_estado', 'id_estado');
         $paises = [
             '1' => 'México',
             '2' => 'Estados Unidos',

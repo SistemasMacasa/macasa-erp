@@ -13,17 +13,17 @@
     <h2 class="mb-3 text-titulo">Mis Cuentas</h2>
  
     {{-- 🎛 Botonera --}}
-    <div class=" row-fluid gap-2 mb-3">
-        <a href="{{ url()->previous() }}" class="col-md-2 btn btn-secondary d-flex align-items-center justify-content-center ">
+    <div class=" d-flex flex-wrap gap-2 mb-3">
+        <a href="{{ url()->previous() }}" class="col-xxl-2 col-xl-2 col-lg-3 btn btn-secondary d-flex align-items-center justify-content-center ">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
-        <a href="{{ route('clientes.recalls') }}" class=" col-md-2 btn btn-primary d-flex align-items-center justify-content-center">
+        <a href="{{ route('clientes.recalls') }}" class=" col-xxl-2 col-xl-2 col-lg-3 btn btn-primary d-flex align-items-center justify-content-center">
             <i class="fa fa-list me-1"></i> Mis Recall's
         </a>
 
         <a href="{{ route('inicio') }}"
-            class="col-md-2 btn btn-primary btn-principal">
+            class="col-xxl-2 col-xl-2 col-lg-3 btn btn-primary btn-principal">
              <i class="fa fa-check me-1"></i><span class="text-boton-peq">Enviar carta de presentación</span>
         </a>
     </div>

@@ -14,11 +14,11 @@
 
         {{-- 🎛 Botonera --}}
         <div class="d-flex flex-wrap gap-2 mb-3">
-            <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
+            <a href="{{ url()->previous() }}" class="col-xxl-2 col-xl-2 col-lg-2 btn btn-secondary btn-principal">
                 <i class="fa fa-arrow-left me-1"></i> Regresar
             </a>
 
-            <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal">
+            <a href="{{ route('clientes.index') }}" class="col-xxl-2 col-xl-2 col-lg-2 btn btn-primary btn-principal">
                 <i class="fa fa-users me-1"></i> Mis cuentas
             </a>
         </div>
@@ -31,21 +31,21 @@
             <div class="card-body">
                 <form method="GET" action="{{ route('clientes.recalls') }}">
                     <div class="row gx-3 gy-2">
-                        <div class="col-md-3 col-lg-2">
+                        <div class="col-xxl-3 col-xl-3 col-lg-3">
                             <label for="search" class="form-label"><i class="fa fa-search text-normal"></i> Búsqueda</label>
                             <input type="text" name="busqueda" id="busqueda" class="form-control"
                                 placeholder="Nombre, empresa, teléfono..." value="{{ request('busqueda') }}">
                         </div>
 
                         @unlessrole('Ejecutivo')
-                        <div class="col-md-3 col-lg-2">
+                        <div class="col-xxl-2 col-xl-2 col-lg-2">
                             <label class="form-label text-normal">Jefe de equipo</label>
                             <select class="form-select" disabled>
                                 <option value="">-- Selecciona --</option>
                             </select>
                         </div>
 
-                        <div class="col-md-3 col-lg-2">
+                        <div class="col-xxl-2 col-xl-2 col-lg-2">
                             <label for="id_vendedor" class="form-label text-normal">Ejecutivo</label>
                             <select name="id_vendedor" id="id_vendedor" class="form-select">
                                 <option value="" {{ request('id_vendedor') == '' ? 'selected' : '' }}>-- Selecciona --
@@ -60,7 +60,7 @@
                         </div>
                         @endunlessrole
 
-                        <div class="col-md-3 col-lg-2">
+                        <div class="col-xxl-2 col-xl-2 col-lg-2">
                             <label for="ver" class="form-label text-normal">Ver registros</label>
                             <select name="ver" id="ver" class="form-select">
                                 <option value="" {{ request('ver') === '' ? 'selected' : '' }}>-- Selecciona --</option>

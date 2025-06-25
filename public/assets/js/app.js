@@ -2,11 +2,9 @@
 (function ($) {
     "use strict";
 
-    // Restaurar el tamaño guardado del sidebar desde localStorage
-    const savedSidebarSize = localStorage.getItem("sidebarSize");
-    if (savedSidebarSize) {
-        document.body.setAttribute("data-sidebar-size", savedSidebarSize);
-    }
+ // Aplicar tamaño guardado del sidebar, o usar "lg" por defecto
+    const savedSidebarSize = localStorage.getItem("sidebarSize") || "lg";
+    document.body.setAttribute("data-sidebar-size", savedSidebarSize);
 
     $(document).ready(function () {
 
