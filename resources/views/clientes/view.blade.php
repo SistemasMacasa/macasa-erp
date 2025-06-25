@@ -941,9 +941,9 @@
                             <label>Nota:</label>
                             <div class="d-flex flex-wrap align-items-center gap-2">
                                 <textarea name="contenido" rows="3" class="form-control"
-                                    style="resize: both; width: 50%; min-width: 200px; max-width: 100%;" required></textarea>
+                                    style="width: 50%; min-width: 200px; max-width: 100%;" required></textarea>
                                 <button type="submit" class="btn btn-success col-15ch"
-                                    style="height: 48px; white-space: nowrap;">Anexar nota</button>
+                                    style="white-space: nowrap;">Anexar nota</button>
                             </div>
                         </div>
                     </div>
