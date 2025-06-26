@@ -52,7 +52,7 @@
                         <div class="card-body">
                             {{-- ── DATOS DE LA EMPRESA ─────────────────────────── --}}
                             <div class="row gx-3 gy-2 mb-4">
-                                <div class="col-xxl-6 col-xl-6 col-lg-12">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label class="form-label text-normal">Nombre de la Empresa <span
                                             class="text-danger">*</span></label>
                                     <input id="nombre" name="nombre" type="text"
@@ -63,7 +63,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-xxl-2 col-xl-6 col-lg-6">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label class="form-label text-normal">Asignado a: <span class="text-danger">*</span></label>
                                     <select name="id_vendedor" class="form-select">
                                         <option value="" disabled selected>-- Selecciona --</option>
@@ -76,7 +76,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-xxl-2 col-xl-6 col-lg-6">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label class="form-label text-normal">Sector <span class="text-danger">*</span></label>
                                     <select name="sector" class="form-select" required>
                                         <option value="" disabled selected>-- Selecciona --</option>
@@ -85,7 +85,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-xxl-2 col-xl-6 col-lg-12">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label class="form-label text-normal">Segmento <span class="text-danger">*</span></label>
                                     <select name="segmento" class="form-select" required>
                                         <option value="" disabled selected>-- Selecciona --</option>
@@ -104,18 +104,18 @@
                             <div class="row g-3 contacto-block" data-index="0">
 
                                 {{-- Nombre(s) / Apellidos --}}
-                                <div class="col-xxl-4 col-xl-12">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label class="form-label text-normal">Nombre(s) <span class="text-danger">*</span></label>
                                     <input name="contacto[0][nombre]" class="form-control guarda-mayus" minlength="2"
                                         maxlength="45" required>
                                 </div>
-                                <div class="col-xxl-4 col-xl-6">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label class="form-label text-normal">Primer Apellido <span
                                             class="text-danger">*</span></label>
                                     <input name="contacto[0][apellido_p]" class="form-control guarda-mayus" maxlength="27"
                                         required>
                                 </div>
-                                <div class="col-xxl-4 col-xl-6">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label class="form-label text-normal">Segundo Apellido <span
                                             class="text-danger">*</span></label>
                                     <input name="contacto[0][apellido_m]" class="form-control guarda-mayus" maxlength="27"
@@ -123,18 +123,18 @@
                                 </div>
                             </div>
                             {{-- Email / Puesto / Género --}}
-                            <div class="row g-3 mb-3">
-                                <div class="col-xxl-4 col-xl-6">
+                            <div class="row">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label class="form-label text-normal">Correo Electrónico <span
                                             class="text-danger">*</span></label>
                                     <input name="contacto[0][email]" type="email" class="form-control guarda-minus"
                                         maxlength="50" required>
                                 </div>
-                                <div class="col-xxl-2 col-xl-6">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label class="form-label text-normal">Puesto <span class="text-danger">*</span></label>
                                     <input name="contacto[0][puesto]" class="form-control guarda-mayus" maxlength="20" required>
                                 </div>
-                                <div class="col-xxl-2 col-xl-6">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label class="form-label text-normal">Género <span class="text-danger">*</span></label>
                                     <select name="contacto[0][genero]" class="form-select" required>
                                         <option value="" disabled selected>-- Selecciona --</option>
@@ -149,7 +149,7 @@
 
                                 <div class="row mb-3">
                                     {{-- Teléfonos fijos --}}
-                                    <div class="col-xxl-4 col-xl-6 col-6" id="telefonos-col" style="padding-right: 0 !important;">
+                                    <div class="col-xxl-4 col-xl-4 col-lg-4" id="telefonos-col" style="padding-right: 0 !important;">
                                         <div class="mb-2 telefono-item">
                                             <label class="text-normal">Teléfono 1 <span class="text-danger">*</span></label>
 
@@ -166,7 +166,7 @@
                                     </div>
 
                                     {{-- Celulares --}}
-                                    <div class="col-xxl-4 col-xl-6 col-6" id="celulares-col">
+                                    <div class="col-xxl-4 col-xl-4 col-lg-4" id="celulares-col">
                                         <div class="mb-2 celular-item">
                                             <label class="text-normal">Teléfono Celular 1</label>
 
@@ -197,16 +197,16 @@
         <div class="container-fluid">
             <h2 class="mb-3">Nueva Cuenta Personal</h2>
             <!-- ╭━━━━━━━━━━━━━━━━━━ Botonera superior ━━━━━━━━━━━━━━━━━╮ -->
-            <div class="row-fluid gap-2 mb-3">
-                <a href="{{ url()->previous() }}" class="col-xxl-2 btn btn-secondary btn-principal">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <a href="{{ url()->previous() }}" class="btn btn-secondary col-xxl-2 col-xl-2 col-lg-3">
                     <i class="fa fa-arrow-left me-1"></i> Regresar
                 </a>
 
-                <button form="clienteForm" type="submit" class="col-xxl-2 btn btn-success btn-principal">
+                <button form="clienteForm" type="submit" class="btn btn-success col-xxl-2 col-xl-2 col-lg-3">
                     <i class="fa fa-save me-1"></i> Guardar
                 </button>
 
-                <a href="{{ route('clientes.index') }}" class="col-xxl-2 btn btn-primary btn-principal">
+                <a href="{{ route('clientes.index') }}" class="btn btn-primary col-xxl-2 col-xl-2 col-lg-3">
                     <i class="fa fa-list me-1"></i> Mis Cuentas
                 </a>
 
@@ -232,7 +232,7 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <!-- Nombre(s) del contacto = Nombre de la Cuenta -->
-                                <div class="col-xxl-4">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label for="nombre" class="form-label text-normal">
                                         Nombre(s) <span class="text-danger">*</span>
                                     </label>
@@ -243,7 +243,7 @@
                                     @enderror
                                 </div>
                                 <!-- Apellido 1 -->
-                                <div class="col-xxl-4">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label for="apellido_p" class="form-label text-normal">
                                         Primer Apellido <span class="text-danger">*</span>
                                     </label>
@@ -254,7 +254,7 @@
                                     @enderror
                                 </div>
                                 <!-- Apellido 2 -->
-                                <div class="col-xxl-4">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label for="apellido_m" class="form-label text-normal">
                                         Segundo Apellido <span class="text-danger">*</span>
                                     </label>
@@ -267,14 +267,14 @@
                             </div><!-- /row g-3 -->
                             <div class="row">
                                 <!-- Correo Electrónico -->
-                                <div class="col-xxl-4">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4">
                                     <label for="email" class="form-label text-normal">Correo Electrónico <span
                                             class="text-danger">*</span></label>
                                     <input name="email" type="email" class="form-control guarda-minus"
                                         value="{{ old('email') }}" maxlength="40" required>
                                 </div>
                                 <!-- Segmento -->
-                                <div class="col-xxl-2">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label for="segmento" class="form-label text-normal">Segmento <span
                                             class="text-danger">*</span></label>
                                     <select name="segmento" id="segmento" class="form-select" required>
@@ -294,7 +294,7 @@
                                     @enderror
                                 </div>
                                 <!-- Género -->
-                                <div class="col-xxl-2">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label for="genero" class="form-label text-normal">Género <span
                                             class="text-danger">*</span></label>
                                     <select name="genero" id="genero" class="form-select" required>
@@ -307,7 +307,7 @@
                                     </select>
                                 </div>
                                 <!-- Asignado a / id_vendedor -->
-                                <div class="col-xxl-2">
+                                <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label for="nombre" class="form-label text-normal">Asignado a: <span
                                             class="text-danger">*</span></label>
                                     <select name="id_vendedor" id="id_vendedor" class="form-select" style="" required>
@@ -331,7 +331,7 @@
                             <div id="telefonos-cel-wrapper"> {{-- ⬅️ NUEVO --}}
                                 <div class="row">
                                     {{-- Teléfonos fijos --}}
-                                    <div class="col-xxl-4" id="telefonos-col">
+                                    <div class="col-xxl-4 col-xl-4 col-lg-4" id="telefonos-col">
                                         <div class="mb-2 telefono-item">
                                             <label class="text-normal">Teléfono 1 <span class="text-danger">*</span></label>
 
@@ -355,7 +355,7 @@
                                     </div>
 
                                     {{-- Celulares --}}
-                                    <div class="col-xxl-4" id="celulares-col">
+                                    <div class="col-xxl-4 col-xl-4 col-lg-4" id="celulares-col">
                                         <div class="mb-2 celular-item">
                                             <label class="text-normal">Teléfono Celular 1</label>
                                             <div class="input-group input-group-separated">
