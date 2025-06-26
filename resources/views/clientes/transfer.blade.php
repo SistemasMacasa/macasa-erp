@@ -55,11 +55,11 @@
                  
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5>Seleccione ejecutivo de origen</h5>
+                            <h5 class="text-subtitulo">Seleccione ejecutivo de origen</h5>
                         </div>
                         <div class="card-body">
                             <div class="row gx-2 gy-2 mb-4">
-                                <div class="col-md-8 col-sm-12">
+                                <div class="col-xxl-8 col-xl-12">
                                     <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
                                     <select name="id_vendedor_origen" class="form-select">
                                         <option value="" disabled selected>-- Selecciona --</option>
@@ -73,7 +73,7 @@
                                     </select>                                
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-xxl-4 col-xl-6">
                                     <label for="orden" class="form-label">Ordenar por</label>
                                     <select name="orden" class="form-select">
                                         <option value=""            {{ request('orden') == '' ? 'selected' : '' }} disabled selected>-- Selecciona -- </option>
@@ -87,7 +87,7 @@
                                     </select>
                                 </div>
                             
-                                <div class="col-md-4">
+                                <div class="col-xxl-4 col-xl-6">
                                     <label for="ver" class="form-label">Ver registros</label>
                                     <select name="per_page" id="" class="form-select">
                                         <option value="" disabled selected>-- Selecciona --</option>
@@ -99,7 +99,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-xxl-4 col-xl-6">
                                     <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
                                     <select name="ciclo_venta" id="" class="form-select">
                                         <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }} disabled selected>-- Selecciona --</option>
@@ -107,6 +107,19 @@
                                         <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
                                     </select>
                                 </div>
+                                
+                
+
+                                {{-- ① Toggle ON/OFF --}}
+                                <div class="col-xxl-4 col-xl-6 mt-4 d-flex align-items-center">
+                                <label class="switch">
+                                    <input type="checkbox" id="archiveToggle">
+                                    <span class="slider round"></span>
+                                </label>
+                                <span class="ms-2">Modo Archivado</span>
+                                </div>
+
+
                             </div>
 
                             {{-- Botones alineados a la derecha --}}
@@ -127,6 +140,16 @@
             <div class="col-md-2 text-center d-flex flex-column justify-content-center">
                 <button type="button" id="btnAgregar" class="btn btn-success mb-2">&gt;</button>
                 <button type="button" id="btnQuitar" class="btn btn-success">&lt;</button>
+                    {{-- 🔴 Formulario independiente de archivado --}}
+                  <form id="formArchivar" method="POST" action="{{ route('clientes.archive') }}">
+                    @csrf
+                    <button  id="btnArchivar"
+                            type="submit"
+                            class="btn btn-danger mt-2"
+                            style="display:none;">
+                    <i class="fa fa-archive me-1"></i> ARCHIVAR CUENTAS
+                    </button>
+                </form>
             </div>
 
             {{-- Formulario de cuentas (destino) --}}
@@ -136,11 +159,11 @@
                 
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5>Seleccione ejecutivo de destino</h5>
+                        <h5 class="text-subtitulo">Seleccione ejecutivo de destino</h5>
                     </div>
                     <div class="card-body">
                         <div class="row gx-2 gy-2 mb-4">
-                            <div class="col-md-8 col-sm-12">
+                            <div class="col-xxl-8 col-lg-12">
                                 <label for="nombre_ejecutivo" class="form-label">Ejecutivo</label>
                                 <select name="id_vendedor_destino" class="form-select">
                                     <option value="" disabled selected>-- Selecciona --</option>
@@ -154,7 +177,7 @@
                                 </select>                                
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4 col-lg-6">
                                 <label for="orden" class="form-label">Ordenar por</label>
                                 <select name="orden" class="form-select">
                                     <option value=""            {{ request('orden') == '' ? 'selected' : '' }} disabled selected>-- Selecciona -- </option>
@@ -168,7 +191,7 @@
                                 </select>
                             </div>
                         
-                            <div class="col-md-4">
+                            <div class="col-xxl-4 col-lg-6">
                                 <label for="ver" class="form-label">Ver registros</label>
                                 <select name="per_page" id="" class="form-select">
                                     <option value="" disabled selected>-- Selecciona --</option>
@@ -180,7 +203,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4 col-lg-6">
                                 <label for="ciclo_venta" class="form-label">Ciclo de venta</label>
                                 <select name="ciclo_venta" id="" class="form-select">
                                     <option value=""            {{ request('ciclo_venta') == '' ? 'selected' : '' }} disabled selected>-- Selecciona --</option>
@@ -188,6 +211,7 @@
                                     <option value="venta"       {{ request('ciclo_venta') == 'venta' ? 'selected' : '' }}>Venta</option>
                                 </select>
                             </div>
+
                         </div>
 
                         {{-- Botones alineados a la derecha --}}
@@ -323,7 +347,20 @@
                                                 table-striped table-bordered">
                     <thead class="text-center align-middle">
                         <tr>
-                            <th class="py-1 px-2 div-5ch"                    style="background-color: var( --tabla-header-bg);"><input type="checkbox" id="selectAll"></th>
+                            {{-- Columna de archivado --}}
+                            <th class="col-archivar text-center div-10ch"    style="background-color: var( --tabla-header-bg);">
+                                <input  type="checkbox"
+                                        id="selectAllArchive"
+                                        class="chk-archive-head"
+                                        form="formArchivar">
+                            </th>
+
+                            {{-- Columna traspaso --}}
+                            <th class="col-traspaso text-center"             style="background-color: var( --tabla-header-bg);">
+                                <input  type="checkbox"
+                                        id="selectAllTraspaso"
+                                        class="chk-traspaso-head">
+                            </th>
                             <th class="py-1 px-2 div-10ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">ID Cliente</th>
                             <th class="py-1 px-2 div-30ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Empresa</th>
                             <th class="py-1 px-2 div-25ch filtro-asc-desc"   style="background-color: var( --tabla-header-bg);">Contacto</th>
@@ -338,7 +375,7 @@
 
                     <tbody>
                         @if($clientes != null)
-                            @foreach ($clientes as $c)
+                            @forelse ($clientes as $c)
                                 @php
                                     $pc    = $c->primerContacto;
                                     $tel   = optional($pc)->telefono1;
@@ -347,8 +384,21 @@
                                 @endphp
 
                                 <tr>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="cliente-checkbox" name="clientes[]" value="{{ $c->id_cliente }}">
+                                    {{-- Checkbox archivado (solo visible en modo archivado) --}}
+                                    <td class="col-archivar text-center">
+                                        <input  type="checkbox"
+                                                name="selected_clients[]"
+                                                value="{{ $c->id_cliente }}"
+                                                class="chk-archive"
+                                                form="formArchivar">
+                                    </td>
+
+                                    {{-- Checkbox traspaso (oculto en modo archivado) --}}
+                                    <td class="col-traspaso text-center">
+                                        <input  type="checkbox"
+                                                name="clientes[]"
+                                                value="{{ $c->id_cliente }}"
+                                                class="chk-traspaso cliente-checkbox">
                                     </td>
                                     
                                     {{-- ID Cliente --}}
@@ -451,7 +501,13 @@
                                         }}
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="11" class="text-center text-muted">
+                                        No hay clientes para mostrar
+                                    </td>
+                                </tr>
+                            @endforelse
                         @endif
                     </tbody>
 
@@ -590,76 +646,130 @@
 
     @push('scripts')
         <script>
-            //Script para preparar la petición para traspaso de cuentas
-            document.getElementById('selectAll').addEventListener('click', function () {
-                document.querySelectorAll('.cliente-checkbox').forEach(cb => cb.checked = this.checked);
+            // -------------------------------------------------------------
+            // 1) “Seleccionar todo” para la columna de traspaso
+            document.getElementById('selectAllTraspaso')?.addEventListener('click', function () {
+                document.querySelectorAll('.chk-traspaso').forEach(cb => cb.checked = this.checked);
             });
 
+            // -------------------------------------------------------------
+            // 2) Preparar el form oculto con las cuentas a mover
             function prepararTraspaso(origen, destino) {
-                const seleccionados = document.querySelectorAll('.cliente-checkbox:checked');
+                const seleccionados = document.querySelectorAll('.chk-traspaso:checked');
                 if (seleccionados.length === 0) {
                     alert("Selecciona al menos una cuenta.");
                     return;
                 }
 
+                // ⚙️ Armamos los <input hidden> dentro de formTraspaso
                 const form = document.getElementById('formTraspaso');
                 form.innerHTML = '';
 
-                const csrf = document.createElement('input');
-                csrf.type = 'hidden';
-                csrf.name = '_token';
-                csrf.value = '{{ csrf_token() }}';
-                form.appendChild(csrf);
-
+                // CSRF
                 form.appendChild(Object.assign(document.createElement('input'), {
-                    type: 'hidden',
-                    name: 'origen',
-                    value: origen
+                    type : 'hidden',
+                    name : '_token',
+                    value: '{{ csrf_token() }}'
                 }));
 
-                form.appendChild(Object.assign(document.createElement('input'), {
-                    type: 'hidden',
-                    name: 'destino',
-                    value: destino
-                }));
+                // origen y destino
+                form.appendChild(Object.assign(document.createElement('input'), {type:'hidden', name:'origen',  value: origen}));
+                form.appendChild(Object.assign(document.createElement('input'), {type:'hidden', name:'destino', value: destino}));
 
+                // IDs de clientes
                 seleccionados.forEach(cb => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'clientes[]';
-                    input.value = cb.value;
-                    form.appendChild(input);
+                    form.appendChild(Object.assign(document.createElement('input'), {
+                        type :'hidden',
+                        name :'clientes[]',
+                        value: cb.value
+                    }));
                 });
 
-                if (!destino || destino === 'base') {
-                    alert("Selecciona un ejecutivo destino distinto de BASE GENERAL.");
-                    return;
-                }
+                // ✅ Única validación: que no sea el mismo ejecutivo
                 if (origen === destino) {
                     alert("El origen y destino deben ser distintos.");
                     return;
                 }
 
-
+                // Si destino vale 'base', el backend desasignará id_vendedor (null/0)
                 new bootstrap.Modal(document.getElementById('confirmarModal')).show();
             }
 
+            // -------------------------------------------------------------
+            // 3) Conectar los botones “>” y “<” al selector de ejecutivos
             const selOri = document.querySelector('select[name="id_vendedor_origen"]');
             const selDes = document.querySelector('select[name="id_vendedor_destino"]');
 
             document.getElementById('btnAgregar')?.addEventListener('click', () => {
-                prepararTraspaso(selOri.value, selDes.value);  // origen → destino
+                // Mover de origen → destino
+                prepararTraspaso(selOri.value, selDes.value);
             });
 
             document.getElementById('btnQuitar')?.addEventListener('click', () => {
-                prepararTraspaso(selDes.value, selOri.value);  // destino → origen
+                // Mover de destino → origen
+                prepararTraspaso(selDes.value, selOri.value);
             });
 
-
+            // -------------------------------------------------------------
+            // 4) Confirmar en el modal
             document.getElementById('btnConfirmarTraspaso')?.addEventListener('click', () => {
                 document.getElementById('formTraspaso').submit();
             });
         </script>
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        /* === ELEMENTOS ==================================================== */
+        const toggle           = document.getElementById('archiveToggle');      // interruptor
+        const btnArchivar      = document.getElementById('btnArchivar');        // botón rojo
+        const selectAllArchive = document.getElementById('selectAllArchive');   // head archivado
+        const selectAllTras    = document.getElementById('selectAllTraspaso');  // head traspaso
+        const chkArchive       = document.querySelectorAll('.chk-archive');     // filas archivado
+        const chkTraspaso      = document.querySelectorAll('.chk-traspaso');    // filas traspaso
+        const colArchivar      = document.querySelectorAll('.col-archivar');    // <th>/<td> archivado
+        const colTraspaso      = document.querySelectorAll('.col-traspaso');    // <th>/<td> traspaso
+        const root             = document.documentElement;                      // <html>
+        const titulo           = document.querySelector('.text-titulo');        // título principal
+        const tituloOriginal   = titulo ? titulo.innerHTML : '';                // guarda el título original
+
+        /* === FUNCIÓN CENTRAL ============================================== */
+        function setArchiveMode(on) {
+            if (titulo) {
+                titulo.innerHTML = on ? "Archivado de Cuentas" : tituloOriginal;
+            }
+            // Añade/quita clase global para colorear todo
+            root.classList.toggle('archivar-mode', on);
+
+            // Muestra/oculta botón rojo
+            btnArchivar.style.display = on ? 'inline-block' : 'none';
+
+            // Alterna columnas
+            colArchivar.forEach(el => el.style.display = on ? 'table-cell' : 'none');
+            colTraspaso.forEach(el => el.style.display = on ? 'none'       : 'table-cell');
+
+            // Limpia checks para evitar confusiones
+            if (selectAllArchive) selectAllArchive.checked = false;
+            if (selectAllTras)    selectAllTras.checked    = false;
+            chkArchive .forEach(cb => cb.checked = false);
+            chkTraspaso.forEach(cb => cb.checked = false);
+        }
+
+        /* === EVENTOS ====================================================== */
+        toggle.addEventListener('change', () => setArchiveMode(toggle.checked));
+
+        selectAllArchive?.addEventListener('change', e =>
+            chkArchive.forEach(cb => cb.checked = e.target.checked)
+        );
+
+        selectAllTras?.addEventListener('change', e =>
+            chkTraspaso.forEach(cb => cb.checked = e.target.checked)
+        );
+    });
+</script>
+
     @endpush
 
 

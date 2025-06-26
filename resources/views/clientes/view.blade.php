@@ -844,7 +844,8 @@
 
 
     {{-- 📝 Historial de notas --}}
-    <div class="card">
+    <div class="card" id="historialNotas">
+    
         {{-- Cabecera de la tarjeta --}}
         <div class="card-header d-flex">
             <h5 class="mb-0 flex-grow-1">Historial de notas</h5>
@@ -1108,31 +1109,31 @@
 
     </div><!-- Fin contenedor principal -->
 
-@endsection
-@push('scripts')
-    <script>
-        window.addEventListener('load', () => {
-            const form = document.getElementById('formCuenta');
-            const selEstatus = document.getElementById('selectEstatus');
-            const modalEl = document.getElementById('confirmArchivar');
-            const modal = new bootstrap.Modal(modalEl);
-            const btnConfirm = document.getElementById('btnConfirmArchivar');
+    @push('scripts')
 
-            if (!form || !selEstatus) {
-                console.warn('No se encontró el form o el select');
-                return;
-            }
+        <script>
+            window.addEventListener('load', () => {
+                const form = document.getElementById('formCuenta');
+                const selEstatus = document.getElementById('selectEstatus');
+                const modalEl = document.getElementById('confirmArchivar');
+                const modal = new bootstrap.Modal(modalEl);
+                const btnConfirm = document.getElementById('btnConfirmArchivar');
 
-            let archivarPendiente = false;
-
-            form.addEventListener('submit', e => {
-                console.log('Submit interceptado');
-                if (selEstatus.value === 'inactivo' && !archivarPendiente) {
-                    e.preventDefault();
-                    console.log('Mostrando modal...');
-                    modal.show();
+                if (!form || !selEstatus) {
+                    console.warn('No se encontró el form o el select');
+                    return;
                 }
-            });
+
+                let archivarPendiente = false;
+
+                form.addEventListener('submit', e => {
+                    console.log('Submit interceptado');
+                    if (selEstatus.value === 'inactivo' && !archivarPendiente) {
+                        e.preventDefault();
+                        console.log('Mostrando modal...');
+                        modal.show();
+                    }
+                });
 
             btnConfirm.addEventListener('click', () => {
                 console.log('Confirmado archivar');
@@ -1148,74 +1149,74 @@
         // Script para ordenar tabla de pedidos
         document.addEventListener('DOMContentLoaded', () => {
 
-            const table = document.getElementById('tblPedidos');
-            const tbody = table.querySelector('tbody');
-            const ths = table.querySelectorAll('thead th');
-            const dirMap = {};
+                const table = document.getElementById('tblPedidos');
+                const tbody = table.querySelector('tbody');
+                const ths = table.querySelectorAll('thead th');
+                const dirMap = {};
 
-            ths.forEach((th, idx) => {
+                ths.forEach((th, idx) => {
 
-                th.addEventListener('click', () => {
+                    th.addEventListener('click', () => {
 
-                    // Alterna dirección
-                    dirMap[idx] = dirMap[idx] === 'asc' ? 'desc' : 'asc';
+                        // Alterna dirección
+                        dirMap[idx] = dirMap[idx] === 'asc' ? 'desc' : 'asc';
 
-                    // Convertir NodeList filas a array
-                    const rows = Array.from(tbody.querySelectorAll('tr'));
-                    const type = th.dataset.type || 'text';
-                    const parse = (txt) => {
-                        if (type === 'number') return parseFloat(txt.replace(/[^\d.-]/g, '')) ||
-                            0;
-                        if (type === 'date') return new Date(txt.split('-').reverse().join('-'))
-                            .getTime();
-                        return txt.toLowerCase();
-                    };
+                        // Convertir NodeList filas a array
+                        const rows = Array.from(tbody.querySelectorAll('tr'));
+                        const type = th.dataset.type || 'text';
+                        const parse = (txt) => {
+                            if (type === 'number') return parseFloat(txt.replace(/[^\d.-]/g, '')) ||
+                                0;
+                            if (type === 'date') return new Date(txt.split('-').reverse().join('-'))
+                                .getTime();
+                            return txt.toLowerCase();
+                        };
 
-                    rows.sort((a, b) => {
-                        const A = parse(a.children[idx].innerText);
-                        const B = parse(b.children[idx].innerText);
-                        return (A < B ? -1 : A > B ? 1 : 0) * (dirMap[idx] === 'asc' ? 1 : -
-                            1);
+                        rows.sort((a, b) => {
+                            const A = parse(a.children[idx].innerText);
+                            const B = parse(b.children[idx].innerText);
+                            return (A < B ? -1 : A > B ? 1 : 0) * (dirMap[idx] === 'asc' ? 1 : -
+                                1);
+                        });
+
+                        // Repinta filas ordenadas
+                        rows.forEach(r => tbody.appendChild(r));
+
+                        /* ——— Actualiza flechas ——— */
+                        ths.forEach(h => h.classList.remove('asc', 'desc'));
+                        th.classList.add(dirMap[idx]);
                     });
-
-                    // Repinta filas ordenadas
-                    rows.forEach(r => tbody.appendChild(r));
-
-                    /* ——— Actualiza flechas ——— */
-                    ths.forEach(h => h.classList.remove('asc', 'desc'));
-                    th.classList.add(dirMap[idx]);
                 });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('formCuenta');
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementById('formCuenta');
 
-            form.querySelectorAll('.phone-field').forEach(inp => {
-                // Mientras el usuario teclea...
-                inp.addEventListener('input', () => {
-                    const digits = inp.value.replace(/\D/g, '');
-
-                    if (digits.length === 0 || digits.length === 10) {
-                        inp.setCustomValidity(''); // válido
-                    } else {
-                        inp.setCustomValidity('Número incompleto');
-                    }
-                });
-            });
-
-            // Seguridad extra: justo antes de enviar,
-            // limpia cualquier máscara incompleta
-            form.addEventListener('submit', () => {
                 form.querySelectorAll('.phone-field').forEach(inp => {
-                    const digits = inp.value.replace(/\D/g, '');
-                    if (digits.length < 10) inp.value = ''; // lo deja vacío → válido
+                    // Mientras el usuario teclea...
+                    inp.addEventListener('input', () => {
+                        const digits = inp.value.replace(/\D/g, '');
+
+                        if (digits.length === 0 || digits.length === 10) {
+                            inp.setCustomValidity(''); // válido
+                        } else {
+                            inp.setCustomValidity('Número incompleto');
+                        }
+                    });
+                });
+
+                // Seguridad extra: justo antes de enviar,
+                // limpia cualquier máscara incompleta
+                form.addEventListener('submit', () => {
+                    form.querySelectorAll('.phone-field').forEach(inp => {
+                        const digits = inp.value.replace(/\D/g, '');
+                        if (digits.length < 10) inp.value = ''; // lo deja vacío → válido
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 
     @can('Editar Cuenta')
         <script>
@@ -1229,313 +1230,313 @@
                 const form = document.getElementById('formCuenta');
                 if (!btnEdit || !form) return;
 
-                // fila 1 ⇢ incluye botón ➕ (oculto con d-none)
-                const mkTelRowPlus = () => `
+                    // fila 1 ⇢ incluye botón ➕ (oculto con d-none)
+                    const mkTelRowPlus = () => `
+                        <div class="mb-2 telefono-item">
+                            <label>Teléfono 1</label>
+                            <div class="input-group input-group-separated">
+                            <input type="text" class="form-control phone-field" placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
+                            <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
+                            <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
+                            </div>
+                        </div>`;
+                    const mkCelRowPlus = () => `
+                        <div class="mb-2 celular-item">
+                            <label>Teléfono Celular 1</label>
+                            <div class="input-group input-group-separated">
+                            <input type="text" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
+                            <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
+                            </div>
+                        </div>`;
+
+
+                    // ——— Crea filas sin ➕ ———
+                    const mkTelRow = () => `
                     <div class="mb-2 telefono-item">
-                        <label>Teléfono 1</label>
-                        <div class="input-group input-group-separated">
-                        <input type="text" class="form-control phone-field" placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-                        <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
-                        <button type="button" class="btn btn-outline-primary agregar-telefono btn-field d-none">+</button>
-                        </div>
+                    <label></label>
+                    <div class="input-group input-group-separated">
+                        <input type="text" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
+                        <input type="text" class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
+                        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+                    </div>
                     </div>`;
-                const mkCelRowPlus = () => `
+                    const mkCelRow = () => `
                     <div class="mb-2 celular-item">
-                        <label>Teléfono Celular 1</label>
-                        <div class="input-group input-group-separated">
+                    <label></label>
+                    <div class="input-group input-group-separated">
                         <input type="text" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
-                        <button type="button" class="btn btn-outline-primary agregar-celular btn-field d-none">+</button>
-                        </div>
+                        <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+                    </div>
                     </div>`;
 
+                    // ——— Actualiza nombres/textos y botones ➕/❌ ———
+                    function updateRowButtons() {
+                        // Teléfonos
+                        telCol.querySelectorAll('.telefono-item').forEach((item, idx) => {
+                            const plus = item.querySelector('.agregar-telefono');
+                            const minus = item.querySelector('.eliminar-item');
+                            if (idx === 0) {
+                                plus?.classList.remove('d-none');
+                                minus?.classList.add('d-none');
+                            } else {
+                                plus?.classList.add('d-none');
+                                minus?.classList.remove('d-none');
+                            }
+                        });
+                        // Celulares
+                        celCol.querySelectorAll('.celular-item').forEach((item, idx) => {
+                            const plus = item.querySelector('.agregar-celular');
+                            const minus = item.querySelector('.eliminar-item');
+                            if (idx === 0) {
+                                plus?.classList.remove('d-none');
+                                minus?.classList.add('d-none');
+                            } else {
+                                plus?.classList.add('d-none');
+                                minus?.classList.remove('d-none');
+                            }
+                        });
+                    }
 
-                // ——— Crea filas sin ➕ ———
-                const mkTelRow = () => `
-                <div class="mb-2 telefono-item">
-                <label></label>
-                <div class="input-group input-group-separated">
-                    <input type="text" class="form-control phone-field"  placeholder="Teléfono" style="min-width: 16ch; max-width: 16ch;">
-                    <input type="text" class="form-control ext-field div-10ch"    placeholder="Ext." maxlength="7">
-                    <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-                </div>
-                </div>`;
-                const mkCelRow = () => `
-                <div class="mb-2 celular-item">
-                <label></label>
-                <div class="input-group input-group-separated">
-                    <input type="text" class="form-control phone-field" placeholder="Celular" style="min-width: 16ch; max-width: 16ch;">
-                    <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-                </div>
-                </div>`;
+                    let telTimeout, celTimeout;
 
-                // ——— Actualiza nombres/textos y botones ➕/❌ ———
-                function updateRowButtons() {
-                    // Teléfonos
-                    telCol.querySelectorAll('.telefono-item').forEach((item, idx) => {
-                        const plus = item.querySelector('.agregar-telefono');
-                        const minus = item.querySelector('.eliminar-item');
-                        if (idx === 0) {
-                            plus?.classList.remove('d-none');
-                            minus?.classList.add('d-none');
-                        } else {
-                            plus?.classList.add('d-none');
-                            minus?.classList.remove('d-none');
-                        }
-                    });
-                    // Celulares
-                    celCol.querySelectorAll('.celular-item').forEach((item, idx) => {
-                        const plus = item.querySelector('.agregar-celular');
-                        const minus = item.querySelector('.eliminar-item');
-                        if (idx === 0) {
-                            plus?.classList.remove('d-none');
-                            minus?.classList.add('d-none');
-                        } else {
-                            plus?.classList.add('d-none');
-                            minus?.classList.remove('d-none');
-                        }
-                    });
-                }
+                    function toggleLimitMessages() {
+                        const telMsg = document.getElementById('tel-limit-msg');
+                        const celMsg = document.getElementById('cel-limit-msg');
+                        const telCount = telCol.querySelectorAll('.telefono-item').length;
+                        const celCount = celCol.querySelectorAll('.celular-item').length;
 
-                let telTimeout, celTimeout;
-
-                function toggleLimitMessages() {
-                    const telMsg = document.getElementById('tel-limit-msg');
-                    const celMsg = document.getElementById('cel-limit-msg');
-                    const telCount = telCol.querySelectorAll('.telefono-item').length;
-                    const celCount = celCol.querySelectorAll('.celular-item').length;
-
-                    // —— Teléfonos ——
-                    if (telMsg) {
-                        if (telCount >= MAX) {
-                            // muestra y mueve al final
-                            telMsg.classList.remove('d-none');
-                            telCol.appendChild(telMsg);
-                            clearTimeout(telTimeout);
-                            telTimeout = setTimeout(() => {
+                        // —— Teléfonos ——
+                        if (telMsg) {
+                            if (telCount >= MAX) {
+                                // muestra y mueve al final
+                                telMsg.classList.remove('d-none');
+                                telCol.appendChild(telMsg);
+                                clearTimeout(telTimeout);
+                                telTimeout = setTimeout(() => {
+                                    telMsg.classList.add('d-none');
+                                }, 5000);
+                            } else {
                                 telMsg.classList.add('d-none');
-                            }, 5000);
-                        } else {
-                            telMsg.classList.add('d-none');
-                            clearTimeout(telTimeout);
+                                clearTimeout(telTimeout);
+                            }
                         }
-                    }
 
-                    // —— Celulares ——
-                    if (celMsg) {
-                        if (celCount >= MAX) {
-                            celMsg.classList.remove('d-none');
-                            celCol.appendChild(celMsg);
-                            clearTimeout(celTimeout);
-                            celTimeout = setTimeout(() => {
+                        // —— Celulares ——
+                        if (celMsg) {
+                            if (celCount >= MAX) {
+                                celMsg.classList.remove('d-none');
+                                celCol.appendChild(celMsg);
+                                clearTimeout(celTimeout);
+                                celTimeout = setTimeout(() => {
+                                    celMsg.classList.add('d-none');
+                                }, 5000);
+                            } else {
                                 celMsg.classList.add('d-none');
-                            }, 5000);
-                        } else {
-                            celMsg.classList.add('d-none');
-                            clearTimeout(celTimeout);
+                                clearTimeout(celTimeout);
+                            }
                         }
                     }
-                }
 
 
 
-                function ensureFirstPlusButtons() {
-                    // —— Teléfonos ——
-                    const firstTel = telCol.querySelector('.telefono-item');
-                    if (firstTel && !firstTel.querySelector('.agregar-telefono')) {
-                        const btn = document.createElement('button');
-                        btn.type = 'button';
-                        btn.className = 'btn btn-outline-primary agregar-telefono btn-field';
-                        btn.textContent = '+';
-                        // lo metemos al final de la input-group
-                        firstTel.querySelector('.input-group').appendChild(btn);
-                    }
-                    // —— Celulares ——
-                    const firstCel = celCol.querySelector('.celular-item');
-                    if (firstCel && !firstCel.querySelector('.agregar-celular')) {
-                        const btn = document.createElement('button');
-                        btn.type = 'button';
-                        btn.className = 'btn btn-outline-primary agregar-celular btn-field';
-                        btn.textContent = '+';
-                        firstCel.querySelector('.input-group').appendChild(btn);
-                    }
-                }
-
-
-                // ——— Ajusta índices y etiquetas ———
-                const reindex = tipo => {
-                    const items = (tipo === 'telefono') ?
-                        telCol.querySelectorAll('.telefono-item') :
-                        celCol.querySelectorAll('.celular-item');
-                    items.forEach((item, i) => {
-                        const idx = i + 1;
-                        if (tipo === 'telefono') {
-                            const [tel, ext] = item.querySelectorAll('input');
-                            tel.name = `contacto[0][telefono${idx}]`;
-                            ext.name = `contacto[0][ext${idx}]`;
-                            item.querySelector('label').textContent = `Teléfono ${idx}`;
-                        } else {
-                            item.querySelector('input').name = `contacto[0][celular${idx}]`;
-                            item.querySelector('label').textContent = `Teléfono Celular ${idx}`;
+                    function ensureFirstPlusButtons() {
+                        // —— Teléfonos ——
+                        const firstTel = telCol.querySelector('.telefono-item');
+                        if (firstTel && !firstTel.querySelector('.agregar-telefono')) {
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'btn btn-outline-primary agregar-telefono btn-field';
+                            btn.textContent = '+';
+                            // lo metemos al final de la input-group
+                            firstTel.querySelector('.input-group').appendChild(btn);
                         }
-                    });
-                    updateRowButtons();
-                };
-
-                // ——— Elimina filas vacías ———
-                const removeEmptyRows = () => {
-                    // borra vacías…
-                    telCol.querySelectorAll('.telefono-item').forEach(el => {
-                        const [tel, ext] = el.querySelectorAll('input');
-                        if (!tel.value.trim() && !ext.value.trim()) el.remove();
-                    });
-                    celCol.querySelectorAll('.celular-item').forEach(el => {
-                        if (!el.querySelector('input').value.trim()) el.remove();
-                    });
-
-                    // si quedó a 0, recrea fila 1 (con ➕ oculto)
-                    if (telCol.querySelectorAll('.telefono-item').length === 0) {
-                        telCol.insertAdjacentHTML('afterbegin', mkTelRowPlus());
-                    }
-                    if (celCol.querySelectorAll('.celular-item').length === 0) {
-                        celCol.insertAdjacentHTML('afterbegin', mkCelRowPlus());
+                        // —— Celulares ——
+                        const firstCel = celCol.querySelector('.celular-item');
+                        if (firstCel && !firstCel.querySelector('.agregar-celular')) {
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'btn btn-outline-primary agregar-celular btn-field';
+                            btn.textContent = '+';
+                            firstCel.querySelector('.input-group').appendChild(btn);
+                        }
                     }
 
-                    ensureFirstPlusButtons();
 
-                    // re-indexa y ajusta botones
-                    reindex('telefono');
-                    reindex('celular');
-                    toggleLimitMessages();
-
-                };
-
-                // ——— Ocultar inputs/botones ———
-                const setEditing = (state) => {
-                    /* 1. Inputs y selects */
-                    form.querySelectorAll('input:not(.no-editar), select:not(.no-editar), textarea:not(.no-editar)')
-                        .forEach(el => {
-                            el.disabled = !state;
+                    // ——— Ajusta índices y etiquetas ———
+                    const reindex = tipo => {
+                        const items = (tipo === 'telefono') ?
+                            telCol.querySelectorAll('.telefono-item') :
+                            celCol.querySelectorAll('.celular-item');
+                        items.forEach((item, i) => {
+                            const idx = i + 1;
+                            if (tipo === 'telefono') {
+                                const [tel, ext] = item.querySelectorAll('input');
+                                tel.name = `contacto[0][telefono${idx}]`;
+                                ext.name = `contacto[0][ext${idx}]`;
+                                item.querySelector('label').textContent = `Teléfono ${idx}`;
+                            } else {
+                                item.querySelector('input').name = `contacto[0][celular${idx}]`;
+                                item.querySelector('label').textContent = `Teléfono Celular ${idx}`;
+                            }
                         });
-
-                    /* 2. Botones dinámicos de teléfonos / celulares */
-                    const toggleBtns = (col, sel) => {
-                        col.querySelectorAll(sel).forEach(btn => {
-                            btn.disabled = !state;
-                            btn.classList.toggle('d-none', !state); // oculta en modo lectura
-                        });
+                        updateRowButtons();
                     };
-                    toggleBtns(telCol, '.agregar-telefono, .eliminar-item');
-                    toggleBtns(celCol, '.agregar-celular, .eliminar-item');
 
-                    /* 3. Botón Guardar */
-                    const btnGuardar = document.querySelector('.btnGuardarCuenta');
-                    if (btnGuardar) {
-                        if (state) {
-                            // Activar y poner en verde MACASA
-                            btnGuardar.classList.remove('btn-secondary');
-                            btnGuardar.classList.add('btn-success');
-                            btnGuardar.disabled = false;
-                        } else {
-                            // Desactivar y poner gris Bootstrap
-                            btnGuardar.classList.remove('btn-success');
-                            btnGuardar.classList.add('btn-secondary');
-                            btnGuardar.disabled = true;
+                    // ——— Elimina filas vacías ———
+                    const removeEmptyRows = () => {
+                        // borra vacías…
+                        telCol.querySelectorAll('.telefono-item').forEach(el => {
+                            const [tel, ext] = el.querySelectorAll('input');
+                            if (!tel.value.trim() && !ext.value.trim()) el.remove();
+                        });
+                        celCol.querySelectorAll('.celular-item').forEach(el => {
+                            if (!el.querySelector('input').value.trim()) el.remove();
+                        });
+
+                        // si quedó a 0, recrea fila 1 (con ➕ oculto)
+                        if (telCol.querySelectorAll('.telefono-item').length === 0) {
+                            telCol.insertAdjacentHTML('afterbegin', mkTelRowPlus());
                         }
-                    }
-
-
-                };
-
-                // ——— Lógica de Editar / Guardar ———
-                let editing = false;
-                btnEdit.addEventListener('click', () => {
-                    editing = !editing;
-                    if (editing) {
-                        // — Entrar a edición —
-                        btnEdit.classList.remove('btn-success');
-                        btnEdit.classList.add('btn-secondary');
-                        btnEdit.innerHTML = '<i class="fa fa-lock-open me-1"></i> Edición habilitada';
-                        document.querySelectorAll('.asterisco').forEach(el => el.classList.remove(
-                            'ocultar-asterisco'));
-                        setEditing(true);
-
-                        // Asegura fila 1 de celular si no existía
                         if (celCol.querySelectorAll('.celular-item').length === 0) {
-                            celCol.insertAdjacentHTML(
-                                'afterbegin',
-                                mkCelRow().replace('<label></label>', '<label>Teléfono Celular 1</label>')
-                            );
+                            celCol.insertAdjacentHTML('afterbegin', mkCelRowPlus());
                         }
 
                         ensureFirstPlusButtons();
 
-                        // Reindex para mostrar ➕/❌ correctamente
+                        // re-indexa y ajusta botones
                         reindex('telefono');
                         reindex('celular');
                         toggleLimitMessages();
 
-                    } else {
-                        // — Cerrar edición —
-                        removeEmptyRows(); // limpia vacías y deja al menos 1 fila
-                        ensureFirstPlusButtons();
+                    };
 
-                        reindex('telefono'); // reposiciona y reaplica updateRowButtons
+                    // ——— Ocultar inputs/botones ———
+                    const setEditing = (state) => {
+                        /* 1. Inputs y selects */
+                        form.querySelectorAll('input:not(.no-editar), select:not(.no-editar), textarea:not(.no-editar)')
+                            .forEach(el => {
+                                el.disabled = !state;
+                            });
+
+                        /* 2. Botones dinámicos de teléfonos / celulares */
+                        const toggleBtns = (col, sel) => {
+                            col.querySelectorAll(sel).forEach(btn => {
+                                btn.disabled = !state;
+                                btn.classList.toggle('d-none', !state); // oculta en modo lectura
+                            });
+                        };
+                        toggleBtns(telCol, '.agregar-telefono, .eliminar-item');
+                        toggleBtns(celCol, '.agregar-celular, .eliminar-item');
+
+                        /* 3. Botón Guardar */
+                        const btnGuardar = document.querySelector('.btnGuardarCuenta');
+                        if (btnGuardar) {
+                            if (state) {
+                                // Activar y poner en verde MACASA
+                                btnGuardar.classList.remove('btn-secondary');
+                                btnGuardar.classList.add('btn-success');
+                                btnGuardar.disabled = false;
+                            } else {
+                                // Desactivar y poner gris Bootstrap
+                                btnGuardar.classList.remove('btn-success');
+                                btnGuardar.classList.add('btn-secondary');
+                                btnGuardar.disabled = true;
+                            }
+                        }
+
+
+                    };
+
+                    // ——— Lógica de Editar / Guardar ———
+                    let editing = false;
+                    btnEdit.addEventListener('click', () => {
+                        editing = !editing;
+                        if (editing) {
+                            // — Entrar a edición —
+                            btnEdit.classList.remove('btn-success');
+                            btnEdit.classList.add('btn-secondary');
+                            btnEdit.innerHTML = '<i class="fa fa-lock-open me-1"></i> Edición habilitada';
+                            document.querySelectorAll('.asterisco').forEach(el => el.classList.remove(
+                                'ocultar-asterisco'));
+                            setEditing(true);
+
+                            // Asegura fila 1 de celular si no existía
+                            if (celCol.querySelectorAll('.celular-item').length === 0) {
+                                celCol.insertAdjacentHTML(
+                                    'afterbegin',
+                                    mkCelRow().replace('<label></label>', '<label>Teléfono Celular 1</label>')
+                                );
+                            }
+
+                            ensureFirstPlusButtons();
+
+                            // Reindex para mostrar ➕/❌ correctamente
+                            reindex('telefono');
+                            reindex('celular');
+                            toggleLimitMessages();
+
+                        } else {
+                            // — Cerrar edición —
+                            removeEmptyRows(); // limpia vacías y deja al menos 1 fila
+                            ensureFirstPlusButtons();
+
+                            reindex('telefono'); // reposiciona y reaplica updateRowButtons
+                            reindex('celular');
+                            toggleLimitMessages();
+
+                            setEditing(false); // por último, oculta todos los ➕/❌ y bloquea inputs
+
+                            btnEdit.classList.remove('btn-secondary');
+                            btnEdit.classList.add('btn-success');
+                            btnEdit.innerHTML = '<i class="fa fa-edit me-1"></i> Editar cuenta';
+                            document.querySelectorAll('.asterisco').forEach(el => el.classList.add(
+                                'ocultar-asterisco'));
+
+                        }
+                    });
+
+
+                    // ——— Añadir filas ———
+                    telCol.addEventListener('click', e => {
+                        if (!e.target.closest('.agregar-telefono')) return;
+                        if (telCol.querySelectorAll('.telefono-item').length >= MAX) return;
+                        telCol.insertAdjacentHTML('beforeend', mkTelRow()); // fila sin ➕
+                        reindex('telefono');
+                        toggleLimitMessages();
+
+                    });
+
+                    celCol.addEventListener('click', e => {
+                        if (!e.target.closest('.agregar-celular')) return;
+                        if (celCol.querySelectorAll('.celular-item').length >= MAX) return;
+                        celCol.insertAdjacentHTML('beforeend', mkCelRow());
                         reindex('celular');
                         toggleLimitMessages();
 
-                        setEditing(false); // por último, oculta todos los ➕/❌ y bloquea inputs
-
-                        btnEdit.classList.remove('btn-secondary');
-                        btnEdit.classList.add('btn-success');
-                        btnEdit.innerHTML = '<i class="fa fa-edit me-1"></i> Editar cuenta';
-                        document.querySelectorAll('.asterisco').forEach(el => el.classList.add(
-                            'ocultar-asterisco'));
-
-                    }
-                });
+                    });
 
 
-                // ——— Añadir filas ———
-                telCol.addEventListener('click', e => {
-                    if (!e.target.closest('.agregar-telefono')) return;
-                    if (telCol.querySelectorAll('.telefono-item').length >= MAX) return;
-                    telCol.insertAdjacentHTML('beforeend', mkTelRow()); // fila sin ➕
+                    // ——— Eliminar filas ———
+                    document.addEventListener('click', e => {
+                        if (!e.target.classList.contains('eliminar-item')) return;
+                        const item = e.target.closest('.telefono-item, .celular-item');
+                        const isTel = !!item.closest('#telefonos-col--view');
+                        item.remove();
+                        reindex(isTel ? 'telefono' : 'celular');
+                    });
+
+                    ensureFirstPlusButtons();
+
+                    // Estado inicial
                     reindex('telefono');
-                    toggleLimitMessages();
-
-                });
-
-                celCol.addEventListener('click', e => {
-                    if (!e.target.closest('.agregar-celular')) return;
-                    if (celCol.querySelectorAll('.celular-item').length >= MAX) return;
-                    celCol.insertAdjacentHTML('beforeend', mkCelRow());
                     reindex('celular');
                     toggleLimitMessages();
 
+                    setEditing(false);
+                    document.querySelectorAll('.asterisco').forEach(el => el.classList.add('ocultar-asterisco'));
                 });
-
-
-                // ——— Eliminar filas ———
-                document.addEventListener('click', e => {
-                    if (!e.target.classList.contains('eliminar-item')) return;
-                    const item = e.target.closest('.telefono-item, .celular-item');
-                    const isTel = !!item.closest('#telefonos-col--view');
-                    item.remove();
-                    reindex(isTel ? 'telefono' : 'celular');
-                });
-
-                ensureFirstPlusButtons();
-
-                // Estado inicial
-                reindex('telefono');
-                reindex('celular');
-                toggleLimitMessages();
-
-                setEditing(false);
-                document.querySelectorAll('.asterisco').forEach(el => el.classList.add('ocultar-asterisco'));
-            });
-        </script>
-    @endcan
+            </script>
+        @endcan
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

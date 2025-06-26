@@ -184,7 +184,7 @@
         <div class="card-body">
         </div>
     </div>
-</div>
+</div> <!-- End container-fluid -->
 
 
 <!-- Modal: Directorio de direcciones de facturación -->
@@ -361,32 +361,46 @@
                 {{-- Colonia --}}
                 <div class="col-md-4">
                     <label class="form-label">Colonia</label>
-                    <input type="text" name="colonia" class="form-control">
+                    <select name="colonia" class="form-select colonia-select" disabled>
+                        <option value="">— Selecciona CP primero —</option>
+                    </select>
                 </div>
 
                 {{-- Código Postal --}}
                 <div class="col-md-3">
                     <label class="form-label">CP</label>
-                    <input type="text" name="cp" class="form-control">
+                    <input type="text" name="cp" maxlength="5" class="form-control cp-field">
                 </div>
 
                 {{-- Municipio --}}
                 <div class="col-md-3">
                     <label class="form-label">Municipio</label>
-                    <input type="text" name="municipio" class="form-control">
+                    <select name="municipio" class="form-select municipio-field">
+                        <option value="">— Selecciona CP primero —</option>
+                    </select>
+
                 </div>
 
                 {{-- Estado --}}
                 <div class="col-md-3">
                     <label class="form-label">Estado</label>
-                    <input type="text" name="estado" class="form-control">
+                    <select name="estado" class="form-select estado-field">
+                        <option value="">— Selecciona CP primero —</option>
+                    </select>
                 </div>
 
-                {{-- País --}}
-                <div class="col-md-3">
+                <!-- País -->
+                 <div class="col-md-3">
                     <label class="form-label">País</label>
-                    <input type="text" name="pais" class="form-control" value="MÉXICO">
-                </div>
+                    <select name="id_pais" class="form-select pais-field">
+                        @foreach($paises as $pais)
+                            <option value="{{ $pais->id_pais }}" {{ $pais->nombre === 'México' ? 'selected' : '' }}>
+                            {{ $pais->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                 </div>
+                
             </div>
 
             <div class="mt-4 text-end">
@@ -401,66 +415,266 @@
   </div>
 </div>
 
+@push('scripts')
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('formNuevaRazonSocialFactura');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('formNuevaRazonSocialFactura');
 
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const datos = new FormData(form);
+            form.addEventListener('submit', async e => {
+                e.preventDefault();
+                const datos = new FormData(form);
 
-    const resp = await fetch('{{ route('ajax.direccion.factura') }}', {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        'Accept': 'application/json'           // ← pide JSON de Laravel
-      },
-      body: datos
+                const resp = await fetch('{{ route('ajax.direccion.factura') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'           // ← pide JSON de Laravel
+                },
+                body: datos
+                });
+
+                if (!resp.ok) {
+                    const contentType = resp.headers.get('Content-Type') || '';
+                    if (contentType.includes('application/json')) {
+                        const err = await resp.json();
+                        console.error('Error JSON:', err);
+                        alert('❌ ' + (err.error || JSON.stringify(err.errors) || 'Error al guardar'));
+                    } else {
+                        const text = await resp.text();
+                        console.error('Error HTML:', text);
+                        alert('❌ Error inesperado. Revisa consola.');
+                    }
+                    return;
+                }
+
+                const { razon_social: razon, direccion: dir } = await resp.json();
+
+                // Cierra modal
+                bootstrap.Modal.getInstance(
+                document.getElementById('modalCrearDireccionFactura')
+                ).hide();
+
+                // Rellena formulario principal
+                document.querySelector('[name="nombre"]').value   = razon.nombre;
+                document.querySelector('[name="rfc"]').value            = razon.rfc;
+                document.querySelector('[name="id_uso_cfdi"]').value       = razon.id_uso_cfdi;
+                document.querySelector('[name="id_metodo_pago"]').value    = razon.id_metodo_pago;
+                document.querySelector('[name="id_forma_pago"]').value     = razon.id_forma_pago;
+                document.querySelector('[name="id_regimen_fiscal"]').value = razon.id_regimen_fiscal;
+
+                document.querySelector('[name="calle"]').value    = dir.calle   || '';
+                document.querySelector('[name="num_ext"]').value  = dir.num_ext || '';
+                document.querySelector('[name="num_int"]').value  = dir.num_int || '';
+                document.querySelector('[name="colonia"]').value  = dir.colonia || '';
+                document.querySelector('[name="cp"]').value       = dir.cp      || '';
+                document.querySelector('[name="municipio"]').value= dir.municipio || '';
+                document.querySelector('[name="estado"]').value   = dir.estado  || '';
+                document.querySelector('[name="pais"]').value     = dir.pais    || 'MÉXICO';
+                document.querySelector('[name="notas"]').value    = dir.notas   || '';
+            });
+        });
+    </script>
+
+    <script defer>
+        //Autocompletado de direcciones de facturación
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('modalCrearDireccionFactura');
+
+            if (!modal) return;
+
+            const delay = (fn, ms = 400) => {
+                let t; return (...args) => {
+                    clearTimeout(t);
+                    t = setTimeout(() => fn(...args), ms);
+                };
+            };
+
+            function seleccionarPorTexto(select, texto) {
+                if (!select) return;
+
+                let opt = [...select.options].find(o =>
+                    o.text.trim().toLowerCase() === texto.trim().toLowerCase()
+                );
+
+                if (!opt) opt = [...select.options].find(o => o.value === texto);
+
+                if (!opt) {
+                    opt = new Option(texto, texto, true, true);
+                    select.prepend(opt);
+                }
+
+                select.value = opt.value;
+            }
+
+            function limpiar(bloque) {
+                if (!bloque) return;
+
+                const estado = bloque.querySelector('.estado-field');
+                const municipio = bloque.querySelector('.municipio-field');
+                const colonia = bloque.querySelector('.colonia-select');
+
+                if (estado) estado.value = '';
+                if (municipio) municipio.value = '';
+                if (colonia) {
+                    colonia.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+                    colonia.disabled = true;
+                }
+            }
+
+            modal.addEventListener('shown.bs.modal', () => {
+                const cpInput = modal.querySelector('.cp-field');
+                if (!cpInput) return;
+
+                cpInput.addEventListener('input', delay(async () => {
+                    const cp = cpInput.value.trim();
+                    const bloque = cpInput.closest('.facturacion-block') ?? modal;
+
+                    if (!/^\d{5}$/.test(cp)) {
+                        limpiar(bloque);
+                        return;
+                    }
+
+                    try {
+                        const r = await fetch(`/api/cp/${cp}`);
+                        if (!r.ok) throw new Error(`No hay datos para el CP ${cp}`);
+
+                        const data = await r.json();
+
+                        seleccionarPorTexto(bloque.querySelector('.estado-field'), data.head.estado);
+                        seleccionarPorTexto(bloque.querySelector('.municipio-field'), data.head.municipio);
+
+                        const coloniaSel = bloque.querySelector('.colonia-select');
+                        if (coloniaSel) {
+                            coloniaSel.innerHTML = '';
+                            data.colonias.forEach(c => {
+                                const opt = new Option(`${c.colonia} (${c.tipo})`, c.colonia);
+                                coloniaSel.appendChild(opt);
+                            });
+                            coloniaSel.disabled = false;
+                        }
+
+                    } catch (err) {
+                        console.error('❌ Error cargando CP:', err);
+                        limpiar(bloque);
+                    }
+                }));
+            });
+        });
+    </script>
+
+<script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('modalCrearDireccionFactura');
+    if (!modal) return;
+
+    // Campos dentro del modal
+    const campoPais      = modal.querySelector('.pais-field');
+    const campoCP        = modal.querySelector('.cp-field');
+    const coloniaSel     = modal.querySelector('.colonia-select');
+    const municipioSel   = modal.querySelector('.municipio-field');
+    const estadoSel      = modal.querySelector('.estado-field');
+
+    // ① Aplica “readonly” vía CSS y atributos a municipio/estado
+    [municipioSel, estadoSel].forEach(sel => {
+        if (!sel) return;
+        sel.setAttribute('readonly', 'readonly');      // marca semántica
+        sel.setAttribute('tabindex', '-1');            // no reciba focus
+        sel.style.pointerEvents = 'none';               // no clickable
+        sel.style.backgroundColor = '#e9ecef';          // tono disabled
     });
 
-    if (!resp.ok) {
-      const contentType = resp.headers.get('Content-Type') || '';
-      if (contentType.includes('application/json')) {
-        const err = await resp.json();
-        console.error('Error JSON:', err);
-        alert('❌ ' + (err.error || JSON.stringify(err.errors) || 'Error al guardar'));
-      } else {
-        const text = await resp.text();
-        console.error('Error HTML:', text);
-        alert('❌ Error inesperado. Revisa consola.');
-      }
-      return;
+    // ─── Utilidades ────────────────────────────────
+    const delay = (fn, ms = 400) => {
+        let t;
+        return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), ms);
+        };
+    };
+
+    function seleccionarPorTexto(select, texto) {
+        if (!select) return;
+        let opt = [...select.options].find(o =>
+        o.text.trim().toLowerCase() === texto.trim().toLowerCase()
+        );
+        if (!opt) opt = [...select.options].find(o => o.value === texto);
+        if (!opt) {
+        opt = new Option(texto, texto, true, true);
+        select.prepend(opt);
+        }
+        select.value = opt.value;
     }
 
-    const { razon_social: razon, direccion: dir } = await resp.json();
+    function limpiarCampos() {
+        // limpia colonia, mantiene municipio/estado en blanco
+        if (coloniaSel) {
+        coloniaSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+        coloniaSel.disabled = true;
+        }
+        municipioSel.value = '';
+        estadoSel.value    = '';
+    }
 
-    // Cierra modal
-    bootstrap.Modal.getInstance(
-      document.getElementById('modalCrearDireccionFactura')
-    ).hide();
+    // ─── Lógica país → habilita/deshabilita autocompletado ───────────────
+    function togglePorPais() {
+        const nombre = campoPais.options[campoPais.selectedIndex].text.trim().toLowerCase();
+        const esMx   = nombre === 'méxico';
 
-    // Rellena formulario principal
-    document.querySelector('[name="razon_social"]').value   = razon.nombre;
-    document.querySelector('[name="rfc"]').value            = razon.rfc;
-    document.querySelector('[name="uso_cfdi"]').value       = razon.id_uso_cfdi;
-    document.querySelector('[name="metodo_pago"]').value    = razon.id_metodo_pago;
-    document.querySelector('[name="forma_pago"]').value     = razon.id_forma_pago;
-    document.querySelector('[name="regimen_fiscal"]').value = razon.id_regimen_fiscal;
+        // CP y Colonia sólo si es México
+        campoCP.disabled          = !esMx;
+        coloniaSel.disabled       = !esMx;
+        if (!esMx) {
+        coloniaSel.innerHTML = '<option value="">No aplicable fuera de México</option>';
+        limpiarCampos();
+        } else {
+        coloniaSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+        }
+    }
 
-    document.querySelector('[name="calle"]').value    = dir.calle || '';
-    document.querySelector('[name="num_ext"]').value  = dir.num_ext || '';
-    document.querySelector('[name="num_int"]').value  = dir.num_int || '';
-    document.querySelector('[name="colonia"]').value  = dir.colonia || '';
-    document.querySelector('[name="cp"]').value       = dir.cp || '';
-    document.querySelector('[name="municipio"]').value= dir.municipio || '';
-    document.querySelector('[name="estado"]').value   = dir.estado || '';
-    document.querySelector('[name="pais"]').value     = dir.pais || 'MÉXICO';
-    document.querySelector('[name="notas"]').value    = dir.notas || '';
-  });
-});
+    campoPais.addEventListener('change', togglePorPais);
+
+    // ─── Al abrir el modal ─────────────────────────────
+    modal.addEventListener('shown.bs.modal', () => {
+        togglePorPais();  // estado inicial
+
+        // Listener CP → fetch
+        campoCP.removeEventListener('input', onCPInput);
+        campoCP.addEventListener('input', delay(onCPInput, 400));
+    });
+
+    // ─── Manejador de CP → autocompletado ─────────────
+    async function onCPInput() {
+        const cp = campoCP.value.trim();
+        if (!/^\d{5}$/.test(cp)) {
+        limpiarCampos();
+        return;
+        }
+        try {
+        const res = await fetch(`/api/cp/${cp}`);
+        if (!res.ok) throw new Error('Sin datos');
+        const data = await res.json();
+
+        // llena municipio y estado (readonly)
+        seleccionarPorTexto(estadoSel,    data.head.estado);
+        seleccionarPorTexto(municipioSel, data.head.municipio);
+
+        // llena colonias
+        coloniaSel.innerHTML = '';
+        data.colonias.forEach(c => {
+            const o = new Option(`${c.colonia} (${c.tipo})`, c.colonia);
+            coloniaSel.appendChild(o);
+        });
+        coloniaSel.disabled = false;
+        } catch {
+        limpiarCampos();
+        }
+    }
+    });
 </script>
 
 
+
+@endpush
 
 @endsection

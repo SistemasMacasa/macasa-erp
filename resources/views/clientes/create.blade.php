@@ -67,7 +67,7 @@
                                     <label class="form-label text-normal">Asignado a: <span class="text-danger">*</span></label>
                                     <select name="id_vendedor" class="form-select">
                                         <option value="" disabled selected>-- Selecciona --</option>
-                                        <option value="" @selected(old('id_vendedor') === '')>-- Base General --</option>
+                                        <option value="" @selected(old('id_vendedor') === '')>Base General</option>
                                         @foreach ($vendedores as $v)
                                             <option value="{{ $v->id_usuario }}" @selected(old('id_vendedor') == $v->id_usuario)>
                                                 {{ $v->nombre }} {{ $v->apellido_p }} {{ $v->apellido_m }}
@@ -147,7 +147,7 @@
                             {{-- Contacto Principal ─ Teléfonos EMPRESARIAL --}}
                             <div id="telefonos-cel-wrapper"> {{-- ⬅️ NUEVO --}}
 
-                                <div class="row">
+                                <div class="row mb-3">
                                     {{-- Teléfonos fijos --}}
                                     <div class="col-xxl-4 col-xl-4 col-lg-4" id="telefonos-col" style="padding-right: 0 !important;">
                                         <div class="mb-2 telefono-item">
