@@ -1580,4 +1580,13 @@
         });
     </script>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const contenedor = document.querySelector('.body-notas');
+        if (contenedor) {
+            contenedor.scrollTop = contenedor.scrollHeight;
+        }
+    });
+</script>
+
 @endpush

@@ -1656,7 +1656,9 @@ tfoot>tr>th {
   overflow-y: auto;
   background: var(--color-body-nota);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1rem 12rem 1rem 12rem;
+  scroll-behavior: smooth;
+
 }
 
 /* ───────────────────────────────────────────────
