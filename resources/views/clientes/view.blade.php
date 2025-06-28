@@ -18,7 +18,7 @@
         <li class="breadcrumb-item active">Ver Cuenta</li>
     @endsection
 
-    <h2 class="mb-3">Información de la Cuenta [{{ $cliente->id_cliente }}] - {{ $cliente->nombre }}
+    <h2 class="mb-3 text-titulo">Información de la Cuenta [{{ $cliente->id_cliente }}] - {{ $cliente->nombre }}
         {{ $cliente->apellido_p ?? '' }} {{ $cliente->apellido_m ?? '' }}</h2>
 
 
@@ -182,7 +182,7 @@
                             </div>
 
                             {{-- ── CONTACTO PRINCIPAL ─────────────────────────── --}}
-                            <h6 class="fw-semibold mb-3">Contacto principal</h6>
+                            <h6 class=" mb-3 text-subtitulo">Contacto principal</h6>
 
                             <div class="row g-3 contacto-block" data-index="0">
                                 {{-- Ojo: El operador ?-> es para navegación segura --}}

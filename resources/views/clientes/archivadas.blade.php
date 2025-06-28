@@ -129,10 +129,10 @@
                 </div> {{-- /.row --}}
 
 
-                <div class="row gx-3 gy-2 justify-content-between mt-3">
+                <div class="row gx-3 gy-2 mt-3">
 
                     {{-- Registros por página --}}
-                    <div class="col-xxl-2">
+                    <div class="col-xxl-2 col-xl-4">
                         <label for="perPage" class="form-label text-normal">Ver registros</label>
                         <select name="perPage" id="perPage" class="form-select">
                             <option value="all" {{ request('perPage') == 'all' ? 'selected' : '' }}>Todos</option>
@@ -145,25 +145,38 @@
                     </div>
 
                     {{-- ① Toggle ON/OFF multiselección --}}
-                    <div class="col-xxl-2 col-xl-6 mt-4 d-flex align-items-center">
+                    <div class="col-6 col-md-2 col-xxl-2 d-flex justify-content-center align-items-center">
                         <label class="switch">
-                        <input type="checkbox" id="toggleBulk">
-                        <span class="slider round"></span>
+                            <input type="checkbox" id="toggleBulk">
+                            <span class="slider round"></span>
                         </label>
                         <span class="ms-2">Modo Restaurar</span>
                     </div>
 
-                    <div class="col-xxl-2 mt-4 d-flex">
-                        {{-- BOTÓN RESTAURAR --}}
+                    {{-- Ejecutivo Destino (oculto hasta toggle) --}}
+                    <div class="col-6 col-md-2 col-xxl-2 d-none restore-item" id="restoreSelect">
+                        <label for="restoreEjecutivo" class="form-label">Ejecutivo Destino</label>
+                        <select id="restoreEjecutivo" name="id_vendedor" form="formRestore"
+                                class="form-select" required>
+                            <option value="" disabled selected>-- Selecciona --</option>
+                            <option value="base">BASE GENERAL</option>
+                            @foreach($vendedores as $v)
+                            <option value="{{ $v->id_usuario }}">{{ $v->nombreCompleto }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Botón RESTAURAR (oculto hasta toggle) --}}
+                    <div class="col-xxl-2 col-xl-2 mt-4 d-none restore-item" id="restoreButton">
                         <button type="submit"
                                 id="btnRestore"
                                 form="formRestore"
-                                class="btn btn-success me-2 d-none">
-                        <i class="fa fa-undo me-1"></i> RESTAURAR CUENTAS
+                                class="btn btn-success w-100">
+                            <i class="fa fa-undo me-1"></i> RESTAURAR CUENTAS
                         </button>
                     </div>
-                    <div class="col"></div>
-                    <div class="col"></div>
+
+                    
                 </div>
 
 
@@ -571,84 +584,125 @@
 @push('scripts')
 
     
-<script>
-    //Filtros ASC/DESC en cabecera de la tabla pincipal
-    document.addEventListener('DOMContentLoaded', () => {
-        const table = document.getElementById('tabla-clientes');
-        const tbody = table.tBodies[0];
-        // 1) Todos los th
-        const allThs = Array.from(table.querySelectorAll('thead th'));
-        // 2) Solo los que tienen la clase filtro-asc-desc
-        const sortableThs = allThs.filter(th => th.classList.contains('filtro-asc-desc'));
-        const dir = {}; // guardará la dirección por índice de columna
+    <script>
+        //Filtros ASC/DESC en cabecera de la tabla pincipal
+        document.addEventListener('DOMContentLoaded', () => {
+            const table = document.getElementById('tabla-clientes');
+            const tbody = table.tBodies[0];
+            // 1) Todos los th
+            const allThs = Array.from(table.querySelectorAll('thead th'));
+            // 2) Solo los que tienen la clase filtro-asc-desc
+            const sortableThs = allThs.filter(th => th.classList.contains('filtro-asc-desc'));
+            const dir = {}; // guardará la dirección por índice de columna
 
-        sortableThs.forEach(th => {
-            // posición real de la columna
-            const colIndex = th.cellIndex;
+            sortableThs.forEach(th => {
+                // posición real de la columna
+                const colIndex = th.cellIndex;
 
-            th.style.cursor = 'pointer';
-            // agrega la flecha
-            const arrow = document.createElement('span');
-            arrow.className = 'sort-arrow';
-            th.append(' ', arrow);
+                th.style.cursor = 'pointer';
+                // agrega la flecha
+                const arrow = document.createElement('span');
+                arrow.className = 'sort-arrow';
+                th.append(' ', arrow);
 
-            th.addEventListener('click', () => {
-                // alterna dirección
-                dir[colIndex] = dir[colIndex] === 'asc' ? 'desc' : 'asc';
+                th.addEventListener('click', () => {
+                    // alterna dirección
+                    dir[colIndex] = dir[colIndex] === 'asc' ? 'desc' : 'asc';
 
-                // extrae y ordena filas
-                const rows = Array.from(tbody.rows);
-                rows.sort((a, b) => {
-                    const A = a.cells[colIndex].innerText.trim();
-                    const B = b.cells[colIndex].innerText.trim();
-                    // parsea número si usas data-type="number", o texto por defecto
-                    let res = 0;
-                    if (th.dataset.type === 'number') {
-                        res = parseFloat(A.replace(/[^\d.-]/g, '')) - parseFloat(B
-                            .replace(/[^\d.-]/g, ''));
-                    } else {
-                        res = A.localeCompare(B, undefined, {
-                            numeric: true,
-                            sensitivity: 'base'
-                        });
-                    }
-                    return dir[colIndex] === 'asc' ? res : -res;
+                    // extrae y ordena filas
+                    const rows = Array.from(tbody.rows);
+                    rows.sort((a, b) => {
+                        const A = a.cells[colIndex].innerText.trim();
+                        const B = b.cells[colIndex].innerText.trim();
+                        // parsea número si usas data-type="number", o texto por defecto
+                        let res = 0;
+                        if (th.dataset.type === 'number') {
+                            res = parseFloat(A.replace(/[^\d.-]/g, '')) - parseFloat(B
+                                .replace(/[^\d.-]/g, ''));
+                        } else {
+                            res = A.localeCompare(B, undefined, {
+                                numeric: true,
+                                sensitivity: 'base'
+                            });
+                        }
+                        return dir[colIndex] === 'asc' ? res : -res;
+                    });
+
+                    // reinyecta las filas ordenadas
+                    rows.forEach(r => tbody.appendChild(r));
+
+                    // actualiza clases de flecha
+                    sortableThs.forEach(t => t.classList.remove('asc', 'desc'));
+                    th.classList.add(dir[colIndex]);
                 });
-
-                // reinyecta las filas ordenadas
-                rows.forEach(r => tbody.appendChild(r));
-
-                // actualiza clases de flecha
-                sortableThs.forEach(t => t.classList.remove('asc', 'desc'));
-                th.classList.add(dir[colIndex]);
             });
         });
-    });
-</script>
+    </script>
 
-<script>
-  const toggle = document.getElementById('toggleBulk');
-  const htmlEl = document.documentElement;
-  const btnRestore = document.getElementById('btnRestore');
-  const selectAll = document.getElementById('selectAll');
-  const items = () => document.querySelectorAll('.bulk-item');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle      = document.getElementById('toggleBulk');
+            const restoreEls  = document.querySelectorAll('.restore-item');
+            const selectAll   = document.getElementById('selectAll');
+            const items       = () => document.querySelectorAll('.bulk-item');
+            const titleEl     = document.querySelector('.text-titulo');
+            const originalTitle = titleEl?.textContent || '';
 
-  toggle.addEventListener('change', () => {
-    const titleEl = document.querySelector('.text-titulo');
-    titleEl.textContent = toggle.checked ? 'Restaurar Cuentas Archivadas' : 'Cuentas Archivadas';    const on = toggle.checked;
-    // clase visual (verde)
-    htmlEl.classList.toggle('selection-mode', on);
-    // mostramos/ocultamos checkboxes y botón
-    document.querySelectorAll('.col-select')
-            .forEach(c => c.style.display = on ? 'table-cell' : 'none');
-    btnRestore.classList.toggle('d-none', !on);
-    if (!on) items().forEach(i => i.checked = false);
-  });
+            function toggleRowHighlightGreen(e) {
+                e.target.closest('tr').classList.toggle('table-success', e.target.checked);
+            }
 
-  selectAll.addEventListener('change', () => {
-    items().forEach(i => i.checked = selectAll.checked);
-  });
-</script>
+            function setRestoreMode(on) {
+                // 1) Título
+                if (titleEl) {
+                titleEl.textContent = on
+                    ? 'Restaurar Cuentas Archivadas'
+                    : originalTitle;
+                }
+
+                // 2) togglear la visibilidad de select+botón
+                restoreEls.forEach(el => 
+                el.classList.toggle('d-none', !on)
+                );
+
+                // 3) columna de checkboxes
+                document.querySelectorAll('.col-select')
+                .forEach(c => c.style.display = on ? 'table-cell' : 'none');
+
+                // 4) limpiar checks y resaltados
+                selectAll.checked = false;
+                items().forEach(cb => {
+                cb.checked = false;
+                cb.removeEventListener('change', toggleRowHighlightGreen);
+                });
+                document.querySelectorAll('tr.table-success')
+                .forEach(tr => tr.classList.remove('table-success'));
+
+                // 5) si on=true, añadir listeners para el resaltado
+                if (on) {
+                items().forEach(cb => {
+                    cb.addEventListener('change', toggleRowHighlightGreen);
+                    if (cb.checked) cb.closest('tr').classList.add('table-success');
+                });
+                }
+            }
+
+            // Conecta el toggle
+            toggle.addEventListener('change', () =>
+                setRestoreMode(toggle.checked)
+            );
+
+            // Select All
+            selectAll.addEventListener('change', () => {
+                items().forEach(cb => {
+                cb.checked = selectAll.checked;
+                cb.dispatchEvent(new Event('change'));
+                });
+            });
+        });
+    </script>
+
+
 
 @endpush
 

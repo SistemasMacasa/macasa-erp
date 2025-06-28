@@ -721,54 +721,76 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        /* === ELEMENTOS ==================================================== */
-        const toggle           = document.getElementById('archiveToggle');      // interruptor
-        const btnArchivar      = document.getElementById('btnArchivar');        // botón rojo
-        const selectAllArchive = document.getElementById('selectAllArchive');   // head archivado
-        const selectAllTras    = document.getElementById('selectAllTraspaso');  // head traspaso
-        const chkArchive       = document.querySelectorAll('.chk-archive');     // filas archivado
-        const chkTraspaso      = document.querySelectorAll('.chk-traspaso');    // filas traspaso
-        const colArchivar      = document.querySelectorAll('.col-archivar');    // <th>/<td> archivado
-        const colTraspaso      = document.querySelectorAll('.col-traspaso');    // <th>/<td> traspaso
-        const root             = document.documentElement;                      // <html>
-        const titulo           = document.querySelector('.text-titulo');        // título principal
-        const tituloOriginal   = titulo ? titulo.innerHTML : '';                // guarda el título original
+document.addEventListener('DOMContentLoaded', () => {
+    /* === ELEMENTOS ==================================================== */
+    const toggle           = document.getElementById('archiveToggle');
+    const btnArchivar      = document.getElementById('btnArchivar');
+    const selectAllArchive = document.getElementById('selectAllArchive');
+    const selectAllTras    = document.getElementById('selectAllTraspaso');
+    const chkArchive       = document.querySelectorAll('.chk-archive');
+    const chkTraspaso      = document.querySelectorAll('.chk-traspaso');
+    const colArchivar      = document.querySelectorAll('.col-archivar');
+    const colTraspaso      = document.querySelectorAll('.col-traspaso');
+    const root             = document.documentElement;
+    const titulo           = document.querySelector('.text-titulo');
+    const tituloOriginal   = titulo ? titulo.innerHTML : '';
 
-        /* === FUNCIÓN CENTRAL ============================================== */
-        function setArchiveMode(on) {
-            if (titulo) {
-                titulo.innerHTML = on ? "Archivado de Cuentas" : tituloOriginal;
-            }
-            // Añade/quita clase global para colorear todo
-            root.classList.toggle('archivar-mode', on);
+    /* === FUNCIÓN PARA RESALTAR FILAS ================================== */
+    function toggleRowHighlight(e) {
+      const tr = e.target.closest('tr');
+      tr.classList.toggle('table-danger', e.target.checked);
+    }
 
-            // Muestra/oculta botón rojo
-            btnArchivar.style.display = on ? 'inline-block' : 'none';
-
-            // Alterna columnas
-            colArchivar.forEach(el => el.style.display = on ? 'table-cell' : 'none');
-            colTraspaso.forEach(el => el.style.display = on ? 'none'       : 'table-cell');
-
-            // Limpia checks para evitar confusiones
-            if (selectAllArchive) selectAllArchive.checked = false;
-            if (selectAllTras)    selectAllTras.checked    = false;
-            chkArchive .forEach(cb => cb.checked = false);
-            chkTraspaso.forEach(cb => cb.checked = false);
+    /* === FUNCIÓN CENTRAL ============================================== */
+    function setArchiveMode(on) {
+        // Título y botón
+        if (titulo) {
+            titulo.innerHTML = on ? "Archivado de Cuentas" : tituloOriginal;
         }
+        root.classList.toggle('archivar-mode', on);
+        btnArchivar.style.display = on ? 'inline-block' : 'none';
 
-        /* === EVENTOS ====================================================== */
-        toggle.addEventListener('change', () => setArchiveMode(toggle.checked));
+        // Columnas de checkboxes
+        colArchivar.forEach(el => el.style.display = on ? 'table-cell' : 'none');
+        colTraspaso.forEach(el => el.style.display = on ? 'none'       : 'table-cell');
 
-        selectAllArchive?.addEventListener('change', e =>
-            chkArchive.forEach(cb => cb.checked = e.target.checked)
-        );
+        // Limpia checks y resaltados
+        if (selectAllArchive) selectAllArchive.checked = false;
+        if (selectAllTras)    selectAllTras.checked    = false;
+        chkArchive.forEach(cb => {
+            cb.checked = false;
+            // siempre remueve listener para evitar duplicados
+            cb.removeEventListener('change', toggleRowHighlight);
+        });
+        chkTraspaso.forEach(cb => cb.checked = false);
+        // quita cualquier .table-danger que haya quedado
+        document.querySelectorAll('tr.table-danger').forEach(tr => tr.classList.remove('table-danger'));
 
-        selectAllTras?.addEventListener('change', e =>
-            chkTraspaso.forEach(cb => cb.checked = e.target.checked)
-        );
-    });
+        // Si activo, atacheo resaltado de fila
+        if (on) {
+            chkArchive.forEach(cb => {
+                cb.addEventListener('change', toggleRowHighlight);
+                // estado inicial (por si ya estaba checked)
+                if (cb.checked) {
+                    cb.closest('tr').classList.add('table-danger');
+                }
+            });
+        }
+    }
+
+    /* === EVENTOS ====================================================== */
+    toggle.addEventListener('change', () => setArchiveMode(toggle.checked));
+
+    selectAllArchive?.addEventListener('change', e =>
+        chkArchive.forEach(cb => { cb.checked = e.target.checked; cb.dispatchEvent(new Event('change')); })
+    );
+
+    selectAllTras?.addEventListener('change', e =>
+        chkTraspaso.forEach(cb => cb.checked = e.target.checked)
+    );
+});
 </script>
+
 
     @endpush
 

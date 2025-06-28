@@ -1764,11 +1764,19 @@ body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
 }
 
 /* === MODO ARCHIVADO (clase en <html>) ========================= */
-.archivar-mode body                { background:var(--modo-archivado-body-bg)!important; }
+/* .archivar-mode body                { background:var(--modo-archivado-body-bg)!important; }
 .archivar-mode .vertical-menu      { background:var(--modo-archivado-sidebar-bg)!important; border-color: var(--modo-archivado-sidebar-bg)!important ; }
 .archivar-mode #logo-box           { background:var(--modo-archivado-sidebar-bg)!important; }
 .archivar-mode #page-topbar        { background:var(--modo-archivado-body-bg)!important; border-color: var(--modo-archivado-sidebar-bg)!important;}
-.archivar-mode .bg-light-subtle    { background:rgba(var(--bs-danger-rgb),.2)!important; }
+.archivar-mode .bg-light-subtle    { background:rgba(var(--bs-danger-rgb),.2)!important; } */
+
+/* 2) Sólo coloreamos las filas que tengan la clase .table-danger */
+.archivar-mode tbody tr.table-danger > td {
+  /* fondo rojo suave */
+  background-color: rgba(var(--bs-danger-rgb), .2) !important;
+  /* texto rojo oscuro */
+  color: rgb(var(--bs-danger-rgb)) !important;
+}
 
 /* Columnas: por defecto vemos solo traspaso */
 .col-archivar { display:none; }
@@ -1812,7 +1820,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 }
 
 /* Modo multiselección: fondo verde suave */
-.selection-mode body {
+/* .selection-mode body {
   background-color: var(--bs-success-bg-subtle) !important;
 }
 .selection-mode .vertical-menu,
@@ -1820,6 +1828,13 @@ input:checked + .slider:before { transform: translateX(22px); }
 .selection-mode #page-topbar,
 .selection-mode .bg-light-subtle {
   background-color: rgba(var(--bs-success-rgb), .2) !important;
+} */
+/* Solo coloreamos las filas marcadas con .table-success */
+.selection-mode tbody tr.table-success > td {
+  /* fondo verde suave */
+  background-color: rgba(var(--bs-success-rgb), .2) !important;
+  /* texto verde oscuro */
+  color: rgb(var(--bs-success-rgb)) !important;
 }
 
 /* Columnas: por defecto ocultas */

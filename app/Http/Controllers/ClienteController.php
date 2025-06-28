@@ -272,6 +272,7 @@ class ClienteController extends Controller
                 $nextId = null;
             }
         } else {
+            // Navegación general para otros roles
             $prevId = Cliente::where('id_cliente', '<', $cliente->id_cliente)
                 ->orderByDesc('id_cliente')
                 ->value('id_cliente');
@@ -280,6 +281,7 @@ class ClienteController extends Controller
                 ->orderBy('id_cliente')
                 ->value('id_cliente');
         }
+
 
         $usuario = auth()->user();
 
@@ -310,7 +312,7 @@ class ClienteController extends Controller
         // Actualiza los datos de un cliente existente desde clientes.view
 
         if ($request->sector == "privada" || $request->sector == "gobierno") {
-            if (auth()->user()->es_admin != 1) {
+            if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Gerente')) {
                 return redirect()->back()->with('error', 'No tienes permiso para actualizar este cliente.');
             }
 
@@ -354,11 +356,14 @@ class ClienteController extends Controller
 
             // ── Validamos ───────────────────────────────────────────────────────────
             $data = $request->validate($rules);
-
-
+            
             // Actualizar el cliente en la BD
             try {
                 $cliente = Cliente::findOrFail($id);
+                $estatus_anterior = $cliente->estatus;
+                $estatus_nuevo = $data['estatus'];
+                $vendedor_anterior = $cliente->id_vendedor;
+                $vendedor_nuevo = $request->input('id_vendedor');
                 $cliente->update([
                     'estatus' => $data['estatus'],
                     'nombre' => $data['nombre'],
@@ -394,18 +399,70 @@ class ClienteController extends Controller
                 }
                 $contacto->save();
 
-                //registrarNota es una función Helper, está definida en app/Helpers/
-                $mensaje = "El usuario " . auth()->user()->nombre . " " . auth()->user()->apellido_p . " " . auth()->user()->apellido_m .
-                    " ha actualizado la cuenta empresarial [{$cliente->id_cliente}]  {$cliente->nombre}.";
+                
+                // Verificar cambio de estatus
+                if ($estatus_anterior !== $estatus_nuevo) 
+                {
+                    if ($estatus_nuevo === 'inactivo') {
+                        $mensaje = "El usuario " . auth()->user()->nombreCompleto . " archivó esta cuenta.";
 
-                registrarNota(
-                    id_cliente: $cliente->id_cliente,
-                    contenido: $mensaje,
-                    etapa: $cliente->ciclo_venta,
-                    fecha_reprogramacion: null,
-                    es_automatico: 1,
+                        registrarNota(
+                            id_cliente: $cliente->id_cliente,
+                            contenido: $mensaje,
+                            etapa: null,
+                            fecha_reprogramacion: null,
+                            es_automatico: 1,
+                        );
+                    } elseif ($estatus_anterior === 'inactivo' && $estatus_nuevo === 'activo') {
+                        $mensaje = "El usuario " . auth()->user()->nombreCompleto . " restauró esta cuenta.";
 
-                );
+                        registrarNota(
+                            id_cliente: $cliente->id_cliente,
+                            contenido: $mensaje,
+                            etapa: null,
+                            fecha_reprogramacion: null,
+                            es_automatico: 1,
+                        );
+                    }
+                } else 
+                {
+                    // Verificar cambio de asignación de vendedor
+                    if ((int) $vendedor_anterior !== (int) $vendedor_nuevo) {
+                        $nombre_origen = $vendedor_anterior
+                            ? optional(Usuario::find($vendedor_anterior))->nombreCompleto ?? 'Vendedor desconocido'
+                            : 'BASE GENERAL';
+
+                        $nombre_destino = $vendedor_nuevo
+                            ? optional(Usuario::find($vendedor_nuevo))->nombreCompleto ?? 'Vendedor desconocido'
+                            : 'BASE GENERAL';
+
+                        $mensaje = sprintf(
+                            'El usuario %s reasignó esta cuenta del vendedor %s al vendedor %s.',
+                            auth()->user()->nombreCompleto,
+                            $nombre_origen,
+                            $nombre_destino
+                        );
+
+                        registrarNota(
+                            id_cliente: $cliente->id_cliente,
+                            contenido: $mensaje,
+                            etapa: null,
+                            fecha_reprogramacion: null,
+                            es_automatico: 1,
+                        );
+                    } else {
+                        // Si no cambió ni estatus ni vendedor, se asume actualización general
+                        $mensaje = "El usuario " . auth()->user()->nombreCompleto . " actualizó los datos de esta cuenta.";
+
+                        registrarNota(
+                            id_cliente: $cliente->id_cliente,
+                            contenido: $mensaje,
+                            etapa: $cliente->ciclo_venta,
+                            fecha_reprogramacion: null,
+                            es_automatico: 1,
+                        );
+                    }
+                }
 
                 return redirect()->route('clientes.view', ['id' => $cliente->id_cliente])
                     ->with('success', 'Cliente empresarial actualizado correctamente');
@@ -924,6 +981,7 @@ class ClienteController extends Controller
         $ids = $request->input('clientes', []);
         $origen = $request->input('origen');
         $destino = $request->input('destino');
+        
 
         if (empty($ids)) {
             return back()->with('error', 'No se seleccionó ningún cliente.');
@@ -935,19 +993,29 @@ class ClienteController extends Controller
 
         // Registra UNA nota por cliente (recomendado para trazabilidad)
         foreach ($ids as $idCliente) {
+            // Obtener nombres reales de origen y destino
+            $nombre_origen = ($origen === 'base' || $origen === null || $origen === '0')
+                ? 'BASE GENERAL'
+                : optional(Usuario::find($origen))->nombreCompleto ?? 'Vendedor desconocido';
+
+            $nombre_destino = ($destino === 'base' || $destino === null || $destino === '0')
+                ? 'BASE GENERAL'
+                : optional(Usuario::find($destino))->nombreCompleto ?? 'Vendedor desconocido';
+
             registrarNota(
                 id_cliente           : $idCliente,
                 contenido            : sprintf(
                     'El usuario %s traspasó la cuenta del vendedor %s al vendedor %s.',
-                    auth()->user()->nombre_completo,
-                    $origen  ?: 'BASE GENERAL',
-                    $destino ?: 'BASE GENERAL'
+                    auth()->user()->nombreCompleto,
+                    $nombre_origen,
+                    $nombre_destino
                 ),
-                etapa                : $request->input('ciclo_venta'),   // opcional
-                fecha_reprogramacion : today(),                          // si aplica
-                es_automatico        : true                              // o null
+                etapa                : $request->input('ciclo_venta'),
+                fecha_reprogramacion : null,
+                es_automatico        : true
             );
         }
+
 
         return redirect()->route('clientes.transfer')
             ->with('success', count($ids) . ' cuentas traspasadas.');
@@ -1090,7 +1158,9 @@ class ClienteController extends Controller
             ->appends($request->all());   // conserva filtros
 
         /* ---------- Catálogos para los <select> ---------- */
-        $vendedores = Usuario::whereNull('id_cliente')->get();
+        $vendedores = Usuario::whereNull('id_cliente')
+                        ->where('estatus', 'activo')
+                        ->get();
 
         // Los sacamos directo de la tabla para que no se “desincronicen”
         $sectores = Cliente::select('sector')->distinct()->pluck('sector');
@@ -1106,29 +1176,54 @@ class ClienteController extends Controller
         ));
     }
 
-    public function restaurarMultiples(Request $request)
-    {
-        $ids = $request->input('ids', []);
-        if (empty($ids)) {
-            return back()->with('error', 'Selecciona al menos una cuenta.');
-        }
-        Cliente::whereIn('id_cliente', $ids)
-            ->update(['estatus' => 'activo']);
+public function restaurarMultiples(Request $request)
+{
+    $ids = $request->input('ids', []);
+    $id_vendedor = $request->input('id_vendedor');
 
-        /* Nota automática para cada cliente restaurado */
-        foreach ($ids as $idCliente) {
-            registrarNota(
-                id_cliente    : $idCliente,
-                contenido     : sprintf(
-                    'El usuario %s restauró esta cuenta.',
-                    auth()->user()->nombre_completo
-                ),
-                etapa         : 'activo',   // o la etapa que corresponda
-                es_automatico : true
-            );
-        }
-        return back()->with('success', 'Cuentas restauradas correctamente.');
+    if (empty($ids)) {
+        return back()->with('error', 'Selecciona al menos una cuenta.');
     }
+
+    if (!$id_vendedor) {
+        return back()->with('error', 'Selecciona un ejecutivo destino.');
+    }
+
+    // Determina si va a la BASE GENERAL (sin id_vendedor)
+    $asignacion = $id_vendedor === 'base' ? null : $id_vendedor;
+
+    // Actualiza las cuentas con estatus activo y el ejecutivo (o null)
+    Cliente::whereIn('id_cliente', $ids)->update([
+        'estatus'     => 'activo',
+        'id_vendedor' => $asignacion,
+    ]);
+
+    // Obtiene nombre del ejecutivo si aplica
+    $nombreDestino = $asignacion
+        ? Usuario::find($asignacion)?->nombre_completo ?? "ID #$asignacion"
+        : 'BASE GENERAL';
+
+    // Registrar nota para cada cuenta
+    foreach ($ids as $idCliente) {
+        $contenidoNota = sprintf(
+            'El usuario %s restauró esta cuenta y la asignó a %s.',
+            auth()->user()->nombreCompleto,
+            $nombreDestino
+        );
+
+        registrarNota(
+            id_cliente            : $idCliente,
+            contenido             : $contenidoNota,
+            etapa                 : null,
+            fecha_reprogramacion  : null,
+            es_automatico         : true
+        );
+    }
+
+    return back()->with('success', 'Cuentas restauradas correctamente.');
+}
+
+
 
 }
 
