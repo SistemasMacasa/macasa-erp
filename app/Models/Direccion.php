@@ -1,34 +1,37 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Colonia;  // <-- importar el modelo
 
 class Direccion extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;               // si tu tabla no los usa
-    protected $table = 'direcciones';         // si el plural difiere
+    public $timestamps = false;
+    protected $table = 'direcciones';
     protected $primaryKey = 'id_direccion';
-    // Como es INT auto-incremental:
     public $incrementing = true;
     protected $keyType = 'int';
+
     protected $fillable = [
-        'id_cliente', 
-        'nombre', 
-        'tipo', 
-        'calle', 
-        'num_ext', 
+        'id_cliente',
+        'nombre',
+        'tipo',
+        'calle',
+        'num_ext',
         'num_int',
-        'colonia', 
-        'cp', 
-        'id_ciudad', 
-        'id_estado', 
+        'id_colonia',  // <-- nueva FK
+        'cp',
+        'id_ciudad',
+        'id_estado',
         'id_pais',
     ];
 
     /* Relaciones */
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'id_cliente');
@@ -43,15 +46,20 @@ class Direccion extends Model
     {
         return $this->hasMany(RazonSocial::class, 'id_direccion_facturacion', 'id_direccion');
     }
-    public function contactos()
+
+    // Relación a Colonia
+    public function colonia()
     {
-        return $this->hasMany(Contacto::class, 'id_direccion_entrega', 'id_direccion');
+        return $this->belongsTo(Colonia::class, 'id_colonia', 'id_colonia');
     }
+
+    // Relación a Ciudad
     public function ciudad()
     {
         return $this->belongsTo(Ciudad::class, 'id_ciudad', 'id_ciudad');
     }
 
+    // Relación a Estado
     public function estado()
     {
         return $this->belongsTo(Estado::class, 'id_estado', 'id_estado');
@@ -61,6 +69,4 @@ class Direccion extends Model
     {
         return $this->belongsTo(Pais::class, 'id_pais', 'id_pais');
     }
-
 }
-
