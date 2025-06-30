@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionsTableSeeder::class,
             RolesTableSeeder::class,
+            ActualizarRoleNamesSeeder::class,
             RolePermissionSeeder::class, // Este será el que asigne los permisos a cada rol
             EstadosFromColoniasSeeder::class,
             CiudadesFromColoniasSeeder::class,

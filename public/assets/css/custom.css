@@ -154,13 +154,14 @@ body[data-bs-theme="dark"] {
     gap: 0.5rem;
   }
 
-  .row-fluid > .col-md-2 {
+  .row-fluid>.col-md-2 {
     flex: 1 1 0 !important;
     max-width: 100% !important;
     min-width: 0;
   }
 }
-.text-boton-peq{
+
+.text-boton-peq {
   font-size: 0.69rem;
   color: #ffffff;
 }
@@ -804,7 +805,7 @@ body[data-sidebar-size="sm"] #sidebar-menu .metismenu>li>a {
 }
 
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a {
-    padding: .56rem 0.8rem;
+  padding: .56rem 0.8rem;
   -webkit-transition: none;
   transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
@@ -830,6 +831,16 @@ body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li>a {
    2.  En :hover y en el estado .mm-active (el que usa MetisMenu
        cuando la ruta está seleccionada) desplazamos 4 px a la derecha.
 ─────────────────────────────────────────────────────────────── */
+.vertical-menu,
+.vertical-menu a,
+.vertical-menu .menu-item {
+  transition:
+    width 0.3s ease,
+    max-width 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease;
+}
+
 #sidebar-menu .metismenu>li>a {
   display: flex;
   align-items: center;
@@ -863,12 +874,15 @@ body[data-sidebar-size=sm] #sidebar-menu .icon {
 #sidebar-menu .metismenu ul.sub-menu li>a {
   transition: background-color .20s ease, color .20s ease, transform .20s ease;
 }
+
 ul.sub-menu li a::before {
-    content: "›"; /* También puedes probar: "→", "»", etc. */
-    display: inline-block;
-    margin-right: 0.5rem;
-    color: var(--mc-azul); /* o el color que quieras */
-    font-size: 0.9em;
+  content: "›";
+  /* También puedes probar: "→", "»", etc. */
+  display: inline-block;
+  margin-right: 0.5rem;
+  color: var(--mc-azul);
+  /* o el color que quieras */
+  font-size: 0.9em;
 }
 
 
@@ -1672,10 +1686,11 @@ tfoot>tr>th {
   overflow-y: auto;
 }
 
-  /* Arrancamos con “modo traspaso”: ocultamos la columna de archivado */
+/* Arrancamos con “modo traspaso”: ocultamos la columna de archivado */
 .col-archivar {
   display: none;
 }
+
 .col-traspaso {
   display: table-cell;
 }
@@ -1683,14 +1698,14 @@ tfoot>tr>th {
 /* Cuando entres en modo archivado, este background ayuda a reforzar la acción */
 
 
-  /* Ajuste visual de los checkboxes */
-  .client-checkbox {
-    margin: 0;
-    transform: scale(1.2);
-  }
+/* Ajuste visual de los checkboxes */
+.client-checkbox {
+  margin: 0;
+  transform: scale(1.2);
+}
 
 
-  /* Contenedor del switch */
+/* Contenedor del switch */
 .switch {
   position: relative;
   display: inline-block;
@@ -1709,9 +1724,9 @@ tfoot>tr>th {
 .slider {
   position: absolute;
   cursor: pointer;
-  top:    0;
-  left:   0;
-  right:  0;
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   background-color: #ccc;
   transition: background-color .3s;
@@ -1721,21 +1736,21 @@ tfoot>tr>th {
 .slider:before {
   position: absolute;
   content: "";
-  height:  22px;
-  width:   22px;
-  left:    3px;
-  bottom:  3px;
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
   background-color: white;
   transition: transform .3s;
 }
 
 /* Cuando está ON */
-input:checked + .slider {
+input:checked+.slider {
   background-color: var(--bs-danger);
 }
 
 /* Mueve el círculo al estado ON */
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(22px);
 }
 
@@ -1743,25 +1758,68 @@ input:checked + .slider:before {
 .slider.round {
   border-radius: 28px;
 }
+
 .slider.round:before {
   border-radius: 50%;
 }
+
 /* === SWITCH =================================================== */
-.switch { position:relative; display:inline-block; width:50px; height:28px; }
-.switch input { opacity:0; width:0; height:0; }
-.slider { position:absolute; cursor:pointer; inset:0;
-          background:#ccc; transition:background .3s; }
-.slider:before { content:""; position:absolute; bottom:3px; left:3px;
-                 width:22px; height:22px; background:#fff; transition:transform .3s; }
-input:checked + .slider       { background:var(--bs-danger); }
-input:checked + .slider:before{ transform:translateX(22px); }
-.slider.round      { border-radius:28px; }
-.slider.round:before{ border-radius:50%; }
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #ccc;
+  transition: background .3s;
+}
+
+.slider:before {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: #fff;
+  transition: transform .3s;
+}
+
+input:checked+.slider {
+  background: var(--bs-danger);
+}
+
+input:checked+.slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 28px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 
 /* === TRANSICIONES SUAVES ====================================== */
-body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
-  transition:background-color .3s ease;
-}
+/* body,
+.vertical-menu,
+#logo-box,
+#page-topbar,
+.bg-light-subtle {
+  transition: background-color .3s ease;
+} */
 
 /* === MODO ARCHIVADO (clase en <html>) ========================= */
 /* .archivar-mode body                { background:var(--modo-archivado-body-bg)!important; }
@@ -1771,7 +1829,7 @@ body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
 .archivar-mode .bg-light-subtle    { background:rgba(var(--bs-danger-rgb),.2)!important; } */
 
 /* 2) Sólo coloreamos las filas que tengan la clase .table-danger */
-.archivar-mode tbody tr.table-danger > td {
+.archivar-mode tbody tr.table-danger>td {
   /* fondo rojo suave */
   background-color: rgba(var(--bs-danger-rgb), .2) !important;
   /* texto rojo oscuro */
@@ -1779,8 +1837,13 @@ body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
 }
 
 /* Columnas: por defecto vemos solo traspaso */
-.col-archivar { display:none; }
-.col-traspaso { display:table-cell; }
+.col-archivar {
+  display: none;
+}
+
+.col-traspaso {
+  display: table-cell;
+}
 
 
 /* contenedor switch exactamente como en clientes/transfer */
@@ -1790,7 +1853,13 @@ body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
   width: 50px;
   height: 28px;
 }
-.switch input { opacity: 0; width: 0; height: 0; }
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
 .slider {
   position: absolute;
   cursor: pointer;
@@ -1798,6 +1867,7 @@ body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
   background-color: #ccc;
   transition: background-color .3s;
 }
+
 .slider:before {
   content: "";
   position: absolute;
@@ -1808,10 +1878,22 @@ body, .vertical-menu, #logo-box, #page-topbar, .bg-light-subtle {
   background-color: white;
   transition: transform .3s;
 }
-input:checked + .slider { background-color: var(--bs-success); }
-input:checked + .slider:before { transform: translateX(22px); }
-.slider.round      { border-radius: 28px; }
-.slider.round:before { border-radius: 50%; }
+
+input:checked+.slider {
+  background-color: var(--bs-success);
+}
+
+input:checked+.slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 28px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 
 /* Ajuste visual de los checkboxes */
 .client-checkbox {
@@ -1830,7 +1912,7 @@ input:checked + .slider:before { transform: translateX(22px); }
   background-color: rgba(var(--bs-success-rgb), .2) !important;
 } */
 /* Solo coloreamos las filas marcadas con .table-success */
-.selection-mode tbody tr.table-success > td {
+.selection-mode tbody tr.table-success>td {
   /* fondo verde suave */
   background-color: rgba(var(--bs-success-rgb), .2) !important;
   /* texto verde oscuro */
@@ -1838,4 +1920,6 @@ input:checked + .slider:before { transform: translateX(22px); }
 }
 
 /* Columnas: por defecto ocultas */
-.col-select { display: none; }
+.col-select {
+  display: none;
+}

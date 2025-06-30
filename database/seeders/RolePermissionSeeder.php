@@ -14,8 +14,8 @@ class RolePermissionSeeder extends Seeder
 
         // Mapeo de permisos por rol
         $rolesPermissions = [
-            'Desarrollador' => $permissions->values()->toArray(), // todos los permisos
-            'Administrador' => [
+            'Sistemas' => $permissions->values()->toArray(), // todos los permisos
+            'Direccion' => [
                 'Nueva Cuenta',
                 'Mis Cuentas',
                 'Ver Cuenta',
@@ -49,7 +49,7 @@ class RolePermissionSeeder extends Seeder
                 'Editar Usuario',
                 'Eliminar Usuario'
             ],
-            'Ejecutivo' => [
+            'Ventas' => [
                 'Mis Cuentas',
                 'Ver Cuenta',
                 'Levantar Cotizacion',
@@ -64,6 +64,8 @@ class RolePermissionSeeder extends Seeder
             'Compras' => [],
             'Gerente' => [],
             'Supervisor' => [],
+            'Administracion' => [],
+            'Marketing' => [],
         ];
 
         foreach ($rolesPermissions as $roleName => $permissionNames) {
