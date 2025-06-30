@@ -44,14 +44,18 @@ class CotizacionController extends Controller
         $direccion_facturacion = $cliente->razon_social_predet?->direccion_facturacion;
         $direccion_entrega = $cliente->contacto_entrega_predet?->direccion_entrega;
 
-        $direcciones_facturacion = Direccion::where('id_cliente', $id_cliente)
-            ->where('tipo', 'facturacion')
-            ->orderBy('id_cliente')
-            ->get();
-
-        $direcciones_entrega = Direccion::where('id_cliente', $id_cliente)
-            ->where('tipo', 'entrega')
-            ->orderBy('id_cliente')
+        $razones_sociales = RazonSocial::with([
+            'direccion_facturacion.colonia',
+            'direccion_facturacion.ciudad',
+            'direccion_facturacion.estado',
+            'direccion_facturacion.pais',
+            'uso_cfdi',
+            'metodo_pago',
+            'forma_pago',
+            'regimen_fiscal'
+        ])
+            ->where('id_cliente', $id_cliente)
+            ->orderBy('id_razon_social')
             ->get();
 
         $paises = Pais::whereIn('nombre', ['México', 'Estados Unidos', 'Canadá'])
@@ -61,17 +65,16 @@ class CotizacionController extends Controller
         return view(
             'cotizaciones.create',
             compact(
-                'cliente',
-                'uso_cfdis',
-                'metodos',
-                'formas',
-                'regimenes',
-                'direcciones_facturacion',
-                'direcciones_entrega',
-                'direccion_facturacion',
-                'direccion_entrega',
-                'paises'
-            )
+                  'cliente',
+                 'uso_cfdis',
+                            'metodos',
+                            'formas',
+                            'regimenes',
+                            'razones_sociales',
+                            'direccion_facturacion',
+                            'direccion_entrega',
+                            'paises'
+                        )
         );
     }
 
@@ -111,11 +114,11 @@ class CotizacionController extends Controller
         // 1) Intento resolver colonia por CP + nombre normalizado
         // ---------------------------------------------------------------
         $cp = $data['cp'];
-        $nombreCol = normalize($data['colonia']);
+        $nombreCol = $this->normalize($data['colonia']);
 
-        $colonia = Colonia::where('d_CP', $cp)->get()
-            ->first(function ($row) use ($nombreCol) {
-                return normalize($row->d_asenta) === $nombreCol;
+        $colonia = Colonia::where('d_codigo', $cp)->get()
+                            ->first(function ($row) use ($nombreCol) {
+                return $this->normalize($row->d_asenta) === $nombreCol;
             });
 
         if (!$colonia) {

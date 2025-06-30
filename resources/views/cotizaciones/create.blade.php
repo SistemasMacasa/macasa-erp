@@ -52,87 +52,93 @@
 
 
                     <div class="card-body">
-                        <div class="row gy-3">
+                        <div class="row gy-2">
                             {{-- Fecha, Monto y Utilidad --}}
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Fecha de facturación</label>
                                 <input type="date" name="fecha_facturacion" class="form-control"
                                     value="{{ now()->toDateString() }}">
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Monto de la factura</label>
                                 <input type="text" name="monto" class="form-control">
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Utilidad</label>
                                 <input type="text" name="utilidad" class="form-control">
                             </div>
 
+                            <hr class="mt-3">
+
                             {{-- Razón social y RFC --}}
-                            <div class="col-md-6">
+                            <div class="col-xxl-8">
                                 <label class="form-label">Razón Social *</label>
                                 <input value="{{ $cliente->razon_social_predet?->nombre }}" type="text" name="razon_social"
                                     class="form-control" required>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-xxl-4">
                                 <label class="form-label">RFC *</label>
-                                <input value="{{ $cliente->razon_social_predet?->rfc }}" type="text" name="rfc"
+                                <input value="{{ $cliente->razon_social_predet?->RFC }}" type="text" name="rfc"
                                     class="form-control" required>
                             </div>
 
+                            <hr class="mt-3">
+
                             {{-- Dirección --}}
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Calle</label>
                                 <input value="{{ $direccion_facturacion?->calle }}" type="text" name="calle"
                                     class="form-control">
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-xxl-2">
                                 <label class="form-label">Num. Ext.</label>
                                 <input value="{{ $direccion_facturacion?->num_ext }}" type="text" name="num_ext"
                                     class="form-control">
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-xxl-2">
                                 <label class="form-label">Num. Int.</label>
                                 <input value="{{ $direccion_facturacion?->num_int }}" type="text" name="num_int"
                                     class="form-control">
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Colonia</label>
-                                <input value="{{ $direccion_facturacion?->colonia }}" type="text" name="colonia"
+                                <input value="{{ $direccion_facturacion?->colonia->d_asenta }}" type="text" name="colonia"
                                     class="form-control">
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Código Postal</label>
                                 <input value="{{ $direccion_facturacion?->cp }}" type="text" name="cp" class="form-control">
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Municipio</label>
-                                <input value="{{ $direccion_facturacion?->ciudad?->nombre }}" type="text" name="municipio"
+                                <input value="{{ $direccion_facturacion?->ciudad?->n_mnpio }}" type="text" name="municipio"
                                     class="form-control">
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Estado</label>
-                                <input value="{{ $direccion_facturacion?->estado?->nombre }}" type="text" name="estado"
+                                <input value="{{ $direccion_facturacion?->estado?->d_estado }}" type="text" name="estado"
                                     class="form-control">
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-xxl-4">
                                 <label class="form-label">País</label>
                                 <input value="{{ $direccion_facturacion?->pais?->nombre ?? 'MÉXICO' }}" type="text"
                                     name="pais" class="form-control">
                             </div>
 
+                            <hr class="mt-3">
+
                             {{-- CFDI y pagos --}}
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Uso CFDI</label>
                                 <select name="uso_cfdi" class="form-select">
                                     <option value="">Selecciona uno</option>
@@ -143,7 +149,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Método de pago CFDI</label>
                                 <select name="metodo_pago" class="form-select">
                                     <option value="">Selecciona uno</option>
@@ -154,7 +160,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-xxl-4">
                                 <label class="form-label">Forma de pago</label>
                                 <select name="forma_pago" class="form-select">
                                     <option value="">Selecciona uno</option>
@@ -238,21 +244,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($direcciones_facturacion as $dir)
+                                @forelse($razones_sociales as $rs)
                                     <tr>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-success seleccionar-direccion"
-                                                data-direccion='@json($dir)' data-bs-dismiss="modal">
+                                                data-direccion='@json($rs)' data-bs-dismiss="modal">
                                                 <i class="fa fa-check"></i>
                                             </button>
                                         </td>
-                                        <td>{{ $dir->razon_social }}</td>
-                                        <td>{{ $dir->rfc }}</td>
-                                        <td>{{ $dir->calle }} {{ $dir->num_ext }}</td>
-                                        <td>{{ $dir->colonia }}</td>
-                                        <td>{{ $dir->cp }}</td>
-                                        <td>{{ optional($dir->ciudad)->nombre }}</td>
-                                        <td>{{ optional($dir->estado)->nombre }}</td>
+                                        <td>{{ $rs->nombre }}</td>
+                                        <td>{{ $rs->RFC }}</td>
+                                        <td>{{ $rs->direccion_facturacion->calle }} #{{ $rs->direccion_facturacion->num_ext }}</td>
+                                        <td>{{ $rs->direccion_facturacion->colonia?->d_asenta }}</td>
+                                        <td>{{ $rs->direccion_facturacion?->cp }}</td>
+                                        <td>{{ $rs->direccion_facturacion->ciudad?->n_mnpio }}</td>
+                                        <td>{{ $rs->direccion_facturacion->estado?->d_estado }}</td>
                                     </tr>
                                 @empty
                                     <tr>
