@@ -54,18 +54,18 @@
                     <div class="card-body">
                         <div class="row gy-2">
                             {{-- Fecha, Monto y Utilidad --}}
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Fecha de facturación</label>
                                 <input type="date" name="fecha_facturacion" class="form-control"
                                     value="{{ now()->toDateString() }}">
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Monto de la factura</label>
                                 <input type="text" name="monto" class="form-control">
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Utilidad</label>
                                 <input type="text" name="utilidad" class="form-control">
                             </div>
@@ -73,13 +73,13 @@
                             <hr class="mt-3">
 
                             {{-- Razón social y RFC --}}
-                            <div class="col-xxl-8">
+                            <div class="col-xxl-8 col-xl-6">
                                 <label class="form-label">Razón Social *</label>
                                 <input value="{{ $cliente->razon_social_predet?->nombre }}" type="text" name="razon_social"
                                     class="form-control" required>
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">RFC *</label>
                                 <input value="{{ $cliente->razon_social_predet?->RFC }}" type="text" name="rfc"
                                     class="form-control" required>
@@ -88,48 +88,48 @@
                             <hr class="mt-3">
 
                             {{-- Dirección --}}
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Calle</label>
                                 <input value="{{ $direccion_facturacion?->calle }}" type="text" name="calle"
                                     class="form-control">
                             </div>
 
-                            <div class="col-xxl-2">
+                            <div class="col-xxl-2 col-xl-3">
                                 <label class="form-label">Num. Ext.</label>
                                 <input value="{{ $direccion_facturacion?->num_ext }}" type="text" name="num_ext"
                                     class="form-control">
                             </div>
 
-                            <div class="col-xxl-2">
+                            <div class="col-xxl-2 col-xl-3">
                                 <label class="form-label">Num. Int.</label>
                                 <input value="{{ $direccion_facturacion?->num_int }}" type="text" name="num_int"
                                     class="form-control">
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Colonia</label>
                                 <input value="{{ $direccion_facturacion?->colonia->d_asenta }}" type="text" name="colonia"
                                     class="form-control">
                             </div>
 
-                            <div class="col-xxl-4">
-                                <label class="form-label">Código Postal</label>
-                                <input value="{{ $direccion_facturacion?->cp }}" type="text" name="cp" class="form-control">
-                            </div>
-
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Municipio</label>
                                 <input value="{{ $direccion_facturacion?->ciudad?->n_mnpio }}" type="text" name="municipio"
                                     class="form-control">
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Estado</label>
                                 <input value="{{ $direccion_facturacion?->estado?->d_estado }}" type="text" name="estado"
                                     class="form-control">
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
+                                <label class="form-label">Código Postal</label>
+                                <input value="{{ $direccion_facturacion?->cp }}" type="text" name="cp" class="form-control">
+                            </div>
+
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">País</label>
                                 <input value="{{ $direccion_facturacion?->pais?->nombre ?? 'MÉXICO' }}" type="text"
                                     name="pais" class="form-control">
@@ -138,7 +138,7 @@
                             <hr class="mt-3">
 
                             {{-- CFDI y pagos --}}
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Uso CFDI</label>
                                 <select name="uso_cfdi" class="form-select">
                                     <option value="">Selecciona uno</option>
@@ -149,7 +149,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Método de pago CFDI</label>
                                 <select name="metodo_pago" class="form-select">
                                     <option value="">Selecciona uno</option>
@@ -160,7 +160,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-xxl-4">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Forma de pago</label>
                                 <select name="forma_pago" class="form-select">
                                     <option value="">Selecciona uno</option>
@@ -171,7 +171,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Régimen Fiscal</label>
                                 <select name="regimen_fiscal" class="form-select">
                                     <option value="">Selecciona uno</option>
@@ -180,7 +180,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-xxl-12 col-xl-12">
                                 <label class="form-label">Notas</label>
                                 <textarea name="notas" class="form-control"
                                     rows="3">{{ $direccion_facturacion?->notas }}</textarea>
@@ -212,7 +212,7 @@
     </div> <!-- End container-fluid -->
 
 
-    <!-- Modal: Directorio de direcciones de facturación -->
+    <!-- Modal: Directorio de Razones Sociales + Direccion de Facturación -->
     <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content text-center">
@@ -230,10 +230,10 @@
                     <p class="text-muted mb-4">Selecciona una dirección registrada para el cliente actual</p>
 
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered align-middle small text-start">
+                        <table id="tabla-razones" class="table table-hover table-bordered align-middle small text-start">
                             <thead class="table-light">
                                 <tr>
-                                    <th></th>
+                                    <th>Predeterminado</th>
                                     <th>Razón Social</th>
                                     <th>RFC</th>
                                     <th>Calle</th>
@@ -245,13 +245,17 @@
                             </thead>
                             <tbody>
                                 @forelse($razones_sociales as $rs)
-                                    <tr>
+                                    <tr id="rs-row-{{ $rs->id_razon_social }}" class="{{ $rs->predeterminado ? 'table-success' : '' }}">
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-success seleccionar-direccion"
-                                                data-direccion='@json($rs)' data-bs-dismiss="modal">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-success seleccionar-direccion"
+                                                data-id="{{ $rs->id_razon_social }}"
+                                                data-route="{{ route('razones_sociales.seleccionar', $rs->id_razon_social) }}">
                                                 <i class="fa fa-check"></i>
                                             </button>
                                         </td>
+
                                         <td>{{ $rs->nombre }}</td>
                                         <td>{{ $rs->RFC }}</td>
                                         <td>{{ $rs->direccion_facturacion->calle }} #{{ $rs->direccion_facturacion->num_ext }}</td>
@@ -701,6 +705,54 @@
                 }
             });
         </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+
+                const token = document.querySelector('input[name="_token"]').value;
+
+                document.querySelectorAll('.seleccionar-direccion').forEach(btn => {
+
+                    btn.addEventListener('click', async function () {
+                        const url      = this.dataset.route;
+                        const idRazon  = this.dataset.id;
+
+                        try {
+                            const res = await fetch(url, {
+                                method  : 'POST',
+                                headers : { 'X-CSRF-TOKEN': token }
+                            });
+                            const json = await res.json();
+
+                            if (!json.success) {
+                                alert('Hubo un error al seleccionar');
+                                return;
+                            }
+
+                            // 1) Quitar marca verde a cualquier fila anterior
+                            document.querySelectorAll('#tabla-razones tr.table-success')
+                                    .forEach(tr => tr.classList.remove('table-success'));
+
+                            // 2) Marcar la nueva fila
+                            document
+                            .getElementById(`rs-row-${idRazon}`)
+                            .classList.add('table-success');
+
+                            // 3) Feedback
+                            alert('Dirección seleccionada');   // Se queda el modal abierto
+
+                        } catch (err) {
+                            console.error(err);
+                            alert('Error al conectar con el servidor');
+                        }
+                    });
+
+                });
+            });
+        </script>
+
+
+
 
 
 

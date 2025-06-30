@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CotizacionController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RazonSocialController;
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
 // Route::get('/', function () {
@@ -124,6 +125,8 @@ Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: f
 
     //Mostrar Levantar Cotizacion
     Route::get('/cotizaciones/create/{cliente}', [CotizacionController::class, 'create'])->name('cotizaciones.create');
+    //Seleccionar Razón Social para Cotización
+    Route::post('/razones-sociales/{id}/seleccionar', [RazonSocialController::class, 'seleccionar'])->name('razones_sociales.seleccionar');
 
 });
 
