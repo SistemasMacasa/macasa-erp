@@ -21,13 +21,13 @@ use Spatie\Permission\Traits\HasRoles;
 // //Los permisos se validan en controlador o vista:
 //        dd( auth()->user()->hasRole('desarrollador') );
 //        dd( auth()->user()->can('clientes.index'));
-            // @role('administrador')
-            //     <!-- contenido visible solo a admins -->
-            // @endrole
+// @role('administrador')
+//     <!-- contenido visible solo a admins -->
+// @endrole
 
-            // @can('cotizaciones.create')
-            //     <a href="#">Nueva cotización</a>
-            // @endcan
+// @can('cotizaciones.create')
+//     <a href="#">Nueva cotización</a>
+// @endcan
 
 class Usuario extends Authenticatable
 {
@@ -40,7 +40,14 @@ class Usuario extends Authenticatable
     public $timestamps = false; // Solo si no usas created_at / updated_at
 
     protected $fillable = [
-        'username', 'email', 'password', 'cargo', 'tipo', 'estatus', 'es_admin', 'fecha_alta'
+        'username',
+        'email',
+        'password',
+        'cargo',
+        'tipo',
+        'estatus',
+        'es_admin',
+        'fecha_alta'
     ];
 
     protected $hidden = [
@@ -78,5 +85,22 @@ class Usuario extends Authenticatable
     {
         return $this->belongsTo(Cliente::class, 'id_cliente', 'id_cliente');
         // "id_cliente" en "usuarios" apunta a "id_cliente" en "clientes"
+    }
+    public function equipos()
+    {
+        return $this->belongsToMany(
+            Equipo::class,
+            'equipo_usuario',
+            'usuario_id',
+            'equipo_id'
+        )->withPivot('rol')->withTimestamps();
+    }
+
+    /**
+     * Equipos en los que el usuario es líder.
+     */
+    public function equiposLiderados()
+    {
+        return $this->hasMany(Equipo::class, 'lider_id', 'id_usuario');
     }
 }
