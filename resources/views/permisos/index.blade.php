@@ -13,15 +13,15 @@
     <h2 class="mb-3 text-titulo">Gestión de permisos</h2>
 
     {{-- 🎛 Botonera --}}
-    <div class="d-flex flex-wrap gap-2 mb-3">
+    <div class="row-fluid gap-2 mb-3">
         <a href="{{ url()->previous() }}"
-           class="btn btn-secondary btn-principal">
+           class="col-md-2 btn btn-secondary btn-principal">
             <i class="fa fa-arrow-left me-1"></i> Regresar
         </a>
 
         {{-- Botón Modal catálogo de roles --}}
         <button type="button"
-                class="btn btn-primary btn-principal"
+                class="col-md-2 btn btn-primary btn-principal"
                 data-bs-toggle="modal"
                 data-bs-target="#modalRoles">
             <i class="fa fa-users-cog me-1"></i> Catálogo de roles
@@ -29,7 +29,7 @@
 
         {{-- Botón Modal catálogo de permisos --}}
         <button id="btnCatalogoPermisos"
-                class="btn btn-primary btn-principal"
+                class="col-md-2 btn btn-primary btn-principal"
                 data-bs-toggle="modal"
                 data-bs-target="#modalCatalogoPermisos">
           <i class="fa fa-key me-1"></i> Catálogo de permisos
