@@ -69,4 +69,15 @@ class Direccion extends Model
     {
         return $this->belongsTo(Pais::class, 'id_pais', 'id_pais');
     }
+
+    public function ubicacionCompleta()
+    {
+        return "{$this->calle} {$this->num_ext}" .
+            ($this->num_int ? " Int. {$this->num_int}" : "") . ", " .
+            optional($this->colonia)->d_asenta . ", " .
+            optional($this->ciudad)->n_mnpio . ", " .
+            optional($this->estado)->d_estado . ", " .
+            optional($this->pais)->nombre . " CP {$this->cp}";
+    }
+
 }

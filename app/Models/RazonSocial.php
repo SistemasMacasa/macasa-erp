@@ -9,6 +9,7 @@ class RazonSocial extends Model
 {
     use HasFactory;
     protected $table = 'razones_sociales'; 
+    protected $primaryKey = 'id_razon_social';
     protected $fillable = [
         'nombre',
         'id_cliente',
