@@ -75,13 +75,13 @@
                             {{-- Razón social y RFC --}}
                             <div class="col-xxl-8 col-xl-6">
                                 <label class="form-label">Razón Social *</label>
-                                <input value="{{ $cliente->razon_social_predet?->nombre }}" type="text" name="razon_social"
+                                <input id="rs-nombre" value="{{ $cliente->razon_social_predet?->nombre }}" type="text" name="razon_social"
                                     class="form-control" required>
                             </div>
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">RFC *</label>
-                                <input value="{{ $cliente->razon_social_predet?->RFC }}" type="text" name="rfc"
+                                <input id="rs-rfc" value="{{ $cliente->razon_social_predet?->RFC }}" type="text" name="rfc"
                                     class="form-control" required>
                             </div>
 
@@ -90,7 +90,7 @@
                             {{-- Dirección --}}
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Calle</label>
-                                <input value="{{ $direccion_facturacion?->calle }}" type="text" name="calle"
+                                <input id="dir-calle" value="{{ $direccion_facturacion?->calle }}" type="text" name="calle"
                                     class="form-control">
                             </div>
 
@@ -107,31 +107,31 @@
                             </div>
 
                             <div class="col-xxl-4 col-xl-6">
-                                <label class="form-label">Colonia</label>
+                                <label id="dir-colonia" class="form-label">Colonia</label>
                                 <input value="{{ $direccion_facturacion?->colonia->d_asenta }}" type="text" name="colonia"
                                     class="form-control">
                             </div>
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Municipio</label>
-                                <input value="{{ $direccion_facturacion?->ciudad?->n_mnpio }}" type="text" name="municipio"
+                                <input id="dir-ciudad" value="{{ $direccion_facturacion?->ciudad?->n_mnpio }}" type="text" name="municipio"
                                     class="form-control">
                             </div>
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Estado</label>
-                                <input value="{{ $direccion_facturacion?->estado?->d_estado }}" type="text" name="estado"
+                                <input id="dir-estado" value="{{ $direccion_facturacion?->estado?->d_estado }}" type="text" name="estado"
                                     class="form-control">
                             </div>
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Código Postal</label>
-                                <input value="{{ $direccion_facturacion?->cp }}" type="text" name="cp" class="form-control">
+                                <input id="dir-cp" value="{{ $direccion_facturacion?->cp }}" type="text" name="cp" class="form-control">
                             </div>
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">País</label>
-                                <input value="{{ $direccion_facturacion?->pais?->nombre ?? 'MÉXICO' }}" type="text"
+                                <input id="dir-pais" value="{{ $direccion_facturacion?->pais?->nombre ?? 'MÉXICO' }}" type="text"
                                     name="pais" class="form-control">
                             </div>
 
@@ -140,7 +140,7 @@
                             {{-- CFDI y pagos --}}
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Uso CFDI</label>
-                                <select name="uso_cfdi" class="form-select">
+                                <select id="rs-uso" name="uso_cfdi" class="form-select">
                                     <option value="">Selecciona uno</option>
                                     <option value="G01" {{ $direccion_facturacion?->uso_cfdi == 'G01' ? 'selected' : '' }}>
                                         G01, Adquisición de mercancías</option>
@@ -151,7 +151,7 @@
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Método de pago CFDI</label>
-                                <select name="metodo_pago" class="form-select">
+                                <select id="rs-metodo" name="metodo_pago" class="form-select">
                                     <option value="">Selecciona uno</option>
                                     <option value="PUE" {{ $direccion_facturacion?->metodo_pago == 'PUE' ? 'selected' : '' }}>
                                         PUE</option>
@@ -162,7 +162,7 @@
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Forma de pago</label>
-                                <select name="forma_pago" class="form-select">
+                                <select id="rs-forma" name="forma_pago" class="form-select">
                                     <option value="">Selecciona uno</option>
                                     <option value="01" {{ $direccion_facturacion?->forma_pago == '01' ? 'selected' : '' }}>01,
                                         Efectivo</option>
@@ -173,7 +173,7 @@
 
                             <div class="col-xxl-4 col-xl-6">
                                 <label class="form-label">Régimen Fiscal</label>
-                                <select name="regimen_fiscal" class="form-select">
+                                <select id="rs-regimen" name="regimen_fiscal" class="form-select">
                                     <option value="">Selecciona uno</option>
                                     <option value="601" {{ $direccion_facturacion?->regimen_fiscal == '601' ? 'selected' : '' }}>601, General de Ley Personas Morales</option>
                                     <option value="605" {{ $direccion_facturacion?->regimen_fiscal == '605' ? 'selected' : '' }}>605, Sueldos y Salarios</option>
@@ -740,6 +740,7 @@
 
                             // 3) Feedback
                             alert('Dirección seleccionada');   // Se queda el modal abierto
+                            actualizarCamposCotizacion(json.razon);
 
                         } catch (err) {
                             console.error(err);
@@ -748,6 +749,34 @@
                     });
 
                 });
+
+                function actualizarCamposCotizacion(rs) {
+
+                    // 1) Referencia corta
+                    const rs  = json.razon;
+                    const dir = rs.direccion_facturacion;
+
+                    // 2) Actualiza spans visibles
+                    document.getElementById('rs-nombre').textContent   = rs.nombre;
+                    document.getElementById('rs-rfc').textContent      = rs.RFC;
+                    document.getElementById('dir-calle').textContent   =
+                        `${dir.calle} #${dir.num_ext}${dir.num_int ? ' Int.'+dir.num_int : ''}`;
+                    document.getElementById('dir-colonia').textContent = dir.colonia?.d_asenta || '';
+                    document.getElementById('dir-cp').textContent      = dir.cp;
+                    document.getElementById('dir-ciudad').textContent  = dir.ciudad?.n_mnpio || '';
+                    document.getElementById('dir-estado').textContent  = dir.estado?.d_estado || '';
+
+                    // 3) Actualiza inputs ocultos para que el POST lleve los datos correctos
+                    document.getElementById('id_razon_social').value = rs.id_razon_social;
+                    document.getElementById('rfc').value            = rs.RFC;
+                    document.getElementById('calle').value          = dir.calle;
+                    document.getElementById('num_ext').value        = dir.num_ext;
+                    document.getElementById('num_int').value        = dir.num_int;
+                    document.getElementById('cp').value             = dir.cp;
+                    document.getElementById('id_colonia').value     = dir.id_colonia;   // si lo necesitas
+                    document.getElementById('id_ciudad').value      = dir.id_ciudad;
+                    document.getElementById('id_estado').value      = dir.id_estado;
+                }        
             });
         </script>
 
