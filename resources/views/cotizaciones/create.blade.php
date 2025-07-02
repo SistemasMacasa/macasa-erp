@@ -8,23 +8,23 @@
         @section('breadcrumb')
             <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
             <li class="breadcrumb-item"><a href="{{ route('cotizaciones.index') }}">Cotizaciones</a></li>
-            <li class="breadcrumb-item active">Levantar Cotización - [{{ $cliente->id_cliente }}] - {{ $cliente->nombre }}</li>
+            <li class="breadcrumb-item active">Levantar Cotización - [{{ $cliente->id_cliente }}] {{ $cliente->nombre }}</li>
         @endsection
 
         <h2 class="mb-3" style="color: inherit;">Levantar cotización - [{{ $cliente->id_cliente }}] {{ $cliente->nombre }}</h2>
 
         {{-- 🎛 Botonera --}}
         <div class="d-flex flex-wrap gap-2 mb-3">
-            <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal">
+            <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal col-xxl-2 col-xl-2 col-lg-3">
                 <i class="fa fa-arrow-left me-1"></i> Regresar
             </a>
-            <button class="btn btn-success btn-principal">
+            <button class="btn btn-success btn-principal col-xxl-2 col-xl-2 col-lg-3">
                 <i class="fa fa-save me-1"></i> Guardar
             </button>
-            <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal">
+            <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal col-xxl-2 col-xl-2 col-lg-3">
                 <i class="fa fa-building me-1"></i> Mis cuentas
             </a>
-            <a href="#" class="btn btn-primary btn-principal">
+            <a href="#" class="btn btn-primary btn-principal col-xxl-2 col-xl-2 col-lg-3">
                 <i class="fa fa-user me-1"></i> Ver cuenta
             </a>
         </div>
@@ -95,8 +95,7 @@
                     @endphp
 
                     <form id="cotizacionForm" method="POST" action="{{ route('cotizaciones.store') }}">
-                     @csrf
-
+                            @csrf
                             {{-- Campos invisibles que se sobreescriben por JS --}}
                             <input type="hidden" name="id_razon_social"  id="id_razon_social">
                             <input type="hidden" name="rfc"              id="rfc">
@@ -113,137 +112,137 @@
                             <input type="hidden" name="forma_pago"       id="forma_pago">
                             <input type="hidden" name="regimen_fiscal"   id="regimen_fiscal">
 
-                            <div class="card-body small">
-                                <div class="row g-3">
-                                    <!-- Información de Facturación -->
-                                    <div class="col-12">
-                                        <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
-                                            <div>
-                                                <span class="text-muted me-2"><i class="fa fa-calendar-alt me-1"></i> Fecha de facturación:</span>
-                                                <span id="fecha-facturacion" class="fw-semibold">
-                                                    {{ now()->format('d/m/Y') }}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span class="text-muted me-2"><i class="fa fa-file-invoice-dollar me-1"></i> Monto:</span>
-                                                <span id="monto-factura" class="fw-semibold text-success">
-                                                    $0.00
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span class="text-muted me-2"><i class="fa fa-chart-line me-1"></i> Utilidad:</span>
-                                                <span id="utilidad-factura" class="fw-semibold text-primary">
-                                                    $0.00
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <hr class="my-2">
-                                    </div>
-
-                                    <!-- Razón Social -->
-                                    <div class="col-12">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <i class="fa fa-building fa-fw text-primary me-2"></i>
-                                            <span class="fw-semibold fs-5" id="rs-nombre">
-                                                {{ $rsPredet->nombre ?? '— Sin seleccionar —' }}
+                        <div class="card-body small">
+                            <div class="row g-3">
+                                <!-- Información de Facturación -->
+                                <div class="col-12">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+                                        <div>
+                                            <span class="text-muted me-2"><i class="fa fa-calendar-alt me-1"></i> Fecha de facturación:</span>
+                                            <span id="fecha-facturacion" class="fw-semibold">
+                                                {{ now()->format('d/m/Y') }}
                                             </span>
                                         </div>
-                                        <div class="d-flex align-items-center mb-2">
-                                            <i class="fa fa-id-card fa-fw text-secondary me-2"></i>
-                                            <span id="rs-rfc" class="text-muted">{{ $rsPredet->RFC ?? '' }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <hr class="my-2">
-                                    </div>
-
-                                    <!-- Dirección -->
-                                    <div class="col-12">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <i class="fa fa-map-marker-alt fa-fw text-danger me-2"></i>
-                                            <span id="dir-calle" class="me-2">
-                                                @isset($rsPredet)
-                                                    {{ $rsPredet->direccion_facturacion->calle }}
-                                                    Ext. {{ $rsPredet->direccion_facturacion->num_ext }}
-                                                    @if($rsPredet->direccion_facturacion->num_int)
-                                                        Int. {{ $rsPredet->direccion_facturacion->num_int }}
-                                                    @endif
-                                                @endisset
+                                        <div>
+                                            <span class="text-muted me-2"><i class="fa fa-file-invoice-dollar me-1"></i> Monto:</span>
+                                            <span id="monto-factura" class="fw-semibold text-success">
+                                                $0.00
                                             </span>
                                         </div>
-                                        <div class="d-flex align-items-center mb-1">
-                                            <i class="fa fa-location-arrow fa-fw text-info me-2"></i>
-                                            <span id="dir-colonia" class="me-2">
-                                                {{ $rsPredet->direccion_facturacion->colonia->d_asenta ?? '' }}
+                                        <div>
+                                            <span class="text-muted me-2"><i class="fa fa-chart-line me-1"></i> Utilidad:</span>
+                                            <span id="utilidad-factura" class="fw-semibold text-primary">
+                                                $0.00
                                             </span>
                                         </div>
-                                        <div class="d-flex flex-wrap align-items-center gap-2">
-                                            <i class="fa fa-map fa-fw text-warning"></i>
-                                            <span id="dir-ciudad" class="me-1">
-                                                {{ $rsPredet->direccion_facturacion->ciudad->n_mnpio ?? '—' }}
-                                            </span>
-                                            <span id="dir-estado" class="me-1">
-                                                {{ $rsPredet->direccion_facturacion->estado->d_estado ?? '—' }}
-                                            </span>
-                                            <span>
-                                                <strong>C.P.</strong>
-                                                <span id="dir-cp">{{ $rsPredet->direccion_facturacion->cp ?? '—' }}</span>
-                                            </span>
-                                            <span id="dir-pais" class="ms-1">
-                                                {{ $rsPredet->direccion_facturacion->pais->nombre ?? '—' }}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <hr class="my-2">
-                                    </div>
-
-                                    <!-- CFDI y Métodos -->
-                                    <div class="col-12">
-                                        <div class="row g-2">
-                                            <div class="col-12 col-md-6">
-                                                <span class="text-muted">Uso CFDI:</span>
-                                                <span id="uso-cfdi" class="fw-semibold">
-                                                    {{ $rsPredet->uso_cfdi->clave ?? '— Sin seleccionar —' }}
-                                                    {{ $rsPredet->uso_cfdi->nombre ?? '' }}
-                                                </span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <span class="text-muted">Método de pago:</span>
-                                                <span id="metodo-pago" class="fw-semibold">
-                                                    {{ $rsPredet->metodo_pago->clave ?? '— Sin seleccionar —' }}
-                                                    {{ $rsPredet->metodo_pago->nombre ?? '' }}
-                                                </span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <span class="text-muted">Forma de pago:</span>
-                                                <span id="forma-pago" class="fw-semibold">
-                                                    {{ $rsPredet->forma_pago->clave ?? '— Sin seleccionar —' }}
-                                                    {{ $rsPredet->forma_pago->nombre ?? '' }}
-                                                </span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <span class="text-muted">Régimen Fiscal:</span>
-                                                <span id="regimen-fiscal" class="fw-semibold">
-                                                    {{ $rsPredet->regimen_fiscal->clave ?? '— Sin seleccionar —' }}
-                                                    {{ $rsPredet->regimen_fiscal->nombre ?? '' }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                        <hr class="my-2">
-
-                                    <div class="col-12">
-                                        <textarea name="notas" class="form-control" rows="2" placeholder="Notas adicionales sobre la facturación" style="resize: vertical; min-height: 38px;"></textarea>
                                     </div>
                                 </div>
+
+                                <div class="col-12">
+                                    <hr class="my-2">
+                                </div>
+
+                                <!-- Razón Social -->
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-building fa-fw text-primary me-2"></i>
+                                        <span class="fw-semibold fs-5" id="rs-nombre">
+                                            {{ $rsPredet->nombre ?? '— Sin seleccionar —' }}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fa fa-id-card fa-fw text-secondary me-2"></i>
+                                        <span id="rs-rfc" class="text-muted">{{ $rsPredet->RFC ?? '' }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <hr class="my-2">
+                                </div>
+
+                                <!-- Dirección -->
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-map-marker-alt fa-fw text-danger me-2"></i>
+                                        <span id="dir-calle" class="me-2">
+                                            @isset($rsPredet)
+                                                {{ $rsPredet->direccion_facturacion->calle }}
+                                                Ext. {{ $rsPredet->direccion_facturacion->num_ext }}
+                                                @if($rsPredet->direccion_facturacion->num_int)
+                                                    Int. {{ $rsPredet->direccion_facturacion->num_int }}
+                                                @endif
+                                            @endisset
+                                        </span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-location-arrow fa-fw text-info me-2"></i>
+                                        <span id="dir-colonia" class="me-2">
+                                            {{ $rsPredet->direccion_facturacion->colonia->d_asenta ?? '' }}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex flex-wrap align-items-center gap-2">
+                                        <i class="fa fa-map fa-fw text-warning"></i>
+                                        <span id="dir-ciudad" class="me-1">
+                                            {{ $rsPredet->direccion_facturacion->ciudad->n_mnpio ?? '—' }}
+                                        </span>
+                                        <span id="dir-estado" class="me-1">
+                                            {{ $rsPredet->direccion_facturacion->estado->d_estado ?? '—' }}
+                                        </span>
+                                        <span>
+                                            <strong>C.P.</strong>
+                                            <span id="dir-cp">{{ $rsPredet->direccion_facturacion->cp ?? '—' }}</span>
+                                        </span>
+                                        <span id="dir-pais" class="ms-1">
+                                            {{ $rsPredet->direccion_facturacion->pais->nombre ?? '—' }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <hr class="my-2">
+                                </div>
+
+                                <!-- CFDI y Métodos -->
+                                <div class="col-12">
+                                    <div class="row g-2">
+                                        <div class="col-12 col-md-6">
+                                            <span class="text-muted">Uso CFDI:</span>
+                                            <span id="uso-cfdi" class="fw-semibold">
+                                                {{ $rsPredet->uso_cfdi->clave ?? '— Sin seleccionar —' }}
+                                                {{ $rsPredet->uso_cfdi->nombre ?? '' }}
+                                            </span>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <span class="text-muted">Método de pago:</span>
+                                            <span id="metodo-pago" class="fw-semibold">
+                                                {{ $rsPredet->metodo_pago->clave ?? '— Sin seleccionar —' }}
+                                                {{ $rsPredet->metodo_pago->nombre ?? '' }}
+                                            </span>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <span class="text-muted">Forma de pago:</span>
+                                            <span id="forma-pago" class="fw-semibold">
+                                                {{ $rsPredet->forma_pago->clave ?? '— Sin seleccionar —' }}
+                                                {{ $rsPredet->forma_pago->nombre ?? '' }}
+                                            </span>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <span class="text-muted">Régimen Fiscal:</span>
+                                            <span id="regimen-fiscal" class="fw-semibold">
+                                                {{ $rsPredet->regimen_fiscal->clave ?? '— Sin seleccionar —' }}
+                                                {{ $rsPredet->regimen_fiscal->nombre ?? '' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                    <hr class="my-2">
+
+                                <div class="col-12">
+                                    <textarea name="notas" class="form-control" rows="2" placeholder="Notas adicionales sobre la facturación" style="resize: vertical; min-height: 38px;"></textarea>
+                                </div>
                             </div>
+                        </div>
                     </form>
 
                 </div>
@@ -274,36 +273,41 @@
                         </div>
                     </div>
 
-                    {{-- Inputs invisibles --}}
-                    <input type="hidden" name="id_direccion_entrega"  id="id_direccion_entrega">
-                    <input type="hidden" name="id_contacto_entrega"   id="id_contacto_entrega">
-                    <input type="hidden" name="notas_entrega"         id="notas_entrega">
+                    
+                    <form id="entregaForm" class="">
+                            @csrf
+                            {{-- Inputs invisibles --}}
+                            <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
+                            <input type="hidden" name="id_direccion_entrega"  id="id_direccion_entrega">
+                            <input type="hidden" name="id_contacto_entrega"   id="id_contacto_entrega">
 
-                    <div class="card-body small">
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <span class="text-muted">Contacto:</span>
-                                <span id="entrega-contacto" class="fw-semibold">—</span>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <span class="text-muted">Teléfono:</span>
-                                <span id="entrega-telefono" class="fw-semibold">—</span>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <span class="text-muted">E-mail:</span>
-                                <span id="entrega-email" class="fw-semibold">—</span>
-                            </div>
-                            <div class="col-12">
-                                <i class="fa fa-map-marker-alt text-danger me-1"></i>
-                                <span id="entrega-direccion">—</span>
-                            </div>
-                            <div class="col-12">
-                                <textarea name="notas_entrega_visible" class="form-control" rows="2"
-                                        placeholder="Notas de entrega (opcional)"
-                                        oninput="document.getElementById('notas_entrega').value=this.value"></textarea>
+                        <div class="card-body small">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <span class="text-muted">Contacto:</span>
+                                    <span id="entrega-contacto" class="fw-semibold">{{ $contacto_entrega->nombre ?? '—' }}</span>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <span class="text-muted">Teléfono:</span>
+                                    <span id="entrega-telefono" class="fw-semibold">{{ $contacto_entrega->telefono1 ?? '—' }}</span>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <span class="text-muted">E-mail:</span>
+                                    <span id="entrega-email" class="fw-semibold">{{ $contacto_entrega->email ?? '—' }}</span>
+                                </div>
+                                <div class="col-12">
+                                    <i class="fa fa-map-marker-alt text-danger me-1"></i>
+                                    <span class="text-muted">Calle:</span>
+                                    <span id="entrega-direccion">{{ $contacto_entrega->direccion_entrega->calle ?? '—' }}</span>
+                                </div>
+                                <div class="col-12">
+                                    <textarea name="notas_entrega_visible" class="form-control" rows="2"
+                                            placeholder="Notas de entrega (opcional)"
+                                            oninput="document.getElementById('notas_entrega').value=this.value"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
 
             </div>
@@ -563,7 +567,7 @@
             action="{{ route('cotizaciones.nueva-entrega') }}"
             method="POST">
         @csrf
-        <input type="hidden" name="cliente_id" value="{{ $cliente->id }}">
+        <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
 
         <div class="modal-header">
           <h5 class="modal-title">Nueva dirección de entrega</h5>
@@ -614,6 +618,12 @@
           {{-- ─── DIRECCIÓN ────────────────────────────────────────────────── --}}
           <h6 class="text-primary mb-2">Dirección</h6>
           <div class="row g-2">
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Nombre Dirección</label>
+                <input name="direccion[nombre]" maxlength="27"
+                       class="form-control"
+                       placeholder="Ej. Oficina, Casa, Almacén...">
+            </div>
             <div class="col-md-8">
               <label class="form-label fw-semibold">Calle *</label>
               <input name="direccion[calle]" required maxlength="120"
@@ -1085,7 +1095,7 @@
                 const data  = new FormData(form);
 
                 try {
-                    const resp = await fetch(form.action, { method:'POST', headers:{ 'X-CSRF-TOKEN': token }, body:data });
+                    const resp = await fetch(form.action, { method:'POST', headers:{ 'X-CSRF-TOKEN': token, 'Accept': 'application/json' }, body:data });
                     const json = await resp.json();
                     if (json.success) {
                         setDireccionEntrega(json.entrega);

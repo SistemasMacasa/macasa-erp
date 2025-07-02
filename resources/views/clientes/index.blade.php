@@ -22,10 +22,6 @@
             <i class="fa fa-list me-1"></i> Mis Recall's
         </a>
 
-        <a href="{{ route('inicio') }}"
-            class="col-xxl-2 col-xl-2 col-lg-3 btn btn-primary btn-principal">
-             <i class="fa fa-check me-1"></i><span class="text-boton-peq">Enviar carta de presentación</span>
-        </a>
     </div>
 
     {{-- 🔎 Buscador --}}

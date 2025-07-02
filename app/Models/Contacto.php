@@ -60,8 +60,8 @@ class Contacto extends Model
     }
     public function direccion_entrega()
     {
-        return $this->belongsTo(Direccion::class, 'id_direccion_entrega', 'id_direccion')
-                    ->with(['ciudad', 'estado', 'pais']);
+        return $this->belongsTo(Direccion::class, 'id_direccion_entrega', 'id_direccion');
+
     }
 
 }
