@@ -127,7 +127,8 @@ Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: f
     Route::get('/cotizaciones/create/{cliente}', [CotizacionController::class, 'create'])->name('cotizaciones.create');
     //Seleccionar Razón Social para Cotización
     Route::post('/razones-sociales/{id}/seleccionar', [RazonSocialController::class, 'seleccionar'])->name('razones_sociales.seleccionar');
-
+    //Procesar Guardar Cotización
+    Route::post('/cotizaciones', [CotizacionController::class, 'store'])->name('cotizaciones.store');
 });
 
 Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: function () {
@@ -135,6 +136,10 @@ Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: fun
     //Guardar Dirección de factura mediante AJAX
     Route::post('/ajax/direccion-factura', [CotizacionController::class, 'storeRazonSocialFactura'])
         ->name('ajax.direccion.factura');
+    //Guardar Dirección de entrega mediante AJAX
+    Route::post('/nueva-entrega',
+        [CotizacionController::class, 'storeDireccionEntregaFactura']
+    )->name('cotizaciones.nueva-entrega');
 
 });
 
