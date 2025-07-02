@@ -103,4 +103,8 @@ class Usuario extends Authenticatable
     {
         return $this->hasMany(Equipo::class, 'lider_id', 'id_usuario');
     }
+    public function metasVentas()
+    {
+        return $this->hasMany(MetasVentas::class, 'id_usuario', 'id_usuario');
+    }
 }

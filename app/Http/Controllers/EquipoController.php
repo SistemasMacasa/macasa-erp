@@ -13,9 +13,91 @@ class EquipoController extends Controller
     {
         $equipos = Equipo::with(['lider', 'usuarios'])->get();
         $usuarios = Usuario::all();
-        // dd($equipos);
-        return view('Equipos.index', compact('equipos', 'usuarios'));
+
+        // Crear metasVentas dinámicamente con datos de prueba para cada usuario de los equipos
+        $metasVentas = [];
+        foreach ($equipos as $equipo) {
+            foreach ($equipo->usuarios as $usuario) {
+                $metasVentas[] = [
+                    'id_usuario' => $usuario->id_usuario, // asegúrate que sea id_usuario, no id
+                    'mes_aplicacion' => '2025-07-01',
+                    'cuota_cotizaciones' => rand(70000, 150000), // valores aleatorios para simular
+                    'cuota_marginal_cotizaciones' => rand(20000, 50000),
+                ];
+            }
+        }
+
+        // Recorrer equipos para agregar los datos calculados
+        foreach ($equipos as $equipo) {
+            // Inicializa variables del equipo
+            $equipo->cuota_cotizacion = 0;
+            $equipo->alcance_cotizacion = 0; // puedes calcularlo si tienes datos de alcance
+            $equipo->porcentaje_cotizacion = 0; // idem
+            $equipo->cuota_margen = 0;
+            $equipo->alcance_margen = 0;
+            $equipo->porcentaje_margen = 0;
+
+            foreach ($equipo->usuarios as $usuario) {
+                // Busca metas para este usuario
+                $meta = collect($metasVentas)->firstWhere('id_usuario', $usuario->id_usuario);
+
+                if ($meta) {
+                    // Asigna las metas a cada usuario para que la vista las use
+                    $usuario->cuota_cotizacion = $meta['cuota_cotizaciones'];
+                    $usuario->alcance_cotizacion = $meta['cuota_cotizaciones'] * 0.8; // ejemplo de cálculo
+                    $usuario->porcentaje_cotizacion = $usuario->cuota_cotizacion ? ($usuario->alcance_cotizacion / $usuario->cuota_cotizacion) * 100 : 0;
+
+                    $usuario->cuota_margen = $meta['cuota_marginal_cotizaciones'];
+                    $usuario->alcance_margen = $meta['cuota_marginal_cotizaciones'] * 0.7; // ejemplo
+                    $usuario->porcentaje_margen = $usuario->cuota_margen ? ($usuario->alcance_margen / $usuario->cuota_margen) * 100 : 0;
+
+                    // Creamos el array metas para la vista
+                    $usuario->metas = [
+                        'cuota_cotizacion' => $usuario->cuota_cotizacion,
+                        'alcance_cotizacion' => $usuario->alcance_cotizacion,
+                        'porcentaje_cotizacion' => $usuario->porcentaje_cotizacion,
+                        'cuota_margen' => $usuario->cuota_margen,
+                        'alcance_margen' => $usuario->alcance_margen,
+                        'porcentaje_margen' => $usuario->porcentaje_margen,
+                    ];
+
+                    // Sumamos al equipo
+                    $equipo->cuota_cotizacion += $usuario->cuota_cotizacion;
+                    $equipo->alcance_cotizacion += $usuario->alcance_cotizacion;
+                    $equipo->cuota_margen += $usuario->cuota_margen;
+                    $equipo->alcance_margen += $usuario->alcance_margen;
+                } else {
+                    // Por si acaso no hay meta (no debería pasar)
+                    $usuario->cuota_cotizacion = 0;
+                    $usuario->alcance_cotizacion = 0;
+                    $usuario->porcentaje_cotizacion = 0;
+                    $usuario->cuota_margen = 0;
+                    $usuario->alcance_margen = 0;
+                    $usuario->porcentaje_margen = 0;
+
+                    $usuario->metas = [
+                        'cuota_cotizacion' => 0,
+                        'alcance_cotizacion' => 0,
+                        'porcentaje_cotizacion' => 0,
+                        'cuota_margen' => 0,
+                        'alcance_margen' => 0,
+                        'porcentaje_margen' => 0,
+                    ];
+                }
+            }
+
+            // Calcular porcentaje total del equipo (evitar división por cero)
+            $equipo->porcentaje_cotizacion = $equipo->cuota_cotizacion ? ($equipo->alcance_cotizacion / $equipo->cuota_cotizacion) * 100 : 0;
+            $equipo->porcentaje_margen = $equipo->cuota_margen ? ($equipo->alcance_margen / $equipo->cuota_margen) * 100 : 0;
+        }
+
+        return view('Equipos.index', compact('equipos', 'usuarios', 'metasVentas'));
     }
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.

@@ -18,13 +18,18 @@ use App\Models\Pais;
 use App\Models\Estado;
 use App\Models\Ciudad;
 use App\Models\Colonia;
-
+use App\Models\Equipo;
+use App\Models\Usuario;
 
 class CotizacionController extends Controller
 {
     public function index()
-    {
-        return view('cotizaciones.index');
+    {   
+        $equipos = Equipo::with(['lider', 'usuarios'])->get();
+        $usuarios = Usuario::all();
+        // dd($equipos);
+        
+        return view('cotizaciones.index', compact('equipos','usuarios'));
     }
 
     public function create($id_cliente)
