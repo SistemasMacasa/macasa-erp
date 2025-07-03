@@ -2,6 +2,8 @@
 @section('title', 'SIS 3.0 | Nueva Cotización')
 
 @section('content')
+
+    <!-- SECCION PRINCIPAL -->
     <div class="container-fluid">
 
         {{-- 🧭 Migas de pan --}}
@@ -28,7 +30,6 @@
                 <i class="fa fa-user me-1"></i> Ver cuenta
             </a>
         </div>
-
 
         {{-- 🧾 Sección: Dirección de Facturación y Entrega --}}
         <div class="row gy-4">
@@ -274,7 +275,21 @@
                             <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
                             <input type="hidden" name="id_direccion_entrega"  id="id_direccion_entrega">
                             <input type="hidden" name="id_contacto_entrega"   id="id_contacto_entrega">
-
+                            <input type="hidden" name="entrega[id_direccion_entrega]" id="input-entrega-id_direccion_entrega">
+                            <input type="hidden" name="entrega[id_contacto_entrega]"  id="input-entrega-id_contacto_entrega">
+                            <input type="hidden" name="entrega[nombre]"              id="input-entrega-nombre">
+                            <input type="hidden" name="entrega[contacto]"            id="input-entrega-contacto">
+                            <input type="hidden" name="entrega[telefono]"            id="input-entrega-telefono">
+                            <input type="hidden" name="entrega[email]"               id="input-entrega-email">
+                            <input type="hidden" name="entrega[calle]"               id="input-entrega-calle">
+                            <input type="hidden" name="entrega[num_ext]"             id="input-entrega-num_ext">
+                            <input type="hidden" name="entrega[num_int]"             id="input-entrega-num_int">
+                            <input type="hidden" name="entrega[colonia]"             id="input-entrega-colonia">
+                            <input type="hidden" name="entrega[ciudad]"              id="input-entrega-ciudad">
+                            <input type="hidden" name="entrega[estado]"              id="input-entrega-estado">
+                            <input type="hidden" name="entrega[cp]"                  id="input-entrega-cp">
+                            <input type="hidden" name="entrega[pais]"                id="input-entrega-pais">
+                            <input type="hidden" name="entrega[notas]"               id="input-entrega-notas">
                         <div class="card-body small">
                             <div class="row g-3">
 
@@ -321,7 +336,7 @@
                                             {{ $contacto_entrega->telefono1 ?? '—' }}
                                         </span>
                                         @if(!empty($contacto_entrega->ext1))
-                                            <small class="text-muted ms-2">Ext. {{ $contacto_entrega->ext1 }}</small>
+                                            <small class="text-muted ms-2">Ext. <span class="entrega-ext"> {{ $contacto_entrega->ext1 ?? '—' }} </span></small>
                                         @endif
                                     </div>
                                 </div>
@@ -352,7 +367,7 @@
                                     <div class="d-flex align-items-center mb-1">
                                         <i class="fa fa-location-arrow fa-fw text-info me-2"></i>
                                         <span id="entrega-colonia" class="me-2">
-                                        {{ $contacto_entrega->direccion_entrega->colonia ?? '—' }}
+                                        {{ $contacto_entrega->direccion_entrega->colonia->d_asenta ?? '—' }}
                                         </span>
                                     </div>
 
@@ -409,7 +424,8 @@
             <div class="card-body">
             </div>
         </div>
-    </div> <!-- End container-fluid -->
+
+    </div> <!-- End SECCION PRINCIPAL -->
 
     <!-- Modal: Directorio de Razones Sociales + Direccion de Facturación -->
     <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
@@ -477,7 +493,7 @@
 
             </div>
         </div>
-    </div>
+    </div><!-- End Modal: Directorio de Razones Sociales + Direccion de Facturación -->
 
     <!-- Modal: Crear nueva razón social + dirección de facturación -->
     <div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel" aria-hidden="true">
@@ -621,122 +637,135 @@
 
         </div>
     </div>
-    </div>
+    </div> <!-- End Modal: Crear nueva razón social + dirección de facturación -->
 
     <!-- Modal: Alta rápida Dirección de Entrega -->
     <div class="modal fade" id="modalCrearDireccionEntrega" tabindex="-1" aria-labelledby="modalCrearDireccionEntregaLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                {{-- Header --}}
+                <div class="modal-header flex-column border-0 bg-white text-center pb-0">
+                    <h4 class="modal-title fw-bold text-primary-emphasis">
+                    <i class="fa fa-plus me-2 text-primary"></i>
+                    Nueva Dirección de Entrega
+                    </h4>
+                    <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                            data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <hr class="w-100 my-2 opacity-25">
+                </div>
 
-        {{-- Header --}}
-        <div class="modal-header flex-column border-0 bg-white text-center pb-0">
-            <h4 class="modal-title fw-bold text-primary-emphasis">
-            <i class="fa fa-plus me-2 text-primary"></i>
-            Nueva Dirección de Entrega
-            </h4>
-            <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
-                    data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            <hr class="w-100 my-2 opacity-25">
-        </div>
+                <div class="modal-body pt-0">
+                    <form id="formCrearEntrega" action="{{ route('cotizaciones.nueva-entrega') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
 
-        <div class="modal-body pt-0">
-            <form id="formCrearEntrega" action="{{ route('cotizaciones.nueva-entrega') }}" method="POST">
-            @csrf
-            <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
+                    {{-- Contacto --}}
+                    <h6 class="text-primary mb-3"><i class="fa fa-user me-1"></i>Contacto</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                        <label class="form-label fw-semibold">Nombre(s) *</label>
+                        <input name="contacto[nombre]" required maxlength="30" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label fw-semibold">Apellido paterno *</label>
+                        <input name="contacto[apellido_p]" required maxlength="27" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label fw-semibold">Apellido materno</label>
+                        <input name="contacto[apellido_m]" maxlength="27" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                        <label class="form-label fw-semibold">Teléfono</label>
+                        <input name="contacto[telefono]" maxlength="20" class="form-control phone-field">
+                        </div>
+                        <div class="col-md-2">
+                        <label class="form-label fw-semibold">Ext.</label>
+                        <input name="contacto[ext]" maxlength="7" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                        <label class="form-label fw-semibold">E-mail</label>
+                        <input name="contacto[email]" type="email" maxlength="27" class="form-control">
+                        </div>
+                    </div>
 
-            {{-- Contacto --}}
-            <h6 class="text-primary mb-3"><i class="fa fa-user me-1"></i>Contacto</h6>
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Nombre(s) *</label>
-                <input name="contacto[nombre]" required maxlength="30" class="form-control">
-                </div>
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Apellido paterno *</label>
-                <input name="contacto[apellido_p]" required maxlength="100" class="form-control">
-                </div>
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Apellido materno</label>
-                <input name="contacto[apellido_m]" maxlength="100" class="form-control">
-                </div>
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Teléfono</label>
-                <input name="contacto[telefono]" maxlength="20" class="form-control">
-                </div>
-                <div class="col-md-2">
-                <label class="form-label fw-semibold">Ext.</label>
-                <input name="contacto[ext]" maxlength="10" class="form-control">
-                </div>
-                <div class="col-md-6">
-                <label class="form-label fw-semibold">E-mail</label>
-                <input name="contacto[email]" type="email" maxlength="120" class="form-control">
+                    <hr class="my-4">
+
+                    {{-- Dirección --}}
+                    <h6 class="text-primary mb-3"><i class="fa fa-map-marked-alt me-1"></i>Dirección de Entrega</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nombre Dirección</label>
+                            <input name="direccion[nombre]" maxlength="27" class="form-control"
+                                placeholder="Ej. Oficina, Casa, Almacén…">
+                        </div>
+                        <div class="col-md-6"></div>
+
+                        {{-- Calle / número --}}
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Calle *</label>
+                            <input name="direccion[calle]" required maxlength="30" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold">Num. Ext. *</label>
+                            <input name="direccion[num_ext]" required maxlength="7" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold">Num. Int.</label>
+                            <input name="direccion[num_int]" maxlength="7" class="form-control">
+                        </div>
+
+                        {{-- Colonia / CP --}}
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Colonia *</label>
+                            <select name="direccion[colonia]" required class="form-select colonia-select">
+                            <option value="">— Selecciona CP primero —</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">C.P. *</label>
+                            <input name="direccion[cp]" maxlength="5" required class="form-control cp-field">
+                        </div>
+
+                        {{-- Municipio / Estado / País --}}
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Municipio *</label>
+                            <select name="direccion[ciudad]" required class="form-select municipio-field">
+                            <option value="">— Selecciona CP primero —</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Estado *</label>
+                            <select name="direccion[estado]" required class="form-select estado-field">
+                            <option value="">— Selecciona CP primero —</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">País *</label>
+                            <select name="direccion[pais]" required class="form-select pais-field">
+                            <option value="México" selected>México</option>
+                            <option value="Estados Unidos">Estados Unidos</option>
+                            <option value="Canadá">Canadá</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Notas / Referencias</label>
+                            <textarea name="notas" rows="2" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="mt-4 text-end">
+                        <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">
+                        <i class="fa fa-save me-1"></i> Guardar y usar
+                        </button>
+                    </div>
+                    </form>
                 </div>
             </div>
-
-            <hr class="my-4">
-
-            {{-- Dirección --}}
-            <h6 class="text-primary mb-3"><i class="fa fa-map-marked-alt me-1"></i>Dirección de Entrega</h6>
-            <div class="row g-3">
-                <div class="col-md-6">
-                <label class="form-label fw-semibold">Nombre Dirección</label>
-                <input name="direccion[nombre]" maxlength="27" class="form-control" placeholder="Ej. Oficina, Casa, Almacén...">
-                </div>
-                <div class="col-md-6"></div>
-
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Calle *</label>
-                <input name="direccion[calle]" required maxlength="120" class="form-control">
-                </div>
-                <div class="col-md-2">
-                <label class="form-label fw-semibold">Num. Ext. *</label>
-                <input name="direccion[num_ext]" required maxlength="15" class="form-control">
-                </div>
-                <div class="col-md-2">
-                <label class="form-label fw-semibold">Num. Int.</label>
-                <input name="direccion[num_int]" maxlength="15" class="form-control">
-                </div>
-
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Colonia *</label>
-                <input name="direccion[colonia]" required maxlength="120" class="form-control">
-                </div>
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">C.P. *</label>
-                <input name="direccion[cp]" required maxlength="10" class="form-control">
-                </div>
-
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">Municipio *</label>
-                <input name="direccion[ciudad]" required maxlength="120" class="form-control">
-                </div>
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">Estado *</label>
-                <input name="direccion[estado]" required maxlength="120" class="form-control">
-                </div>
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">País *</label>
-                <input name="direccion[pais]" required maxlength="120" value="México" class="form-control">
-                </div>
-
-                <div class="col-12">
-                <label class="form-label fw-semibold">Notas / Referencias</label>
-                <textarea name="notas" rows="2" class="form-control"></textarea>
-                </div>
-            </div>
-
-            <div class="mt-4 text-end">
-                <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success">
-                <i class="fa fa-save me-1"></i> Guardar y usar
-                </button>
-            </div>
-            </form>
         </div>
-
-        </div>
-    </div>
-    </div>
+    </div> <!-- End Modal: Alta rápida Dirección de Entrega -->
 
 @push('scripts')
 <!-- =======================================================================
@@ -760,41 +789,63 @@ window.SIS = (() => {
 </script>
 
 <!-- =======================================================================
-     FUNCIÓN insertarFila PARA TABLA DE FACTURACIÓN
-     ===================================================================== -->
+     FUNCIÓN insertarFila    (versión robusta + console.debug)
+     =======================================================================-->
 <script defer>
 (() => {
-  window.insertarFila = function(rs){
-  const tbody = document.querySelector('#tabla-razones tbody')
-  if(!tbody) return
-  tbody.querySelectorAll('tr').forEach(r=>r.classList.remove('table-success'))
 
-  const col   = rs.direccion_facturacion.colonia
-  const ciudad= rs.direccion_facturacion.ciudad
-  const edo   = rs.direccion_facturacion.estado
+  window.insertarFila = function (rs)
+  {
+    try {
 
-  const tr = document.createElement('tr')
-  tr.id = `rs-row-${rs.id_razon_social}`
-  tr.classList.add('table-success')
-  tr.innerHTML = `
-    <td>
-      <button type="button" class="btn btn-sm btn-success seleccionar-direccion"
-              data-id="${rs.id_razon_social}"
-              data-route="/razones-sociales/${rs.id_razon_social}/seleccionar">
-        <i class="fa fa-check"></i>
-      </button>
-    </td>
-    <td>${rs.nombre}</td>
-    <td>${rs.RFC}</td>
-    <td>${rs.direccion_facturacion.calle} #${rs.direccion_facturacion.num_ext}</td>
-    <td>${col   ? col.d_asenta  : ''}</td>
-    <td>${rs.direccion_facturacion.cp || ''}</td>
-    <td>${ciudad? ciudad.n_mnpio: ''}</td>
-    <td>${edo   ? edo.d_estado  : ''}</td>`
-  tbody.appendChild(tr)
-}
+      /* ── 1. Tabla ─────────────────────────────────────────────── */
+      const tbody = document.querySelector('#tabla-razones tbody');
+      if (!tbody) { console.warn('❗ #tabla-razones tbody no encontrado'); return; }
+
+      /* ── 2. Limpio selección previa ───────────────────────────── */
+      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('table-success'));
+
+      /* ── 3. Protejo contra “huecos” ───────────────────────────── */
+      const dir    = rs.direccion_facturacion || {};
+      const col    = dir.colonia || {};
+      const ciudad = dir.ciudad  || {};
+      const edo    = dir.estado  || {};
+
+      /* ── 4. Construyo la fila ─────────────────────────────────── */
+      const tr = document.createElement('tr');
+      tr.id = `rs-row-${rs.id_razon_social}`;
+      tr.classList.add('table-success');
+
+      tr.innerHTML = `
+        <td>
+          <button type="button"
+                  class="btn btn-sm btn-success seleccionar-direccion"
+                  data-id="${rs.id_razon_social}"
+                  data-route="/razones-sociales/${rs.id_razon_social}/seleccionar">
+            <i class="fa fa-check"></i>
+          </button>
+        </td>
+        <td>${rs.nombre                  ?? ''}</td>
+        <td>${rs.RFC                     ?? ''}</td>
+        <td>${dir.calle      ?? ''} #${dir.num_ext ?? ''}</td>
+        <td>${col.d_asenta   ?? ''}</td>
+        <td>${dir.cp         ?? ''}</td>
+        <td>${ciudad.n_mnpio ?? ''}</td>
+        <td>${edo.d_estado   ?? ''}</td>
+      `;
+
+      tbody.appendChild(tr);
+
+    } catch (e) {
+      console.error('⚡ insertarFila falló:', e, rs);
+      /*  — No vuelvo a lanzar la excepción para que el flujo continúe — */
+    }
+  };
+
 })();
 </script>
+
+
 
 <!-- =======================================================================
      BLOQUE FACTURACIÓN  (autocompletado CP + alta rápida + directorio)
@@ -855,9 +906,9 @@ window.SIS = (() => {
     body:new FormData(form)
   })
   if(!res.ok){ alert('Error al guardar'); return }
-  const {razon_social:rs}=await res.json()
-
-  bootstrap.Modal.getOrCreateInstance(modalF).hide()  // primero cierra
+  const { razon_social: rs, direccion } = await res.json();
+  rs.direccion_facturacion = direccion;           
+  bootstrap.Modal.getOrCreateInstance(modalF).hide()
 
   pintarCard(rs)
   insertarFila(rs)
@@ -912,47 +963,142 @@ window.SIS = (() => {
 </script>
 
 <!-- =======================================================================
-     BLOQUE ENTREGA  (alta rápida + directorio futuro)
+     BLOQUE ENTREGA (autocompletado CP + alta rápida + directorio futuro)
      ===================================================================== -->
 <script defer>
 (() => {
-  const { setV, setT } = window.SIS;
-  const csrf  = document.querySelector('meta[name="csrf-token"]').content;
+  const { delay, selTxt, setV, setT } = window.SIS;
+  const csrf   = document.querySelector('meta[name="csrf-token"]').content;
   const modalE = document.getElementById('modalCrearDireccionEntrega');
   const formE  = document.getElementById('formCrearEntrega');
   if (!modalE || !formE) return;
 
-  // — Alta rápida entrega —
+  /* ── 1) Autocompletado CP (México) ─────────────────────────────── */
+  const cpInput = modalE.querySelector('.cp-field');
+  const colSel  = modalE.querySelector('.colonia-select');
+  const munSel  = modalE.querySelector('.municipio-field');
+  const edoSel  = modalE.querySelector('.estado-field');
+  const paisSel = modalE.querySelector('.pais-field');
+
+  function resetDir() {
+    colSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+    colSel.disabled  = true;
+    munSel.value = '';
+    edoSel.value = '';
+  }
+
+  async function buscarCP(cp) {
+    const r = await fetch(`/api/cp/${cp}`);
+    if (!r.ok) throw new Error('CP sin datos');
+    return r.json();
+  }
+
+  function togglePais() {
+    const esMx = paisSel.options[paisSel.selectedIndex].text.toLowerCase() === 'méxico';
+    cpInput.disabled = colSel.disabled = !esMx;
+    if (!esMx) {
+      colSel.innerHTML = '<option>No aplicable fuera de México</option>';
+      resetDir();
+    }
+  }
+
+  paisSel.addEventListener('change', togglePais);
+  cpInput.addEventListener('input', delay(async () => {
+    const cp = cpInput.value.trim();
+    if (!/^\d{5}$/.test(cp)) { resetDir(); return; }
+    try {
+      const d = await buscarCP(cp);
+      selTxt(edoSel, d.head.estado);
+      selTxt(munSel, d.head.municipio);
+      colSel.innerHTML = '';
+      d.colonias.forEach(c => {
+        colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.colonia));
+      });
+      colSel.disabled = false;
+    } catch {
+      resetDir();
+    }
+  }));
+  togglePais();
+
+  /* ── 2) Helpers de entrega ──────────────────────────────────────── */
+  function formatCalle(d) {
+    return `${d.calle||''} #${d.num_ext||''}` + (d.num_int ? ' Int. '+d.num_int : '');
+  }
+
+  function pintarEntrega(ent) {
+    const d = ent.direccion;
+
+    // ► Card VISIBLES
+    setT('entrega-nombre',   ent.direccion.nombre   || '—');
+    setT('entrega-contacto', ent.contacto.nombre    || '—');
+    setT('entrega-telefono', ent.contacto.telefono  || '—');
+    setT('entrega-email',    ent.contacto.email     || '—');
+    setT('entrega-calle',    formatCalle(d));
+    setT('entrega-colonia',  d.colonia || '—');
+    setT('entrega-ciudad',   d.ciudad  || '—');
+    setT('entrega-estado',   d.estado  || '—');
+    setT('entrega-cp',       d.cp      || '—');
+    setT('entrega-pais',     d.pais    || '—');
+    setT('entrega-notas',    ent.notas  || '—');
+
+    // ► Formulario OCULTO en cotización
+    setV('input-entrega-id_direccion_entrega', ent.id_direccion_entrega);
+    setV('input-entrega-id_contacto_entrega',  ent.contacto.id_contacto);
+    setV('input-entrega-nombre',               ent.direccion.nombre   || '');
+    setV('input-entrega-contacto',             ent.contacto.nombre    || '');
+    setT('entrega-telefono',                   ent.contacto.telefono  || '—');
+    setT('entrega-ext',                        ent.contacto.ext       || '—');
+    setV('input-entrega-email',                ent.contacto.email     || '');
+    setV('input-entrega-calle',                formatCalle(d));
+    setV('input-entrega-num_ext',              d.num_ext   || '');
+    setV('input-entrega-num_int',              d.num_int   || '');
+    setV('input-entrega-colonia',              d.colonia   || '');
+    setV('input-entrega-ciudad',               d.ciudad    || '');
+    setV('input-entrega-estado',               d.estado    || '');
+    setV('input-entrega-cp',                   d.cp        || '');
+    setV('input-entrega-pais',                 d.pais      || '');
+    setV('input-entrega-notas',                ent.notas   || '');
+  }
+
+  /* ── 3) Alta rápida contacto + dirección ───────────────────────── */
   formE.addEventListener('submit', async e => {
     e.preventDefault();
-    const res = await fetch(formE.action, {
-      method:'POST',
-      headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'},
-      body:new FormData(formE)
-    });
-    const j = await res.json();
-    if (!j.success) { alert(j.message || 'No se guardó la dirección'); return; }
-    pintarEntrega(j.entrega);
-    formE.reset();
-    bootstrap.Modal.getOrCreateInstance(modalE).hide();
+    try {
+      const res = await fetch(formE.action, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
+        body: new FormData(formE)
+      });
+      const j = await res.json();
+      if (!j.success) {
+        alert(j.message || 'No se guardó la dirección');
+        return;
+      }
+
+      // 1) Pinto card y formulario oculto
+      pintarEntrega(j.entrega);
+
+      // 2) (Opcional) Directorio futuro
+      if (typeof insertarFilaEntrega === 'function') insertarFilaEntrega(j.entrega);
+      if (typeof actualizarBadgeEntrega === 'function') actualizarBadgeEntrega();
+
+      // 3) Limpio form y cierro modal
+      formE.reset();
+      resetDir();
+      togglePais();
+      bootstrap.Modal.getOrCreateInstance(modalE).hide();
+
+    } catch (err) {
+      console.error(err);
+      alert('Error de red al guardar la dirección');
+    }
   });
 
-  // — Helper local —
-  function formatDir(d){
-    return `${d.calle||''} #${d.num_ext||''}, ${d.colonia||''}, `
-         + `${d.ciudad||''}, ${d.estado||''}, ${d.pais||''}, CP ${d.cp||''}`;
-  }
-  function pintarEntrega(data){
-    setV('id_direccion_entrega', data.id_direccion_entrega);
-    setV('id_contacto_entrega',  data.contacto.id_contacto);
-    setV('notas_entrega',        data.notas || '');
-    setT('entrega-contacto',  data.contacto.nombre);
-    setT('entrega-telefono',  data.contacto.telefono);
-    setT('entrega-email',     data.contacto.email);
-    setT('entrega-direccion', formatDir(data.direccion));
-  }
 })();
 </script>
+
+
 @endpush
 
 
