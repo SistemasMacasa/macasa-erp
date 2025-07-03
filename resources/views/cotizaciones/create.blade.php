@@ -48,6 +48,7 @@
                         <div class="d-flex flex-row align-items-center gap-2">
                             {{-- Botón Directorio con badge numérico --}}
                             <button
+                            id="btn-directorio"
                             type="button"
                             class="btn btn-primary btn-sm position-relative"
                             data-bs-toggle="modal"
@@ -84,9 +85,6 @@
                             </button>
                         </div>
                     </div>
-
-
-
 
 
                     @php
@@ -154,10 +152,6 @@
                                         <i class="fa fa-id-card fa-fw text-secondary me-2"></i>
                                         <span id="rs-rfc" class="text-muted">{{ $rsPredet->RFC ?? '' }}</span>
                                     </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <hr class="my-2">
                                 </div>
 
                                 <!-- Dirección -->
@@ -236,11 +230,11 @@
                                     </div>
                                 </div>
                                 
-                                    <hr class="my-2">
-
                                 <div class="col-12">
-                                    <textarea name="notas" class="form-control" rows="2" placeholder="Notas adicionales sobre la facturación" style="resize: vertical; min-height: 38px;"></textarea>
+                                    <hr class="mt-3">
                                 </div>
+
+                               
                             </div>
                         </div>
                     </form>
@@ -283,30 +277,126 @@
 
                         <div class="card-body small">
                             <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    <span class="text-muted">Contacto:</span>
-                                    <span id="entrega-contacto" class="fw-semibold">{{ $contacto_entrega->nombre ?? '—' }}</span>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <span class="text-muted">Teléfono:</span>
-                                    <span id="entrega-telefono" class="fw-semibold">{{ $contacto_entrega->telefono1 ?? '—' }}</span>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <span class="text-muted">E-mail:</span>
-                                    <span id="entrega-email" class="fw-semibold">{{ $contacto_entrega->email ?? '—' }}</span>
-                                </div>
+
+                                {{-- DÍAS DE CRÉDITO --}}
                                 <div class="col-12">
-                                    <i class="fa fa-map-marker-alt text-danger me-1"></i>
-                                    <span class="text-muted">Calle:</span>
-                                    <span id="entrega-direccion">{{ $contacto_entrega->direccion_entrega->calle ?? '—' }}</span>
+                                    <div class="d-flex align-items-center justify-content-space-evenly mb-2">
+                                        <div>
+                                            <i class="fa fa-calendar-alt fa-fw text-muted me-1"></i>
+                                            <span class="text-muted me-2">Días de Crédito</span>
+                                        </div>
+                                        <span id="dias-credito" class="fw-semibold"> $0.00</span>
+                                    </div>
                                 </div>
+
                                 <div class="col-12">
-                                    <textarea name="notas_entrega_visible" class="form-control" rows="2"
-                                            placeholder="Notas de entrega (opcional)"
-                                            oninput="document.getElementById('notas_entrega').value=this.value"></textarea>
+                                    <hr class="my-2">
+                                </div>
+
+                                {{-- ALIAS / NOMBRE DE LA DIRECCIÓN --}}
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-warehouse fa-fw text-primary me-2"></i>
+                                        <span id="entrega-nombre" class="fw-semibold fs-5">
+                                            {{ $contacto_entrega->direccion_entrega->nombre ?? '—' }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {{-- CONTACTO DE RECEPCIÓN --}}
+                                <div class="col-12 col-md-4">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-user fa-fw text-primary me-2"></i>
+                                        <span id="entrega-contacto">
+                                            {{ $contacto_entrega->nombre ?? '—' }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {{-- TELÉFONO + EXTENSIÓN --}}
+                                <div class="col-12 col-md-4">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-phone fa-fw text-primary me-2"></i>
+                                        <span id="entrega-telefono">
+                                            {{ $contacto_entrega->telefono1 ?? '—' }}
+                                        </span>
+                                        @if(!empty($contacto_entrega->ext1))
+                                            <small class="text-muted ms-2">Ext. {{ $contacto_entrega->ext1 }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- E-MAIL --}}
+                                <div class="col-12 col-md-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fa fa-envelope fa-fw text-primary me-2"></i>
+                                        <span id="entrega-email">
+                                            {{ $contacto_entrega->email ?? '—' }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Dirección de Entrega -->
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-map-marker-alt fa-fw text-danger me-2"></i>
+                                        <span id="entrega-calle" class="me-2">
+                                            {{ $contacto_entrega->direccion_entrega->calle ?? '—' }}
+                                            Ext. {{ $contacto_entrega->direccion_entrega->num_ext ?? '—' }}
+                                            @if(!empty($contacto_entrega->direccion_entrega->num_int))
+                                                Int. {{ $contacto_entrega->direccion_entrega->num_int }}
+                                            @endif
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="fa fa-location-arrow fa-fw text-info me-2"></i>
+                                        <span id="entrega-colonia" class="me-2">
+                                        {{ $contacto_entrega->direccion_entrega->colonia ?? '—' }}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap align-items-center gap-2">
+                                        <i class="fa fa-map fa-fw text-warning"></i>
+                                        <span id="entrega-ciudad" class="me-1">
+                                            {{ $contacto_entrega->direccion_entrega->ciudad ?? '—' }}
+                                        </span>
+                                        <span id="entrega-estado" class="me-1">
+                                            {{ $contacto_entrega->direccion_entrega->estado ?? '—' }}
+                                        </span>
+                                        <span>
+                                            <strong>C.P.</strong>
+                                            <span id="entrega-cp">{{ $contacto_entrega?->direccion_entrega->cp ?? '—' }}</span>
+                                        </span>
+                                        <span id="entrega-pais" class="ms-1">
+                                            {{ optional($contacto_entrega?->direccion_entrega->pais)->nombre ?? '—' }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <hr class="my-2">
+                                </div>
+
+                                {{-- NOTAS / REFERENCIAS --}}
+                                <div class="col-12">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-sticky-note fa-fw text-muted me-2 mt-1"></i>
+                                        <div>
+                                            <span class="text-muted">Notas / Referencias</span>
+                                            <div id="entrega-notas" class="fw-semibold">
+                                                {{ $contacto_entrega->direccion_entrega->notas ?? '—' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <hr class="my-2">
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
 
@@ -320,7 +410,6 @@
             </div>
         </div>
     </div> <!-- End container-fluid -->
-
 
     <!-- Modal: Directorio de Razones Sociales + Direccion de Facturación -->
     <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
@@ -391,730 +480,480 @@
     </div>
 
     <!-- Modal: Crear nueva razón social + dirección de facturación -->
-    <div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
+    <div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
 
-                <div class="modal-header flex-column border-0 bg-white text-center">
-                    <h4 class="modal-title w-100 fw-bold text-primary-emphasis">
-                        <i class="fa fa-plus me-2 text-primary"></i> Nueva Razón Social y Dirección
-                    </h4>
-                    <hr class="w-100 my-2 opacity-25">
-                    <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3" data-bs-dismiss="modal"
-                        aria-label="Cerrar"></button>
+        {{-- Header --}}
+        <div class="modal-header flex-column border-0 bg-white text-center pb-0">
+            <h4 class="modal-title fw-bold text-primary-emphasis">
+            <i class="fa fa-plus me-2 text-primary"></i>
+            Nueva Razón Social y Dirección
+            </h4>
+            <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <hr class="w-100 my-2 opacity-25">
+        </div>
+
+        <div class="modal-body pt-0">
+            <form id="formNuevaRazonSocialFactura">
+            @csrf
+            <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
+
+            {{-- Razón Social --}}
+            <h6 class="text-primary mb-3"><i class="fa fa-id-card-alt me-1"></i>Razón Social</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                <label class="form-label fw-semibold">Razón Social *</label>
+                <input type="text" name="nombre" class="form-control" required>
                 </div>
-
-                <div class="modal-body pt-0">
-                    <form id="formNuevaRazonSocialFactura">
-                        @csrf
-                        <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
-
-                        <div class="row g-3">
-                            {{-- Razón Social --}}
-                            <div class="col-md-6">
-                                <label class="form-label">Razón Social *</label>
-                                <input type="text" name="nombre" class="form-control" required>
-                            </div>
-
-                            {{-- RFC --}}
-                            <div class="col-md-6">
-                                <label class="form-label">RFC *</label>
-                                <input type="text" name="rfc" class="form-control" required>
-                            </div>
-
-                            {{-- Uso CFDI --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Uso CFDI *</label>
-                                <select name="id_uso_cfdi" class="form-select" required>
-                                    <option value="" disabled selected>Selecciona uno</option>
-                                    @foreach($uso_cfdis as $uso)
-                                        <option value="{{ $uso->id_uso_cfdi }}">{{ $uso->clave }} – {{ $uso->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            {{-- Método de pago CFDI --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Método de pago CFDI *</label>
-                                <select name="id_metodo_pago" class="form-select" required>
-                                    <option value="" disabled selected>Selecciona uno</option>
-                                    @foreach($metodos->unique('clave') as $metodo)
-                                        <option value="{{ $metodo->id_metodo_pago }}">{{ $metodo->clave }} –
-                                            {{ $metodo->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            {{-- Forma de pago --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Forma de pago *</label>
-                                <select name="id_forma_pago" class="form-select" required>
-                                    <option value="" disabled selected>Selecciona uno</option>
-                                    @foreach($formas->unique('clave') as $forma)
-                                        <option value="{{ $forma->id_forma_pago }}">{{ $forma->clave }} – {{ $forma->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            {{-- Régimen Fiscal --}}
-                            <div class="col-md-6">
-                                <label class="form-label">Régimen Fiscal *</label>
-                                <select name="id_regimen_fiscal" class="form-select" required>
-                                    <option value="" disabled selected>Selecciona uno</option>
-                                    @foreach($regimenes as $regimen)
-                                        <option value="{{ $regimen->id_regimen_fiscal }}">{{ $regimen->clave }} –
-                                            {{ $regimen->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            {{-- Notas --}}
-                            <div class="col-md-12">
-                                <label class="form-label">Notas</label>
-                                <textarea name="notas" class="form-control" rows="2"></textarea>
-                            </div>
-
-                            {{-- — Separador — --}}
-                            <div class="col-12">
-                                <hr>
-                            </div>
-
-                            {{-- Calle --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Calle</label>
-                                <input type="text" name="calle" class="form-control">
-                            </div>
-
-                            {{-- Num. Ext. --}}
-                            <div class="col-md-2">
-                                <label class="form-label">Num. Ext.</label>
-                                <input type="text" name="num_ext" class="form-control">
-                            </div>
-
-                            {{-- Num. Int. --}}
-                            <div class="col-md-2">
-                                <label class="form-label">Num. Int.</label>
-                                <input type="text" name="num_int" class="form-control">
-                            </div>
-
-                            {{-- Colonia --}}
-                            <div class="col-md-4">
-                                <label class="form-label">Colonia</label>
-                                <select name="colonia" class="form-select colonia-select">
-                                    <option value="">— Selecciona CP primero —</option>
-                                </select>
-                            </div>
-
-                            {{-- Código Postal --}}
-                            <div class="col-md-3">
-                                <label class="form-label">CP</label>
-                                <input type="text" name="cp" maxlength="5" class="form-control cp-field">
-                            </div>
-
-                            {{-- Municipio --}}
-                            <div class="col-md-3">
-                                <label class="form-label">Municipio</label>
-                                <select name="municipio" class="form-select municipio-field">
-                                    <option value="">— Selecciona CP primero —</option>
-                                </select>
-
-                            </div>
-
-                            {{-- Estado --}}
-                            <div class="col-md-3">
-                                <label class="form-label">Estado</label>
-                                <select name="estado" class="form-select estado-field">
-                                    <option value="">— Selecciona CP primero —</option>
-                                </select>
-                            </div>
-
-                            <!-- País -->
-                            <div class="col-md-3">
-                                <label class="form-label">País</label>
-                                <select name="id_pais" class="form-select pais-field">
-                                    @foreach($paises as $pais)
-                                        <option value="{{ $pais->id_pais }}" {{ $pais->nombre === 'México' ? 'selected' : '' }}>
-                                            {{ $pais->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <div class="mt-4 text-end">
-                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar razón social</button>
-                        </div>
-                    </form>
-
+                <div class="col-md-6">
+                <label class="form-label fw-semibold">RFC *</label>
+                <input type="text" name="rfc" class="form-control" required>
                 </div>
-
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Uso CFDI *</label>
+                <select name="id_uso_cfdi" class="form-select" required>
+                    <option value="" disabled selected>Selecciona uno</option>
+                    @foreach($uso_cfdis as $uso)
+                    <option value="{{ $uso->id_uso_cfdi }}">{{ $uso->clave }} – {{ $uso->nombre }}</option>
+                    @endforeach
+                </select>
+                </div>
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Método de pago *</label>
+                <select name="id_metodo_pago" class="form-select" required>
+                    <option value="" disabled selected>Selecciona uno</option>
+                    @foreach($metodos->unique('clave') as $metodo)
+                    <option value="{{ $metodo->id_metodo_pago }}">{{ $metodo->clave }} – {{ $metodo->nombre }}</option>
+                    @endforeach
+                </select>
+                </div>
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Forma de pago *</label>
+                <select name="id_forma_pago" class="form-select" required>
+                    <option value="" disabled selected>Selecciona uno</option>
+                    @foreach($formas->unique('clave') as $forma)
+                    <option value="{{ $forma->id_forma_pago }}">{{ $forma->clave }} – {{ $forma->nombre }}</option>
+                    @endforeach
+                </select>
+                </div>
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Régimen Fiscal *</label>
+                <select name="id_regimen_fiscal" class="form-select" required>
+                    <option value="" disabled selected>Selecciona uno</option>
+                    @foreach($regimenes as $regimen)
+                    <option value="{{ $regimen->id_regimen_fiscal }}">{{ $regimen->clave }} – {{ $regimen->nombre }}</option>
+                    @endforeach
+                </select>
+                </div>
             </div>
+
+            {{-- Separador --}}
+            <hr class="my-4">
+
+            {{-- Dirección --}}
+            <h6 class="text-primary mb-3"><i class="fa fa-map-marked-alt me-1"></i>Dirección de Facturación</h6>
+            <div class="row g-3">
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Calle *</label>
+                <input type="text" name="calle" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                <label class="form-label fw-semibold">Num. Ext. *</label>
+                <input type="text" name="num_ext" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                <label class="form-label fw-semibold">Num. Int.</label>
+                <input type="text" name="num_int" class="form-control">
+                </div>
+
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Colonia *</label>
+                <select name="colonia" class="form-select colonia-select" required>
+                    <option value="">— Selecciona CP primero —</option>
+                </select>
+                </div>
+
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">C.P. *</label>
+                <input type="text" name="cp" maxlength="5" class="form-control cp-field" required>
+                </div>
+
+
+
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">Municipio *</label>
+                <select name="municipio" class="form-select municipio-field" required>
+                    <option value="">— Selecciona CP primero —</option>
+                </select>
+                </div>
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">Estado *</label>
+                <select name="estado" class="form-select estado-field" required>
+                    <option value="">— Selecciona CP primero —</option>
+                </select>
+                </div>
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">País *</label>
+                <select name="id_pais" class="form-select pais-field" required>
+                    @foreach($paises as $pais)
+                    <option value="{{ $pais->id_pais }}" {{ $pais->nombre === 'México' ? 'selected' : '' }}>
+                        {{ $pais->nombre }}
+                    </option>
+                    @endforeach
+                </select>
+                </div>
+                <div class="col-md-12">
+                <label class="form-label fw-semibold">Notas / Referencias</label>
+                <textarea name="notas" rows="2" class="form-control"></textarea>
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="mt-4 text-end">
+                <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">
+                <i class="fa fa-save me-1"></i> Guardar razón social
+                </button>
+            </div>
+            </form>
+        </div>
+
         </div>
     </div>
+    </div>
 
+    <!-- Modal: Alta rápida Dirección de Entrega -->
+    <div class="modal fade" id="modalCrearDireccionEntrega" tabindex="-1" aria-labelledby="modalCrearDireccionEntregaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
 
-<!-- Modal: Alta rápida Dirección de Entrega -->
-<div class="modal fade" id="modalCrearDireccionEntrega" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <form id="formCrearEntrega"
-            action="{{ route('cotizaciones.nueva-entrega') }}"
-            method="POST">
-        @csrf
-        <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
-
-        <div class="modal-header">
-          <h5 class="modal-title">Nueva dirección de entrega</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"
-                  aria-label="Cerrar"></button>
+        {{-- Header --}}
+        <div class="modal-header flex-column border-0 bg-white text-center pb-0">
+            <h4 class="modal-title fw-bold text-primary-emphasis">
+            <i class="fa fa-plus me-2 text-primary"></i>
+            Nueva Dirección de Entrega
+            </h4>
+            <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                    data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <hr class="w-100 my-2 opacity-25">
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body pt-0">
+            <form id="formCrearEntrega" action="{{ route('cotizaciones.nueva-entrega') }}" method="POST">
+            @csrf
+            <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
 
-          {{-- ─── CONTACTO ─────────────────────────────────────────────────── --}}
-          <h6 class="text-primary mb-2">Contacto</h6>
-          <div class="row g-2 mb-3">
-            <div class="col-md-4">
-              <label class="form-label fw-semibold">Nombre(s) *</label>
-              <input name="contacto[nombre]" required maxlength="100"
-                     class="form-control">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label fw-semibold">Apellido paterno *</label>
-              <input name="contacto[apellido_p]" required maxlength="100"
-                     class="form-control">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label fw-semibold">Apellido materno</label>
-              <input name="contacto[apellido_m]" maxlength="100"
-                     class="form-control">
+            {{-- Contacto --}}
+            <h6 class="text-primary mb-3"><i class="fa fa-user me-1"></i>Contacto</h6>
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Nombre(s) *</label>
+                <input name="contacto[nombre]" required maxlength="30" class="form-control">
+                </div>
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Apellido paterno *</label>
+                <input name="contacto[apellido_p]" required maxlength="100" class="form-control">
+                </div>
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Apellido materno</label>
+                <input name="contacto[apellido_m]" maxlength="100" class="form-control">
+                </div>
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Teléfono</label>
+                <input name="contacto[telefono]" maxlength="20" class="form-control">
+                </div>
+                <div class="col-md-2">
+                <label class="form-label fw-semibold">Ext.</label>
+                <input name="contacto[ext]" maxlength="10" class="form-control">
+                </div>
+                <div class="col-md-6">
+                <label class="form-label fw-semibold">E-mail</label>
+                <input name="contacto[email]" type="email" maxlength="120" class="form-control">
+                </div>
             </div>
 
-            <div class="col-md-4">
-              <label class="form-label fw-semibold">Teléfono</label>
-              <input name="contacto[telefono]" maxlength="20"
-                     class="form-control">
-            </div>
-            <div class="col-md-2">
-              <label class="form-label fw-semibold">Ext.</label>
-              <input name="contacto[ext]" maxlength="10"
-                     class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label fw-semibold">E-mail</label>
-              <input name="contacto[email]" type="email" maxlength="120"
-                     class="form-control">
-            </div>
-          </div>
+            <hr class="my-4">
 
-          <hr>
-
-          {{-- ─── DIRECCIÓN ────────────────────────────────────────────────── --}}
-          <h6 class="text-primary mb-2">Dirección</h6>
-          <div class="row g-2">
-            <div class="col-md-8">
+            {{-- Dirección --}}
+            <h6 class="text-primary mb-3"><i class="fa fa-map-marked-alt me-1"></i>Dirección de Entrega</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
                 <label class="form-label fw-semibold">Nombre Dirección</label>
-                <input name="direccion[nombre]" maxlength="27"
-                       class="form-control"
-                       placeholder="Ej. Oficina, Casa, Almacén...">
-            </div>
-            <div class="col-md-8">
-              <label class="form-label fw-semibold">Calle *</label>
-              <input name="direccion[calle]" required maxlength="120"
-                     class="form-control">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label fw-semibold">Número Exterior *</label>
-              <input name="direccion[num_ext]" required maxlength="15"
-                     class="form-control">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label fw-semibold">Número Interior *</label>
-              <input name="direccion[num_int]" required maxlength="15"
-                     class="form-control">
+                <input name="direccion[nombre]" maxlength="27" class="form-control" placeholder="Ej. Oficina, Casa, Almacén...">
+                </div>
+                <div class="col-md-6"></div>
+
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Calle *</label>
+                <input name="direccion[calle]" required maxlength="120" class="form-control">
+                </div>
+                <div class="col-md-2">
+                <label class="form-label fw-semibold">Num. Ext. *</label>
+                <input name="direccion[num_ext]" required maxlength="15" class="form-control">
+                </div>
+                <div class="col-md-2">
+                <label class="form-label fw-semibold">Num. Int.</label>
+                <input name="direccion[num_int]" maxlength="15" class="form-control">
+                </div>
+
+                <div class="col-md-4">
+                <label class="form-label fw-semibold">Colonia *</label>
+                <input name="direccion[colonia]" required maxlength="120" class="form-control">
+                </div>
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">C.P. *</label>
+                <input name="direccion[cp]" required maxlength="10" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">Municipio *</label>
+                <input name="direccion[ciudad]" required maxlength="120" class="form-control">
+                </div>
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">Estado *</label>
+                <input name="direccion[estado]" required maxlength="120" class="form-control">
+                </div>
+                <div class="col-md-3">
+                <label class="form-label fw-semibold">País *</label>
+                <input name="direccion[pais]" required maxlength="120" value="México" class="form-control">
+                </div>
+
+                <div class="col-12">
+                <label class="form-label fw-semibold">Notas / Referencias</label>
+                <textarea name="notas" rows="2" class="form-control"></textarea>
+                </div>
             </div>
 
-            <div class="col-md-6">
-              <label class="form-label fw-semibold">Colonia *</label>
-              <input name="direccion[colonia]" required maxlength="120"
-                     class="form-control">
+            <div class="mt-4 text-end">
+                <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">
+                <i class="fa fa-save me-1"></i> Guardar y usar
+                </button>
             </div>
-            <div class="col-md-3">
-              <label class="form-label fw-semibold">C.P. *</label>
-              <input name="direccion[cp]" required maxlength="10"
-                     class="form-control">
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-semibold">Ciudad *</label>
-              <input name="direccion[ciudad]" required maxlength="120"
-                     class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label fw-semibold">Estado *</label>
-              <input name="direccion[estado]" required maxlength="120"
-                     class="form-control">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label fw-semibold">País *</label>
-              <input name="direccion[pais]" required maxlength="120"
-                     value="México" class="form-control">
-            </div>
-
-            <div class="col-12">
-              <label class="form-label fw-semibold">Notas / Referencias</label>
-              <textarea name="notas" rows="2"
-                        class="form-control"></textarea>
-            </div>
-          </div>
-
+            </form>
         </div>
 
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">
-            <i class="fa fa-save me-1"></i> Guardar y usar
-          </button>
-          <button type="button" class="btn btn-outline-secondary"
-                  data-bs-dismiss="modal">Cancelar</button>
         </div>
-      </form>
     </div>
-  </div>
-</div>
-
-
-    @push('scripts')
-
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const form = document.getElementById('formNuevaRazonSocialFactura');
-
-                form.addEventListener('submit', async e => {
-                    e.preventDefault();
-                    const datos = new FormData(form);
-
-                    const resp = await fetch('{{ route('ajax.direccion.factura') }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'           // ← pide JSON de Laravel
-                        },
-                        body: datos
-                    });
-
-                    if (!resp.ok) {
-                        const contentType = resp.headers.get('Content-Type') || '';
-                        if (contentType.includes('application/json')) {
-                            const err = await resp.json();
-                            console.error('Error JSON:', err);
-                            alert('❌ ' + (err.error || JSON.stringify(err.errors) || 'Error al guardar'));
-                        } else {
-                            const text = await resp.text();
-                            console.error('Error HTML:', text);
-                            alert('❌ Error inesperado. Revisa consola.');
-                        }
-                        return;
-                    }
-
-                    const { razon_social: razon, direccion: dir } = await resp.json();
-
-                    // Cierra modal
-                    bootstrap.Modal.getInstance(
-                        document.getElementById('modalCrearDireccionFactura')
-                    ).hide();
-
-                    // Rellena formulario principal
-                    document.querySelector('[name="nombre"]').value = razon.nombre;
-                    document.querySelector('[name="rfc"]').value = razon.rfc;
-                    document.querySelector('[name="id_uso_cfdi"]').value = razon.id_uso_cfdi;
-                    document.querySelector('[name="id_metodo_pago"]').value = razon.id_metodo_pago;
-                    document.querySelector('[name="id_forma_pago"]').value = razon.id_forma_pago;
-                    document.querySelector('[name="id_regimen_fiscal"]').value = razon.id_regimen_fiscal;
-
-                    document.querySelector('[name="calle"]').value = dir.calle || '';
-                    document.querySelector('[name="num_ext"]').value = dir.num_ext || '';
-                    document.querySelector('[name="num_int"]').value = dir.num_int || '';
-                    document.querySelector('[name="colonia"]').value = dir.colonia || '';
-                    document.querySelector('[name="cp"]').value = dir.cp || '';
-                    document.querySelector('[name="municipio"]').value = dir.municipio || '';
-                    document.querySelector('[name="estado"]').value = dir.estado || '';
-                    document.querySelector('[name="pais"]').value = dir.pais || 'MÉXICO';
-                    document.querySelector('[name="notas"]').value = dir.notas || '';
-                });
-            });
-        </script>
-
-        <script defer>
-            //Autocompletado de direcciones de facturación
-            document.addEventListener('DOMContentLoaded', () => {
-                const modal = document.getElementById('modalCrearDireccionFactura');
-
-                if (!modal) return;
-
-                const delay = (fn, ms = 400) => {
-                    let t; return (...args) => {
-                        clearTimeout(t);
-                        t = setTimeout(() => fn(...args), ms);
-                    };
-                };
-
-                function seleccionarPorTexto(select, texto) {
-                    if (!select) return;
-
-                    let opt = [...select.options].find(o =>
-                        o.text.trim().toLowerCase() === texto.trim().toLowerCase()
-                    );
-
-                    if (!opt) opt = [...select.options].find(o => o.value === texto);
-
-                    if (!opt) {
-                        opt = new Option(texto, texto, true, true);
-                        select.prepend(opt);
-                    }
-
-                    select.value = opt.value;
-                }
-
-                function limpiar(bloque) {
-                    if (!bloque) return;
-
-                    const estado = bloque.querySelector('.estado-field');
-                    const municipio = bloque.querySelector('.municipio-field');
-                    const colonia = bloque.querySelector('.colonia-select');
-
-                    if (estado) estado.value = '';
-                    if (municipio) municipio.value = '';
-                    if (colonia) {
-                        colonia.innerHTML = '<option value="">— Selecciona CP primero —</option>';
-                        colonia.disabled = true;
-                    }
-                }
-
-                modal.addEventListener('shown.bs.modal', () => {
-                    const cpInput = modal.querySelector('.cp-field');
-                    if (!cpInput) return;
-
-                    cpInput.addEventListener('input', delay(async () => {
-                        const cp = cpInput.value.trim();
-                        const bloque = cpInput.closest('.facturacion-block') ?? modal;
-
-                        if (!/^\d{5}$/.test(cp)) {
-                            limpiar(bloque);
-                            return;
-                        }
-
-                        try {
-                            const r = await fetch(`/api/cp/${cp}`);
-                            if (!r.ok) throw new Error(`No hay datos para el CP ${cp}`);
-
-                            const data = await r.json();
-
-                            seleccionarPorTexto(bloque.querySelector('.estado-field'), data.head.estado);
-                            seleccionarPorTexto(bloque.querySelector('.municipio-field'), data.head.municipio);
-
-                            const coloniaSel = bloque.querySelector('.colonia-select');
-                            if (coloniaSel) {
-                                coloniaSel.innerHTML = '';
-                                data.colonias.forEach(c => {
-                                    const opt = new Option(`${c.colonia} (${c.tipo})`, c.colonia);
-                                    coloniaSel.appendChild(opt);
-                                });
-                                coloniaSel.disabled = false;
-                            }
-
-                        } catch (err) {
-                            console.error('❌ Error cargando CP:', err);
-                            limpiar(bloque);
-                        }
-                    }));
-                });
-            });
-        </script>
-
-        <script defer>
-            document.addEventListener('DOMContentLoaded', () => {
-                const modal = document.getElementById('modalCrearDireccionFactura');
-                if (!modal) return;
-
-                // Campos dentro del modal
-                const campoPais = modal.querySelector('.pais-field');
-                const campoCP = modal.querySelector('.cp-field');
-                const coloniaSel = modal.querySelector('.colonia-select');
-                const municipioSel = modal.querySelector('.municipio-field');
-                const estadoSel = modal.querySelector('.estado-field');
-
-                // ① Aplica “readonly” vía CSS y atributos a municipio/estado
-                [municipioSel, estadoSel].forEach(sel => {
-                    if (!sel) return;
-                    sel.setAttribute('readonly', 'readonly');      // marca semántica
-                    sel.setAttribute('tabindex', '-1');            // no reciba focus
-                    sel.style.pointerEvents = 'none';               // no clickable
-                    sel.style.backgroundColor = '#e9ecef';          // tono disabled
-                });
-
-                // ─── Utilidades ────────────────────────────────
-                const delay = (fn, ms = 400) => {
-                    let t;
-                    return (...args) => {
-                        clearTimeout(t);
-                        t = setTimeout(() => fn(...args), ms);
-                    };
-                };
-
-                function seleccionarPorTexto(select, texto) {
-                    if (!select) return;
-                    let opt = [...select.options].find(o =>
-                        o.text.trim().toLowerCase() === texto.trim().toLowerCase()
-                    );
-                    if (!opt) opt = [...select.options].find(o => o.value === texto);
-                    if (!opt) {
-                        opt = new Option(texto, texto, true, true);
-                        select.prepend(opt);
-                    }
-                    select.value = opt.value;
-                }
-
-                function limpiarCampos() {
-                    // limpia colonia, mantiene municipio/estado en blanco
-                    if (coloniaSel) {
-                        coloniaSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
-                        coloniaSel.disabled = true;
-                    }
-                    municipioSel.value = '';
-                    estadoSel.value = '';
-                }
-
-                // ─── Lógica país → habilita/deshabilita autocompletado ───────────────
-                function togglePorPais() {
-                    const nombre = campoPais.options[campoPais.selectedIndex].text.trim().toLowerCase();
-                    const esMx = nombre === 'méxico';
-
-                    // CP y Colonia sólo si es México
-                    campoCP.disabled = !esMx;
-                    coloniaSel.disabled = !esMx;
-                    if (!esMx) {
-                        coloniaSel.innerHTML = '<option value="">No aplicable fuera de México</option>';
-                        limpiarCampos();
-                    } else {
-                        coloniaSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
-                    }
-                }
-
-                campoPais.addEventListener('change', togglePorPais);
-
-                // ─── Al abrir el modal ─────────────────────────────
-                modal.addEventListener('shown.bs.modal', () => {
-                    togglePorPais();  // estado inicial
-
-                    // Listener CP → fetch
-                    campoCP.removeEventListener('input', onCPInput);
-                    campoCP.addEventListener('input', delay(onCPInput, 400));
-                });
-
-                // ─── Manejador de CP → autocompletado ─────────────
-                async function onCPInput() {
-                    const cp = campoCP.value.trim();
-                    if (!/^\d{5}$/.test(cp)) {
-                        limpiarCampos();
-                        return;
-                    }
-                    try {
-                        const res = await fetch(`/api/cp/${cp}`);
-                        if (!res.ok) throw new Error('Sin datos');
-                        const data = await res.json();
-
-                        // llena municipio y estado (readonly)
-                        seleccionarPorTexto(estadoSel, data.head.estado);
-                        seleccionarPorTexto(municipioSel, data.head.municipio);
-
-                        // llena colonias
-                        coloniaSel.innerHTML = '';
-                        data.colonias.forEach(c => {
-                            const o = new Option(`${c.colonia} (${c.tipo})`, c.colonia);
-                            coloniaSel.appendChild(o);
-                        });
-                        coloniaSel.disabled = false;
-                    } catch {
-                        limpiarCampos();
-                    }
-                }
-            });
-        </script>
-
-        <script>
-            // Seleccionar Razón Social para Cotización
-            document.addEventListener('DOMContentLoaded', () => {
-
-                const token = document.querySelector('input[name="_token"]').value;
-
-                document.querySelectorAll('.seleccionar-direccion').forEach(btn => {
-
-                    btn.addEventListener('click', async function () {
-                        const url      = this.dataset.route;
-                        const idRazon  = this.dataset.id;
-
-                        try {
-                            const res = await fetch(url, {
-                                method  : 'POST',
-                                headers : { 'X-CSRF-TOKEN': token }
-                            });
-                            const json = await res.json();
-
-                            if (!json.success) {
-                                alert('Hubo un error al seleccionar');
-                                return;
-                            }
-
-                            // 1) Quitar marca verde a cualquier fila anterior
-                            document.querySelectorAll('#tabla-razones tr.table-success')
-                                    .forEach(tr => tr.classList.remove('table-success'));
-
-                            // 2) Marcar la nueva fila
-                            document
-                            .getElementById(`rs-row-${idRazon}`)
-                            .classList.add('table-success');
-
-                            // 3) Feedback
-                            actualizarCamposCotizacion(json.razon);
-
-                        } catch (err) {
-                            console.error(err);
-                            alert('Error al conectar con el servidor');
-                        }
-                    });
-
-                });
-
-                function actualizarCamposCotizacion(rs) {
-                    const dir = rs.direccion_facturacion;
-
-                    /* ============ CARD VISIBLE ============ */
-                    const setText = (id, v='') => {
-                        const el = document.getElementById(id);
-                        if (el) el.textContent = v ?? '';
-                    };
-
-                    setText('rs-nombre',  rs.nombre);
-                    setText('rs-rfc',     rs.RFC);
-                    setText('dir-calle',
-                        `${dir.calle ?? ''} #${dir.num_ext ?? ''}${dir.num_int ? ' Int.'+dir.num_int : ''}`);
-                    setText('dir-colonia', dir.colonia?.d_asenta);
-                    setText('dir-ciudad',  dir.ciudad?.n_mnpio);
-                    setText('dir-estado',  dir.estado?.d_estado);
-                    setText('dir-cp',      dir.cp);
-
-                    /* ============ INPUTS OCULTOS ============ */
-                    const setVal = (id, v='') => {
-                        const el = document.getElementById(id);
-                        if (el) el.value = v ?? '';
-                    };
-
-                    setVal('id_razon_social', rs.id_razon_social);
-                    setVal('rfc',             rs.RFC);
-                    setVal('calle',           dir.calle);
-                    setVal('num_ext',         dir.num_ext);
-                    setVal('num_int',         dir.num_int);
-                    setVal('cp',              dir.cp);
-                    setVal('id_colonia',      dir.id_colonia);
-                    setVal('id_ciudad',       dir.id_ciudad);
-                    setVal('id_estado',       dir.id_estado);
-                }
-     
-            });
-        </script>
-
-        <script>
-            // Seleccionar Dirección de Entrega
-            /** ----------------------------------------------------
-             *  UTIL: formatea la dirección para la vista                                              
-             * ---------------------------------------------------*/
-            const formatDir = d =>
-            `${d.calle || ''} #${d.numero || ''}, ${d.colonia || ''}, `
-            + `${d.ciudad || ''}, ${d.estado || ''}, ${d.pais || ''}, CP ${d.cp || ''}`;
-
-            /** ----------------------------------------------------
-             *  Pinta la card + actualiza inputs invisibles                                            
-             * ---------------------------------------------------*/
-            function setDireccionEntrega(data)
-            {
-                const setVal = (id, v = '')  => { const el = document.getElementById(id); if (el) el.value = v ?? ''; };
-                const setTxt = (id, v = '—') => { const el = document.getElementById(id); if (el) el.textContent = v ?? '—'; };
-
-                /* ---------- inputs ocultos ---------- */
-                setVal('id_direccion_entrega', data.id_direccion_entrega);
-                setVal('id_contacto_entrega',  data.contacto.id_contacto);
-                setVal('notas_entrega',        data.notas || '');
-
-                /* ---------- vista en card ----------- */
-                setTxt('entrega-contacto',  data.contacto.nombre);
-                setTxt('entrega-telefono',  data.contacto.telefono);
-                setTxt('entrega-email',     data.contacto.email);
-                setTxt('entrega-direccion', formatDir(data.direccion));
-            }
-
-            /** ----------------------------------------------------
-             *  Directorio ⇒ Seleccionar                                                                
-             * ---------------------------------------------------*/
-            document.addEventListener('click', async e => {
-                const btn = e.target.closest('.seleccionar-entrega');
-                if (!btn) return;
-
-                e.preventDefault();
-                const url = btn.dataset.url;   // la ruta que devuelve el JSON (GET ó POST)
-                const token = document.querySelector('meta[name="csrf-token"]').content;
-
-                try {
-                    const resp = await fetch(url, { method: 'POST', headers:{ 'X-CSRF-TOKEN': token }});
-                    const json = await resp.json();
-                    if (json.success) {
-                        setDireccionEntrega(json.entrega);
-                        bootstrap.Modal.getInstance(btn.closest('.modal')).hide();
-                    } else {
-                        alert(json.message || 'Error al obtener la dirección');
-                    }
-                } catch (err) {
-                    console.error(err);
-                    alert('Error de red al obtener la dirección');
-                }
-            });
-
-            /** ----------------------------------------------------
-             *  Alta rápida ⇒ Guardar                                                                   
-             * ---------------------------------------------------*/
-            document.getElementById('formCrearEntrega')
-                    .addEventListener('submit', async function (e) {
-                e.preventDefault();
-                const form  = e.currentTarget;
-                const token = document.querySelector('meta[name="csrf-token"]').content;
-                const data  = new FormData(form);
-
-                try {
-                    const resp = await fetch(form.action, { method:'POST', headers:{ 'X-CSRF-TOKEN': token, 'Accept': 'application/json' }, body:data });
-                    const json = await resp.json();
-                    if (json.success) {
-                        setDireccionEntrega(json.entrega);
-                        form.reset();
-                        bootstrap.Modal.getInstance(form.closest('.modal')).hide();
-                    } else {
-                        alert(json.message || 'No se guardó la dirección');
-                    }
-                } catch (err) {
-                    console.error(err);
-                    alert('Error al guardar la dirección');
-                }
-            });
-        </script>
-
-
-
-
-
-    @endpush
+    </div>
+
+@push('scripts')
+<!-- =======================================================================
+     HELPERS GLOBALES  (window.SIS) 
+     ===================================================================== -->
+<script defer>
+window.SIS = (() => {
+  const delay = (fn, ms = 400) => { let t; return (...a)=>{ clearTimeout(t); t = setTimeout(()=>fn(...a), ms); }; };
+  const selTxt = (sel, txt) => {
+    if (!sel) return;
+    let opt = [...sel.options].find(o => o.text.trim().toLowerCase() === txt.trim().toLowerCase())
+            || [...sel.options].find(o => o.value === txt);
+    if (!opt) { opt = new Option(txt, txt, true, true); sel.prepend(opt); }
+    sel.value = opt.value;
+  };
+  const qs   = s => document.querySelector(s);
+  const setV = (id,v='') => { const e=qs('#'+id); if(e) e.value = v ?? ''; };
+  const setT = (id,v='—')=> { const e=qs('#'+id); if(e) e.textContent = v ?? '—'; };
+  return { delay, selTxt, qs, setV, setT };
+})();
+</script>
+
+<!-- =======================================================================
+     FUNCIÓN insertarFila PARA TABLA DE FACTURACIÓN
+     ===================================================================== -->
+<script defer>
+(() => {
+  window.insertarFila = function(rs){
+  const tbody = document.querySelector('#tabla-razones tbody')
+  if(!tbody) return
+  tbody.querySelectorAll('tr').forEach(r=>r.classList.remove('table-success'))
+
+  const col   = rs.direccion_facturacion.colonia
+  const ciudad= rs.direccion_facturacion.ciudad
+  const edo   = rs.direccion_facturacion.estado
+
+  const tr = document.createElement('tr')
+  tr.id = `rs-row-${rs.id_razon_social}`
+  tr.classList.add('table-success')
+  tr.innerHTML = `
+    <td>
+      <button type="button" class="btn btn-sm btn-success seleccionar-direccion"
+              data-id="${rs.id_razon_social}"
+              data-route="/razones-sociales/${rs.id_razon_social}/seleccionar">
+        <i class="fa fa-check"></i>
+      </button>
+    </td>
+    <td>${rs.nombre}</td>
+    <td>${rs.RFC}</td>
+    <td>${rs.direccion_facturacion.calle} #${rs.direccion_facturacion.num_ext}</td>
+    <td>${col   ? col.d_asenta  : ''}</td>
+    <td>${rs.direccion_facturacion.cp || ''}</td>
+    <td>${ciudad? ciudad.n_mnpio: ''}</td>
+    <td>${edo   ? edo.d_estado  : ''}</td>`
+  tbody.appendChild(tr)
+}
+})();
+</script>
+
+<!-- =======================================================================
+     BLOQUE FACTURACIÓN  (autocompletado CP + alta rápida + directorio)
+     ===================================================================== -->
+<script defer>
+(() => {
+  const { delay, selTxt, setV, setT } = window.SIS;
+  const csrf   = document.querySelector('meta[name="csrf-token"]').content;
+  const modalF = document.getElementById('modalCrearDireccionFactura');
+  const form   = document.getElementById('formNuevaRazonSocialFactura');
+  const dirDlg = document.getElementById('modalFacturacion');
+  if (!modalF || !form) return;
+
+  // — Autocompletado CP (México) —
+  const cpInput = modalF.querySelector('.cp-field');
+  const colSel  = modalF.querySelector('.colonia-select');
+  const munSel  = modalF.querySelector('.municipio-field');
+  const edoSel  = modalF.querySelector('.estado-field');
+  const paisSel = modalF.querySelector('.pais-field');
+
+  const resetDir = () => {
+    colSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+    colSel.disabled = true; munSel.value=''; edoSel.value='';
+  };
+  async function buscarCP(cp) {
+    const r = await fetch(`/api/cp/${cp}`);
+    if (!r.ok) throw new Error('CP sin datos');
+    return r.json();
+  }
+  function togglePais() {
+    const esMx = paisSel.options[paisSel.selectedIndex].text.toLowerCase() === 'méxico';
+    cpInput.disabled = colSel.disabled = !esMx;
+    if (!esMx) { colSel.innerHTML = '<option>No aplicable fuera de México</option>'; resetDir(); }
+  }
+  paisSel.addEventListener('change', togglePais);
+  cpInput.addEventListener('input', delay(async () => {
+    const cp = cpInput.value.trim();
+    if (!/^\d{5}$/.test(cp)) { resetDir(); return; }
+    try {
+      const d = await buscarCP(cp);
+      selTxt(edoSel, d.head.estado);
+      selTxt(munSel, d.head.municipio);
+      colSel.innerHTML = '';
+      d.colonias.forEach(c => colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.colonia)));
+      colSel.disabled = false;
+    } catch {
+      resetDir();
+    }
+  }));
+  togglePais();
+
+  // — Alta rápida (guardar) —
+  form.addEventListener('submit', async e=>{
+  e.preventDefault()
+  const res = await fetch('{{ route("ajax.direccion.factura") }}',{
+    method:'POST',
+    headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'},
+    body:new FormData(form)
+  })
+  if(!res.ok){ alert('Error al guardar'); return }
+  const {razon_social:rs}=await res.json()
+
+  bootstrap.Modal.getOrCreateInstance(modalF).hide()  // primero cierra
+
+  pintarCard(rs)
+  insertarFila(rs)
+  actualizarBadge()
+  limpiarFormulario()
+})
+
+  // — Selección en directorio —
+  dirDlg.addEventListener('click', async e => {
+    const btn = e.target.closest('.seleccionar-direccion');
+    if (!btn) return;
+    const { route:url, id:idRs } = btn.dataset;
+    const r = await fetch(url, { method:'POST', headers:{'X-CSRF-TOKEN':csrf} });
+    const j = await r.json();
+    if (!j.success) { alert('Error'); return; }
+    document.querySelectorAll('#tabla-razones tr').forEach(tr=>tr.classList.remove('table-success'));
+    document.getElementById('rs-row-'+idRs)?.classList.add('table-success');
+    pintarCard(j.razon);
+    bootstrap.Modal.getOrCreateInstance(dirDlg).hide();
+  });
+
+  // — Helpers locales —
+  function pintarCard(rs){
+    const d = rs.direccion_facturacion;
+    setT('rs-nombre', rs.nombre);
+    setT('rs-rfc',    rs.RFC);
+    setT('dir-calle', `${d.calle} #${d.num_ext}${d.num_int?' Int.'+d.num_int:''}`);
+    setT('dir-colonia', d.colonia?.d_asenta);
+    setT('dir-ciudad',  d.ciudad?.n_mnpio);
+    setT('dir-estado',  d.estado?.d_estado);
+    setT('dir-cp',      d.cp);
+    setV('id_razon_social', rs.id_razon_social);
+    setV('rfc',             rs.RFC);
+    setV('calle',           d.calle);
+  }
+  function limpiarFormulario(){
+    form.reset();
+    resetDir();
+    togglePais();
+  }
+  function actualizarBadge(){
+    const btn = document.getElementById('btn-directorio');
+    if (!btn) return;
+    btn.removeAttribute('disabled');
+    const badge = btn.querySelector('.badge');
+    if (badge) {
+      const total = document.querySelectorAll('#tabla-razones tbody tr').length;
+      badge.textContent = total;
+    }
+  }
+})();
+</script>
+
+<!-- =======================================================================
+     BLOQUE ENTREGA  (alta rápida + directorio futuro)
+     ===================================================================== -->
+<script defer>
+(() => {
+  const { setV, setT } = window.SIS;
+  const csrf  = document.querySelector('meta[name="csrf-token"]').content;
+  const modalE = document.getElementById('modalCrearDireccionEntrega');
+  const formE  = document.getElementById('formCrearEntrega');
+  if (!modalE || !formE) return;
+
+  // — Alta rápida entrega —
+  formE.addEventListener('submit', async e => {
+    e.preventDefault();
+    const res = await fetch(formE.action, {
+      method:'POST',
+      headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'},
+      body:new FormData(formE)
+    });
+    const j = await res.json();
+    if (!j.success) { alert(j.message || 'No se guardó la dirección'); return; }
+    pintarEntrega(j.entrega);
+    formE.reset();
+    bootstrap.Modal.getOrCreateInstance(modalE).hide();
+  });
+
+  // — Helper local —
+  function formatDir(d){
+    return `${d.calle||''} #${d.num_ext||''}, ${d.colonia||''}, `
+         + `${d.ciudad||''}, ${d.estado||''}, ${d.pais||''}, CP ${d.cp||''}`;
+  }
+  function pintarEntrega(data){
+    setV('id_direccion_entrega', data.id_direccion_entrega);
+    setV('id_contacto_entrega',  data.contacto.id_contacto);
+    setV('notas_entrega',        data.notas || '');
+    setT('entrega-contacto',  data.contacto.nombre);
+    setT('entrega-telefono',  data.contacto.telefono);
+    setT('entrega-email',     data.contacto.email);
+    setT('entrega-direccion', formatDir(data.direccion));
+  }
+})();
+</script>
+@endpush
+
 
 @endsection
