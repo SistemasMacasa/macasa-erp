@@ -13,76 +13,80 @@
             </a>
         </div>
 
-        <div class="table-responsive mb-3 shadow-lg">
-            @if ($equipos->isEmpty())
-                <p>No hay equipos registrados.</p>
-            @else
-                <table class="table table-striped table-hover table-bordered align-middle">
-                    <thead class="text-center">
+
+
+        <table class="table table-hover table-bordered">
+            <thead class="text-center">
+                <tr>
+                    <th class="header-tabla text-start text-normal">Equipo</th>
+                    <th class="cotiaziones-header text-normal">Cuota Cotización</th>
+                    <th class="cotiaziones-header">Alcance Cotización</th>
+                    <th class="cotiaziones-header">% Cotización</th>
+                    <th class="margen-header">Cuota Margen</th>
+                    <th class="margen-header">Alcance Margen</th>
+                    <th class="margen-header">% Margen</th>
+                </tr>
+            </thead>
+
+            @foreach($equipos as $equipo)
+                {{-- 1) TBODY siempre visible con la fila del líder --}}
+                <tbody>
+                    <tr class="cursor-pointer" data-bs-toggle="collapse" data-bs-target="#members-{{ $equipo->id }}"
+                        aria-expanded="false">
+                        <td>
+                            <strong>
+                                {{ $equipo->lider->nombre ?? 'Sin líder' }}
+                                {{ $equipo->lider->apellido_p ?? '' }}
+                            </strong>
+                        </td>
+                        <td>{{ number_format($equipo->cuota_cotizacion, 2) }}</td>
+                        <td>{{ number_format($equipo->alcance_cotizacion, 2) }}</td>
+                        <td>{{ number_format($equipo->porcentaje_cotizacion, 2) }}%</td>
+                        <td>{{ number_format($equipo->cuota_margen, 2) }}</td>
+                        <td>{{ number_format($equipo->alcance_margen, 2) }}</td>
+                        <td>{{ number_format($equipo->porcentaje_margen, 2) }}%</td>
+                    </tr>
+                </tbody>
+
+                {{-- 2) TBODY colapsable con miembros + alcance --}}
+                <tbody id="members-{{ $equipo->id }}" class="collapse">
+                    @if($equipo->usuarios->filter(fn($u) => $u->pivot->rol !== 'lider')->isEmpty())
                         <tr>
-                            <th class="header-tabla">Equipo / Miembro</th>
-                            <th class="header-tabla">Cuota Cotización</th>
-                            <th class="header-tabla">Alcance Cotización</th>
-                            <th class="header-tabla">% Cotización</th>
-                            <th class="header-tabla">Cuota Margen</th>
-                            <th class="header-tabla">Alcance Margen</th>
-                            <th class="header-tabla">% Margen</th>
+                            <td colspan="7" class="text-center text-muted py-3">
+                                Este equipo no tiene miembros.
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($equipos as $equipo)
-                            {{-- Fila del equipo --}}
-                            <tr class="cursor-pointer" data-bs-toggle="collapse" data-bs-target=".equipo-{{ $equipo->id }}"
-                                aria-expanded="false" aria-controls="equipo-{{ $equipo->id }}">
+                    @else
+                        @foreach($equipo->usuarios->filter(fn($u) => $u->pivot->rol !== 'lider') as $usuario)
+                            <tr>
                                 <td>
-                                    <strong>{{ $equipo->nombre }}</strong>
+                                    👤 <strong>{{ $usuario->nombre }} {{ $usuario->apellido_p }}</strong>
+                                    <small class="text-muted">({{ $usuario->pivot->rol }})</small>
                                 </td>
-                                <td class="text-end">{{ number_format($equipo->cuota_cotizacion, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->alcance_cotizacion, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->porcentaje_cotizacion, 2) }}%</td>
-                                <td class="text-end">{{ number_format($equipo->cuota_margen, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->alcance_margen, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->porcentaje_margen, 2) }}%</td>
-                            </tr>
-
-                            {{-- Filas de miembros --}}
-                            @if ($equipo->usuarios->isEmpty())
-                                <tr class="collapse equipo-{{ $equipo->id }}">
-                                    <td colspan="7" class="text-center text-muted">
-                                        Este equipo no tiene miembros.
-                                    </td>
-                                </tr>
-                            @else
-                                @foreach ($equipo->usuarios as $usuario)
-                                    <tr class="collapse equipo-{{ $equipo->id }}">
-                                        <td>
-                                            {{ $usuario->nombre }} {{ $usuario->apellido_p }} ({{ $usuario->pivot->rol }})
-                                        </td>
-                                        <td class="text-end">{{ number_format($usuario->metas['cuota_cotizacion'] ?? 0, 2) }}</td>
-                                        <td class="text-end">{{ number_format($usuario->metas['alcance_cotizacion'] ?? 0, 2) }}</td>
-                                        <td class="text-end">{{ number_format($usuario->metas['porcentaje_cotizacion'] ?? 0, 2) }}%</td>
-                                        <td class="text-end">{{ number_format($usuario->metas['cuota_margen'] ?? 0, 2) }}</td>
-                                        <td class="text-end">{{ number_format($usuario->metas['alcance_margen'] ?? 0, 2) }}</td>
-                                        <td class="text-end">{{ number_format($usuario->metas['porcentaje_margen'] ?? 0, 2) }}%</td>
-                                    </tr>
-                                @endforeach
-                            @endif
-
-                            {{-- Fila de alcance del equipo --}}
-                            <tr class="collapse equipo-{{ $equipo->id }} table-secondary fw-bold">
-                                <td>Alcance del Equipo</td>
-                                <td class="text-end">{{ number_format($equipo->cuota_cotizacion, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->alcance_cotizacion, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->porcentaje_cotizacion, 2) }}%</td>
-                                <td class="text-end">{{ number_format($equipo->cuota_margen, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->alcance_margen, 2) }}</td>
-                                <td class="text-end">{{ number_format($equipo->porcentaje_margen, 2) }}%</td>
+                                <td>{{ number_format($usuario->metas['cuota_cotizacion'] ?? 0, 2) }}</td>
+                                <td>{{ number_format($usuario->metas['alcance_cotizacion'] ?? 0, 2) }}</td>
+                                <td>{{ number_format($usuario->metas['porcentaje_cotizacion'] ?? 0, 2) }}%</td>
+                                <td>{{ number_format($usuario->metas['cuota_margen'] ?? 0, 2) }}</td>
+                                <td>{{ number_format($usuario->metas['alcance_margen'] ?? 0, 2) }}</td>
+                                <td>{{ number_format($usuario->metas['porcentaje_margen'] ?? 0, 2) }}%</td>
                             </tr>
                         @endforeach
-                    </tbody>
-                </table>
-            @endif
-        </div>
+                    @endif
+
+                    {{-- fila de resumen “Alcance del Equipo” --}}
+                    <tr class="fw-bold bg-light">
+                        <td>📊 Alcance del Equipo</td>
+                        <td>{{ number_format($equipo->cuota_cotizacion, 2) }}</td>
+                        <td>{{ number_format($equipo->alcance_cotizacion, 2) }}</td>
+                        <td>{{ number_format($equipo->porcentaje_cotizacion, 2) }}%</td>
+                        <td>{{ number_format($equipo->cuota_margen, 2) }}</td>
+                        <td>{{ number_format($equipo->alcance_margen, 2) }}</td>
+                        <td>{{ number_format($equipo->porcentaje_margen, 2) }}%</td>
+                    </tr>
+                </tbody>
+            @endforeach
+        </table>
+
 
 
 
