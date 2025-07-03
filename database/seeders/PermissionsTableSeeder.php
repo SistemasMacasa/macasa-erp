@@ -42,6 +42,10 @@ class PermissionsTableSeeder extends Seeder
             'Crear Usuario',
             'Editar Usuario',
             'Eliminar Usuario',
+            'Equipos de Trabajo',
+            'Crear Equipos de Trabajo',
+            'Editar Equipos de Trabajo',
+            'Eliminar Equipos de trabajo',
         ];
 
         foreach ($permissions as $permission) {

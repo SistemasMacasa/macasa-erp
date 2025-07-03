@@ -7,6 +7,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CotizacionController;
+use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RazonSocialController;
@@ -30,7 +31,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('inicio');
     Route::post('/clientes/{id}/nota', [ClienteController::class, 'storeNota'])->name('clientes.nota.store');
-
 });
 
 //Inicio de Sesión
@@ -44,14 +44,12 @@ Route::middleware(['auth', 'permission:Nueva Cuenta'])->group(function () {
     Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
     //Procesar Nueva Cuenta 
     Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
-
 });
 
 Route::middleware(['auth', 'permission:Mis Cuentas'])->group(callback: function () {
 
     //Mostrar Mis Cuentas
     Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
-
 });
 
 Route::middleware(['auth', 'permission:Editar Cuenta'])->group(callback: function () {
@@ -60,7 +58,6 @@ Route::middleware(['auth', 'permission:Editar Cuenta'])->group(callback: functio
     Route::get('/clientes/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
     //Procesar Actualizar Cuenta
     Route::put('/clientes/update/{id}', [ClienteController::class, 'update'])->name('clientes.update');
-
 });
 
 Route::middleware(['auth', 'permission:Archivar Cuenta'])->group(callback: function () {
@@ -69,23 +66,19 @@ Route::middleware(['auth', 'permission:Archivar Cuenta'])->group(callback: funct
     Route::delete('/clientes/{cliente}', [ClienteController::class, 'delete'])->name('clientes.delete');
     //Archivar Cuenta desde clientes/trasnfer
     Route::post('clientes/archive', [ClienteController::class, 'archive'])
-     ->name('clientes.archive');
-
+        ->name('clientes.archive');
 });
 
 Route::middleware(['auth', 'permission:Restaurar Cuenta'])->group(callback: function () {
     //Restaurar Cuenta desde clientes/archivadas
     Route::post('clientes/restaurar-multiples', [ClienteController::class, 'restaurarMultiples'])
-     ->name('clientes.restaurar-multiples');
-
-
+        ->name('clientes.restaurar-multiples');
 });
 
 Route::middleware(['auth', 'permission:Ver Cuenta'])->group(callback: function () {
 
     //Ver Cuenta
     Route::get('/clientes/view/{id}', [ClienteController::class, 'view'])->name('clientes.view');
-
 });
 
 Route::middleware(['auth', 'permission:Traspaso de Cuenta'])->group(callback: function () {
@@ -96,14 +89,12 @@ Route::middleware(['auth', 'permission:Traspaso de Cuenta'])->group(callback: fu
     // Procesar transferencia
     Route::post('/clientes/transfer', [ClienteController::class, 'transferStore'])
         ->name('clientes.transfer.store');
-
 });
 
 Route::middleware(['auth', 'permission:Mis Recalls'])->group(callback: function () {
 
     //Mostrar Mis Recall's
     Route::get('/clientes/recalls', [ClienteController::class, 'recalls'])->name('clientes.recalls');
-
 });
 
 Route::middleware(['auth', 'permission:Cuentas Archivadas'])->group(callback: function () {
@@ -111,14 +102,12 @@ Route::middleware(['auth', 'permission:Cuentas Archivadas'])->group(callback: fu
     //Mostrar Cuentas Archivadas
     Route::get('/clientes/archivadas', [ClienteController::class, 'archivadas'])
         ->name('clientes.archivadas');
-
 });
 
 Route::middleware(['auth', 'permission:Monitor de Cotizaciones'])->group(callback: function () {
 
     // === Cotizaciones ===
     Route::get('/cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
-
 });
 
 Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: function () {
@@ -170,10 +159,6 @@ Route::middleware(['auth', 'permission:Permisos'])->group(callback: function () 
     Route::get('/api/roles', [RoleController::class, 'index'])->name('api.roles');
     // Cargar permisos de un rol
     Route::get('/api/roles/{role}/permisos', [RoleController::class, 'permisos'])->name('api.roles.permisos');
-
-
-
-
 });
 
 Route::middleware(['auth', 'permission:Crear Nuevos Permisos'])->group(callback: function () {
@@ -184,7 +169,6 @@ Route::middleware(['auth', 'permission:Crear Nuevos Permisos'])->group(callback:
         [PermisoController::class, 'storePermiso']
     )
         ->name('permisos.catalogo.store');
-
 });
 
 Route::middleware(['auth', 'permission:Eliminar Permisos'])->group(callback: function () {
@@ -194,7 +178,6 @@ Route::middleware(['auth', 'permission:Eliminar Permisos'])->group(callback: fun
         [PermisoController::class, 'destroyPermisoCatalog']
     )
         ->name('permisos.catalogo.destroy');
-
 });
 
 Route::middleware(['auth', 'permission:Asignar Permisos'])->group(callback: function () {
@@ -202,7 +185,6 @@ Route::middleware(['auth', 'permission:Asignar Permisos'])->group(callback: func
     Route::post('/permisos/asignar', [PermisoController::class, 'asignarPermiso'])->name('permisos.asignar');
     // Sincronizar permisos de un rol
     Route::post('/roles/{role}/permisos', [RoleController::class, 'syncPermisos'])->name('roles.permisos.sync');
-
 });
 
 Route::middleware(['auth', 'permission:Desasignar Permisos'])->group(callback: function () {
@@ -214,7 +196,6 @@ Route::middleware(['auth', 'permission:Desasignar Permisos'])->group(callback: f
         'permisos-catalogo/{permission}/roles/{role}',
         [PermisoController::class, 'removerPermisoDeRol']
     )->name('permisos.catalogo.removerRol');
-
 });
 
 Route::middleware(['auth', 'permission:Asignar Rol'])->group(callback: function () {
@@ -222,7 +203,6 @@ Route::middleware(['auth', 'permission:Asignar Rol'])->group(callback: function 
     // Asignar rol
     Route::post('/roles/asignar', [PermisoController::class, 'asignarRol'])
         ->name('roles.asignar');
-
 });
 
 Route::middleware(['auth', 'permission:Desasignar Rol'])->group(callback: function () {
@@ -230,21 +210,18 @@ Route::middleware(['auth', 'permission:Desasignar Rol'])->group(callback: functi
     // Quitar rol
     Route::post('/roles/remover', [PermisoController::class, 'removerRol'])
         ->name('roles.remover');
-
 });
 
 Route::middleware(['auth', 'permission:Crear Rol'])->group(callback: function () {
 
     // Crear un nuevo rol
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-
 });
 
 Route::middleware(['auth', 'permission:Eliminar Rol'])->group(callback: function () {
 
     // Eliminar rol
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
-
 });
 
 
@@ -271,6 +248,22 @@ Route::middleware(['auth', 'permission:Editar Usuario'])->group(function () {
 Route::middleware(['auth', 'permission:Eliminar Usuario'])->group(function () {
 
     Route::get('/usuarios/delete', [UsuarioController::class, 'delete'])->name('usuarios.delete');
-
 });
 
+Route::middleware(['auth', 'permission:Equipos de Trabajo'])->group(function () {
+    Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
+});
+
+Route::middleware(['auth', 'permission:Crear Equipos de Trabajo'])->group(function () {
+    Route::get('/equipos/create', [EquipoController::class, 'create'])->name('equipos.create');
+    Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
+});
+
+Route::middleware(['auth', 'permission:Editar Equipos de Trabajo'])->group(function () {
+    Route::get('/equipos/create', [EquipoController::class, 'create'])->name('equipos.create');
+    Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
+});
+
+Route::middleware(['auth', 'permission:Eliminar Equipos de Trabajo'])->group(function () {
+    Route::delete('/equipos/{id}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
+});

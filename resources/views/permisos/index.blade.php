@@ -3,7 +3,6 @@
 
 @section('content')
 <div class="container-fluid">
-
     {{-- 🧭 Migas de pan --}}
     @section('breadcrumb')
         <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>

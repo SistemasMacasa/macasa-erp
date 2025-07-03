@@ -47,7 +47,11 @@ class RolePermissionSeeder extends Seeder
                 'Eliminar Rol',
                 'Crear Usuario',
                 'Editar Usuario',
-                'Eliminar Usuario'
+                'Eliminar Usuario',
+                'Equipos de Trabajo',
+                'Crear Equipos de Trabajo',
+                'Editar Equipos de Trabajo',
+                'Eliminar Equipos de trabajo',
             ],
             'Ventas' => [
                 'Mis Cuentas',

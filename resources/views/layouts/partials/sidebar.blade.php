@@ -139,6 +139,7 @@
                             @can('Permisos')
                                 <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
                             @endcan
+                                <li><a href="{{ route('equipos.index') }}">Equipos de Trabajo</a></li>
                         </ul>
                     </li>
                 @endcanany
