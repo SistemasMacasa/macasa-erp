@@ -107,4 +107,8 @@ class Usuario extends Authenticatable
     {
         return $this->hasMany(MetasVentas::class, 'id_usuario', 'id_usuario');
     }
+    public function cotizaciones(){
+        
+        return $this->hasMany(Cotizacion::class, 'id_vendedor', 'id_usuario');
+    }
 }

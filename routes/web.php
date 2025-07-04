@@ -260,8 +260,8 @@ Route::middleware(['auth', 'permission:Crear Equipos de Trabajo'])->group(functi
 });
 
 Route::middleware(['auth', 'permission:Editar Equipos de Trabajo'])->group(function () {
-    Route::get('/equipos/create', [EquipoController::class, 'create'])->name('equipos.create');
-    Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
+Route::get('/equipos/{id}/datos', [EquipoController::class, 'datos'])->name('equipos.datos');
+Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
 });
 
 Route::middleware(['auth', 'permission:Eliminar Equipos de Trabajo'])->group(function () {

@@ -21,4 +21,9 @@ class MetasVentas extends Model
         'cuota_marginal_cotizaciones',
         'cuota_llamadas',
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -19,20 +20,85 @@ use App\Models\Estado;
 use App\Models\Ciudad;
 use App\Models\Colonia;
 use App\Models\Equipo;
-use App\Models\Usuario;use App\Models\Contacto;
+use App\Models\Usuario;
+use App\Models\Contacto;
 use Illuminate\Support\Str;
 
 
 class CotizacionController extends Controller
 {
-    public function index()
-    {   
+    public function index(Request $request)
+    {
+        $year = $request->input('year', now()->year);
+        $month = $request->input('month', now()->month);
+
+        // Obtener equipos con usuarios y líderes
         $equipos = Equipo::with(['lider', 'usuarios'])->get();
-        $usuarios = Usuario::all();
-        // dd($equipos);
-        
-        return view('cotizaciones.index', compact('equipos','usuarios'));
+
+        // Cargar metas y cotizaciones filtradas
+        $usuarios = Usuario::with([
+            'metasVentas' => function ($query) use ($year, $month) {
+                $query->whereYear('mes_aplicacion', $year)
+                    ->whereMonth('mes_aplicacion', $month);
+            },
+            'cotizaciones' => function ($query) use ($year, $month) {
+                $query->whereYear('fecha_alta', $year)
+                    ->whereMonth('fecha_alta', $month);
+            }
+        ])->get()->keyBy('id_usuario');
+
+        foreach ($equipos as $equipo) {
+            // Inicia en cero
+            $equipo->cuota_cotizacion = 0;
+            $equipo->alcance_cotizacion = 0;
+            $equipo->porcentaje_cotizacion = 0;
+            $equipo->cuota_margen = 0;
+            $equipo->alcance_margen = 0;
+            $equipo->porcentaje_margen = 0;
+
+            foreach ($equipo->usuarios as $usuario) {
+                $user = $usuarios->get($usuario->id_usuario);
+                $meta = $user->metasVentas->first();
+
+                // Simulación si no hay metas reales
+                $cuota = $meta->cuota_cotizaciones ?? rand(8, 15);
+                $alcance = $user->cotizaciones->count();
+                $porcentaje = $cuota > 0 ? ($alcance / $cuota) * 100 : 0;
+
+                $cuotaMargen = $meta->cuota_marginal_cotizaciones ?? rand(2000, 4000);
+                $alcanceMargen = $user->cotizaciones->sum('score_final') ?? rand(1500, 3500);
+                $porcentajeMargen = $cuotaMargen > 0 ? ($alcanceMargen / $cuotaMargen) * 100 : 0;
+
+                // Inyectar datos al usuario
+                $usuario->metas = [
+                    'cuota_cotizacion' => $cuota,
+                    'alcance_cotizacion' => $alcance,
+                    'porcentaje_cotizacion' => $porcentaje,
+                    'cuota_margen' => $cuotaMargen,
+                    'alcance_margen' => $alcanceMargen,
+                    'porcentaje_margen' => $porcentajeMargen,
+                ];
+
+                // Sumar al equipo
+                $equipo->cuota_cotizacion += $cuota;
+                $equipo->alcance_cotizacion += $alcance;
+                $equipo->cuota_margen += $cuotaMargen;
+                $equipo->alcance_margen += $alcanceMargen;
+            }
+
+            // Cálculos de porcentaje del equipo
+            $equipo->porcentaje_cotizacion = $equipo->cuota_cotizacion > 0
+                ? ($equipo->alcance_cotizacion / $equipo->cuota_cotizacion) * 100
+                : 0;
+
+            $equipo->porcentaje_margen = $equipo->cuota_margen > 0
+                ? ($equipo->alcance_margen / $equipo->cuota_margen) * 100
+                : 0;
+        }
+
+        return view('cotizaciones.index', compact('equipos', 'year', 'month'));
     }
+
 
     public function create($id_cliente)
     {
@@ -144,18 +210,23 @@ class CotizacionController extends Controller
         $idColonia = $coloniaObj->id_colonia;
         $idEstado  = Estado::where('c_estado',  $coloniaObj->c_estado)->value('id_estado');
         $idCiudad  = Ciudad::where('c_estado',  $coloniaObj->c_estado)
-                        ->where('c_mnpio', $coloniaObj->c_mnpio)
-                        ->value('id_ciudad');
+            ->where('c_mnpio', $coloniaObj->c_mnpio)
+            ->value('id_ciudad');
 
-        if(!$idEstado || !$idCiudad){
+        if (!$idEstado || !$idCiudad) {
             throw ValidationException::withMessages([
                 'ubicacion' => ['No se pudo resolver ciudad/estado a partir de la colonia.']
             ]);
         }
 
         /* 3. Crear todo en transacción */
-        DB::transaction(function() use (
-            &$razon, &$direccion, $data, $idColonia, $idCiudad, $idEstado
+        DB::transaction(function () use (
+            &$razon,
+            &$direccion,
+            $data,
+            $idColonia,
+            $idCiudad,
+            $idEstado
         ) {
             /* Dirección */
             $direccion = Direccion::create([
@@ -174,8 +245,8 @@ class CotizacionController extends Controller
 
             /* Desactiva predeterminada previa */
             RazonSocial::where('id_cliente', $data['id_cliente'])
-                    ->where('predeterminado', 1)
-                    ->update(['predeterminado' => 0]);
+                ->where('predeterminado', 1)
+                ->update(['predeterminado' => 0]);
 
             /* Nueva razón social */
             $razon = RazonSocial::create([
@@ -207,7 +278,7 @@ class CotizacionController extends Controller
         ]);
 
         // También la dirección por separado (por comodidad del front)
-        $direccion->load(['colonia','ciudad','estado','pais']);
+        $direccion->load(['colonia', 'ciudad', 'estado', 'pais']);
 
         return response()->json([
             'razon_social' => $razon,
@@ -255,10 +326,10 @@ class CotizacionController extends Controller
             ], 422);
         }
 
-        $idEstado = Estado ::where('c_estado', $colonia->c_estado)->value('id_estado');
-        $idCiudad = Ciudad ::where('c_estado', $colonia->c_estado)
-                        ->where('c_mnpio', $colonia->c_mnpio)
-                        ->value('id_ciudad');
+        $idEstado = Estado::where('c_estado', $colonia->c_estado)->value('id_estado');
+        $idCiudad = Ciudad::where('c_estado', $colonia->c_estado)
+            ->where('c_mnpio', $colonia->c_mnpio)
+            ->value('id_ciudad');
 
         DB::beginTransaction();
         try {
@@ -280,13 +351,13 @@ class CotizacionController extends Controller
 
             /* 3. Contacto predeterminado */
             Contacto::where('id_cliente', $v['id_cliente'])
-                    ->whereNotNull('id_direccion_entrega')
-                    ->where('predeterminado', 1)
-                    ->update(['predeterminado' => 0]);
+                ->whereNotNull('id_direccion_entrega')
+                ->where('predeterminado', 1)
+                ->update(['predeterminado' => 0]);
 
             $contacto = Contacto::create([
                 'id_cliente'          => $v['id_cliente'],
-                'id_direccion_entrega'=> $direccion->id_direccion,
+                'id_direccion_entrega' => $direccion->id_direccion,
                 'nombre'              => $v['contacto']['nombre'],
                 'apellido_p'          => $v['contacto']['apellido_p'],
                 'apellido_m'          => $v['contacto']['apellido_m'] ?? null,
@@ -300,7 +371,7 @@ class CotizacionController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return response()->json(['success'=>false,'message'=>'Error interno'],500);
+            return response()->json(['success' => false, 'message' => 'Error interno'], 500);
         }
 
         /* 4.  Devuelve TEXTO + IDs para el front */
@@ -330,5 +401,4 @@ class CotizacionController extends Controller
             ],
         ]);
     }
-
 }
