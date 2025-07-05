@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'SIS 3.0 | Nueva Cotización')
+@section('title', 'SIS 3.0 | Levantar Cotización')
 
 @section('content')
 
@@ -446,216 +446,249 @@
     </div> <!-- End SECCION PRINCIPAL -->
 
     <!-- Modal 1: Directorio de Razones Sociales + Direccion de Facturación -->
-    <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content text-center">
-
-                <div class="modal-header flex-column border-0 bg-white">
-                    <h4 class="modal-title w-100 fw-bold text-primary-emphasis">
-                        <i class="fa fa-address-book me-2 text-primary"></i> Seleccionar Dirección de Facturación
-                    </h4>
-                    <hr class="w-100 my-2 opacity-25">
-                    <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3" data-bs-dismiss="modal"
-                        aria-label="Cerrar"></button>
-                </div>
-
-                <div class="modal-body pt-0">
-                    <p class="text-muted mb-4">Selecciona una dirección registrada para el cliente actual</p>
-
-                    <div class="table-responsive">
-                        <table id="tabla-razones" class="table table-hover table-bordered align-middle small text-start">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Predeterminado</th>
-                                    <th>Razón Social</th>
-                                    <th>RFC</th>
-                                    <th>Calle</th>
-                                    <th>Colonia</th>
-                                    <th>CP</th>
-                                    <th>Municipio</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($razones_sociales as $rs)
-                                    <tr id="rs-row-{{ $rs->id_razon_social }}" class="{{ $rs->predeterminado ? 'table-success' : '' }}">
-                                        <td>
-                                            <button
-                                                type="button"
-                                                class="btn btn-sm btn-success seleccionar-direccion"
-                                                data-id="{{ $rs->id_razon_social }}"
-                                                data-route="{{ route('razones_sociales.seleccionar', $rs->id_razon_social) }}">
-                                                <i class="fa fa-check"></i>
-                                            </button>
-                                        </td>
-
-                                        <td>{{ $rs->nombre }}</td>
-                                        <td>{{ $rs->RFC }}</td>
-                                        <td>{{ $rs->direccion_facturacion->calle }} #{{ $rs->direccion_facturacion->num_ext }}</td>
-                                        <td>{{ $rs->direccion_facturacion->colonia?->d_asenta }}</td>
-                                        <td>{{ $rs->direccion_facturacion?->cp }}</td>
-                                        <td>{{ $rs->direccion_facturacion->ciudad?->n_mnpio }}</td>
-                                        <td>{{ $rs->direccion_facturacion->estado?->d_estado }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="8" class="text-center">
-                                            <span>No se encontraron direcciones de facturación</span>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
+<div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border rounded">
+      
+      <div class="modal-header flex-column border-0">
+        <h4 class="modal-title w-100 fw-bold text-primary-emphasis" id="modalFacturacionLabel">
+          <i class="fa fa-address-book me-2 text-primary"></i>
+          Seleccionar Dirección de Facturación
+        </h4>
+        <hr class="w-100 my-2 opacity-25">
+        <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      
+      <div class="modal-body">        
+        <!-- contenedor con borde y padding -->
+        <div class="table-responsive border rounded p-3 bg-white">
+          <table id="tabla-razones"
+                 class="table table-hover table-bordered align-middle small text-start mb-0">
+                 <thead class="table-light">
+              <tr>
+                <th class="text-center select-col"></th>
+                <th>Razón Social</th>
+                <th>RFC</th>
+                <th>Calle</th>
+                <th>Colonia</th>
+                <th>CP</th>
+                <th>Municipio</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @forelse($razones_sociales as $rs)
+                <tr id="rs-row-{{ $rs->id_razon_social }}"
+                    class="{{ $rs->predeterminado ? 'table-success' : '' }}">
+                  <td class="text-center select-col">
+                    <button type="button"
+                            class="btn btn-primary btn-sm seleccionar-direccion"
+                            data-id="{{ $rs->id_razon_social }}"
+                            data-route="{{ route('razones_sociales.seleccionar', $rs->id_razon_social) }}">
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </td>
+                  <td>{{ $rs->nombre }}</td>
+                  <td>{{ $rs->RFC }}</td>
+                  <td>{{ $rs->direccion_facturacion->calle }} #{{ $rs->direccion_facturacion->num_ext }}</td>
+                  <td>{{ $rs->direccion_facturacion->colonia?->d_asenta }}</td>
+                  <td>{{ $rs->direccion_facturacion?->cp }}</td>
+                  <td>{{ $rs->direccion_facturacion->ciudad?->n_mnpio }}</td>
+                  <td>{{ $rs->direccion_facturacion->estado?->d_estado }}</td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="8" class="text-center">
+                    <span>No se encontraron direcciones de facturación</span>
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
         </div>
-    </div><!-- End Modal: Directorio de Razones Sociales + Direccion de Facturación -->
+        
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+    <!-- End Modal: Directorio de Razones Sociales + Direccion de Facturación -->
 
     <!-- Modal 2: Crear nueva razón social + dirección de facturación -->
-    <div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
 
-        {{-- Header --}}
-        <div class="modal-header flex-column border-0 bg-white text-center pb-0">
-            <h4 class="modal-title fw-bold text-primary-emphasis">
-            <i class="fa fa-plus me-2 text-primary"></i>
-            Nueva Razón Social y Dirección
-            </h4>
-            <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            <hr class="w-100 my-2 opacity-25">
-        </div>
+<!-- Modal: Nueva Razón Social y Dirección -->
+<div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content border-0 rounded-3 shadow">
 
-        <div class="modal-body pt-0">
-            <form id="formNuevaRazonSocialFactura">
-            @csrf
-            <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
+      <!-- Header -->
+      <div class="modal-header border-0 bg-white text-center pb-0">
+        <h4 class="modal-title w-100 fw-bold text-primary-emphasis" id="modalCrearDireccionFacturaLabel">
+          <i class="fa fa-plus me-2 text-primary"></i>
+          Nueva Razón Social y Dirección
+        </h4>
+        <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <hr class="w-100 my-2 opacity-25">
+      </div>
 
-            {{-- Razón Social --}}
-            <h6 class="text-primary mb-3"><i class="fa fa-id-card-alt me-1"></i>Razón Social</h6>
-            <div class="row g-3">
-                <div class="col-md-6">
-                <label class="form-label fw-semibold">Razón Social *</label>
-                <input type="text" name="nombre" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                <label class="form-label fw-semibold">RFC *</label>
-                <input type="text" name="rfc" class="form-control" required>
-                </div>
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Uso CFDI *</label>
-                <select name="id_uso_cfdi" class="form-select" required>
-                    <option value="" disabled selected>Selecciona uno</option>
-                    @foreach($uso_cfdis as $uso)
-                    <option value="{{ $uso->id_uso_cfdi }}">{{ $uso->clave }} – {{ $uso->nombre }}</option>
-                    @endforeach
-                </select>
-                </div>
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Método de pago *</label>
-                <select name="id_metodo_pago" class="form-select" required>
-                    <option value="" disabled selected>Selecciona uno</option>
-                    @foreach($metodos->unique('clave') as $metodo)
-                    <option value="{{ $metodo->id_metodo_pago }}">{{ $metodo->clave }} – {{ $metodo->nombre }}</option>
-                    @endforeach
-                </select>
-                </div>
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Forma de pago *</label>
-                <select name="id_forma_pago" class="form-select" required>
-                    <option value="" disabled selected>Selecciona uno</option>
-                    @foreach($formas->unique('clave') as $forma)
-                    <option value="{{ $forma->id_forma_pago }}">{{ $forma->clave }} – {{ $forma->nombre }}</option>
-                    @endforeach
-                </select>
-                </div>
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Régimen Fiscal *</label>
-                <select name="id_regimen_fiscal" class="form-select" required>
-                    <option value="" disabled selected>Selecciona uno</option>
-                    @foreach($regimenes as $regimen)
-                    <option value="{{ $regimen->id_regimen_fiscal }}">{{ $regimen->clave }} – {{ $regimen->nombre }}</option>
-                    @endforeach
-                </select>
-                </div>
+      <div class="modal-body py-3 px-4">
+        <form id="formNuevaRazonSocialFactura"
+      action="{{ route('ajax.direccion.factura') }}"
+      method="POST">
+
+          @csrf
+          <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
+
+          <!-- Sección Razón Social -->
+          <div class="form-section mb-4">
+            <div class="section-header mb-3">
+              <i class="fa fa-id-card-alt text-primary me-2"></i>
+              <span class="fw-semibold fs-6">Razón Social</span>
             </div>
-
-            {{-- Separador --}}
-            <hr class="my-4">
-
-            {{-- Dirección --}}
-            <h6 class="text-primary mb-3"><i class="fa fa-map-marked-alt me-1"></i>Dirección de Facturación</h6>
             <div class="row g-3">
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Calle *</label>
-                <input type="text" name="calle" class="form-control" required>
-                </div>
-                <div class="col-md-2">
-                <label class="form-label fw-semibold">Num. Ext. *</label>
-                <input type="text" name="num_ext" class="form-control" required>
-                </div>
-                <div class="col-md-2">
-                <label class="form-label fw-semibold">Num. Int.</label>
-                <input type="text" name="num_int" class="form-control">
-                </div>
-
-                <div class="col-md-4">
-                <label class="form-label fw-semibold">Colonia *</label>
-                <select name="colonia" class="form-select colonia-select" required>
-                    <option value="">— Selecciona CP primero —</option>
-                </select>
-                </div>
-
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">C.P. *</label>
-                <input type="text" name="cp" maxlength="5" class="form-control cp-field" required>
-                </div>
-
-
-
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">Municipio *</label>
-                <select name="municipio" class="form-select municipio-field" required>
-                    <option value="">— Selecciona CP primero —</option>
-                </select>
-                </div>
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">Estado *</label>
-                <select name="estado" class="form-select estado-field" required>
-                    <option value="">— Selecciona CP primero —</option>
-                </select>
-                </div>
-                <div class="col-md-3">
-                <label class="form-label fw-semibold">País *</label>
-                <select name="id_pais" class="form-select pais-field" required>
-                    @foreach($paises as $pais)
-                    <option value="{{ $pais->id_pais }}" {{ $pais->nombre === 'México' ? 'selected' : '' }}>
-                        {{ $pais->nombre }}
+              <div class="col-md-6">
+                <label class="form-label small text-secondary">Razón Social *</label>
+                <input type="text" name="nombre" class="form-control form-control-sm" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-secondary">RFC *</label>
+                <input type="text" name="rfc" class="form-control form-control-sm" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small text-secondary">Uso CFDI *</label>
+                <select name="id_uso_cfdi" class="form-select form-select-sm" required>
+                  <option value="" disabled selected>Selecciona uno</option>
+                  @foreach($uso_cfdis as $uso)
+                    <option value="{{ $uso->id_uso_cfdi }}">
+                      {{ $uso->clave }} – {{ $uso->nombre }}
                     </option>
-                    @endforeach
+                  @endforeach
                 </select>
-                </div>
-                <div class="col-md-12">
-                <label class="form-label fw-semibold">Notas / Referencias</label>
-                <textarea name="notas" rows="2" class="form-control"></textarea>
-                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small text-secondary">Método de pago *</label>
+                <select name="id_metodo_pago" class="form-select form-select-sm" required>
+                  <option value="" disabled selected>Selecciona uno</option>
+                  @foreach($metodos->unique('clave') as $metodo)
+                    <option value="{{ $metodo->id_metodo_pago }}">
+                      {{ $metodo->clave }} – {{ $metodo->nombre }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small text-secondary">Forma de pago *</label>
+                <select name="id_forma_pago" class="form-select form-select-sm" required>
+                  <option value="" disabled selected>Selecciona uno</option>
+                  @foreach($formas->unique('clave') as $forma)
+                    <option value="{{ $forma->id_forma_pago }}">
+                      {{ $forma->clave }} – {{ $forma->nombre }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small text-secondary">Régimen Fiscal *</label>
+                <select name="id_regimen_fiscal" class="form-select form-select-sm" required>
+                  <option value="" disabled selected>Selecciona uno</option>
+                  @foreach($regimenes as $regimen)
+                    <option value="{{ $regimen->id_regimen_fiscal }}">
+                      {{ $regimen->clave }} – {{ $regimen->nombre }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
             </div>
+          </div>
 
-            {{-- Footer --}}
-            <div class="mt-4 text-end">
-                <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary">
-                <i class="fa fa-save me-1"></i> Guardar razón social
-                </button>
+          <!-- Sección Dirección de Facturación -->
+          <div class="form-section mb-4">
+            <div class="section-header mb-3">
+              <i class="fa fa-map-marked-alt text-primary me-2"></i>
+              <span class="fw-semibold fs-6">Dirección de Facturación</span>
             </div>
-            </form>
-        </div>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label small text-secondary">Calle *</label>
+                <input type="text" name="calle" class="form-control form-control-sm" required>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label small text-secondary">Num. Ext. *</label>
+                <input type="text" name="num_ext" class="form-control form-control-sm" required>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label small text-secondary">Num. Int.</label>
+                <input type="text" name="num_int" class="form-control form-control-sm">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small text-secondary">C.P. *</label>
+                <input type="text"
+                       name="cp"
+                       maxlength="5"
+                       class="form-control form-control-sm cp-field"
+                       required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small text-secondary">Colonia *</label>
+                <select name="colonia" class="form-select form-select-sm colonia-select" required>
+                  <option value="">— Selecciona CP primero —</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small text-secondary">Municipio *</label>
+                <select name="municipio" class="form-select form-select-sm municipio-field" required>
+                  <option value="">— Selecciona CP primero —</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small text-secondary">Estado *</label>
+                <select name="estado" class="form-select form-select-sm estado-field" required>
+                  <option value="">— Selecciona CP primero —</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small text-secondary">País *</label>
+                <select name="id_pais" class="form-select form-select-sm pais-field" required>
+                  @foreach($paises as $pais)
+                    <option value="{{ $pais->id_pais }}"
+                      {{ $pais->nombre === 'México' ? 'selected' : '' }}>
+                      {{ $pais->nombre }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label small text-secondary">Notas / Referencias</label>
+                <textarea name="notas"
+                          class="form-control form-control-sm"
+                          style="height: 100px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </div>
 
-        </div>
+          <!-- Footer -->
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-sm btn-primary">
+              <i class="fa fa-save me-1"></i> Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+
     </div>
-    </div> <!-- End Modal: Crear nueva razón social + dirección de facturación -->
+  </div>
+</div>
+
+
+    
+    <!-- End Modal: Crear nueva razón social + dirección de facturación -->
 
 
     <!-- Modal 3: Directorio de contactos + direcciones de entrega -->
@@ -694,29 +727,31 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($contactos_entrega as $c)
+                        @foreach($contactos_entrega as $c)
                         @php $dir = $c->direccion_entrega @endphp
-                        <tr id="entrega-row-{{ $dir->id_direccion }}"
-                            class="{{ $c->predeterminado ? 'table-success' : '' }}">
-                        <td>
-                            <button type="button"
-                                    class="btn btn-sm btn-success seleccionar-entrega"
-                                    data-id="{{ $dir->id_direccion }}"
-                                    data-route="{{ route('cotizaciones.seleccionar-entrega',$dir->id_direccion) }}">
-                            <i class="fa fa-check"></i>
-                            </button>
-                        </td>
-                        <td>{{ $dir->nombre }}</td>
-                        <td>{{ $c->nombreCompleto }}</td>
-                        <td>{{ $c->telefono1 }}</td>
-                        <td>{{ $c->email }}</td>
-                        <td>{{ $dir->calle }} #{{ $dir->num_ext }}</td>
-                        <td>{{ $dir->colonia->d_asenta }}</td>
-                        <td>{{ $dir->cp }}</td>
-                        <td>{{ $dir->ciudad->n_mnpio }}</td>
-                        <td>{{ $dir->estado->d_estado }}</td>
-                        </tr>
-                    @endforeach
+
+                            <tr id="entrega-row-{{ $c->id_contacto }}"
+                                class="{{ $c->predeterminado ? 'table-success' : '' }}">
+
+                                <td>
+                                    <button type="button"
+                                            class="btn btn-sm btn-success seleccionar-entrega"
+                                            data-id="{{ $c->id_contacto }}"
+                                            data-route="{{ route('contactos.seleccionar', $c->id_contacto) }}">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                </td>
+                                <td>{{ $dir->nombre }}</td>
+                                <td>{{ $c->nombreCompleto }}</td>
+                                <td>{{ $c->telefono1 }}</td>
+                                <td>{{ $c->email }}</td>
+                                <td>{{ $dir->calle }} #{{ $dir->num_ext }}</td>
+                                <td>{{ $dir->colonia->d_asenta ?? '-' }}</td>
+                                <td>{{ $dir->cp }}</td>
+                                <td>{{ $dir->ciudad->n_mnpio ?? '-'}}</td>
+                                <td>{{ $dir->estado->d_estado ?? '-' }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
                 </div>
@@ -1194,78 +1229,99 @@ window.SIS = (() => {
             });
 
             
-  /* -----------------------------------------------------------
-     1)  Insertar una fila nueva tras alta rápida
-  ----------------------------------------------------------- */
-  window.insertarFilaEntrega = function(ent){
-    const tbody = document.querySelector('#tabla-entregas tbody');
-    if(!tbody) return;
+        /* -----------------------------------------------------------
+            1)  Insertar una fila nueva tras alta rápida
+        ----------------------------------------------------------- */
+        window.insertarFilaEntrega = function(ent){
+            const tbody = document.querySelector('#tabla-entregas tbody');
+            if(!tbody) return;
 
-    // desmarca todo y arma fila
-    tbody.querySelectorAll('tr').forEach(tr=>tr.classList.remove('table-success'));
+            // desmarca todo y arma fila
+            tbody.querySelectorAll('tr').forEach(tr=>tr.classList.remove('table-success'));
 
-    const d   = ent.direccion;
-    const tel = ent.contacto.telefono||'';
-    const row = document.createElement('tr');
-    row.id = `entrega-row-${ent.id_direccion_entrega}`;
-    row.classList.add('table-success');
-    row.innerHTML = `
-      <td>
-        <button type="button" class="btn btn-sm btn-success seleccionar-entrega"
-                data-id="${ent.id_direccion_entrega}"
-                data-route="/cotizaciones/seleccionar-entrega/${ent.id_direccion_entrega}">
-          <i class="fa fa-check"></i>
-        </button>
-      </td>
-      <td>${d.nombre||''}</td>
-      <td>${ent.contacto.nombre}</td>
-      <td>${tel}</td>
-      <td>${ent.contacto.email||''}</td>
-      <td>${d.calle} #${d.num_ext}</td>
-      <td>${d.colonia}</td>
-      <td>${d.cp}</td>
-      <td>${d.ciudad}</td>
-      <td>${d.estado}</td>`;
-    tbody.appendChild(row);
-  };
+            const d   = ent.direccion;
+            const tel = ent.contacto.telefono||'';
+            const row = document.createElement('tr');
+            row.id = `entrega-row-${ent.id_direccion_entrega}`;
+            row.classList.add('table-success');
+            row.innerHTML = `
+            <td>
+                <button type="button" class="btn btn-sm btn-success seleccionar-entrega"
+                        data-id="${ent.id_direccion_entrega}"
+                        data-route="/contactos/${ent.id_direccion_entrega}/seleccionar">
+                <i class="fa fa-check"></i>
+                </button>
+            </td>
+            <td>${d.nombre||''}</td>
+            <td>${ent.contacto.nombre}</td>
+            <td>${tel}</td>
+            <td>${ent.contacto.email||''}</td>
+            <td>${d.calle} #${d.num_ext}</td>
+            <td>${d.colonia}</td>
+            <td>${d.cp}</td>
+            <td>${d.ciudad}</td>
+            <td>${d.estado}</td>`;
+            tbody.appendChild(row);
+        };
 
-  /* -----------------------------------------------------------
-     2)  Badge numérico del botón directorio
-  ----------------------------------------------------------- */
-  window.actualizarBadgeEntrega = function(){
-    const btn   = document.getElementById('btn-directorio-entrega');
-    if(!btn) return;
-    btn.removeAttribute('disabled');
-    const total = document.querySelectorAll('#tabla-entregas tbody tr').length;
-    btn.querySelector('.badge').textContent = total;
-  };
+        /* -----------------------------------------------------------
+            2)  Badge numérico del botón directorio
+        ----------------------------------------------------------- */
+        window.actualizarBadgeEntrega = function(){
+            const btn   = document.getElementById('btn-directorio-entrega');
+            if(!btn) return;
+            btn.removeAttribute('disabled');
+            const total = document.querySelectorAll('#tabla-entregas tbody tr').length;
+            btn.querySelector('.badge').textContent = total;
+        };
 
-  /* -----------------------------------------------------------
-     3)  Selección dentro del modal
-  ----------------------------------------------------------- */
-  document.getElementById('modalEntrega')
-          .addEventListener('click', async e=>{
-    const btn = e.target.closest('.seleccionar-entrega');
-    if(!btn) return;
+        /* 3) Selección dentro del modal --------------------------- */
+        document
+            .getElementById('modalEntrega')
+            .addEventListener('click', async e => 
+            {
 
-    const { route:url, id } = btn.dataset;
-    const res = await fetch(url,{
-      method:'POST',
-      headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'}
-    });
-    const j = await res.json();
-    if(!j.success){ alert('Error al seleccionar'); return; }
+                const btn = e.target.closest('.seleccionar-entrega');
+                if (!btn) return;               // no es el botón ✔️
 
-    // pinta card y actualiza marcado en tabla
-    pintarEntrega(j.entrega);
-    document.querySelectorAll('#tabla-entregas tr')
-            .forEach(tr=>tr.classList.remove('table-success'));
-    document.getElementById('entrega-row-'+id)?.classList.add('table-success');
+                const url        = btn.dataset.route;
+                const idContacto = btn.dataset.id;
 
-    bootstrap.Modal.getOrCreateInstance(
-      document.getElementById('modalEntrega')).hide();
-  });
+                try 
+                {
+                    const res = await fetch(url, {
+                    method : 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                    });
+                    const j = await res.json();
+                    if (!j.success) {
+                    alert(j.message || 'Error al seleccionar');
+                    return;
+                    }
 
+                    /* 1️⃣ Pinta la card (y los inputs ocultos) */
+                    pintarEntrega(j.entrega);
+
+                    /* 2️⃣ Resalta la fila correcta */
+                    document
+                    .querySelectorAll('#tabla-entregas tbody tr')
+                    .forEach(tr => tr.classList.remove('table-success'));
+
+                    document
+                    .getElementById('entrega-row-' + idContacto)
+                    ?.classList.add('table-success');
+
+                    /* 3️⃣ Cierra el modal */
+                    bootstrap
+                    .Modal
+                    .getOrCreateInstance(document.getElementById('modalEntrega'))
+                    .hide();
+
+                } catch (err) {
+                    console.error(err);
+                    alert('Error de red');
+                }
+            });
         })();
     </script>
 

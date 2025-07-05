@@ -11,6 +11,7 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RazonSocialController;
+use App\Http\Controllers\ContactoController;
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
 // Route::get('/', function () {
@@ -118,6 +119,8 @@ Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: f
     Route::post('/razones-sociales/{id}/seleccionar', [RazonSocialController::class, 'seleccionar'])->name('razones_sociales.seleccionar');
     //Procesar Guardar Cotización
     Route::post('/cotizaciones', [CotizacionController::class, 'store'])->name('cotizaciones.store');
+    //Seleccionar Contacto para Cotización
+    Route::post('/contactos/{contacto}/seleccionar', [ContactoController::class, 'seleccionar'])->name('contactos.seleccionar');
 });
 
 Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: function () {
@@ -126,7 +129,8 @@ Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: fun
     Route::post('/ajax/direccion-factura', [CotizacionController::class, 'storeRazonSocialFactura'])
         ->name('ajax.direccion.factura');
     //Guardar Dirección de entrega mediante AJAX
-    Route::post('/nueva-entrega',
+    Route::post(
+        '/nueva-entrega',
         [CotizacionController::class, 'storeDireccionEntregaFactura']
     )->name('cotizaciones.nueva-entrega');
 

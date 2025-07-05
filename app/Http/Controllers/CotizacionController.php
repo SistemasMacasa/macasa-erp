@@ -19,19 +19,20 @@ use App\Models\Estado;
 use App\Models\Ciudad;
 use App\Models\Colonia;
 use App\Models\Equipo;
-use App\Models\Usuario;use App\Models\Contacto;
+use App\Models\Usuario;
+use App\Models\Contacto;
 use Illuminate\Support\Str;
 
 
 class CotizacionController extends Controller
 {
     public function index()
-    {   
+    {
         $equipos = Equipo::with(['lider', 'usuarios'])->get();
         $usuarios = Usuario::all();
         // dd($equipos);
-        
-        return view('cotizaciones.index', compact('equipos','usuarios'));
+
+        return view('cotizaciones.index', compact('equipos', 'usuarios'));
     }
 
     public function create($id_cliente)
@@ -76,6 +77,17 @@ class CotizacionController extends Controller
             ->where('predeterminado', 1)
             ->first();
 
+        $contactos_entrega = Contacto::with([
+            'direccion_entrega.colonia',
+            'direccion_entrega.ciudad',
+            'direccion_entrega.estado',
+            'direccion_entrega.pais'
+        ])
+            ->where('id_cliente', $id_cliente)
+            ->whereNotNull('id_direccion_entrega')
+            ->orderBy('nombre')
+            ->get();
+
         $paises = Pais::whereIn('nombre', ['México', 'Estados Unidos', 'Canadá'])
             ->orderByRaw("FIELD(nombre, 'México', 'Estados Unidos', 'Canadá')")
             ->get();
@@ -90,6 +102,7 @@ class CotizacionController extends Controller
                 'regimenes',
                 'razones_sociales',
                 'contacto_entrega',
+                'contactos_entrega',
                 'direccion_facturacion',
                 'direccion_entrega',
                 'paises'
@@ -109,29 +122,29 @@ class CotizacionController extends Controller
     {
         /* 1. Validación */
         $data = $request->validate([
-            'id_cliente'        => 'required|exists:clientes,id_cliente',
-            'nombre'            => 'required|string|max:100',
-            'rfc'               => 'required|string|max:13',
-            'id_uso_cfdi'       => 'required|exists:uso_cfdis,id_uso_cfdi',
-            'id_metodo_pago'    => 'required|exists:metodo_pagos,id_metodo_pago',
-            'id_forma_pago'     => 'required|exists:forma_pagos,id_forma_pago',
+            'id_cliente' => 'required|exists:clientes,id_cliente',
+            'nombre' => 'required|string|max:100',
+            'rfc' => 'required|string|max:13',
+            'id_uso_cfdi' => 'required|exists:uso_cfdis,id_uso_cfdi',
+            'id_metodo_pago' => 'required|exists:metodo_pagos,id_metodo_pago',
+            'id_forma_pago' => 'required|exists:forma_pagos,id_forma_pago',
             'id_regimen_fiscal' => 'required|exists:regimen_fiscales,id_regimen_fiscal',
 
             /* Dirección */
-            'calle'      => 'required|string|max:100',
-            'num_ext'    => 'required|string|max:20',
-            'num_int'    => 'nullable|string|max:20',
-            'colonia'    => 'required|string|max:100',
-            'cp'         => 'required|string|max:10',
-            'municipio'  => 'nullable|string|max:100',
-            'estado'     => 'nullable|string|max:100',
-            'id_pais'    => 'nullable|integer|exists:paises,id_pais',
-            'notas'      => 'nullable|string|max:255',
+            'calle' => 'required|string|max:100',
+            'num_ext' => 'required|string|max:20',
+            'num_int' => 'nullable|string|max:20',
+            'colonia' => 'required|string|max:100',
+            'cp' => 'required|string|max:10',
+            'municipio' => 'nullable|string|max:100',
+            'estado' => 'nullable|string|max:100',
+            'id_pais' => 'nullable|integer|exists:paises,id_pais',
+            'notas' => 'nullable|string|max:255',
         ]);
 
         /* 2. Resolver Colonia → Ciudad/Estado */
-        $cp         = $data['cp'];
-        $nombreCol  = $this->normalize($data['colonia']);
+        $cp = $data['cp'];
+        $nombreCol = $this->normalize($data['colonia']);
         $coloniaObj = Colonia::where('d_codigo', $cp)->get()
             ->first(fn($c) => $this->normalize($c->d_asenta) === $nombreCol);
 
@@ -142,55 +155,53 @@ class CotizacionController extends Controller
         }
 
         $idColonia = $coloniaObj->id_colonia;
-        $idEstado  = Estado::where('c_estado',  $coloniaObj->c_estado)->value('id_estado');
-        $idCiudad  = Ciudad::where('c_estado',  $coloniaObj->c_estado)
-                        ->where('c_mnpio', $coloniaObj->c_mnpio)
-                        ->value('id_ciudad');
+        $idEstado = Estado::where('c_estado', $coloniaObj->c_estado)->value('id_estado');
+        $idCiudad = Ciudad::where('c_estado', $coloniaObj->c_estado)
+            ->where('c_mnpio', $coloniaObj->c_mnpio)
+            ->value('id_ciudad');
 
-        if(!$idEstado || !$idCiudad){
+        if (!$idEstado || !$idCiudad) {
             throw ValidationException::withMessages([
                 'ubicacion' => ['No se pudo resolver ciudad/estado a partir de la colonia.']
             ]);
         }
 
         /* 3. Crear todo en transacción */
-        DB::transaction(function() use (
-            &$razon, &$direccion, $data, $idColonia, $idCiudad, $idEstado
-        ) {
+        DB::transaction(function () use (&$razon, &$direccion, $data, $idColonia, $idCiudad, $idEstado) {
             /* Dirección */
             $direccion = Direccion::create([
                 'id_cliente' => $data['id_cliente'],
-                'tipo'       => 'facturacion',
-                'calle'      => $data['calle'],
-                'num_ext'    => $data['num_ext'],
-                'num_int'    => $data['num_int'] ?? null,
-                'cp'         => $data['cp'],
+                'tipo' => 'facturacion',
+                'calle' => $data['calle'],
+                'num_ext' => $data['num_ext'],
+                'num_int' => $data['num_int'] ?? null,
+                'cp' => $data['cp'],
                 'id_colonia' => $idColonia,
-                'id_ciudad'  => $idCiudad,
-                'id_estado'  => $idEstado,
-                'id_pais'    => $data['id_pais'] ?? 1,
-                'notas'      => $data['notas'] ?? null,
+                'id_ciudad' => $idCiudad,
+                'id_estado' => $idEstado,
+                'id_pais' => $data['id_pais'] ?? 1,
+                'notas' => $data['notas'] ?? null,
             ]);
 
             /* Desactiva predeterminada previa */
             RazonSocial::where('id_cliente', $data['id_cliente'])
-                    ->where('predeterminado', 1)
-                    ->update(['predeterminado' => 0]);
+                ->where('predeterminado', 1)
+                ->update(['predeterminado' => 0]);
 
             /* Nueva razón social */
             $razon = RazonSocial::create([
-                'nombre'              => $data['nombre'],
-                'id_cliente'          => $data['id_cliente'],
-                'RFC'                 => strtoupper($data['rfc']),
-                'id_uso_cfdi'         => $data['id_uso_cfdi'],
-                'id_metodo_pago'      => $data['id_metodo_pago'],
-                'id_forma_pago'       => $data['id_forma_pago'],
-                'id_regimen_fiscal'   => $data['id_regimen_fiscal'],
-                'dias_credito'        => 0,
-                'saldo'               => 0,
-                'limite_credito'      => 0,
+                'nombre' => $data['nombre'],
+                'id_cliente' => $data['id_cliente'],
+                'RFC' => strtoupper($data['rfc']),
+                'id_uso_cfdi' => $data['id_uso_cfdi'],
+                'id_metodo_pago' => $data['id_metodo_pago'],
+                'id_forma_pago' => $data['id_forma_pago'],
+                'id_regimen_fiscal' => $data['id_regimen_fiscal'],
+                'dias_credito' => 0,
+                'saldo' => 0,
+                'limite_credito' => 0,
                 'id_direccion_facturacion' => $direccion->id_direccion,
-                'predeterminado'      => 1,
+                'predeterminado' => 1,
             ]);
         });
 
@@ -207,11 +218,11 @@ class CotizacionController extends Controller
         ]);
 
         // También la dirección por separado (por comodidad del front)
-        $direccion->load(['colonia','ciudad','estado','pais']);
+        $direccion->load(['colonia', 'ciudad', 'estado', 'pais']);
 
         return response()->json([
             'razon_social' => $razon,
-            'direccion'    => $direccion,
+            'direccion' => $direccion,
         ], 201);
     }
 
@@ -221,138 +232,138 @@ class CotizacionController extends Controller
      */
 
 
-     public function storeDireccionEntregaFactura(Request $request)
-{
-    /* 1️⃣  VALIDACIÓN */
-    $v = $request->validate([
-        'id_cliente'                    => 'required|integer|exists:clientes,id_cliente',
+    public function storeDireccionEntregaFactura(Request $request)
+    {
+        /* 1️⃣  VALIDACIÓN */
+        $v = $request->validate([
+            'id_cliente' => 'required|integer|exists:clientes,id_cliente',
 
-        // contacto
-        'contacto.nombre'               => 'required|string|max:120',
-        'contacto.apellido_p'           => 'required|string|max:100',
-        'contacto.apellido_m'           => 'nullable|string|max:100',
-        'contacto.telefono'             => 'nullable|string|max:25',
-        'contacto.ext'                  => 'nullable|string|max:10',
-        'contacto.email'                => 'nullable|email|max:120',
+            // contacto
+            'contacto.nombre' => 'required|string|max:120',
+            'contacto.apellido_p' => 'required|string|max:100',
+            'contacto.apellido_m' => 'nullable|string|max:100',
+            'contacto.telefono' => 'nullable|string|max:25',
+            'contacto.ext' => 'nullable|string|max:10',
+            'contacto.email' => 'nullable|email|max:120',
 
-        // dirección
-        'direccion.id_colonia'          => 'required|integer|exists:colonias,id_colonia',
-        'direccion.nombre'              => 'nullable|string|max:27',
-        'direccion.calle'               => 'required|string|max:120',
-        'direccion.num_ext'             => 'required|string|max:15',
-        'direccion.num_int'             => 'nullable|string|max:15',
-        'direccion.cp'                  => 'required|string|max:10',
-        'direccion.pais'                => 'required|string|max:120',
+            // dirección
+            'direccion.id_colonia' => 'required|integer|exists:colonias,id_colonia',
+            'direccion.nombre' => 'nullable|string|max:27',
+            'direccion.calle' => 'required|string|max:120',
+            'direccion.num_ext' => 'required|string|max:15',
+            'direccion.num_int' => 'nullable|string|max:15',
+            'direccion.cp' => 'required|string|max:10',
+            'direccion.pais' => 'required|string|max:120',
 
-        'notas'                         => 'nullable|string|max:255',
-    ]);
-
-    /* 2️⃣  COLONIA + ESTADO + CIUDAD */
-    $colonia = Colonia::findOrFail($v['direccion']['id_colonia']);   // sin with()
-
-    // Verificamos que el CP corresponda
-    if ($colonia->d_codigo !== $v['direccion']['cp']) {
-        return response()->json([
-            'success' => false,
-            'message' => 'El C.P. no coincide con la colonia seleccionada.'
-        ], 422);
-    }
-
-    // Estado
-    $estado = Estado::where('c_estado', $colonia->c_estado)->first();
-    if (!$estado) {
-        return response()->json([
-            'success' => false,
-            'message' => 'No se encontró el estado ligado a la colonia.'
-        ], 422);
-    }
-
-    // Ciudad / municipio  ← dupla (c_estado, c_mnpio)
-    $ciudad = Ciudad::where('c_estado', $colonia->c_estado)
-                    ->where('c_mnpio',  $colonia->c_mnpio)
-                    ->first();
-
-    if (!$ciudad) {
-        return response()->json([
-            'success' => false,
-            'message' => 'No se encontró la ciudad ligada a la colonia.'
-        ], 422);
-    }
-
-    /* 3️⃣  TRANSACCIÓN  Dirección + Contacto */
-    DB::beginTransaction();
-    try {
-        $direccion = Direccion::create([
-            'id_cliente'  => $v['id_cliente'],
-            'nombre'      => $v['direccion']['nombre'] ?? null,
-            'tipo'        => 'entrega',
-            'calle'       => $v['direccion']['calle'],
-            'num_ext'     => $v['direccion']['num_ext'],
-            'num_int'     => $v['direccion']['num_int'] ?? null,
-            'cp'          => $v['direccion']['cp'],         // <--  cp correcto
-            'id_colonia'  => $colonia->id_colonia,
-            'id_ciudad'   => $ciudad->id_ciudad,
-            'id_estado'   => $estado->id_estado,
-            'id_pais'     => 1, // México
-            'notas'       => $v['notas'] ?? null,
+            'notas' => 'nullable|string|max:255',
         ]);
 
-        // desactivar contacto predeterminado anterior
-        Contacto::where('id_cliente', $v['id_cliente'])
-            ->whereNotNull('id_direccion_entrega')
-            ->where('predeterminado', 1)
-            ->update(['predeterminado' => 0]);
+        /* 2️⃣  COLONIA + ESTADO + CIUDAD */
+        $colonia = Colonia::findOrFail($v['direccion']['id_colonia']);   // sin with()
 
-        // nuevo contacto
-        $contacto = Contacto::create([
-            'id_cliente'           => $v['id_cliente'],
-            'id_direccion_entrega' => $direccion->id_direccion,
-            'nombre'               => $v['contacto']['nombre'],
-            'apellido_p'           => $v['contacto']['apellido_p'],
-            'apellido_m'           => $v['contacto']['apellido_m'] ?? null,
-            'telefono1'            => $v['contacto']['telefono'] ?? null,
-            'ext1'                 => $v['contacto']['ext'] ?? null,
-            'email'                => $v['contacto']['email'] ?? null,
-            'predeterminado'       => 1,
-        ]);
+        // Verificamos que el CP corresponda
+        if ($colonia->d_codigo !== $v['direccion']['cp']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El C.P. no coincide con la colonia seleccionada.'
+            ], 422);
+        }
 
-        DB::commit();
-    } catch (\Throwable $e) {
-        DB::rollBack();
-        report($e);
+        // Estado
+        $estado = Estado::where('c_estado', $colonia->c_estado)->first();
+        if (!$estado) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el estado ligado a la colonia.'
+            ], 422);
+        }
+
+        // Ciudad / municipio  ← dupla (c_estado, c_mnpio)
+        $ciudad = Ciudad::where('c_estado', $colonia->c_estado)
+            ->where('c_mnpio', $colonia->c_mnpio)
+            ->first();
+
+        if (!$ciudad) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la ciudad ligada a la colonia.'
+            ], 422);
+        }
+
+        /* 3️⃣  TRANSACCIÓN  Dirección + Contacto */
+        DB::beginTransaction();
+        try {
+            $direccion = Direccion::create([
+                'id_cliente' => $v['id_cliente'],
+                'nombre' => $v['direccion']['nombre'] ?? null,
+                'tipo' => 'entrega',
+                'calle' => $v['direccion']['calle'],
+                'num_ext' => $v['direccion']['num_ext'],
+                'num_int' => $v['direccion']['num_int'] ?? null,
+                'cp' => $v['direccion']['cp'],         // <--  cp correcto
+                'id_colonia' => $colonia->id_colonia,
+                'id_ciudad' => $ciudad->id_ciudad,
+                'id_estado' => $estado->id_estado,
+                'id_pais' => 1, // México
+                'notas' => $v['notas'] ?? null,
+            ]);
+
+            // desactivar contacto predeterminado anterior
+            Contacto::where('id_cliente', $v['id_cliente'])
+                ->whereNotNull('id_direccion_entrega')
+                ->where('predeterminado', 1)
+                ->update(['predeterminado' => 0]);
+
+            // nuevo contacto
+            $contacto = Contacto::create([
+                'id_cliente' => $v['id_cliente'],
+                'id_direccion_entrega' => $direccion->id_direccion,
+                'nombre' => $v['contacto']['nombre'],
+                'apellido_p' => $v['contacto']['apellido_p'],
+                'apellido_m' => $v['contacto']['apellido_m'] ?? null,
+                'telefono1' => $v['contacto']['telefono'] ?? null,
+                'ext1' => $v['contacto']['ext'] ?? null,
+                'email' => $v['contacto']['email'] ?? null,
+                'predeterminado' => 1,
+            ]);
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            report($e);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error interno al guardar la dirección.'
+            ], 500);
+        }
+
+        /* 4️⃣  PAYLOAD para el front */
         return response()->json([
-            'success' => false,
-            'message' => 'Error interno al guardar la dirección.'
-        ], 500);
+            'success' => true,
+            'entrega' => [
+                'id_direccion_entrega' => $direccion->id_direccion,
+                'contacto' => [
+                    'id_contacto' => $contacto->id_contacto,
+                    'nombre' => $contacto->nombreCompleto,
+                    'telefono' => $contacto->telefono1,
+                    'ext' => $contacto->ext1,
+                    'email' => $contacto->email,
+                ],
+                'direccion' => [
+                    'nombre' => $direccion->nombre,
+                    'calle' => $direccion->calle,
+                    'num_ext' => $direccion->num_ext,
+                    'num_int' => $direccion->num_int,
+                    'colonia' => $colonia->d_asenta,
+                    'ciudad' => $ciudad->n_mnpio,
+                    'estado' => $estado->d_estado,
+                    'pais' => 'México',
+                    'cp' => $direccion->cp,
+                ],
+                'notas' => $direccion->notas,
+            ],
+        ]);
     }
-
-    /* 4️⃣  PAYLOAD para el front */
-    return response()->json([
-        'success' => true,
-        'entrega' => [
-            'id_direccion_entrega' => $direccion->id_direccion,
-            'contacto' => [
-                'id_contacto' => $contacto->id_contacto,
-                'nombre'      => $contacto->nombreCompleto,
-                'telefono'    => $contacto->telefono1,
-                'ext'         => $contacto->ext1,
-                'email'       => $contacto->email,
-            ],
-            'direccion' => [
-                'nombre'  => $direccion->nombre,
-                'calle'   => $direccion->calle,
-                'num_ext' => $direccion->num_ext,
-                'num_int' => $direccion->num_int,
-                'colonia' => $colonia->d_asenta,
-                'ciudad'  => $ciudad->n_mnpio,
-                'estado'  => $estado->d_estado,
-                'pais'    => 'México',
-                'cp'      => $direccion->cp,
-            ],
-            'notas' => $direccion->notas,
-        ],
-    ]);
-}
 
 
 
