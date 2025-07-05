@@ -36,7 +36,7 @@
             {{-- Dirección de facturación --}}
             <div class="col-md-6">
                 {{-- 🔲 DIRECCIÓN DE FACTURACIÓN --}}
-                <div class="card shadow mb-4">
+                <div class="card shadow mb-4 h-100">
                     @php
                         $rsCount = $razones_sociales->count();
                     @endphp
@@ -93,7 +93,7 @@
                         $rsPredet = $razones_sociales->firstWhere('predeterminado', 1);
                     @endphp
 
-                    <form id="cotizacionForm" method="POST" action="{{ route('cotizaciones.store') }}">
+                    <form id="cotizacionForm" class="h-100" method="POST" action="{{ route('cotizaciones.store') }}">
                             @csrf
                             {{-- Campos invisibles que se sobreescriben por JS --}}
                             <input type="hidden" name="id_razon_social"  id="id_razon_social">
@@ -111,24 +111,30 @@
                             <input type="hidden" name="forma_pago"       id="forma_pago">
                             <input type="hidden" name="regimen_fiscal"   id="regimen_fiscal">
 
-                        <div class="card-body small">
+                        <div class="card-body h-100">
                             <div class="row g-3">
                                 <!-- Información de Facturación -->
                                 <div class="col-12">
-                                    <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
-                                        <div>
+                                    <div class="row mb-2">
+                                        <div class="col-lg-5 d-sm-none d-lg-block">
                                             <span class="text-muted me-2"><i class="fa fa-calendar-alt me-1"></i> Fecha de facturación:</span>
                                             <span id="fecha-facturacion" class="fw-semibold">
                                                 {{ now()->format('d/m/Y') }}
                                             </span>
                                         </div>
-                                        <div>
+                                        <div class="col-lg-5 d-sm-block d-lg-none">
+                                            <span class="text-muted me-2"><i class="fa fa-calendar-alt me-1"></i> Fecha:</span>
+                                            <span id="fecha-facturacion" class="fw-semibold">
+                                                {{ now()->format('d/m/Y') }}
+                                            </span>
+                                        </div>
+                                        <div class="col">
                                             <span class="text-muted me-2"><i class="fa fa-file-invoice-dollar me-1"></i> Monto:</span>
                                             <span id="monto-factura" class="fw-semibold text-success">
                                                 $0.00
                                             </span>
                                         </div>
-                                        <div>
+                                        <div class="col">
                                             <span class="text-muted me-2"><i class="fa fa-chart-line me-1"></i> Utilidad:</span>
                                             <span id="utilidad-factura" class="fw-semibold text-primary">
                                                 $0.00
@@ -247,29 +253,37 @@
             {{-- Dirección de entrega --}}
             <div class="col-md-6">
                 {{-- 🔲 DIRECCIÓN DE ENTREGA --}}
-                <div class="card shadow mb-4">
+                <div class="card shadow mb-4 h-100">
                     <div class="card-header d-flex flex-row flex-nowrap align-items-center py-2 px-3">
                         <strong class="mb-0 me-auto text-subtitulo">Dirección de Entrega</strong>
 
                         <div class="d-flex flex-row align-items-center gap-2">
                             {{-- Directorio --}}
-                            <button  type="button" class="btn btn-primary btn-sm position-relative"
-                                    data-bs-toggle="modal" data-bs-target="#modalEntrega"
-                                    aria-label="Abrir directorio">
-                                <i class="fa fa-address-book"></i>
+                            <button  id="btn-directorio-entrega"
+                                    type="button"
+                                    class="btn btn-primary btn-sm position-relative"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEntrega"
+                                    aria-label="Abrir directorio de entregas ({{ $contactos_entrega->count() }})"
+                                    {{ $contactos_entrega->isEmpty() ? 'disabled' : '' }}>
+                                        <i class="fa fa-address-book"></i>
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-info">
+                                                {{ $contactos_entrega->count() }}
+                                        </span>
                             </button>
 
                             {{-- Alta rápida --}}
                             <button  type="button" class="btn btn-success btn-sm"
                                     data-bs-toggle="modal" data-bs-target="#modalCrearDireccionEntrega"
-                                    aria-label="Agregar nueva dirección de entrega">
+                                    aria-label="Agregar nueva dirección de entrega"
+                                    title="Agregar nueva dirección de entrega">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                     </div>
 
                     
-                    <form id="entregaForm" class="">
+                    <form id="entregaForm" class="h-100">
                             @csrf
                             {{-- Inputs invisibles --}}
                             <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
@@ -284,23 +298,23 @@
                             <input type="hidden" name="entrega[calle]"               id="input-entrega-calle">
                             <input type="hidden" name="entrega[num_ext]"             id="input-entrega-num_ext">
                             <input type="hidden" name="entrega[num_int]"             id="input-entrega-num_int">
-                            <input type="hidden" name="entrega[colonia]"             id="input-entrega-colonia">
+                            <input type="hidden" name="entrega[id_colonia]"          id="input-entrega-colonia">
                             <input type="hidden" name="entrega[ciudad]"              id="input-entrega-ciudad">
                             <input type="hidden" name="entrega[estado]"              id="input-entrega-estado">
                             <input type="hidden" name="entrega[cp]"                  id="input-entrega-cp">
                             <input type="hidden" name="entrega[pais]"                id="input-entrega-pais">
                             <input type="hidden" name="entrega[notas]"               id="input-entrega-notas">
-                        <div class="card-body small">
+                        <div class="card-body h-100">
                             <div class="row g-3">
 
                                 {{-- DÍAS DE CRÉDITO --}}
                                 <div class="col-12">
-                                    <div class="d-flex align-items-center justify-content-space-evenly mb-2">
-                                        <div>
+                                    <div class="row mb-2">
+                                        <div class="col col-xxl-4 col-xl-4 col-lg-3">
                                             <i class="fa fa-calendar-alt fa-fw text-muted me-1"></i>
                                             <span class="text-muted me-2">Días de Crédito</span>
+                                            <span id="dias-credito" class="fw-semibold"> $0.00</span>
                                         </div>
-                                        <span id="dias-credito" class="fw-semibold"> $0.00</span>
                                     </div>
                                 </div>
 
@@ -316,40 +330,44 @@
                                             {{ $contacto_entrega->direccion_entrega->nombre ?? '—' }}
                                         </span>
                                     </div>
+                                    <div class="row">
+
+                                        {{-- CONTACTO DE RECEPCIÓN --}}
+                                        <div class="col col-xxl-4 col-md-3">
+                                            <div class="d-flex align-items-center mb-1">
+                                                <i class="fa fa-user fa-fw text-primary me-2"></i>
+                                                <span id="entrega-contacto">
+                                                    {{ $contacto_entrega->nombreCompleto ?? '—' }} 
+                                                </span>
+                                            </div>
+                                        </div>
+    
+                                        {{-- TELÉFONO + EXTENSIÓN --}}
+                                        <div class="col col-xxl-4 col-md-5">
+                                            <div class="d-flex align-items-center mb-1">
+                                                <i class="fa fa-phone fa-fw text-primary me-2"></i>
+                                                <span id="entrega-telefono">
+                                                    {{ $contacto_entrega->telefono1 ?? '—' }}
+                                                </span>
+                                                @if(!empty($contacto_entrega->ext1))
+                                                    <small class="text-muted ms-2">Ext. <span id="entrega-ext"> {{ $contacto_entrega->ext1 ?? '—' }} </span></small>
+                                                @endif
+                                            </div>
+                                        </div>
+    
+                                        {{-- E-MAIL --}}
+                                        <div class="col col-xxl-4 col-md-4">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="fa fa-envelope fa-fw text-primary me-2"></i>
+                                                <span id="entrega-email">
+                                                    {{ $contacto_entrega->email ?? '—' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
-                                {{-- CONTACTO DE RECEPCIÓN --}}
-                                <div class="col-12 col-md-4">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-user fa-fw text-primary me-2"></i>
-                                        <span id="entrega-contacto">
-                                            {{ $contacto_entrega->nombre ?? '—' }}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {{-- TELÉFONO + EXTENSIÓN --}}
-                                <div class="col-12 col-md-4">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-phone fa-fw text-primary me-2"></i>
-                                        <span id="entrega-telefono">
-                                            {{ $contacto_entrega->telefono1 ?? '—' }}
-                                        </span>
-                                        @if(!empty($contacto_entrega->ext1))
-                                            <small class="text-muted ms-2">Ext. <span class="entrega-ext"> {{ $contacto_entrega->ext1 ?? '—' }} </span></small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                {{-- E-MAIL --}}
-                                <div class="col-12 col-md-4">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fa fa-envelope fa-fw text-primary me-2"></i>
-                                        <span id="entrega-email">
-                                            {{ $contacto_entrega->email ?? '—' }}
-                                        </span>
-                                    </div>
-                                </div>
 
                                 <!-- Dirección de Entrega -->
                                 <div class="col-12">
@@ -374,10 +392,10 @@
                                     <div class="d-flex flex-wrap align-items-center gap-2">
                                         <i class="fa fa-map fa-fw text-warning"></i>
                                         <span id="entrega-ciudad" class="me-1">
-                                            {{ $contacto_entrega->direccion_entrega->ciudad ?? '—' }}
+                                            {{ $contacto_entrega->direccion_entrega->ciudad->n_mnpio ?? '—' }}
                                         </span>
                                         <span id="entrega-estado" class="me-1">
-                                            {{ $contacto_entrega->direccion_entrega->estado ?? '—' }}
+                                            {{ $contacto_entrega->direccion_entrega->estado->d_estado ?? '—' }}
                                         </span>
                                         <span>
                                             <strong>C.P.</strong>
@@ -427,7 +445,7 @@
 
     </div> <!-- End SECCION PRINCIPAL -->
 
-    <!-- Modal: Directorio de Razones Sociales + Direccion de Facturación -->
+    <!-- Modal 1: Directorio de Razones Sociales + Direccion de Facturación -->
     <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content text-center">
@@ -495,7 +513,7 @@
         </div>
     </div><!-- End Modal: Directorio de Razones Sociales + Direccion de Facturación -->
 
-    <!-- Modal: Crear nueva razón social + dirección de facturación -->
+    <!-- Modal 2: Crear nueva razón social + dirección de facturación -->
     <div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -639,7 +657,78 @@
     </div>
     </div> <!-- End Modal: Crear nueva razón social + dirección de facturación -->
 
-    <!-- Modal: Alta rápida Dirección de Entrega -->
+
+    <!-- Modal 3: Directorio de contactos + direcciones de entrega -->
+    <div class="modal fade" id="modalEntrega" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content text-center">
+
+            <div class="modal-header flex-column border-0 bg-white">
+                <h4 class="modal-title w-100 fw-bold text-primary-emphasis">
+                <i class="fa fa-address-book me-2 text-primary"></i>
+                Seleccionar Dirección de Entrega
+                </h4>
+                <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                        data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <hr class="w-100 my-2 opacity-25">
+            </div>
+
+            <div class="modal-body pt-0">
+                <p class="text-muted mb-4">Elige un contacto/dirección registrada para este cliente</p>
+
+                <div class="table-responsive">
+                <table id="tabla-entregas"
+                        class="table table-hover table-bordered align-middle small text-start">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Predeterminado</th>
+                        <th>Alias</th>
+                        <th>Contacto</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Calle</th>
+                        <th>Colonia</th>
+                        <th>CP</th>
+                        <th>Municipio</th>
+                        <th>Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($contactos_entrega as $c)
+                        @php $dir = $c->direccion_entrega @endphp
+                        <tr id="entrega-row-{{ $dir->id_direccion }}"
+                            class="{{ $c->predeterminado ? 'table-success' : '' }}">
+                        <td>
+                            <button type="button"
+                                    class="btn btn-sm btn-success seleccionar-entrega"
+                                    data-id="{{ $dir->id_direccion }}"
+                                    data-route="{{ route('cotizaciones.seleccionar-entrega',$dir->id_direccion) }}">
+                            <i class="fa fa-check"></i>
+                            </button>
+                        </td>
+                        <td>{{ $dir->nombre }}</td>
+                        <td>{{ $c->nombreCompleto }}</td>
+                        <td>{{ $c->telefono1 }}</td>
+                        <td>{{ $c->email }}</td>
+                        <td>{{ $dir->calle }} #{{ $dir->num_ext }}</td>
+                        <td>{{ $dir->colonia->d_asenta }}</td>
+                        <td>{{ $dir->cp }}</td>
+                        <td>{{ $dir->ciudad->n_mnpio }}</td>
+                        <td>{{ $dir->estado->d_estado }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal 4: Alta rápida Dirección de Entrega -->
     <div class="modal fade" id="modalCrearDireccionEntrega" tabindex="-1" aria-labelledby="modalCrearDireccionEntregaLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
@@ -717,34 +806,36 @@
                         {{-- Colonia / CP --}}
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Colonia *</label>
-                            <select name="direccion[colonia]" required class="form-select colonia-select">
-                            <option value="">— Selecciona CP primero —</option>
+                            <select name="direccion[id_colonia]" class="form-select colonia-select-entrega" required>
+                                <option value="">— Selecciona CP primero —</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">C.P. *</label>
-                            <input name="direccion[cp]" maxlength="5" required class="form-control cp-field">
+                            <input name="direccion[cp]" maxlength="5" required class="form-control cp-field-entrega">
                         </div>
 
                         {{-- Municipio / Estado / País --}}
                         <div class="col-md-3">
+                            <!-- No lo procesa el backend porque busca por id_municipio -->
                             <label class="form-label fw-semibold">Municipio *</label>
-                            <select name="direccion[ciudad]" required class="form-select municipio-field">
-                            <option value="">— Selecciona CP primero —</option>
+                            <select name="direccion[ciudad]" required class="form-select municipio-field-entrega">
+                                <option value="">— Selecciona CP primero —</option>
                             </select>
                         </div>
                         <div class="col-md-3">
+                            <!-- No lo procesa el backend porque busca por id_colonia -->
                             <label class="form-label fw-semibold">Estado *</label>
-                            <select name="direccion[estado]" required class="form-select estado-field">
-                            <option value="">— Selecciona CP primero —</option>
+                            <select name="direccion[estado]" required class="form-select estado-field-entrega">
+                                <option value="">— Selecciona CP primero —</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">País *</label>
-                            <select name="direccion[pais]" required class="form-select pais-field">
-                            <option value="México" selected>México</option>
-                            <option value="Estados Unidos">Estados Unidos</option>
-                            <option value="Canadá">Canadá</option>
+                            <select name="direccion[pais]" required class="form-select pais-field-entrega">
+                                <option value="México" selected>México</option>
+                                <option value="Estados Unidos">Estados Unidos</option>
+                                <option value="Canadá">Canadá</option>
                             </select>
                         </div>
 
@@ -758,7 +849,7 @@
                     <div class="mt-4 text-end">
                         <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-success">
-                        <i class="fa fa-save me-1"></i> Guardar y usar
+                            <i class="fa fa-save me-1"></i> Guardar y usar
                         </button>
                     </div>
                     </form>
@@ -791,312 +882,392 @@ window.SIS = (() => {
 <!-- =======================================================================
      FUNCIÓN insertarFila    (versión robusta + console.debug)
      =======================================================================-->
-<script defer>
-(() => {
+    <script defer>
+        (() => {
 
-  window.insertarFila = function (rs)
-  {
-    try {
+        window.insertarFila = function (rs)
+        {
+            try {
 
-      /* ── 1. Tabla ─────────────────────────────────────────────── */
-      const tbody = document.querySelector('#tabla-razones tbody');
-      if (!tbody) { console.warn('❗ #tabla-razones tbody no encontrado'); return; }
+            /* ── 1. Tabla ─────────────────────────────────────────────── */
+            const tbody = document.querySelector('#tabla-razones tbody');
+            if (!tbody) { console.warn('❗ #tabla-razones tbody no encontrado'); return; }
 
-      /* ── 2. Limpio selección previa ───────────────────────────── */
-      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('table-success'));
+            /* ── 2. Limpio selección previa ───────────────────────────── */
+            tbody.querySelectorAll('tr').forEach(r => r.classList.remove('table-success'));
 
-      /* ── 3. Protejo contra “huecos” ───────────────────────────── */
-      const dir    = rs.direccion_facturacion || {};
-      const col    = dir.colonia || {};
-      const ciudad = dir.ciudad  || {};
-      const edo    = dir.estado  || {};
+            /* ── 3. Protejo contra “huecos” ───────────────────────────── */
+            const dir    = rs.direccion_facturacion || {};
+            const col    = dir.colonia || {};
+            const ciudad = dir.ciudad  || {};
+            const edo    = dir.estado  || {};
 
-      /* ── 4. Construyo la fila ─────────────────────────────────── */
-      const tr = document.createElement('tr');
-      tr.id = `rs-row-${rs.id_razon_social}`;
-      tr.classList.add('table-success');
+            /* ── 4. Construyo la fila ─────────────────────────────────── */
+            const tr = document.createElement('tr');
+            tr.id = `rs-row-${rs.id_razon_social}`;
+            tr.classList.add('table-success');
 
-      tr.innerHTML = `
-        <td>
-          <button type="button"
-                  class="btn btn-sm btn-success seleccionar-direccion"
-                  data-id="${rs.id_razon_social}"
-                  data-route="/razones-sociales/${rs.id_razon_social}/seleccionar">
-            <i class="fa fa-check"></i>
-          </button>
-        </td>
-        <td>${rs.nombre                  ?? ''}</td>
-        <td>${rs.RFC                     ?? ''}</td>
-        <td>${dir.calle      ?? ''} #${dir.num_ext ?? ''}</td>
-        <td>${col.d_asenta   ?? ''}</td>
-        <td>${dir.cp         ?? ''}</td>
-        <td>${ciudad.n_mnpio ?? ''}</td>
-        <td>${edo.d_estado   ?? ''}</td>
-      `;
+            tr.innerHTML = `
+                <td>
+                <button type="button"
+                        class="btn btn-sm btn-success seleccionar-direccion"
+                        data-id="${rs.id_razon_social}"
+                        data-route="/razones-sociales/${rs.id_razon_social}/seleccionar">
+                    <i class="fa fa-check"></i>
+                </button>
+                </td>
+                <td>${rs.nombre                  ?? ''}</td>
+                <td>${rs.RFC                     ?? ''}</td>
+                <td>${dir.calle      ?? ''} #${dir.num_ext ?? ''}</td>
+                <td>${col.d_asenta   ?? ''}</td>
+                <td>${dir.cp         ?? ''}</td>
+                <td>${ciudad.n_mnpio ?? ''}</td>
+                <td>${edo.d_estado   ?? ''}</td>
+            `;
 
-      tbody.appendChild(tr);
+            tbody.appendChild(tr);
 
-    } catch (e) {
-      console.error('⚡ insertarFila falló:', e, rs);
-      /*  — No vuelvo a lanzar la excepción para que el flujo continúe — */
-    }
-  };
+            } catch (e) {
+            console.error('⚡ insertarFila falló:', e, rs);
+            /*  — No vuelvo a lanzar la excepción para que el flujo continúe — */
+            }
+        };
 
-})();
-</script>
+        })();
+    </script>
 
 
 
 <!-- =======================================================================
      BLOQUE FACTURACIÓN  (autocompletado CP + alta rápida + directorio)
      ===================================================================== -->
-<script defer>
-(() => {
-  const { delay, selTxt, setV, setT } = window.SIS;
-  const csrf   = document.querySelector('meta[name="csrf-token"]').content;
-  const modalF = document.getElementById('modalCrearDireccionFactura');
-  const form   = document.getElementById('formNuevaRazonSocialFactura');
-  const dirDlg = document.getElementById('modalFacturacion');
-  if (!modalF || !form) return;
+    <script defer>
+        (() => {
+        const { delay, selTxt, setV, setT } = window.SIS;
+        const csrf   = document.querySelector('meta[name="csrf-token"]').content;
+        const modalF = document.getElementById('modalCrearDireccionFactura');
+        const form   = document.getElementById('formNuevaRazonSocialFactura');
+        const dirDlg = document.getElementById('modalFacturacion');
+        if (!modalF || !form) return;
 
-  // — Autocompletado CP (México) —
-  const cpInput = modalF.querySelector('.cp-field');
-  const colSel  = modalF.querySelector('.colonia-select');
-  const munSel  = modalF.querySelector('.municipio-field');
-  const edoSel  = modalF.querySelector('.estado-field');
-  const paisSel = modalF.querySelector('.pais-field');
+        // — Autocompletado CP (México) —
+        const cpInput = modalF.querySelector('.cp-field');
+        const colSel  = modalF.querySelector('.colonia-select');
+        const munSel  = modalF.querySelector('.municipio-field');
+        const edoSel  = modalF.querySelector('.estado-field');
+        const paisSel = modalF.querySelector('.pais-field');
 
-  const resetDir = () => {
-    colSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
-    colSel.disabled = true; munSel.value=''; edoSel.value='';
-  };
-  async function buscarCP(cp) {
-    const r = await fetch(`/api/cp/${cp}`);
-    if (!r.ok) throw new Error('CP sin datos');
-    return r.json();
-  }
-  function togglePais() {
-    const esMx = paisSel.options[paisSel.selectedIndex].text.toLowerCase() === 'méxico';
-    cpInput.disabled = colSel.disabled = !esMx;
-    if (!esMx) { colSel.innerHTML = '<option>No aplicable fuera de México</option>'; resetDir(); }
-  }
-  paisSel.addEventListener('change', togglePais);
-  cpInput.addEventListener('input', delay(async () => {
-    const cp = cpInput.value.trim();
-    if (!/^\d{5}$/.test(cp)) { resetDir(); return; }
-    try {
-      const d = await buscarCP(cp);
-      selTxt(edoSel, d.head.estado);
-      selTxt(munSel, d.head.municipio);
-      colSel.innerHTML = '';
-      d.colonias.forEach(c => colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.colonia)));
-      colSel.disabled = false;
-    } catch {
-      resetDir();
-    }
-  }));
-  togglePais();
+        const resetDir = () => {
+            colSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+            colSel.disabled = true; munSel.value=''; edoSel.value='';
+        };
+        async function buscarCP(cp) {
+            const r = await fetch(`/api/cp/${cp}`);
+            if (!r.ok) throw new Error('CP sin datos');
+            return r.json();
+        }
+        function togglePais() {
+            const esMx = paisSel.options[paisSel.selectedIndex].text.toLowerCase() === 'méxico';
+            cpInput.disabled = colSel.disabled = !esMx;
+            if (!esMx) { colSel.innerHTML = '<option>No aplicable fuera de México</option>'; resetDir(); }
+        }
+        paisSel.addEventListener('change', togglePais);
+        cpInput.addEventListener('input', delay(async () => {
+            const cp = cpInput.value.trim();
+            if (!/^\d{5}$/.test(cp)) { resetDir(); return; }
+            try {
+            const d = await buscarCP(cp);
+            selTxt(edoSel, d.head.estado);
+            selTxt(munSel, d.head.municipio);
+            colSel.innerHTML = '';
+            d.colonias.forEach(c => colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.colonia)));
+            colSel.disabled = false;
+            } catch {
+            resetDir();
+            }
+        }));
+        togglePais();
 
-  // — Alta rápida (guardar) —
-  form.addEventListener('submit', async e=>{
-  e.preventDefault()
-  const res = await fetch('{{ route("ajax.direccion.factura") }}',{
-    method:'POST',
-    headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'},
-    body:new FormData(form)
-  })
-  if(!res.ok){ alert('Error al guardar'); return }
-  const { razon_social: rs, direccion } = await res.json();
-  rs.direccion_facturacion = direccion;           
-  bootstrap.Modal.getOrCreateInstance(modalF).hide()
+        // — Alta rápida (guardar) —
+        form.addEventListener('submit', async e=>{
+        e.preventDefault()
+        const res = await fetch('{{ route("ajax.direccion.factura") }}',{
+            method:'POST',
+            headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'},
+            body:new FormData(form)
+        })
+        if(!res.ok){ alert('Error al guardar'); return }
+        const { razon_social: rs, direccion } = await res.json();
+        rs.direccion_facturacion = direccion;           
+        bootstrap.Modal.getOrCreateInstance(modalF).hide()
 
-  pintarCard(rs)
-  insertarFila(rs)
-  actualizarBadge()
-  limpiarFormulario()
-})
+        pintarCard(rs)
+        insertarFila(rs)
+        actualizarBadge()
+        limpiarFormulario()
+        })
 
-  // — Selección en directorio —
-  dirDlg.addEventListener('click', async e => {
-    const btn = e.target.closest('.seleccionar-direccion');
-    if (!btn) return;
-    const { route:url, id:idRs } = btn.dataset;
-    const r = await fetch(url, { method:'POST', headers:{'X-CSRF-TOKEN':csrf} });
-    const j = await r.json();
-    if (!j.success) { alert('Error'); return; }
-    document.querySelectorAll('#tabla-razones tr').forEach(tr=>tr.classList.remove('table-success'));
-    document.getElementById('rs-row-'+idRs)?.classList.add('table-success');
-    pintarCard(j.razon);
-    bootstrap.Modal.getOrCreateInstance(dirDlg).hide();
-  });
+        // — Selección en directorio —
+        dirDlg.addEventListener('click', async e => {
+            const btn = e.target.closest('.seleccionar-direccion');
+            if (!btn) return;
+            const { route:url, id:idRs } = btn.dataset;
+            const r = await fetch(url, { method:'POST', headers:{'X-CSRF-TOKEN':csrf} });
+            const j = await r.json();
+            if (!j.success) { alert('Error'); return; }
+            document.querySelectorAll('#tabla-razones tr').forEach(tr=>tr.classList.remove('table-success'));
+            document.getElementById('rs-row-'+idRs)?.classList.add('table-success');
+            pintarCard(j.razon);
+            bootstrap.Modal.getOrCreateInstance(dirDlg).hide();
+        });
 
-  // — Helpers locales —
-  function pintarCard(rs){
-    const d = rs.direccion_facturacion;
-    setT('rs-nombre', rs.nombre);
-    setT('rs-rfc',    rs.RFC);
-    setT('dir-calle', `${d.calle} #${d.num_ext}${d.num_int?' Int.'+d.num_int:''}`);
-    setT('dir-colonia', d.colonia?.d_asenta);
-    setT('dir-ciudad',  d.ciudad?.n_mnpio);
-    setT('dir-estado',  d.estado?.d_estado);
-    setT('dir-cp',      d.cp);
-    setV('id_razon_social', rs.id_razon_social);
-    setV('rfc',             rs.RFC);
-    setV('calle',           d.calle);
-  }
-  function limpiarFormulario(){
-    form.reset();
-    resetDir();
-    togglePais();
-  }
-  function actualizarBadge(){
-    const btn = document.getElementById('btn-directorio');
-    if (!btn) return;
-    btn.removeAttribute('disabled');
-    const badge = btn.querySelector('.badge');
-    if (badge) {
-      const total = document.querySelectorAll('#tabla-razones tbody tr').length;
-      badge.textContent = total;
-    }
-  }
-})();
-</script>
+        // — Helpers locales —
+        function pintarCard(rs){
+            const d = rs.direccion_facturacion;
+            setT('rs-nombre', rs.nombre);
+            setT('rs-rfc',    rs.RFC);
+            setT('dir-calle', `${d.calle} #${d.num_ext}${d.num_int?' Int.'+d.num_int:''}`);
+            setT('dir-colonia', d.colonia?.d_asenta);
+            setT('dir-ciudad',  d.ciudad?.n_mnpio);
+            setT('dir-estado',  d.estado?.d_estado);
+            setT('dir-cp',      d.cp);
+            setV('id_razon_social', rs.id_razon_social);
+            setV('rfc',             rs.RFC);
+            setV('calle',           d.calle);
+        }
+        function limpiarFormulario(){
+            form.reset();
+            resetDir();
+            togglePais();
+        }
+        function actualizarBadge(){
+            const btn = document.getElementById('btn-directorio');
+            if (!btn) return;
+            btn.removeAttribute('disabled');
+            const badge = btn.querySelector('.badge');
+            if (badge) {
+            const total = document.querySelectorAll('#tabla-razones tbody tr').length;
+            badge.textContent = total;
+            }
+        }
+        })();
+    </script>
 
 <!-- =======================================================================
      BLOQUE ENTREGA (autocompletado CP + alta rápida + directorio futuro)
      ===================================================================== -->
-<script defer>
-(() => {
-  const { delay, selTxt, setV, setT } = window.SIS;
-  const csrf   = document.querySelector('meta[name="csrf-token"]').content;
-  const modalE = document.getElementById('modalCrearDireccionEntrega');
-  const formE  = document.getElementById('formCrearEntrega');
-  if (!modalE || !formE) return;
+    <script defer>
+        (() => 
+        {
+            const { delay, selTxt, setV, setT } = window.SIS;
+            const csrf   = document.querySelector('meta[name="csrf-token"]').content;
+            const modalE = document.getElementById('modalCrearDireccionEntrega');
+            const formE  = document.getElementById('formCrearEntrega');
+            if (!modalE || !formE) return;
 
-  /* ── 1) Autocompletado CP (México) ─────────────────────────────── */
-  const cpInput = modalE.querySelector('.cp-field');
-  const colSel  = modalE.querySelector('.colonia-select');
-  const munSel  = modalE.querySelector('.municipio-field');
-  const edoSel  = modalE.querySelector('.estado-field');
-  const paisSel = modalE.querySelector('.pais-field');
+            /* ── 1) Autocompletado CP (México) ─────────────────────────────── */
+            const cpInput = modalE.querySelector('.cp-field-entrega');
+            const colSel  = modalE.querySelector('.colonia-select-entrega');
+            const munSel  = modalE.querySelector('.municipio-field-entrega');
+            const edoSel  = modalE.querySelector('.estado-field-entrega');
+            const paisSel = modalE.querySelector('.pais-field-entrega');
 
-  function resetDir() {
-    colSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
-    colSel.disabled  = true;
-    munSel.value = '';
-    edoSel.value = '';
-  }
+            function resetDir() {
+                colSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
+                colSel.disabled  = true;
+                munSel.value = '';
+                edoSel.value = '';
+            }
 
-  async function buscarCP(cp) {
-    const r = await fetch(`/api/cp/${cp}`);
-    if (!r.ok) throw new Error('CP sin datos');
-    return r.json();
-  }
+            async function buscarCP(cp) {
+                const r = await fetch(`/api/cp/${cp}`);
+                if (!r.ok) throw new Error('CP sin datos');
+                return r.json();
+            }
 
-  function togglePais() {
-    const esMx = paisSel.options[paisSel.selectedIndex].text.toLowerCase() === 'méxico';
-    cpInput.disabled = colSel.disabled = !esMx;
-    if (!esMx) {
-      colSel.innerHTML = '<option>No aplicable fuera de México</option>';
-      resetDir();
-    }
-  }
+            function togglePais() {
+                const esMx = paisSel.options[paisSel.selectedIndex].text.toLowerCase() === 'méxico';
+                cpInput.disabled = colSel.disabled = !esMx;
+                if (!esMx) {
+                colSel.innerHTML = '<option>No aplicable fuera de México</option>';
+                resetDir();
+                }
+            }
 
-  paisSel.addEventListener('change', togglePais);
-  cpInput.addEventListener('input', delay(async () => {
-    const cp = cpInput.value.trim();
-    if (!/^\d{5}$/.test(cp)) { resetDir(); return; }
-    try {
-      const d = await buscarCP(cp);
-      selTxt(edoSel, d.head.estado);
-      selTxt(munSel, d.head.municipio);
-      colSel.innerHTML = '';
-      d.colonias.forEach(c => {
-        colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.colonia));
-      });
-      colSel.disabled = false;
-    } catch {
-      resetDir();
-    }
-  }));
-  togglePais();
+            paisSel.addEventListener('change', togglePais);
+            cpInput.addEventListener('input', delay(async () => {
+                const cp = cpInput.value.trim();
+                if (!/^\d{5}$/.test(cp)) { resetDir(); return; }
+                try {
+                const d = await buscarCP(cp);
+                selTxt(edoSel, d.head.estado);
+                selTxt(munSel, d.head.municipio);
+                colSel.innerHTML = '';
+                d.colonias.forEach(c=>{
+                    colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.id_colonia));
+                });
+                colSel.disabled = false;
+                } catch {
+                resetDir();
+                }
+            }));
+            togglePais();
 
-  /* ── 2) Helpers de entrega ──────────────────────────────────────── */
-  function formatCalle(d) {
-    return `${d.calle||''} #${d.num_ext||''}` + (d.num_int ? ' Int. '+d.num_int : '');
-  }
+                /* ── 2) Helpers de entrega ──────────────────────────────────────── */
+                function formatCalle(d) {
+                    return `${d.calle||''} #${d.num_ext||''}` + (d.num_int ? ' Int. '+d.num_int : '');
+                }
 
-  function pintarEntrega(ent) {
-    const d = ent.direccion;
+                function pintarEntrega(ent) 
+                {
+                    const d = ent.direccion;
 
-    // ► Card VISIBLES
-    setT('entrega-nombre',   ent.direccion.nombre   || '—');
-    setT('entrega-contacto', ent.contacto.nombre    || '—');
-    setT('entrega-telefono', ent.contacto.telefono  || '—');
-    setT('entrega-email',    ent.contacto.email     || '—');
-    setT('entrega-calle',    formatCalle(d));
-    setT('entrega-colonia',  d.colonia || '—');
-    setT('entrega-ciudad',   d.ciudad  || '—');
-    setT('entrega-estado',   d.estado  || '—');
-    setT('entrega-cp',       d.cp      || '—');
-    setT('entrega-pais',     d.pais    || '—');
-    setT('entrega-notas',    ent.notas  || '—');
+                    /* ------- datos visibles en la card ------- */
+                    setT('entrega-nombre',    d.nombre              || '—');
+                    setT('entrega-contacto',  ent.contacto.nombre   || '—');
+                    setT('entrega-telefono',  ent.contacto.telefono || '—');
+                    setT('entrega-ext',       ent.contacto.ext      || '—');   // ← ya existe el id
+                    setT('entrega-email',     ent.contacto.email    || '—');
 
-    // ► Formulario OCULTO en cotización
-    setV('input-entrega-id_direccion_entrega', ent.id_direccion_entrega);
-    setV('input-entrega-id_contacto_entrega',  ent.contacto.id_contacto);
-    setV('input-entrega-nombre',               ent.direccion.nombre   || '');
-    setV('input-entrega-contacto',             ent.contacto.nombre    || '');
-    setT('entrega-telefono',                   ent.contacto.telefono  || '—');
-    setT('entrega-ext',                        ent.contacto.ext       || '—');
-    setV('input-entrega-email',                ent.contacto.email     || '');
-    setV('input-entrega-calle',                formatCalle(d));
-    setV('input-entrega-num_ext',              d.num_ext   || '');
-    setV('input-entrega-num_int',              d.num_int   || '');
-    setV('input-entrega-colonia',              d.colonia   || '');
-    setV('input-entrega-ciudad',               d.ciudad    || '');
-    setV('input-entrega-estado',               d.estado    || '');
-    setV('input-entrega-cp',                   d.cp        || '');
-    setV('input-entrega-pais',                 d.pais      || '');
-    setV('input-entrega-notas',                ent.notas   || '');
-  }
+                    setT('entrega-calle',   formatCalle(d));
+                    setT('entrega-colonia', d.colonia || '—');
+                    setT('entrega-ciudad',  d.ciudad  || '—');
+                    setT('entrega-estado',  d.estado  || '—');
+                    setT('entrega-cp',      d.cp      || '—');
+                    setT('entrega-pais',    d.pais    || '—');
+                    setT('entrega-notas',   ent.notas || '—');
 
-  /* ── 3) Alta rápida contacto + dirección ───────────────────────── */
-  formE.addEventListener('submit', async e => {
-    e.preventDefault();
-    try {
-      const res = await fetch(formE.action, {
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
-        body: new FormData(formE)
-      });
-      const j = await res.json();
-      if (!j.success) {
-        alert(j.message || 'No se guardó la dirección');
-        return;
-      }
+                    /* ------- inputs ocultos para la cotización ------- */
+                    setV('input-entrega-id_direccion_entrega', ent.id_direccion_entrega);
+                    setV('input-entrega-id_contacto_entrega',  ent.contacto.id_contacto);
+                    setV('input-entrega-nombre',               d.nombre   || '');
+                    setV('input-entrega-contacto',             ent.contacto.nombre || '');
+                    setV('input-entrega-telefono',             ent.contacto.telefono || '');
+                    setV('input-entrega-ext',                  ent.contacto.ext || '');
+                    setV('input-entrega-email',                ent.contacto.email || '');
 
-      // 1) Pinto card y formulario oculto
-      pintarEntrega(j.entrega);
+                    setV('input-entrega-calle',    d.calle   || '');
+                    setV('input-entrega-num_ext',  d.num_ext || '');
+                    setV('input-entrega-num_int',  d.num_int || '');
+                    setV('input-entrega-colonia',  d.colonia || '');
+                    setV('input-entrega-ciudad',   d.ciudad  || '');
+                    setV('input-entrega-estado',   d.estado  || '');
+                    setV('input-entrega-cp',       d.cp      || '');
+                    setV('input-entrega-pais',     d.pais    || '');
+                    setV('input-entrega-notas',    ent.notas || '');
+                }
 
-      // 2) (Opcional) Directorio futuro
-      if (typeof insertarFilaEntrega === 'function') insertarFilaEntrega(j.entrega);
-      if (typeof actualizarBadgeEntrega === 'function') actualizarBadgeEntrega();
 
-      // 3) Limpio form y cierro modal
-      formE.reset();
-      resetDir();
-      togglePais();
-      bootstrap.Modal.getOrCreateInstance(modalE).hide();
 
-    } catch (err) {
-      console.error(err);
-      alert('Error de red al guardar la dirección');
-    }
+            /* ── 3) Alta rápida contacto + dirección ───────────────────────── */
+            formE.addEventListener('submit', async e => {
+                e.preventDefault();
+                try {
+                const res = await fetch(formE.action, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
+                    body: new FormData(formE)
+                });
+                const j = await res.json();
+                if (!j.success) {
+                    alert(j.message || 'No se guardó la dirección');
+                    return;
+                }
+
+                // 1) Pinto card y formulario oculto
+                pintarEntrega(j.entrega);
+
+                // 2) (Opcional) Directorio futuro
+                if (typeof insertarFilaEntrega === 'function') insertarFilaEntrega(j.entrega);
+                if (typeof actualizarBadgeEntrega === 'function') actualizarBadgeEntrega();
+
+                // 3) Limpio form y cierro modal
+                formE.reset();
+                resetDir();
+                togglePais();
+                bootstrap.Modal.getOrCreateInstance(modalE).hide();
+
+                } catch (err) {
+                console.error(err);
+                alert('Error de red al guardar la dirección');
+                }
+            });
+
+            
+  /* -----------------------------------------------------------
+     1)  Insertar una fila nueva tras alta rápida
+  ----------------------------------------------------------- */
+  window.insertarFilaEntrega = function(ent){
+    const tbody = document.querySelector('#tabla-entregas tbody');
+    if(!tbody) return;
+
+    // desmarca todo y arma fila
+    tbody.querySelectorAll('tr').forEach(tr=>tr.classList.remove('table-success'));
+
+    const d   = ent.direccion;
+    const tel = ent.contacto.telefono||'';
+    const row = document.createElement('tr');
+    row.id = `entrega-row-${ent.id_direccion_entrega}`;
+    row.classList.add('table-success');
+    row.innerHTML = `
+      <td>
+        <button type="button" class="btn btn-sm btn-success seleccionar-entrega"
+                data-id="${ent.id_direccion_entrega}"
+                data-route="/cotizaciones/seleccionar-entrega/${ent.id_direccion_entrega}">
+          <i class="fa fa-check"></i>
+        </button>
+      </td>
+      <td>${d.nombre||''}</td>
+      <td>${ent.contacto.nombre}</td>
+      <td>${tel}</td>
+      <td>${ent.contacto.email||''}</td>
+      <td>${d.calle} #${d.num_ext}</td>
+      <td>${d.colonia}</td>
+      <td>${d.cp}</td>
+      <td>${d.ciudad}</td>
+      <td>${d.estado}</td>`;
+    tbody.appendChild(row);
+  };
+
+  /* -----------------------------------------------------------
+     2)  Badge numérico del botón directorio
+  ----------------------------------------------------------- */
+  window.actualizarBadgeEntrega = function(){
+    const btn   = document.getElementById('btn-directorio-entrega');
+    if(!btn) return;
+    btn.removeAttribute('disabled');
+    const total = document.querySelectorAll('#tabla-entregas tbody tr').length;
+    btn.querySelector('.badge').textContent = total;
+  };
+
+  /* -----------------------------------------------------------
+     3)  Selección dentro del modal
+  ----------------------------------------------------------- */
+  document.getElementById('modalEntrega')
+          .addEventListener('click', async e=>{
+    const btn = e.target.closest('.seleccionar-entrega');
+    if(!btn) return;
+
+    const { route:url, id } = btn.dataset;
+    const res = await fetch(url,{
+      method:'POST',
+      headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'}
+    });
+    const j = await res.json();
+    if(!j.success){ alert('Error al seleccionar'); return; }
+
+    // pinta card y actualiza marcado en tabla
+    pintarEntrega(j.entrega);
+    document.querySelectorAll('#tabla-entregas tr')
+            .forEach(tr=>tr.classList.remove('table-success'));
+    document.getElementById('entrega-row-'+id)?.classList.add('table-success');
+
+    bootstrap.Modal.getOrCreateInstance(
+      document.getElementById('modalEntrega')).hide();
   });
 
-})();
-</script>
+        })();
+    </script>
 
 
 @endpush

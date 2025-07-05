@@ -219,116 +219,142 @@ class CotizacionController extends Controller
     /**
      * Alta rápida dirección de entrega + contacto predeterminado.
      */
-    public function storeDireccionEntregaFactura(Request $request)
-    {
-        /* ---------- VALIDACIÓN ---------- */
-        $v = $request->validate([
-            'id_cliente' => 'required|exists:clientes,id_cliente|integer',
-            'contacto.nombre' => 'required|string|max:120',
-            'contacto.apellido_p' => 'required|string|max:100',
-            'contacto.apellido_m' => 'nullable|string|max:100',
-            'contacto.telefono' => 'nullable|string|max:25',
-            'contacto.ext' => 'nullable|string|max:10',
-            'contacto.email' => 'nullable|email|max:120',
-            'direccion.nombre' => 'nullable|string|max:27',
-            'direccion.calle' => 'required|string|max:120',
-            'direccion.num_ext' => 'required|string|max:15',
-            'direccion.num_int' => 'nullable|string|max:15',
-            'direccion.colonia' => 'required|string|max:120',
-            'direccion.cp' => 'required|string|max:10',
-            'direccion.ciudad' => 'required|string|max:120',
-            'direccion.estado' => 'required|string|max:120',
-            'direccion.pais' => 'required|string|max:120',
-            'notas' => 'nullable|string|max:255',
-        ]);
 
-        /* ── 1.  Resolver colonia por CP + nombre normalizado ───────── */
-        $nombreCol = Str::of($v['direccion']['colonia'])->lower()->ascii()->trim();
-        $colonia = Colonia::where('d_asenta', $v['direccion']['colonia'])
-            ->get()
-            ->first(fn($c) => Str::of($c->d_asenta)->lower()->ascii()->trim()->is($nombreCol));
 
-        if (!$colonia) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Colonia / C.P. no encontrados en SEPOMEX.'
-            ], 422);
-        }
+     public function storeDireccionEntregaFactura(Request $request)
+{
+    /* 1️⃣  VALIDACIÓN */
+    $v = $request->validate([
+        'id_cliente'                    => 'required|integer|exists:clientes,id_cliente',
 
-        $idEstado = Estado ::where('c_estado', $colonia->c_estado)->value('id_estado');
-        $idCiudad = Ciudad ::where('c_estado', $colonia->c_estado)
-                        ->where('c_mnpio', $colonia->c_mnpio)
-                        ->value('id_ciudad');
+        // contacto
+        'contacto.nombre'               => 'required|string|max:120',
+        'contacto.apellido_p'           => 'required|string|max:100',
+        'contacto.apellido_m'           => 'nullable|string|max:100',
+        'contacto.telefono'             => 'nullable|string|max:25',
+        'contacto.ext'                  => 'nullable|string|max:10',
+        'contacto.email'                => 'nullable|email|max:120',
 
-        DB::beginTransaction();
-        try {
-            /* 2. Dirección de entrega */
-            $direccion = Direccion::create([
-                'id_cliente'  => $v['id_cliente'],
-                'nombre'      => $v['direccion']['nombre'] ?? null,
-                'tipo'        => 'entrega',
-                'calle'       => $v['direccion']['calle'],
-                'num_ext'     => $v['direccion']['num_ext'],
-                'num_int'     => $v['direccion']['num_int'] ?? null,
-                'cp'          => $v['direccion']['cp'],
-                'id_colonia'  => $colonia->id_colonia,
-                'id_ciudad'   => $idCiudad,
-                'id_estado'   => $idEstado,
-                'id_pais'     => 1,
-                'notas'       => $v['notas'] ?? null,
-            ]);
+        // dirección
+        'direccion.id_colonia'          => 'required|integer|exists:colonias,id_colonia',
+        'direccion.nombre'              => 'nullable|string|max:27',
+        'direccion.calle'               => 'required|string|max:120',
+        'direccion.num_ext'             => 'required|string|max:15',
+        'direccion.num_int'             => 'nullable|string|max:15',
+        'direccion.cp'                  => 'required|string|max:10',
+        'direccion.pais'                => 'required|string|max:120',
 
-            /* 3. Contacto predeterminado */
-            Contacto::where('id_cliente', $v['id_cliente'])
-                    ->whereNotNull('id_direccion_entrega')
-                    ->where('predeterminado', 1)
-                    ->update(['predeterminado' => 0]);
+        'notas'                         => 'nullable|string|max:255',
+    ]);
 
-            $contacto = Contacto::create([
-                'id_cliente'          => $v['id_cliente'],
-                'id_direccion_entrega'=> $direccion->id_direccion,
-                'nombre'              => $v['contacto']['nombre'],
-                'apellido_p'          => $v['contacto']['apellido_p'],
-                'apellido_m'          => $v['contacto']['apellido_m'] ?? null,
-                'telefono1'           => $v['contacto']['telefono'] ?? null,
-                'ext1'                => $v['contacto']['ext'] ?? null,
-                'email'               => $v['contacto']['email'] ?? null,
-                'predeterminado'      => 1,
-            ]);
+    /* 2️⃣  COLONIA + ESTADO + CIUDAD */
+    $colonia = Colonia::findOrFail($v['direccion']['id_colonia']);   // sin with()
 
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            report($e);
-            return response()->json(['success'=>false,'message'=>'Error interno'],500);
-        }
-
-        /* 4.  Devuelve TEXTO + IDs para el front */
+    // Verificamos que el CP corresponda
+    if ($colonia->d_codigo !== $v['direccion']['cp']) {
         return response()->json([
-            'success' => true,
-            'entrega' => [
-                'id_direccion_entrega' => $direccion->id_direccion,
-                'contacto' => [
-                    'id_contacto' => $contacto->id_contacto,
-                    'nombre'      => $contacto->nombreCompleto,     // accessor
-                    'telefono'    => $contacto->telefono1,
-                    'ext'         => $contacto->ext1,
-                    'email'       => $contacto->email,
-                ],
-                'direccion' => [
-                    'nombre'  => $direccion->nombre,
-                    'calle'   => $direccion->calle,
-                    'num_ext' => $direccion->num_ext,
-                    'num_int' => $direccion->num_int,
-                    'colonia' => $colonia->d_asenta,
-                    'ciudad'  => $colonia->ciudad->n_mnpio,
-                    'estado'  => $colonia->estado->d_estado,
-                    'pais'    => 'México',
-                    'cp'      => $direccion->cp,
-                ],
-                'notas' => $direccion->notas,
-            ],
-        ]);
+            'success' => false,
+            'message' => 'El C.P. no coincide con la colonia seleccionada.'
+        ], 422);
     }
+
+    // Estado
+    $estado = Estado::where('c_estado', $colonia->c_estado)->first();
+    if (!$estado) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró el estado ligado a la colonia.'
+        ], 422);
+    }
+
+    // Ciudad / municipio  ← dupla (c_estado, c_mnpio)
+    $ciudad = Ciudad::where('c_estado', $colonia->c_estado)
+                    ->where('c_mnpio',  $colonia->c_mnpio)
+                    ->first();
+
+    if (!$ciudad) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró la ciudad ligada a la colonia.'
+        ], 422);
+    }
+
+    /* 3️⃣  TRANSACCIÓN  Dirección + Contacto */
+    DB::beginTransaction();
+    try {
+        $direccion = Direccion::create([
+            'id_cliente'  => $v['id_cliente'],
+            'nombre'      => $v['direccion']['nombre'] ?? null,
+            'tipo'        => 'entrega',
+            'calle'       => $v['direccion']['calle'],
+            'num_ext'     => $v['direccion']['num_ext'],
+            'num_int'     => $v['direccion']['num_int'] ?? null,
+            'cp'          => $v['direccion']['cp'],         // <--  cp correcto
+            'id_colonia'  => $colonia->id_colonia,
+            'id_ciudad'   => $ciudad->id_ciudad,
+            'id_estado'   => $estado->id_estado,
+            'id_pais'     => 1, // México
+            'notas'       => $v['notas'] ?? null,
+        ]);
+
+        // desactivar contacto predeterminado anterior
+        Contacto::where('id_cliente', $v['id_cliente'])
+            ->whereNotNull('id_direccion_entrega')
+            ->where('predeterminado', 1)
+            ->update(['predeterminado' => 0]);
+
+        // nuevo contacto
+        $contacto = Contacto::create([
+            'id_cliente'           => $v['id_cliente'],
+            'id_direccion_entrega' => $direccion->id_direccion,
+            'nombre'               => $v['contacto']['nombre'],
+            'apellido_p'           => $v['contacto']['apellido_p'],
+            'apellido_m'           => $v['contacto']['apellido_m'] ?? null,
+            'telefono1'            => $v['contacto']['telefono'] ?? null,
+            'ext1'                 => $v['contacto']['ext'] ?? null,
+            'email'                => $v['contacto']['email'] ?? null,
+            'predeterminado'       => 1,
+        ]);
+
+        DB::commit();
+    } catch (\Throwable $e) {
+        DB::rollBack();
+        report($e);
+        return response()->json([
+            'success' => false,
+            'message' => 'Error interno al guardar la dirección.'
+        ], 500);
+    }
+
+    /* 4️⃣  PAYLOAD para el front */
+    return response()->json([
+        'success' => true,
+        'entrega' => [
+            'id_direccion_entrega' => $direccion->id_direccion,
+            'contacto' => [
+                'id_contacto' => $contacto->id_contacto,
+                'nombre'      => $contacto->nombreCompleto,
+                'telefono'    => $contacto->telefono1,
+                'ext'         => $contacto->ext1,
+                'email'       => $contacto->email,
+            ],
+            'direccion' => [
+                'nombre'  => $direccion->nombre,
+                'calle'   => $direccion->calle,
+                'num_ext' => $direccion->num_ext,
+                'num_int' => $direccion->num_int,
+                'colonia' => $colonia->d_asenta,
+                'ciudad'  => $ciudad->n_mnpio,
+                'estado'  => $estado->d_estado,
+                'pais'    => 'México',
+                'cp'      => $direccion->cp,
+            ],
+            'notas' => $direccion->notas,
+        ],
+    ]);
+}
+
+
+
 
 }
