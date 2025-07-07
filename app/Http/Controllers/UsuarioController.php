@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
+use Illuminate\Foundation\Providers\FoundationServiceProvider;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
@@ -11,7 +12,7 @@ class UsuarioController extends Controller
     public function index()
     {
         return view('usuarios.index', [
-            'usuarios' => Usuario::all(),
+            'usuarios' => Usuario::activos()->get(),
         ]);
     }
 
@@ -54,7 +55,6 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::find($id);
         return view('usuarios.edit', compact('usuario'));
-
     }
 
     public function update(Request $request, Usuario $usuario)
@@ -98,12 +98,34 @@ class UsuarioController extends Controller
         }
     }
 
-    public function delete(Usuario $usuario)
+    public function archivar($id)
     {
-        $usuario->delete();
+        $usuario = Usuario::findOrFail($id);
 
-        return redirect()->route('usuarios.index')
-            ->with('success', 'Usuario eliminado exitosamente');
+        if ($usuario->estaArchivado()) {
+            return redirect()->back()->with('info', 'El usuario ya está archivado.');
+        }
+
+        $usuario->archivar();
+
+        return redirect()->route('usuarios.index')->with('success', 'Usuario archivado correctamente.');
+    }
+    public function archivados(){
+        return view('usuarios.archivados',[
+            'usuarios' => Usuario::archivados()->get(),
+        ]);
     }
 
+    public function desarchivar($id)
+    {
+        $usuario = Usuario::findOrFail($id);
+
+        if ($usuario->estaActivo()) {
+            return redirect()->back()->with('info', 'El usuario ya está activo.');
+        }
+
+        $usuario->desarchivar();
+
+        return redirect()->route('usuarios.index')->with('success', 'Usuario reactivado correctamente.');
+    }
 }

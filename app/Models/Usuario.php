@@ -46,8 +46,12 @@ class Usuario extends Authenticatable
         'cargo',
         'tipo',
         'estatus',
-        'es_admin',
+        'archivado',
         'fecha_alta'
+    ];
+
+    protected $casts = [
+        'archivado' => 'boolean',
     ];
 
     protected $hidden = [
@@ -86,6 +90,39 @@ class Usuario extends Authenticatable
         return $this->belongsTo(Cliente::class, 'id_cliente', 'id_cliente');
         // "id_cliente" en "usuarios" apunta a "id_cliente" en "clientes"
     }
+    public function archivar(): void
+    {
+        $this->archivado = true;
+        $this->estatus = 'Inactivo';
+        $this->save();
+    }
+
+    public function desarchivar(): void
+    {
+        $this->archivado = false;
+        $this->estatus = 'Activo';
+        $this->save();
+    }
+
+    public function estaArchivado(): bool
+    {
+        return $this->archivado;
+    }
+
+    public function estaActivo(): bool
+    {
+        return !$this->archivado;
+    }
+
+    public function scopeActivos($query)
+    {
+        return $query->where('archivado', false);
+    }
+
+    public function scopeArchivados($query)
+    {
+        return $query->where('archivado', true);
+    }
     public function equipos()
     {
         return $this->belongsToMany(
@@ -107,8 +144,9 @@ class Usuario extends Authenticatable
     {
         return $this->hasMany(MetasVentas::class, 'id_usuario', 'id_usuario');
     }
-    public function cotizaciones(){
-        
+    public function cotizaciones()
+    {
+
         return $this->hasMany(Cotizacion::class, 'id_vendedor', 'id_usuario');
     }
 }

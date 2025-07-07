@@ -72,7 +72,7 @@
                                 <li><a href="{{ route('inicio') }}">Monitor de Ventas</a></li>
                             @endcan
                             @can('Metas de Venta')
-                                <li><a href="{{ route('inicio') }}">Metas de Venta</a></li>
+                                <li><a href="{{ route('ventas.metas') }}">Metas de Venta</a></li>
                             @endcan
                             @can('Permisos')
                                 <li><a href="{{ route('inicio') }}">Permisos</a></li>

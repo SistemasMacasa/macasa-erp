@@ -283,6 +283,9 @@ body[data-bs-theme="dark"] {
   color: var(--text-color);
 }
 
+.short-number {
+  max-width: 100px;
+}
 
 
 

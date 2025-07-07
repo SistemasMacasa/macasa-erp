@@ -14,18 +14,13 @@
             </li>
         @endsection
 
-        <h1 class="mb-4">Usuarios del Sistema</h1>
+        <h1 class="mb-4">Usuarios del Sistema <small>(Inactivos)</small> </h1>
 
         <div class="row-fluid gap-2 mb-4">
             <a href="{{ url()->previous() }}" class="col-md-2 btn btn-secondary">
                 <i class="fa fa-arrow-left me-1"></i> Regresar
             </a>
-            <a href="{{ route('usuarios.create') }}" class="col-md-2 btn btn-primary">
-                Nuevo Usuario
-            </a>
-            <a href="{{ route('usuarios.archivados') }}" class="col-md-2 btn btn-secondary">
-                <i class="fa fa-users-cog me-1"></i> Ver Usuarios Archivados
-            </a>
+
         </div>
 
         <div class="mb-3">

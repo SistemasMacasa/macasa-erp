@@ -11,6 +11,7 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RazonSocialController;
+use App\Http\Controllers\MetasVentasController;
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
 // Route::get('/', function () {
@@ -126,10 +127,10 @@ Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: fun
     Route::post('/ajax/direccion-factura', [CotizacionController::class, 'storeRazonSocialFactura'])
         ->name('ajax.direccion.factura');
     //Guardar Dirección de entrega mediante AJAX
-    Route::post('/nueva-entrega',
+    Route::post(
+        '/nueva-entrega',
         [CotizacionController::class, 'storeDireccionEntregaFactura']
     )->name('cotizaciones.nueva-entrega');
-
 });
 
 Route::middleware(['auth', 'permission:Permisos'])->group(callback: function () {
@@ -247,8 +248,17 @@ Route::middleware(['auth', 'permission:Editar Usuario'])->group(function () {
 
 Route::middleware(['auth', 'permission:Eliminar Usuario'])->group(function () {
 
-    Route::get('/usuarios/delete', [UsuarioController::class, 'delete'])->name('usuarios.delete');
+    Route::get('/usuarios/archivados', [UsuarioController::class, 'archivados'])->name('usuarios.archivados');
+    // Archivar usuario (cambiar status y marcar como archivado)
+    Route::patch('/usuarios/{usuario}/archivar', [UsuarioController::class, 'archivar'])
+        ->name('usuarios.archivar');
+
+    // Desarchivar usuario (reactivar)
+    Route::patch('/usuarios/{usuario}/desarchivar', [UsuarioController::class, 'desarchivar'])
+        ->name('usuarios.desarchivar');
+
 });
+
 
 Route::middleware(['auth', 'permission:Equipos de Trabajo'])->group(function () {
     Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
@@ -260,10 +270,12 @@ Route::middleware(['auth', 'permission:Crear Equipos de Trabajo'])->group(functi
 });
 
 Route::middleware(['auth', 'permission:Editar Equipos de Trabajo'])->group(function () {
-Route::get('/equipos/{id}/datos', [EquipoController::class, 'datos'])->name('equipos.datos');
-Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
+    Route::get('/equipos/{id}/datos', [EquipoController::class, 'datos'])->name('equipos.datos');
+    Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
 });
 
-Route::middleware(['auth', 'permission:Eliminar Equipos de Trabajo'])->group(function () {
+Route::middleware(['auth', 'permission:Eliminar Equipos de trabajo'])->group(function () {
     Route::delete('/equipos/{id}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
 });
+
+Route::get('/metas-ventas', [MetasVentasController::class, 'index'])->name('ventas.metas');

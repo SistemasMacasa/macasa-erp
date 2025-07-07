@@ -15,43 +15,51 @@
 
         {{-- 🎛 Buscador de cotizaciones --}}
         <form method="GET" action="{{ route('cotizaciones.index') }}">
-            <div class="row g-2 mb-4">
-                {{-- Año --}}
-                <div class="col-md-2">
-                    <label for="year" class="form-label">Año</label>
-                    <select name="year" id="year" class="form-select">
-                        @php
-                            $currentYear = now()->year;
-                            $selectedYear = request('year', $currentYear);
-                        @endphp
-                        @for ($y = $currentYear; $y >= $currentYear - 5; $y--)
-                            <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>
-                                {{ $y }}
-                            </option>
-                        @endfor
-                    </select>
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                     <h5 class="mb-0 text-subtitulo">Filtros</h5>
                 </div>
 
-                {{-- Mes --}}
-                <div class="col-md-2">
-                    <label for="month" class="form-label">Mes</label>
-                    <select name="month" id="month" class="form-select">
-                        @php
-                            $selectedMonth = request('month', now()->month);
-                        @endphp
-                        @foreach (range(1, 12) as $m)
-                            <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>
-                                {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- Botón --}}
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fa fa-filter me-1"></i> Filtrar
-                    </button>
+                <div class="card-body">
+                    <div class="row g-2 mb-4">
+                        {{-- Año --}}
+                        <div class="col-md-2">
+                            <label for="year" class="form-label">Año</label>
+                            <select name="year" id="year" class="form-select">
+                                @php
+                                    $currentYear = now()->year;
+                                    $selectedYear = request('year', $currentYear);
+                                @endphp
+                                @for ($y = $currentYear; $y >= $currentYear - 5; $y--)
+                                    <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>
+                                        {{ $y }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+        
+                        {{-- Mes --}}
+                        <div class="col-md-2">
+                            <label for="month" class="form-label">Mes</label>
+                            <select name="month" id="month" class="form-select">
+                                @php
+                                    $selectedMonth = request('month', now()->month);
+                                @endphp
+                                @foreach (range(1, 12) as $m)
+                                    <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>
+                                        {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+        
+                        {{-- Botón --}}
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fa fa-filter me-1"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -110,8 +118,8 @@
                                     <div class="text-center">{{ number_format($usuario->metas['alcance_cotizacion'] ?? 0, 2) }}</div>
                                     <div class="text-center">{{ number_format($usuario->metas['porcentaje_cotizacion'] ?? 0, 2) }}%
                                     </div>
-                                    <div class="text-center">{{ number_format($usuario->metas['cuota_margen'] ?? 0, 2) }}</div>
-                                    <div class="text-center">{{ number_format($usuario->metas['alcance_margen'] ?? 0, 2) }}</div>
+                                    <div class="text-center">${{ number_format($usuario->metas['cuota_margen'] ?? 0, 2) }}</div>
+                                    <div class="text-center">${{ number_format($usuario->metas['alcance_margen'] ?? 0, 2) }}</div>
                                     <div class="text-center">{{ number_format($usuario->metas['porcentaje_margen'] ?? 0, 2) }}%</div>
                                 </div>
                             @endforeach
@@ -122,8 +130,8 @@
                             <div class="text-center">{{ number_format($equipo->cuota_cotizacion, 2) }}</div>
                             <div class="text-center">{{ number_format($equipo->alcance_cotizacion, 2) }}</div>
                             <div class="text-center">{{ number_format($equipo->porcentaje_cotizacion, 2) }}%</div>
-                            <div class="text-center">{{ number_format($equipo->cuota_margen, 2) }}</div>
-                            <div class="text-center">{{ number_format($equipo->alcance_margen, 2) }}</div>
+                            <div class="text-center">${{ number_format($equipo->cuota_margen, 2) }}</div>
+                            <div class="text-center">${{ number_format($equipo->alcance_margen, 2) }}</div>
                             <div class="text-center">{{ number_format($equipo->porcentaje_margen, 2) }}%</div>
                         </div>
                     </div>
