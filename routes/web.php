@@ -279,3 +279,8 @@ Route::middleware(['auth', 'permission:Eliminar Equipos de trabajo'])->group(fun
 });
 
 Route::get('/metas-ventas', [MetasVentasController::class, 'index'])->name('ventas.metas');
+
+Route::post('/metas-ventas/guardar', [MetasVentasController::class, 'guardar'])->name('ventas.metas.guardar');
+
+
+

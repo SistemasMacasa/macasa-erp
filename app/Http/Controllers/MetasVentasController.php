@@ -17,11 +17,19 @@ class MetasVentasController extends Controller
         $busqueda = $request->input('busqueda');
         $porPagina = $request->input('por_pagina', 10);
 
-        $ordenarPor = $request->input('ordenar_por', 'username'); // campo por defecto
-        $orden = $request->input('orden', 'asc'); // dirección por defecto
+        $ordenarPor = $request->input('ordenar_por', 'username');
+        $orden = $request->input('orden', 'asc');
 
-        $usuariosQuery = Usuario::activos()->where(function ($query) {
-            $query->whereNull('id_cliente')->orWhereNotNull('id_cliente');
+        $usuariosQuery = Usuario::where(function ($query) use ($month, $year) {
+            $query
+                ->where('estatus', 'Activo')
+                ->orWhere(function ($q) use ($month, $year) {
+                    $q->where('estatus', 'Inactivo')
+                        ->where('archivado', 1)
+                        ->whereNotNull('fecha_baja')
+                        ->whereYear('fecha_baja', $year)
+                        ->whereMonth('fecha_baja', $month);
+                });
         });
 
         if ($busqueda) {
@@ -38,7 +46,7 @@ class MetasVentasController extends Controller
         }])
             ->orderBy($ordenarPor, $orden)
             ->paginate($porPagina)
-            ->appends($request->all()); // mantiene filtros en los links de paginación
+            ->appends($request->all());
 
         return view('ventas.metas', compact(
             'usuarios',
@@ -50,6 +58,40 @@ class MetasVentasController extends Controller
             'orden'
         ));
     }
+
+
+    public function guardar(Request $request)
+    {
+        $validated = $request->validate([
+            'id_usuario' => 'required|integer',
+            'cuota_facturacion' => 'required|numeric',
+            'cuota_marginal_facturacion' => 'required|numeric',
+            'dias_meta' => 'required|integer',
+            'cotizaciones_diarias' => 'required|integer',
+            'month' => 'required|integer|min:1|max:12',
+            'year' => 'required|integer|min:2000|max:2100',
+        ]);
+
+        $mes = $validated['month'];
+        $anio = $validated['year'];
+
+        MetasVentas::updateOrCreate(
+            [
+                'id_usuario' => $validated['id_usuario'],
+                'mes' => $mes,
+                'anio' => $anio,
+            ],
+            [
+                'cuota_facturacion' => $validated['cuota_facturacion'],
+                'cuota_marginal_facturacion' => $validated['cuota_marginal_facturacion'],
+                'dias_meta' => $validated['dias_meta'],
+                'cotizaciones_diarias' => $validated['cotizaciones_diarias'],
+            ]
+        );
+
+        return back()->with('success', 'Metas guardadas correctamente.');
+    }
+
 
 
 

@@ -11,6 +11,12 @@
         @endsection
 
         <h2 class="mb-3 text-titulo">Metas de Venta</h2>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        @endif
 
         {{-- 🎛 Botonera --}}
         <div class="row-fluid gap-2 mb-3">
@@ -96,43 +102,49 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($usuarios as $usuario)
-                            @php
-                                $meta = $usuario->metasVentas->first();
-                            @endphp
+                        @foreach ($usuarios as $usuario)
                             <tr>
-                                <td>{{ $usuario->id_usuario }}</td>
-                                <td>{{ $usuario->username }}</td>
-                                <td>
-                                    <input type="text" name="cuota_facturacion[{{ $usuario->id_usuario }}]"
-                                        class="form-control form-control-sm formato-cantidad"
-                                        value="{{ number_format($meta->cuota_facturacion ?? 0, 2) }}">
-                                </td>
-                                <td>
-                                    <input type="text" name="cuota_marginal[{{ $usuario->id_usuario }}]"
-                                        class="form-control form-control-sm formato-cantidad"
-                                        value="{{ number_format($meta->cuota_marginal_facturacion ?? 0, 2) }}">
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" name="cuota_llamadas[{{ $usuario->id_usuario }}]"
-                                        class="form-control form-control-sm short-number" min="0"
-                                        value="{{ $meta->cuota_llamadas ?? '' }}">
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" name="cuota_cotizaciones[{{ $usuario->id_usuario }}]"
-                                        class="form-control form-control-sm short-number" min="0"
-                                        value="{{ $meta->cuota_cotizaciones ?? '' }}">
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-success">Guardar</button>
-                                </td>
+                                <form action="{{ route('ventas.metas.guardar') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id_usuario" value="{{ $usuario->id_usuario }}">
+                                    <input type="hidden" name="month" value="{{ $month }}">
+                                    <input type="hidden" name="year" value="{{ $year }}">
+
+                                    <td>{{ $usuario->id_usuario }}</td>
+                                    <td>{{ $usuario->nombre }} {{ $usuario->apellido_p }} {{ $usuario->apellido_m }}</td>
+
+                                    <td>
+                                        <input type="text" name="cuota_facturacion"
+                                            class="form-control form-control-sm formato-cantidad"
+                                            value="${{ number_format($usuario->metaVenta?->cuota_facturacion ?? 0, 2) }}">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="cuota_marginal_facturacion"
+                                            class="form-control form-control-sm formato-cantidad"
+                                            value="{{ number_format($usuario->metaVenta?->cuota_marginal_facturacion ?? 0, 2) }}">
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <input type="number" name="dias_meta"
+                                            class="form-control form-control-sm text-center short-number mx-auto"
+                                            style="width: 80px;" min="0" value="{{ $usuario->metaVenta?->dias_meta ?? '' }}">
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <input type="number" name="cotizaciones_diarias"
+                                            class="form-control form-control-sm text-center short-number mx-auto" min="0"
+                                            value="{{ $usuario->metaVenta?->cotizaciones_diarias ?? '' }}">
+                                    </td>
+                                    <!-- Campos ocultos: mes y año -->
+                                    <input type="hidden" name="mes" value="{{ $month }}">
+                                    <input type="hidden" name="anio" value="{{ $year }}">
+
+                                    <td>
+                                        <button type="submit" class="btn btn-sm btn-success">Guardar</button>
+                                    </td>
+                                </form>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">No se encontraron resultados.</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
+
                 </table>
 
                 {{-- Paginación --}}
@@ -153,10 +165,13 @@
 @push('scripts')
     <script>
         document.querySelectorAll('.formato-cantidad').forEach(input => {
+            // Al enfocar
             input.addEventListener('focus', () => {
-                if (input.value === '0.00') input.value = '';
+                if (input.value === '$0.00' || input.value === '0.00') input.value = '';
+                input.value = input.value.replace('$', '').replace(/,/g, '');
             });
 
+            // Al escribir
             input.addEventListener('input', () => {
                 let value = input.value.replace(/[^\d.]/g, '').replace(/^0+(?!\.)/, '');
                 if (value.includes('.')) {
@@ -166,16 +181,44 @@
                 } else {
                     value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 }
-                input.value = value;
+                if (value) {
+                    input.value = '$' + value;
+                } else {
+                    input.value = '';
+                }
             });
 
+            // Al salir
             input.addEventListener('blur', () => {
+                let num = parseFloat(input.value.replace(/[$,]/g, ''));
+                if (!isNaN(num)) {
+                    input.value = '$' + num.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                } else {
+                    input.value = '$0.00';
+                }
+            });
+
+            // Formato inicial
+            if (input.value && !input.value.includes('$')) {
                 let num = parseFloat(input.value.replace(/,/g, ''));
                 if (!isNaN(num)) {
-                    input.value = num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                } else {
-                    input.value = '0.00';
+                    input.value = '$' + num.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
                 }
+            }
+        });
+
+        // 🧹 Limpieza antes de enviar el formulario
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', () => {
+                form.querySelectorAll('.formato-cantidad').forEach(input => {
+                    input.value = input.value.replace(/[$,]/g, '');
+                });
             });
         });
     </script>

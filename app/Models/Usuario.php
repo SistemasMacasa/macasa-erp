@@ -47,6 +47,7 @@ class Usuario extends Authenticatable
         'tipo',
         'estatus',
         'archivado',
+        'fecha_baja',
         'fecha_alta'
     ];
 
@@ -94,6 +95,12 @@ class Usuario extends Authenticatable
     {
         $this->archivado = true;
         $this->estatus = 'Inactivo';
+
+        // Solo registrar la fecha si aún no se había archivado antes
+        if (is_null($this->fecha_baja)) {
+            $this->fecha_baja = now();
+        }
+
         $this->save();
     }
 
@@ -101,6 +108,10 @@ class Usuario extends Authenticatable
     {
         $this->archivado = false;
         $this->estatus = 'Activo';
+
+        // Limpiar la fecha de baja al reactivar
+        $this->fecha_baja = null;
+
         $this->save();
     }
 

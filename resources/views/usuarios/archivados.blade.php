@@ -37,6 +37,7 @@
                     <th>Tipo</th>
                     <th>Estatus</th>
                     <th>Fecha Alta </th>
+                    <th>Fecha Baja</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -50,6 +51,7 @@
                         <td>{{ $usuario->tipo }}</td>
                         <td>{{ $usuario->estatus }}</td>
                         <td>{{ \Carbon\Carbon::parse($usuario->fecha_alta)->translatedFormat('l j F Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($usuario->fecha_baja)->translatedFormat('l j F Y') }}</td>
                         <td>
                             <a href="{{ route('usuarios.edit', $usuario->id_usuario) }}" class="btn btn-warning btn-sm">
                                 Editar

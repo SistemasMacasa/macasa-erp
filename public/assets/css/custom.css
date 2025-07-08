@@ -285,6 +285,7 @@ body[data-bs-theme="dark"] {
 
 .short-number {
   max-width: 100px;
+  width: 80px;
 }
 
 
