@@ -121,6 +121,12 @@ Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: f
     Route::post('/cotizaciones', [CotizacionController::class, 'store'])->name('cotizaciones.store');
     //Seleccionar Contacto para Cotización
     Route::post('/contactos/{contacto}/seleccionar', [ContactoController::class, 'seleccionar'])->name('contactos.seleccionar');
+
+Route::post('/cotizaciones/{cotizacion}/partidas', [CotizacionController::class,'agregarPartida'])
+     ->name('cotizaciones.agregarPartida');
+
+Route::delete('/cotizaciones/partidas/{partida}', [CotizacionController::class,'eliminarPartida']);
+
 });
 
 Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: function () {

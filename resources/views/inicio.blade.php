@@ -54,16 +54,13 @@
             <div class="carousel-inner">
 
                 <div class="carousel-item active">
-                    <p class="text-center text-dark text-subtitulo">📢 Mañana hay evento, portar camiseta institucional</p>
+                    <p class="text-center text-dark text-subtitulo">
+                        En un flujo de desarrollo: preguntamos cuando ignoramos (“duda”) 
+                        y buscamos confirmar información cuando el costo de asumir algo 
+                        incorrecto es alto (“confirmación”).
+                     </p>
                 </div>
 
-                <div class="carousel-item">
-                    <p class="text-center text-dark text-subtitulo">🔧 Mantenimiento programado el viernes a las 6PM</p>
-                </div>
-
-                <div class="carousel-item">
-                    <p class="text-center text-dark text.subtitulo">🎉 ¡Bienvenido al equipo, Juan Pérez!</p>
-                </div>
 
             </div>
 
@@ -78,12 +75,7 @@
                 <span class="visually-hidden">Siguiente</span>
             </button>
 
-            <!-- Indicadores -->
-            <div class="carousel-indicators mt-3">
-                <button type="button" data-bs-target="#comunicadosCarousel" data-bs-slide-to="0" class="active bg-primary"></button>
-                <button type="button" data-bs-target="#comunicadosCarousel" data-bs-slide-to="1" class="bg-primary"></button>
-                <button type="button" data-bs-target="#comunicadosCarousel" data-bs-slide-to="2" class="bg-primary"></button>
-            </div>
+           
         </div>
     </div>
 </div>

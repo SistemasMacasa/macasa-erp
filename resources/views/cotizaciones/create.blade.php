@@ -20,7 +20,7 @@
             <a href="{{ url()->previous() }}" class="btn btn-secondary btn-principal col-xxl-2 col-xl-2 col-lg-3">
                 <i class="fa fa-arrow-left me-1"></i> Regresar
             </a>
-            <button class="btn btn-success btn-principal col-xxl-2 col-xl-2 col-lg-3">
+            <button id="btnGuardarCotizacion" class="btn btn-success btn-principal col-xxl-2 col-xl-2 col-lg-3">
                 <i class="fa fa-save me-1"></i> Guardar
             </button>
             <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-principal col-xxl-2 col-xl-2 col-lg-3">
@@ -93,7 +93,7 @@
                         $rsPredet = $razones_sociales->firstWhere('predeterminado', 1);
                     @endphp
 
-                    <form id="cotizacionForm" class="h-100" method="POST" action="{{ route('cotizaciones.store') }}">
+                    <form id="formHiddenFact" class="h-100" method="POST" action="{{ route('cotizaciones.store') }}">
                             @csrf
                             {{-- Campos invisibles que se sobreescriben por JS --}}
                             <input type="hidden" name="id_razon_social"  id="id_razon_social">
@@ -283,7 +283,7 @@
                     </div>
 
                     
-                    <form id="entregaForm" class="h-100">
+                    <form id="formHiddenEntrega" class="h-100">
                             @csrf
                             {{-- Inputs invisibles --}}
                             <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
@@ -440,256 +440,307 @@
         <div class="card shadow mt-4">
             <div class="card-header fw-bold">Agregar partidas</div>
             <div class="card-body">
+                <!-- ============  Formulario partidas ============ -->
+                <form id="formPartida" class="row g-2 align-items-end">
+                    <div class="col-12 col-md-2">
+                        <label class="form-label small">SKU <span class="text-muted">(opcional)</span></label>
+                        <input name="sku" class="form-control form-control-sm">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small">Descripción *</label>
+                        <input name="descripcion" required class="form-control form-control-sm">
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small">Cantidad *</label>
+                        <input name="cantidad" type="number" min="1" step="1" required class="form-control form-control-sm">
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small">Precio *</label>
+                        <input name="precio" type="number" min="0" step="0.01" required class="form-control form-control-sm">
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small">Costo *</label>
+                        <input name="costo" type="number" min="0" step="0.01" required class="form-control form-control-sm">
+                    </div>
+
+                    <div class="col-6 col-md-1 d-grid">
+                        <button type="submit" class="btn btn-sm btn-success">
+                            <i class="fa fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                </form>
+
+                <!-- ============  Tabla de partidas ============ -->
+                <table id="tablaPartidas" class="table table-sm table-bordered align-middle mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th><th>SKU</th><th>Descripción</th>
+                            <th class="text-end">Precio</th><th class="text-end">Costo</th>
+                            <th class="text-end">Cant.</th><th class="text-end">Importe</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                            <th colspan="6" class="text-end">Subtotal</th>
+                            <th id="partidasSubtotal" class="text-end">0.00</th><th></th>
+                            </tr>
+                            <tr>
+                            <th colspan="6" class="text-end">IVA (16 %)</th>
+                            <th id="partidasIVA" class="text-end">0.00</th><th></th>
+                            </tr>
+                            <tr>
+                            <th colspan="6" class="text-end">Total</th>
+                            <th id="partidasTotal" class="text-end fw-bold">0.00</th><th></th>
+                            </tr>
+                        </tfoot>
+                </table>
+
             </div>
         </div>
 
     </div> <!-- End SECCION PRINCIPAL -->
 
     <!-- Modal 1: Directorio de Razones Sociales + Direccion de Facturación -->
-<div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content border rounded">
-      
-      <div class="modal-header flex-column border-0">
-        <h4 class="modal-title w-100 fw-bold text-primary-emphasis" id="modalFacturacionLabel">
-          <i class="fa fa-address-book me-2 text-primary"></i>
-          Seleccionar Dirección de Facturación
-        </h4>
-        <hr class="w-100 my-2 opacity-25">
-        <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
-                data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      
-      <div class="modal-body">        
-        <!-- contenedor con borde y padding -->
-        <div class="table-responsive border rounded p-3 bg-white">
-          <table id="tabla-razones"
-                 class="table table-hover table-bordered align-middle small text-start mb-0">
-                 <thead class="table-light">
-              <tr>
-                <th class="text-center select-col"></th>
-                <th>Razón Social</th>
-                <th>RFC</th>
-                <th>Calle</th>
-                <th>Colonia</th>
-                <th>CP</th>
-                <th>Municipio</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              @forelse($razones_sociales as $rs)
-                <tr id="rs-row-{{ $rs->id_razon_social }}"
-                    class="{{ $rs->predeterminado ? 'table-success' : '' }}">
-                  <td class="text-center select-col">
-                    <button type="button"
-                            class="btn btn-primary btn-sm seleccionar-direccion"
-                            data-id="{{ $rs->id_razon_social }}"
-                            data-route="{{ route('razones_sociales.seleccionar', $rs->id_razon_social) }}">
-                      <i class="fa fa-check"></i>
-                    </button>
-                  </td>
-                  <td>{{ $rs->nombre }}</td>
-                  <td>{{ $rs->RFC }}</td>
-                  <td>{{ $rs->direccion_facturacion->calle }} #{{ $rs->direccion_facturacion->num_ext }}</td>
-                  <td>{{ $rs->direccion_facturacion->colonia?->d_asenta }}</td>
-                  <td>{{ $rs->direccion_facturacion?->cp }}</td>
-                  <td>{{ $rs->direccion_facturacion->ciudad?->n_mnpio }}</td>
-                  <td>{{ $rs->direccion_facturacion->estado?->d_estado }}</td>
-                </tr>
-              @empty
-                <tr>
-                  <td colspan="8" class="text-center">
-                    <span>No se encontraron direcciones de facturación</span>
-                  </td>
-                </tr>
-              @endforelse
-            </tbody>
-          </table>
+    <div class="modal fade" id="modalFacturacion" tabindex="-1" aria-labelledby="modalFacturacionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border rounded">
+            
+            <div class="modal-header flex-column border-0">
+                <h4 class="modal-title w-100 fw-bold text-primary-emphasis" id="modalFacturacionLabel">
+                <i class="fa fa-address-book me-2 text-primary"></i>
+                Seleccionar Dirección de Facturación
+                </h4>
+                <hr class="w-100 my-2 opacity-25">
+                <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                        data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            
+            <div class="modal-body">        
+                <!-- contenedor con borde y padding -->
+                <div class="table-responsive border rounded p-3 bg-white">
+                <table id="tabla-razones"
+                        class="table table-hover table-bordered align-middle small text-start mb-0">
+                        <thead class="table-light">
+                    <tr>
+                        <th class="text-center select-col"></th>
+                        <th>Razón Social</th>
+                        <th>RFC</th>
+                        <th>Calle</th>
+                        <th>Colonia</th>
+                        <th>CP</th>
+                        <th>Municipio</th>
+                        <th>Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($razones_sociales as $rs)
+                        <tr id="rs-row-{{ $rs->id_razon_social }}"
+                            class="{{ $rs->predeterminado ? 'table-success' : '' }}">
+                        <td class="text-center select-col">
+                            <button type="button"
+                                    class="btn btn-primary btn-sm seleccionar-direccion"
+                                    data-id="{{ $rs->id_razon_social }}"
+                                    data-route="{{ route('razones_sociales.seleccionar', $rs->id_razon_social) }}">
+                            <i class="fa fa-check"></i>
+                            </button>
+                        </td>
+                        <td>{{ $rs->nombre }}</td>
+                        <td>{{ $rs->RFC }}</td>
+                        <td>{{ $rs->direccion_facturacion->calle }} #{{ $rs->direccion_facturacion->num_ext }}</td>
+                        <td>{{ $rs->direccion_facturacion->colonia?->d_asenta }}</td>
+                        <td>{{ $rs->direccion_facturacion?->cp }}</td>
+                        <td>{{ $rs->direccion_facturacion->ciudad?->n_mnpio }}</td>
+                        <td>{{ $rs->direccion_facturacion->estado?->d_estado }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                        <td colspan="8" class="text-center">
+                            <span>No se encontraron direcciones de facturación</span>
+                        </td>
+                        </tr>
+                    @endforelse
+                    </tbody>
+                </table>
+                </div>
+                
+            </div>
+            
+            </div>
         </div>
-        
-      </div>
-      
     </div>
-  </div>
-</div>
-
     <!-- End Modal: Directorio de Razones Sociales + Direccion de Facturación -->
 
     <!-- Modal 2: Crear nueva razón social + dirección de facturación -->
+    <div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 rounded-3 shadow">
 
-<!-- Modal: Nueva Razón Social y Dirección -->
-<div class="modal fade" id="modalCrearDireccionFactura" tabindex="-1" aria-labelledby="modalCrearDireccionFacturaLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content border-0 rounded-3 shadow">
-
-      <!-- Header -->
-      <div class="modal-header border-0 bg-white text-center pb-0">
-        <h4 class="modal-title w-100 fw-bold text-primary-emphasis" id="modalCrearDireccionFacturaLabel">
-          <i class="fa fa-plus me-2 text-primary"></i>
-          Nueva Razón Social y Dirección
-        </h4>
-        <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
-                data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        <hr class="w-100 my-2 opacity-25">
-      </div>
-
-      <div class="modal-body py-3 px-4">
-        <form id="formNuevaRazonSocialFactura"
-      action="{{ route('ajax.direccion.factura') }}"
-      method="POST">
-
-          @csrf
-          <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
-
-          <!-- Sección Razón Social -->
-          <div class="form-section mb-4">
-            <div class="section-header mb-3">
-              <i class="fa fa-id-card-alt text-primary me-2"></i>
-              <span class="fw-semibold fs-6">Razón Social</span>
+            <!-- Header -->
+            <div class="modal-header border-0 bg-white text-center pb-0">
+                <h4 class="modal-title w-100 fw-bold text-primary-emphasis" id="modalCrearDireccionFacturaLabel">
+                <i class="fa fa-plus me-2 text-primary"></i>
+                Nueva Razón Social y Dirección
+                </h4>
+                <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                        data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <hr class="w-100 my-2 opacity-25">
             </div>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label small text-secondary">Razón Social *</label>
-                <input type="text" name="nombre" class="form-control form-control-sm" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label small text-secondary">RFC *</label>
-                <input type="text" name="rfc" class="form-control form-control-sm" required>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label small text-secondary">Uso CFDI *</label>
-                <select name="id_uso_cfdi" class="form-select form-select-sm" required>
-                  <option value="" disabled selected>Selecciona uno</option>
-                  @foreach($uso_cfdis as $uso)
-                    <option value="{{ $uso->id_uso_cfdi }}">
-                      {{ $uso->clave }} – {{ $uso->nombre }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label small text-secondary">Método de pago *</label>
-                <select name="id_metodo_pago" class="form-select form-select-sm" required>
-                  <option value="" disabled selected>Selecciona uno</option>
-                  @foreach($metodos->unique('clave') as $metodo)
-                    <option value="{{ $metodo->id_metodo_pago }}">
-                      {{ $metodo->clave }} – {{ $metodo->nombre }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label small text-secondary">Forma de pago *</label>
-                <select name="id_forma_pago" class="form-select form-select-sm" required>
-                  <option value="" disabled selected>Selecciona uno</option>
-                  @foreach($formas->unique('clave') as $forma)
-                    <option value="{{ $forma->id_forma_pago }}">
-                      {{ $forma->clave }} – {{ $forma->nombre }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label class="form-label small text-secondary">Régimen Fiscal *</label>
-                <select name="id_regimen_fiscal" class="form-select form-select-sm" required>
-                  <option value="" disabled selected>Selecciona uno</option>
-                  @foreach($regimenes as $regimen)
-                    <option value="{{ $regimen->id_regimen_fiscal }}">
-                      {{ $regimen->clave }} – {{ $regimen->nombre }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-          </div>
 
-          <!-- Sección Dirección de Facturación -->
-          <div class="form-section mb-4">
-            <div class="section-header mb-3">
-              <i class="fa fa-map-marked-alt text-primary me-2"></i>
-              <span class="fw-semibold fs-6">Dirección de Facturación</span>
-            </div>
-            <div class="row g-3">
-              <div class="col-md-4">
-                <label class="form-label small text-secondary">Calle *</label>
-                <input type="text" name="calle" class="form-control form-control-sm" required>
-              </div>
-              <div class="col-md-2">
-                <label class="form-label small text-secondary">Num. Ext. *</label>
-                <input type="text" name="num_ext" class="form-control form-control-sm" required>
-              </div>
-              <div class="col-md-2">
-                <label class="form-label small text-secondary">Num. Int.</label>
-                <input type="text" name="num_int" class="form-control form-control-sm">
-              </div>
-              <div class="col-md-4">
-                <label class="form-label small text-secondary">C.P. *</label>
-                <input type="text"
-                       name="cp"
-                       maxlength="5"
-                       class="form-control form-control-sm cp-field"
-                       required>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label small text-secondary">Colonia *</label>
-                <select name="colonia" class="form-select form-select-sm colonia-select" required>
-                  <option value="">— Selecciona CP primero —</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label small text-secondary">Municipio *</label>
-                <select name="municipio" class="form-select form-select-sm municipio-field" required>
-                  <option value="">— Selecciona CP primero —</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label small text-secondary">Estado *</label>
-                <select name="estado" class="form-select form-select-sm estado-field" required>
-                  <option value="">— Selecciona CP primero —</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label small text-secondary">País *</label>
-                <select name="id_pais" class="form-select form-select-sm pais-field" required>
-                  @foreach($paises as $pais)
-                    <option value="{{ $pais->id_pais }}"
-                      {{ $pais->nombre === 'México' ? 'selected' : '' }}>
-                      {{ $pais->nombre }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-12">
-                <label class="form-label small text-secondary">Notas / Referencias</label>
-                <textarea name="notas"
-                          class="form-control form-control-sm"
-                          style="height: 100px; resize: none;">
-                </textarea>
-              </div>
-            </div>
-          </div>
+            <div class="modal-body py-3 px-4">
+                <form id="formNuevaRazonSocialFactura">
+                @csrf
+                <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
 
-          <!-- Footer -->
-          <div class="d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
-              Cancelar
-            </button>
-            <button type="submit" class="btn btn-sm btn-primary">
-              <i class="fa fa-save me-1"></i> Guardar
-            </button>
-          </div>
-        </form>
-      </div>
+                <!-- Sección Razón Social -->
+                <div class="form-section mb-4">
+                    <div class="section-header mb-3">
+                    <i class="fa fa-id-card-alt text-primary me-2"></i>
+                    <span class="fw-semibold fs-6">Razón Social</span>
+                    </div>
+                    <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary">Razón Social *</label>
+                        <input type="text" name="nombre" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-secondary">RFC *</label>
+                        <input type="text" name="rfc" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-secondary">Uso CFDI *</label>
+                        <select name="id_uso_cfdi" class="form-select form-select-sm" required>
+                        <option value="" disabled selected>Selecciona uno</option>
+                        @foreach($uso_cfdis as $uso)
+                            <option value="{{ $uso->id_uso_cfdi }}">
+                            {{ $uso->clave }} – {{ $uso->nombre }}
+                            </option>
+                        @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-secondary">Método de pago *</label>
+                        <select name="id_metodo_pago" class="form-select form-select-sm" required>
+                        <option value="" disabled selected>Selecciona uno</option>
+                        @foreach($metodos->unique('clave') as $metodo)
+                            <option value="{{ $metodo->id_metodo_pago }}">
+                            {{ $metodo->clave }} – {{ $metodo->nombre }}
+                            </option>
+                        @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-secondary">Forma de pago *</label>
+                        <select name="id_forma_pago" class="form-select form-select-sm" required>
+                        <option value="" disabled selected>Selecciona uno</option>
+                        @foreach($formas->unique('clave') as $forma)
+                            <option value="{{ $forma->id_forma_pago }}">
+                            {{ $forma->clave }} – {{ $forma->nombre }}
+                            </option>
+                        @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-secondary">Régimen Fiscal *</label>
+                        <select name="id_regimen_fiscal" class="form-select form-select-sm" required>
+                        <option value="" disabled selected>Selecciona uno</option>
+                        @foreach($regimenes as $regimen)
+                            <option value="{{ $regimen->id_regimen_fiscal }}">
+                            {{ $regimen->clave }} – {{ $regimen->nombre }}
+                            </option>
+                        @endforeach
+                        </select>
+                    </div>
+                    </div>
+                </div>
 
+                <!-- Sección Dirección de Facturación -->
+                <div class="form-section mb-4">
+                    <div class="section-header mb-3">
+                    <i class="fa fa-map-marked-alt text-primary me-2"></i>
+                    <span class="fw-semibold fs-6">Dirección de Facturación</span>
+                    </div>
+                    <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label small text-secondary">Calle *</label>
+                        <input type="text" name="direccion[calle]" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small text-secondary">Num. Ext. *</label>
+                        <input type="text" name="direccion[num_ext]" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small text-secondary">Num. Int.</label>
+                        <input type="text" name="direccion[num_int]" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small text-secondary">C.P. *</label>
+                        <input type="text"
+                            name="direccion[cp]"
+                            maxlength="5"
+                            class="form-control form-control-sm cp-field-factura"
+                            required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small text-secondary">Colonia *</label>
+                        <select name="direccion[id_colonia]" class="form-select form-select-sm colonia-select-factura" required>
+                        <option value="">— Selecciona CP primero —</option>
+                        </select>
+                    </div>
+
+                    <!-- Estado y Municipio son informativos, no se procesan en el backend -->
+                    <div class="col-md-3">
+                        <label class="form-label small text-secondary">Municipio *</label>
+                        <select name="municipio" class="form-select form-select-sm municipio-field-factura" required>
+                        <option value="">— Selecciona CP primero —</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small text-secondary">Estado *</label>
+                        <select name="estado" class="form-select form-select-sm estado-field-factura" required>
+                        <option value="">— Selecciona CP primero —</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small text-secondary">País *</label>
+                        <select name="direccion[id_pais]" class="form-select form-select-sm pais-field-factura" required>
+                        @foreach($paises as $pais)
+                            <option value="{{ $pais->id_pais }}"
+                            {{ $pais->nombre === 'México' ? 'selected' : '' }}>
+                            {{ $pais->nombre }}
+                            </option>
+                        @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small text-secondary">Notas / Referencias</label>
+                        <textarea name="notas"
+                                class="form-control form-control-sm"
+                                style="height: 100px; resize: none;"></textarea>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-save me-1"></i> Guardar
+                    </button>
+                </div>
+                </form>
+            </div>
+
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
-
-    
     <!-- End Modal: Crear nueva razón social + dirección de facturación -->
-
 
     <!-- Modal 3: Directorio de contactos + direcciones de entrega -->
     <div class="modal fade" id="modalEntrega" tabindex="-1" aria-hidden="true">
@@ -760,7 +811,7 @@
             </div>
         </div>
     </div>
-
+    <!-- End Modal: Directorio de contactos + direcciones de entrega -->
 
 
     <!-- Modal 4: Alta rápida Dirección de Entrega -->
@@ -867,10 +918,13 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">País *</label>
-                            <select name="direccion[pais]" required class="form-select pais-field-entrega">
-                                <option value="México" selected>México</option>
-                                <option value="Estados Unidos">Estados Unidos</option>
-                                <option value="Canadá">Canadá</option>
+                            <select name="direccion[id_pais]" required class="form-select pais-field-entrega">
+                                @foreach($paises as $pais)
+                                    <option value="{{ $pais->id_pais }}"
+                                    {{ $pais->nombre === 'México' ? 'selected' : '' }}>
+                                    {{ $pais->nombre }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -891,28 +945,29 @@
                 </div>
             </div>
         </div>
-    </div> <!-- End Modal: Alta rápida Dirección de Entrega -->
+    </div> 
+    <!-- End Modal: Alta rápida Dirección de Entrega -->
 
 @push('scripts')
 <!-- =======================================================================
      HELPERS GLOBALES  (window.SIS) 
      ===================================================================== -->
-<script defer>
-window.SIS = (() => {
-  const delay = (fn, ms = 400) => { let t; return (...a)=>{ clearTimeout(t); t = setTimeout(()=>fn(...a), ms); }; };
-  const selTxt = (sel, txt) => {
-    if (!sel) return;
-    let opt = [...sel.options].find(o => o.text.trim().toLowerCase() === txt.trim().toLowerCase())
-            || [...sel.options].find(o => o.value === txt);
-    if (!opt) { opt = new Option(txt, txt, true, true); sel.prepend(opt); }
-    sel.value = opt.value;
-  };
-  const qs   = s => document.querySelector(s);
-  const setV = (id,v='') => { const e=qs('#'+id); if(e) e.value = v ?? ''; };
-  const setT = (id,v='—')=> { const e=qs('#'+id); if(e) e.textContent = v ?? '—'; };
-  return { delay, selTxt, qs, setV, setT };
-})();
-</script>
+    <script defer>
+        window.SIS = (() => {
+        const delay = (fn, ms = 400) => { let t; return (...a)=>{ clearTimeout(t); t = setTimeout(()=>fn(...a), ms); }; };
+        const selTxt = (sel, txt) => {
+            if (!sel) return;
+            let opt = [...sel.options].find(o => o.text.trim().toLowerCase() === txt.trim().toLowerCase())
+                    || [...sel.options].find(o => o.value === txt);
+            if (!opt) { opt = new Option(txt, txt, true, true); sel.prepend(opt); }
+            sel.value = opt.value;
+        };
+        const qs   = s => document.querySelector(s);
+        const setV = (id,v='') => { const e=qs('#'+id); if(e) e.value = v ?? ''; };
+        const setT = (id,v='—')=> { const e=qs('#'+id); if(e) e.textContent = v ?? '—'; };
+        return { delay, selTxt, qs, setV, setT };
+        })();
+    </script>
 
 <!-- =======================================================================
      FUNCIÓN insertarFila    (versión robusta + console.debug)
@@ -971,8 +1026,6 @@ window.SIS = (() => {
         })();
     </script>
 
-
-
 <!-- =======================================================================
      BLOQUE FACTURACIÓN  (autocompletado CP + alta rápida + directorio)
      ===================================================================== -->
@@ -986,11 +1039,11 @@ window.SIS = (() => {
         if (!modalF || !form) return;
 
         // — Autocompletado CP (México) —
-        const cpInput = modalF.querySelector('.cp-field');
-        const colSel  = modalF.querySelector('.colonia-select');
-        const munSel  = modalF.querySelector('.municipio-field');
-        const edoSel  = modalF.querySelector('.estado-field');
-        const paisSel = modalF.querySelector('.pais-field');
+        const cpInput = modalF.querySelector('.cp-field-factura');
+        const colSel  = modalF.querySelector('.colonia-select-factura');
+        const munSel  = modalF.querySelector('.municipio-field-factura');
+        const edoSel  = modalF.querySelector('.estado-field-factura');
+        const paisSel = modalF.querySelector('.pais-field-factura');
 
         const resetDir = () => {
             colSel.innerHTML = '<option value="">— Selecciona CP primero —</option>';
@@ -1015,7 +1068,7 @@ window.SIS = (() => {
             selTxt(edoSel, d.head.estado);
             selTxt(munSel, d.head.municipio);
             colSel.innerHTML = '';
-            d.colonias.forEach(c => colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.colonia)));
+            d.colonias.forEach(c => colSel.add(new Option(`${c.colonia} (${c.tipo})`, c.id_colonia)));
             colSel.disabled = false;
             } catch {
             resetDir();
@@ -1031,7 +1084,12 @@ window.SIS = (() => {
             headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'},
             body:new FormData(form)
         })
-        if(!res.ok){ alert('Error al guardar'); return }
+        if (!res.ok) {
+            const txt = await res.text();          // <-- obtenemos cuerpo crudo
+            console.error('❌ Guardado falló', res.status, txt);
+            alert('Error al guardar (abre la consola para ver detalles)');
+            return;
+        }
         const { razon_social: rs, direccion } = await res.json();
         rs.direccion_facturacion = direccion;           
         bootstrap.Modal.getOrCreateInstance(modalF).hide()
@@ -1324,6 +1382,183 @@ window.SIS = (() => {
             });
         })();
     </script>
+
+
+<!-- =======================================================================
+     BLOQUE PARTIDAS (alta rápida + eliminar)
+     ===================================================================== -->
+<script defer>
+(() => {
+  /* -----  Config  ----- */
+  const LS_KEY   = 'cotizacion_{{ $cliente->id_cliente }}'; // key por cliente
+  const TTL_MIN  = 20;                                      // 20 min de vida
+  const IVA_RATE = 0.16;                                    // 16 %
+
+  /* -----  utilidades  ----- */
+  const nowSec = ()   => Math.floor(Date.now()/1000);
+  const fmt    = num  => (+num).toLocaleString('es-MX',{minimumFractionDigits:2});
+
+  /* -----  elementos  ----- */
+  const tbody       = document.querySelector('#tablaPartidas tbody');
+  const subtotalEl  = document.getElementById('partidasSubtotal');
+  const ivaEl       = document.getElementById('partidasIVA');
+  const totalEl     = document.getElementById('partidasTotal');
+  const formP       = document.getElementById('formPartida');
+
+  /* -----  LS: cargar / guardar  ----- */
+  const loadState = () => {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return { ts: nowSec(), partidas: [] };
+
+      const data = JSON.parse(raw);
+      if (nowSec() - data.ts > TTL_MIN * 60) {
+        localStorage.removeItem(LS_KEY);
+        return { ts: nowSec(), partidas: [] };
+      }
+      return data;
+    } catch { return { ts: nowSec(), partidas: [] }; }
+  };
+
+  const saveState = st => {
+    st.ts = nowSec();                       // renueva TTL
+    localStorage.setItem(LS_KEY, JSON.stringify(st));
+  };
+
+  /* -----  render  ----- */
+  const render = () => {
+    tbody.innerHTML = '';
+    state.partidas.forEach((p, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td>${p.sku || '-'}</td>
+        <td>${p.descripcion}</td>
+        <td class="text-end">${fmt(p.precio)}</td>
+        <td class="text-end">${fmt(p.costo)}</td>
+        <td class="text-end">${p.cantidad}</td>
+        <td class="text-end">${fmt(p.importe)}</td>
+        <td class="text-center">
+          <button data-idx="${i}" class="btn btn-xs btn-outline-danger borrar-partida">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+
+    const sub = state.partidas.reduce((s, p) => s + p.importe, 0);
+    const iva = sub * IVA_RATE;
+    const tot = sub + iva;
+
+    subtotalEl.textContent = fmt(sub);
+    ivaEl.textContent      = fmt(iva);
+    totalEl.textContent    = fmt(tot);
+  };
+
+  /* -----  estado inicial  ----- */
+  const state = loadState();
+  render();
+
+  /* -----  agregar partida  ----- */
+  formP.addEventListener('submit', e => {
+    e.preventDefault();
+    const fd = new FormData(formP);
+
+    const partida = {
+      sku:         fd.get('sku')?.trim() || '',
+      descripcion: fd.get('descripcion').trim(),
+      cantidad:    +fd.get('cantidad'),
+      precio:      +fd.get('precio'),
+      costo:       +fd.get('costo'),
+      importe:     +fd.get('cantidad') * +fd.get('precio'),
+      score:       (+fd.get('precio') - +fd.get('costo')) * +fd.get('cantidad')
+    };
+
+    if (!partida.descripcion) return alert('La descripción es obligatoria');
+    if (partida.cantidad <= 0 || partida.precio < 0 || partida.costo < 0)
+      return alert('Datos numéricos no válidos');
+
+    state.partidas.push(partida);
+    saveState(state);
+    render();
+    formP.reset();
+    formP.descripcion.focus();
+  });
+
+  /* -----  borrar partida  ----- */
+  tbody.addEventListener('click', e => {
+    const btn = e.target.closest('.borrar-partida');
+    if (!btn) return;
+    state.partidas.splice(+btn.dataset.idx, 1);
+    saveState(state);
+    render();
+  });
+
+  /* -----  exportador para el form grande  ----- */
+  window.getPartidasForSubmit = () => state.partidas;
+})();
+</script>
+
+
+
+<!-- =======================================================================
+     ENVÍO DE COTIZACIÓN COMPLETA (Submit Global)
+     ===================================================================== -->
+<script defer>
+(() => {
+
+  /* ---- elemento & llave ---- */
+  const btnGuardar    = document.getElementById('btnGuardarCotizacion');   // tu botón
+  const formFact      = document.getElementById('formHiddenFact');
+  const formEntrega   = document.getElementById('formHiddenEntrega');
+  const partidas      = window.getPartidasForSubmit;        // función expuesta antes
+  const csrf          = document.querySelector('meta[name=csrf-token]').content;
+  const clienteID     = {{ $cliente->id_cliente }};         // ya lo tienes en Blade
+
+  /* ---- click ---- */
+  btnGuardar.addEventListener('click', async () => {
+
+    if (partidas().length === 0){
+      return alert('Agrega al menos una partida antes de guardar.');
+    }
+
+    /* 1️⃣  Armamos payload */
+    const fd = new FormData();
+
+    // a) datos “estáticos” (clonamos los formularios ocultos)
+    [...new FormData(formFact).entries()].forEach(([k,v]) => fd.append(k,v));
+    [...new FormData(formEntrega).entries()].forEach(([k,v]) => fd.append(k,v));
+
+    // b) partidas ⇒ enviamos JSON
+    fd.append('partidas', JSON.stringify(partidas()));
+
+    /* 2️⃣  POST */
+    try{
+      const res  = await fetch('{{ route("cotizaciones.store") }}', {
+        method : 'POST',
+        headers: { 'X-CSRF-TOKEN': csrf, 'Accept':'application/json' },
+        body   : fd
+      });
+
+      const j = await res.json();
+      if (!j.success){
+        throw new Error(j.message || 'Error al guardar');
+      }
+
+      /* 3️⃣  éxito */
+      localStorage.removeItem(`cotizacion_${clienteID}`);
+      alert('¡Cotización guardada!');
+      window.location.href = j.redirect_to;     // p.ej. /cotizaciones/123
+
+    }catch(err){
+      console.error(err);
+      alert('No se pudo guardar la cotización');
+    }
+  });
+
+})();
+</script>
+
 
 
 @endpush
