@@ -116,45 +116,44 @@ class CotizacionController extends Controller
     {
         /* ---------- 1. Validar ---------- */
         $v = $request->validate([
-            'id_cliente'          => 'required|exists:clientes,id_cliente',
-            'id_razon_social'     => 'required|exists:razon_sociales,id_razon_social',
+            'id_cliente' => 'required|exists:clientes,id_cliente',
+            'id_razon_social' => 'required|exists:razones_sociales,id_razon_social',
             'id_contacto_entrega' => 'required|exists:contactos,id_contacto',
             // …otros campos ocultos…
-            'partidas'            => 'required',   // JSON string
+            'partidas' => 'required',   // JSON string
         ]);
 
         $partidas = json_decode($v['partidas'], true);
         if (!$partidas || !is_array($partidas)) {
-            return response()->json(['success'=>false,'message'=>'Partidas mal formateadas'],422);
+            return response()->json(['success' => false, 'message' => 'Partidas mal formateadas'], 422);
         }
 
         /* ---------- 2.  Preparar datos ---------- */
-        $hoy         = now();
+        $hoy = now();
         $vencimiento = $hoy->copy()->addWeeks(2);
-        $vendedorId  = auth()->id();                   // el user logueado
-        $numCons     = $this->nextConsecutivo();       // método propio
+        $vendedorId = auth()->id();                   // el user logueado
+        $numCons = $this->nextConsecutivo();       // método propio
 
         /* ---------- 3. Transacción ---------- */
         DB::beginTransaction();
-        try 
-        {
+        try {
             /* 3-A) cotizaciones */
             $cot = Cotizacion::create([
-                'id_cliente'      => $v['id_cliente'],
+                'id_cliente' => $v['id_cliente'],
                 'id_razon_social' => $v['id_razon_social'],
-                'id_contacto'     => $v['id_contacto_entrega'],
-                'id_vendedor'     => $vendedorId,
-                'fecha_alta'      => $hoy,
-                'vencimiento'     => $vencimiento,
+                'id_contacto' => $v['id_contacto_entrega'],
+                'id_vendedor' => $vendedorId,
+                'fecha_alta' => $hoy,
+                'vencimiento' => $vencimiento,
                 'num_consecutivo' => $numCons,
             ]);
 
             /* 3-B) partidas */
             $scoreTotal = 0;
-            foreach ($partidas as $p){
+            foreach ($partidas as $p) {
                 $p['id_cotizacion'] = $cot->id_cotizacion;
-                $p['score']         = ($p['precio'] - $p['costo']) * $p['cantidad'];
-                $scoreTotal        += $p['score'];
+                $p['score'] = ($p['precio'] - $p['costo']) * $p['cantidad'];
+                $scoreTotal += $p['score'];
                 CotizacionPartida::create($p);
             }
 
@@ -164,34 +163,34 @@ class CotizacionController extends Controller
             DB::commit();
 
             return response()->json([
-                'success'     => true,
+                'success' => true,
                 'redirect_to' => route('cotizaciones.show', $cot->id_cotizacion),
             ]);
 
-        }catch(\Throwable $e){
+        } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-            return response()->json(['success'=>false,'message'=>'Error interno'],500);
+            return response()->json(['success' => false, 'message' => 'Error interno'], 500);
         }
     }
 
-/* ---------- helper para consecutivo seguro ---------- */
-protected function nextConsecutivo(): string
-{
-    return DB::transaction(function () {
-        $reg = DB::table('consecutivos')
-                 ->lockForUpdate()
-                 ->where('serie','MC2')
-                 ->first();
+    /* ---------- helper para consecutivo seguro ---------- */
+    protected function nextConsecutivo(): string
+    {
+        return DB::transaction(function () {
+            $reg = DB::table('consecutivos')
+                ->lockForUpdate()
+                ->where('serie', 'MC2')
+                ->first();
 
-        $next = $reg->ultimo + 1;
-        DB::table('consecutivos')
-            ->where('serie','MC2')
-            ->update(['ultimo'=>$next]);
+            $next = $reg->ultimo + 1;
+            DB::table('consecutivos')
+                ->where('serie', 'MC2')
+                ->update(['ultimo' => $next]);
 
-        return sprintf('MC2%05d', $next);
-    });
-}
+            return sprintf('MC2%05d', $next);
+        });
+    }
 
 
 
@@ -262,16 +261,16 @@ protected function nextConsecutivo(): string
         DB::transaction(function () use (&$razon, &$direccion, $data, $colonia, $estado, $ciudad) {
             /* Dirección */
             $direccion = Direccion::create([
-                'id_cliente'    => $data['id_cliente'],
-                'tipo'          => 'facturacion',
-                'calle'         => $data['direccion']['calle'],
-                'num_ext'       => $data['direccion']['num_ext'],
-                'num_int'       => $data['direccion']['num_int'] ?? null,
-                'cp'            => $data['direccion']['cp'],
-                'id_colonia'    => $colonia->id_colonia,
-                'id_ciudad'     => $ciudad->id_ciudad,
-                'id_estado'     => $estado->id_estado,
-                'id_pais'       => $data['direccion']['id_pais'] ?? 1, // México por defecto
+                'id_cliente' => $data['id_cliente'],
+                'tipo' => 'facturacion',
+                'calle' => $data['direccion']['calle'],
+                'num_ext' => $data['direccion']['num_ext'],
+                'num_int' => $data['direccion']['num_int'] ?? null,
+                'cp' => $data['direccion']['cp'],
+                'id_colonia' => $colonia->id_colonia,
+                'id_ciudad' => $ciudad->id_ciudad,
+                'id_estado' => $estado->id_estado,
+                'id_pais' => $data['direccion']['id_pais'] ?? 1, // México por defecto
             ]);
 
             /* Desactiva predeterminada previa */
@@ -281,18 +280,18 @@ protected function nextConsecutivo(): string
 
             /* Nueva razón social */
             $razon = RazonSocial::create([
-                'nombre'            => $data['nombre'],
-                'id_cliente'        => $data['id_cliente'],
-                'RFC'               => $data['rfc'],
-                'id_uso_cfdi'       => $data['id_uso_cfdi'],
-                'id_metodo_pago'    => $data['id_metodo_pago'],
-                'id_forma_pago'     => $data['id_forma_pago'],
+                'nombre' => $data['nombre'],
+                'id_cliente' => $data['id_cliente'],
+                'RFC' => $data['rfc'],
+                'id_uso_cfdi' => $data['id_uso_cfdi'],
+                'id_metodo_pago' => $data['id_metodo_pago'],
+                'id_forma_pago' => $data['id_forma_pago'],
                 'id_regimen_fiscal' => $data['id_regimen_fiscal'],
-                'dias_credito'      => 0,
-                'saldo'             => 0,
-                'limite_credito'    => 0,
+                'dias_credito' => 0,
+                'saldo' => 0,
+                'limite_credito' => 0,
                 'id_direccion_facturacion' => $direccion->id_direccion,
-                'predeterminado'    => 1,
+                'predeterminado' => 1,
             ]);
         });
 
@@ -317,7 +316,7 @@ protected function nextConsecutivo(): string
         ], 201);
     }
 
-    
+
 
 
     /**
@@ -432,27 +431,27 @@ protected function nextConsecutivo(): string
         return response()->json([
             'success' => true,
             'entrega' => [
-                'id_direccion_entrega' => $direccion->id_direccion,
-                'contacto' => [
-                    'id_contacto' => $contacto->id_contacto,
-                    'nombre' => $contacto->nombreCompleto,
-                    'telefono' => $contacto->telefono1,
-                    'ext' => $contacto->ext1,
-                    'email' => $contacto->email,
+                    'id_direccion_entrega' => $direccion->id_direccion,
+                    'contacto' => [
+                            'id_contacto' => $contacto->id_contacto,
+                            'nombre' => $contacto->nombreCompleto,
+                            'telefono' => $contacto->telefono1,
+                            'ext' => $contacto->ext1,
+                            'email' => $contacto->email,
+                        ],
+                    'direccion' => [
+                        'nombre' => $direccion->nombre,
+                        'calle' => $direccion->calle,
+                        'num_ext' => $direccion->num_ext,
+                        'num_int' => $direccion->num_int,
+                        'colonia' => $colonia->d_asenta,
+                        'ciudad' => $ciudad->n_mnpio,
+                        'estado' => $estado->d_estado,
+                        'pais' => 'México',
+                        'cp' => $direccion->cp,
+                    ],
+                    'notas' => $direccion->notas,
                 ],
-                'direccion' => [
-                    'nombre' => $direccion->nombre,
-                    'calle' => $direccion->calle,
-                    'num_ext' => $direccion->num_ext,
-                    'num_int' => $direccion->num_int,
-                    'colonia' => $colonia->d_asenta,
-                    'ciudad' => $ciudad->n_mnpio,
-                    'estado' => $estado->d_estado,
-                    'pais' => 'México',
-                    'cp' => $direccion->cp,
-                ],
-                'notas' => $direccion->notas,
-            ],
         ]);
     }
 
@@ -462,27 +461,27 @@ protected function nextConsecutivo(): string
     {
         $v = $req->validate([
             'descripcion' => 'required|string|max:255',
-            'sku'         => 'nullable|string|max:50',
-            'precio'      => 'required|numeric|min:0',
-            'costo'       => 'required|numeric|min:0',
-            'cantidad'    => 'required|integer|min:1',
+            'sku' => 'nullable|string|max:50',
+            'precio' => 'required|numeric|min:0',
+            'costo' => 'required|numeric|min:0',
+            'cantidad' => 'required|integer|min:1',
         ]);
 
         $v['importe'] = $v['precio'] * $v['cantidad'];
-        $v['score']   = $v['importe'] - ($v['costo'] * $v['cantidad']); // utilidad simple
+        $v['score'] = $v['importe'] - ($v['costo'] * $v['cantidad']); // utilidad simple
 
         $partida = $cotizacion->partidas()->create($v);
 
         return response()->json([
-            'success'=>true,
-            'partida'=>$partida
+            'success' => true,
+            'partida' => $partida
         ]);
     }
 
     public function eliminarPartida(CotizacionPartida $partida)
     {
         $partida->delete();
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
 

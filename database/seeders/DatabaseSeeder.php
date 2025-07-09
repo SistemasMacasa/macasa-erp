@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             CiudadesFromColoniasSeeder::class,
             EquiposSeeder::class,
             EquipoUsuarioSeeder::class,
+            ConsecutivosSeeder::class,
+
         ]);
     }
 }

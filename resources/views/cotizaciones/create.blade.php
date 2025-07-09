@@ -289,21 +289,7 @@
                             <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
                             <input type="hidden" name="id_direccion_entrega"  id="id_direccion_entrega">
                             <input type="hidden" name="id_contacto_entrega"   id="id_contacto_entrega">
-                            <input type="hidden" name="entrega[id_direccion_entrega]" id="input-entrega-id_direccion_entrega">
-                            <input type="hidden" name="entrega[id_contacto_entrega]"  id="input-entrega-id_contacto_entrega">
-                            <input type="hidden" name="entrega[nombre]"              id="input-entrega-nombre">
-                            <input type="hidden" name="entrega[contacto]"            id="input-entrega-contacto">
-                            <input type="hidden" name="entrega[telefono]"            id="input-entrega-telefono">
-                            <input type="hidden" name="entrega[email]"               id="input-entrega-email">
-                            <input type="hidden" name="entrega[calle]"               id="input-entrega-calle">
-                            <input type="hidden" name="entrega[num_ext]"             id="input-entrega-num_ext">
-                            <input type="hidden" name="entrega[num_int]"             id="input-entrega-num_int">
-                            <input type="hidden" name="entrega[id_colonia]"          id="input-entrega-colonia">
-                            <input type="hidden" name="entrega[ciudad]"              id="input-entrega-ciudad">
-                            <input type="hidden" name="entrega[estado]"              id="input-entrega-estado">
-                            <input type="hidden" name="entrega[cp]"                  id="input-entrega-cp">
-                            <input type="hidden" name="entrega[pais]"                id="input-entrega-pais">
-                            <input type="hidden" name="entrega[notas]"               id="input-entrega-notas">
+
                         <div class="card-body h-100">
                             <div class="row g-3">
 
@@ -1115,18 +1101,31 @@
         });
 
         // — Helpers locales —
-        function pintarCard(rs){
+        function pintarCard(rs) {
             const d = rs.direccion_facturacion;
-            setT('rs-nombre', rs.nombre);
-            setT('rs-rfc',    rs.RFC);
-            setT('dir-calle', `${d.calle} #${d.num_ext}${d.num_int?' Int.'+d.num_int:''}`);
+            setT('rs-nombre',   rs.nombre);
+            setT('rs-rfc',      rs.RFC);
+            setT('dir-calle',   `${d.calle} #${d.num_ext}${d.num_int?' Int.'+d.num_int:''}`);
             setT('dir-colonia', d.colonia?.d_asenta);
             setT('dir-ciudad',  d.ciudad?.n_mnpio);
             setT('dir-estado',  d.estado?.d_estado);
             setT('dir-cp',      d.cp);
+
+            // Aquí es donde se llenan los campos ocultos
             setV('id_razon_social', rs.id_razon_social);
             setV('rfc',             rs.RFC);
             setV('calle',           d.calle);
+            setV('num_ext',         d.num_ext);
+            setV('num_int',         d.num_int);
+            setV('cp',              d.cp);
+            setV('id_colonia',      d.colonia?.id_colonia);
+            setV('id_ciudad',       d.ciudad?.id_ciudad);
+            setV('id_estado',       d.estado?.id_estado);
+            setV('id_pais',         d.pais?.id_pais);
+            setV('uso_cfdi',        rs.id_uso_cfdi);
+            setV('metodo_pago',     rs.id_metodo_pago);
+            setV('forma_pago',      rs.id_forma_pago);
+            setV('regimen_fiscal',  rs.id_regimen_fiscal);
         }
         function limpiarFormulario(){
             form.reset();
@@ -1143,6 +1142,13 @@
             badge.textContent = total;
             }
         }
+
+          // ➊ Invocación inicial con el predeterminado
+        document.addEventListener('DOMContentLoaded', () => {
+            @if(isset($rsPredet))
+            pintarCard(@json($rsPredet));
+            @endif
+        });
         })();
     </script>
 
@@ -1230,25 +1236,16 @@
                     setT('entrega-pais',    d.pais    || '—');
                     setT('entrega-notas',   ent.notas || '—');
 
-                    /* ------- inputs ocultos para la cotización ------- */
-                    setV('input-entrega-id_direccion_entrega', ent.id_direccion_entrega);
-                    setV('input-entrega-id_contacto_entrega',  ent.contacto.id_contacto);
-                    setV('input-entrega-nombre',               d.nombre   || '');
-                    setV('input-entrega-contacto',             ent.contacto.nombre || '');
-                    setV('input-entrega-telefono',             ent.contacto.telefono || '');
-                    setV('input-entrega-ext',                  ent.contacto.ext || '');
-                    setV('input-entrega-email',                ent.contacto.email || '');
+                    setV('id_contacto_entrega', ent.contacto.id_contacto);
 
-                    setV('input-entrega-calle',    d.calle   || '');
-                    setV('input-entrega-num_ext',  d.num_ext || '');
-                    setV('input-entrega-num_int',  d.num_int || '');
-                    setV('input-entrega-colonia',  d.colonia || '');
-                    setV('input-entrega-ciudad',   d.ciudad  || '');
-                    setV('input-entrega-estado',   d.estado  || '');
-                    setV('input-entrega-cp',       d.cp      || '');
-                    setV('input-entrega-pais',     d.pais    || '');
-                    setV('input-entrega-notas',    ent.notas || '');
                 }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    @if(isset($contacto_entrega))
+                        pintarEntrega(@json($contacto_entrega));
+                    @endif
+                });
+
 
 
 
@@ -1533,7 +1530,8 @@
     fd.append('partidas', JSON.stringify(partidas()));
 
     /* 2️⃣  POST */
-    try{
+    try
+    {
       const res  = await fetch('{{ route("cotizaciones.store") }}', {
         method : 'POST',
         headers: { 'X-CSRF-TOKEN': csrf, 'Accept':'application/json' },

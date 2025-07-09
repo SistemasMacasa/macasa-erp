@@ -10,9 +10,9 @@ class Cotizacion extends Model
     use HasFactory;
 
     /* -----------  tabla & PK ----------- */
-    protected $table      = 'cotizaciones';
+    protected $table = 'cotizaciones';
     protected $primaryKey = 'id_cotizacion';
-    public    $timestamps = false;      // usa tus propios campos de fecha
+    public $timestamps = false;      // usa tus propios campos de fecha
 
     /* -----------  mass-assignment  ----------- */
     protected $fillable = [
@@ -73,5 +73,11 @@ class Cotizacion extends Model
         return $this->subtotal + $this->iva;
     }
 
-    
+    public function consecutivo()
+    {
+        return $this->belongsTo(Consecutivo::class, 'num_consecutivo', 'valor_actual');
+    }
+
+
+
 }

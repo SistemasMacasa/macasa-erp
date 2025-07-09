@@ -2063,7 +2063,6 @@ input:checked+.slider:before {
   color: #fff;
 }
 
-
 /* cada sección como tarjeta ligera */
 #modalCrearDireccionFactura .form-section {
   background-color: #f8f9fa;
