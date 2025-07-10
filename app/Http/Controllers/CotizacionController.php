@@ -114,85 +114,110 @@ class CotizacionController extends Controller
 
     public function store(Request $request)
     {
-        /* ---------- 1. Validar ---------- */
+        /* 1. Validación */
         $v = $request->validate([
-            'id_cliente' => 'required|exists:clientes,id_cliente',
-            'id_razon_social' => 'required|exists:razones_sociales,id_razon_social',
-            'id_contacto_entrega' => 'required|exists:contactos,id_contacto',
-            // …otros campos ocultos…
-            'partidas' => 'required',   // JSON string
+            'id_cliente'           => 'required|exists:clientes,id_cliente',
+            'id_contacto_entrega'  => 'required|exists:contactos,id_contacto',
+            'id_razon_social'      => 'required|exists:razones_sociales,id_razon_social',
+            'partidas'             => 'required',               // JSON string
         ]);
 
         $partidas = json_decode($v['partidas'], true);
         if (!$partidas || !is_array($partidas)) {
-            return response()->json(['success' => false, 'message' => 'Partidas mal formateadas'], 422);
+            return response()->json(['success'=>false,'message'=>'Partidas mal formateadas'],422);
         }
 
-        /* ---------- 2.  Preparar datos ---------- */
-        $hoy = now();
+        /* 2. Datos base */
+        $hoy         = now();
         $vencimiento = $hoy->copy()->addWeeks(2);
-        $vendedorId = auth()->id();                   // el user logueado
-        $numCons = $this->nextConsecutivo();       // método propio
+        $vendedorId  = auth()->id();
+        $folio       = $this->nextConsecutivo();      // MC2xxxxx
 
-        /* ---------- 3. Transacción ---------- */
+        \Log::debug('Payload recibido para cotización:', $v);
+
+        /* 3. Transacción */
         DB::beginTransaction();
-        try {
-            /* 3-A) cotizaciones */
+        try 
+        {
+            /* A) Cotización */
             $cot = Cotizacion::create([
-                'id_cliente' => $v['id_cliente'],
-                'id_razon_social' => $v['id_razon_social'],
-                'id_contacto' => $v['id_contacto_entrega'],
-                'id_vendedor' => $vendedorId,
-                'fecha_alta' => $hoy,
-                'vencimiento' => $vencimiento,
-                'num_consecutivo' => $numCons,
+                'id_cliente'          => $v['id_cliente'],
+                'id_razon_social'     => $v['id_razon_social'],
+                'id_contacto_entrega' => $v['id_contacto_entrega'],   // ← nombre correcto
+                'id_vendedor'         => $vendedorId,
+                'fecha_alta'          => $hoy,
+                'vencimiento'         => $vencimiento,
+                'num_consecutivo'     => $folio,
             ]);
 
-            /* 3-B) partidas */
+            /* B) Partidas */
             $scoreTotal = 0;
-            foreach ($partidas as $p) {
+            foreach ($partidas as $p){
                 $p['id_cotizacion'] = $cot->id_cotizacion;
-                $p['score'] = ($p['precio'] - $p['costo']) * $p['cantidad'];
-                $scoreTotal += $p['score'];
-                CotizacionPartida::create($p);
+                CotizacionPartida::create([
+                    'id_cotizacion' => $cot->id_cotizacion,
+                    'sku'           => $p['sku'] ?? '',
+                    'descripcion'   => $p['descripcion'],
+                    'cantidad'      => $p['cantidad'],
+                    'precio'        => $p['precio'],
+                    'costo'         => $p['costo'],
+                ]);
             }
 
-            /* 3-C) actualizar score_final */
+            /* C) Score final */
+            $scoreTotal = $cot->partidas->sum('score');
             $cot->update(['score_final' => $scoreTotal]);
 
             DB::commit();
 
             return response()->json([
-                'success' => true,
-                'redirect_to' => route('cotizaciones.show', $cot->id_cotizacion),
+                'success'     => true,
+                'redirect_to' => route('cotizaciones.index', $cot->id_cotizacion),
             ]);
-
-        } catch (\Throwable $e) {
+        } catch (\Throwable $e){
             DB::rollBack();
-            report($e);
-            return response()->json(['success' => false, 'message' => 'Error interno'], 500);
+            \Log::error('Fallo al guardar cotización', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['success'=>false,'message'=>'Error interno'],500);
         }
+
     }
+
 
     /* ---------- helper para consecutivo seguro ---------- */
     protected function nextConsecutivo(): string
     {
         return DB::transaction(function () {
+
+            /* ① buscamos (y bloqueamos) el registro del prefijo */
             $reg = DB::table('consecutivos')
-                ->lockForUpdate()
-                ->where('serie', 'MC2')
-                ->first();
+                    ->lockForUpdate()
+                    ->where('prefijo', 'MC2')
+                    ->first();
 
-            $next = $reg->ultimo + 1;
-            DB::table('consecutivos')
-                ->where('serie', 'MC2')
-                ->update(['ultimo' => $next]);
+            /* ② si no existe, lo creamos                             */
+            if (!$reg) {
+                DB::table('consecutivos')->insert([
+                    'tipo'          => 'cotizaciones',
+                    'prefijo'       => 'MC2',
+                    'valor_actual'  => 1,
+                    'created_at'    => now(),
+                    'updated_at'    => now(),
+                ]);
+                $next = 1;
+            } else {
+                $next = $reg->valor_actual + 1;
+                DB::table('consecutivos')
+                ->where('id', $reg->id)
+                ->update([
+                    'valor_actual' => $next,
+                    'updated_at'   => now(),
+                ]);
+            }
 
+            /* ③ devolvemos el folio formateado -- MC200001, MC200002, … */
             return sprintf('MC2%05d', $next);
         });
     }
-
-
 
     function normalize($str)
     {
@@ -315,8 +340,6 @@ class CotizacionController extends Controller
             'direccion' => $direccion,
         ], 201);
     }
-
-
 
 
     /**

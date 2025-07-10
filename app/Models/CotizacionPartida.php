@@ -20,7 +20,6 @@ class CotizacionPartida extends Model
         'cantidad',
         'precio',
         'costo',
-        'importe',
         'score',
         'id_proveedor',  // opcional, si algún día se usa
     ];
@@ -41,13 +40,13 @@ class CotizacionPartida extends Model
     protected static function booted()
     {
         static::creating(function ($p) {
-            $p->importe = $p->precio * $p->cantidad;
-            $p->score   = $p->importe - ($p->costo * $p->cantidad);
+            $p->score = ($p->precio - $p->costo) * $p->cantidad;
+
         });
 
         static::updating(function ($p) {
-            $p->importe = $p->precio * $p->cantidad;
-            $p->score   = $p->importe - ($p->costo * $p->cantidad);
+            $p->score = ($p->precio - $p->costo) * $p->cantidad;
+
         });
     }
 }

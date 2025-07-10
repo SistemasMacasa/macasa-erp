@@ -97,19 +97,7 @@
                             @csrf
                             {{-- Campos invisibles que se sobreescriben por JS --}}
                             <input type="hidden" name="id_razon_social"  id="id_razon_social">
-                            <input type="hidden" name="rfc"              id="rfc">
-                            <input type="hidden" name="calle"            id="calle">
-                            <input type="hidden" name="num_ext"          id="num_ext">
-                            <input type="hidden" name="num_int"          id="num_int">
-                            <input type="hidden" name="cp"               id="cp">
-                            <input type="hidden" name="id_colonia"       id="id_colonia">
-                            <input type="hidden" name="id_ciudad"        id="id_ciudad">
-                            <input type="hidden" name="id_estado"        id="id_estado">
-                            <input type="hidden" name="id_pais"          id="id_pais">
-                            <input type="hidden" name="uso_cfdi"         id="uso_cfdi">
-                            <input type="hidden" name="metodo_pago"      id="metodo_pago">
-                            <input type="hidden" name="forma_pago"       id="forma_pago">
-                            <input type="hidden" name="regimen_fiscal"   id="regimen_fiscal">
+                            
 
                         <div class="card-body h-100">
                             <div class="row g-3">
@@ -168,7 +156,7 @@
                                         <span id="dir-calle" class="me-2">
                                             @isset($rsPredet)
                                                 {{ $rsPredet->direccion_facturacion->calle }}
-                                                Ext. {{ $rsPredet->direccion_facturacion->num_ext }}
+                                                #{{ $rsPredet->direccion_facturacion->num_ext }}
                                                 @if($rsPredet->direccion_facturacion->num_int)
                                                     Int. {{ $rsPredet->direccion_facturacion->num_int }}
                                                 @endif
@@ -287,7 +275,6 @@
                             @csrf
                             {{-- Inputs invisibles --}}
                             <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
-                            <input type="hidden" name="id_direccion_entrega"  id="id_direccion_entrega">
                             <input type="hidden" name="id_contacto_entrega"   id="id_contacto_entrega">
 
                         <div class="card-body h-100">
@@ -361,7 +348,7 @@
                                         <i class="fa fa-map-marker-alt fa-fw text-danger me-2"></i>
                                         <span id="entrega-calle" class="me-2">
                                             {{ $contacto_entrega->direccion_entrega->calle ?? '—' }}
-                                            Ext. {{ $contacto_entrega->direccion_entrega->num_ext ?? '—' }}
+                                            #{{ $contacto_entrega->direccion_entrega->num_ext ?? '—' }}
                                             @if(!empty($contacto_entrega->direccion_entrega->num_int))
                                                 Int. {{ $contacto_entrega->direccion_entrega->num_int }}
                                             @endif
@@ -508,7 +495,7 @@
             
             <div class="modal-body">        
                 <!-- contenedor con borde y padding -->
-                <div class="table-responsive border rounded p-3 bg-white">
+                <div class="table-responsive border rounded p-3">
                 <table id="tabla-razones"
                         class="table table-hover table-bordered align-middle small text-start mb-0">
                         <thead class="table-light">
@@ -728,77 +715,71 @@
     </div>
     <!-- End Modal: Crear nueva razón social + dirección de facturación -->
 
-    <!-- Modal 3: Directorio de contactos + direcciones de entrega -->
-    <div class="modal fade" id="modalEntrega" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content text-center">
+<!-- Modal 3: Directorio de contactos + direcciones de entrega -->
+<div class="modal fade" id="modalEntrega" tabindex="-1" aria-labelledby="modalEntregaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border rounded">
 
-            <div class="modal-header flex-column border-0 bg-white">
-                <h4 class="modal-title w-100 fw-bold text-primary-emphasis">
-                <i class="fa fa-address-book me-2 text-primary"></i>
-                Seleccionar Dirección de Entrega
-                </h4>
-                <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
-                        data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                <hr class="w-100 my-2 opacity-25">
-            </div>
+      <div class="modal-header flex-column border-0">
+        <h4 class="modal-title w-100 fw-bold text-primary-emphasis" id="modalEntregaLabel">
+          <i class="fa fa-address-book me-2 text-primary"></i>
+          Seleccionar Dirección de Entrega
+        </h4>
+        <hr class="w-100 my-2 opacity-25">
+        <button type="button" class="btn-close position-absolute end-0 top-0 mt-3 me-3"
+                data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
 
-            <div class="modal-body pt-0">
-                <p class="text-muted mb-4">Elige un contacto/dirección registrada para este cliente</p>
-
-                <div class="table-responsive">
-                <table id="tabla-entregas"
-                        class="table table-hover table-bordered align-middle small text-start">
-                    <thead class="table-light">
-                    <tr>
-                        <th>Predeterminado</th>
-                        <th>Alias</th>
-                        <th>Contacto</th>
-                        <th>Teléfono</th>
-                        <th>Email</th>
-                        <th>Calle</th>
-                        <th>Colonia</th>
-                        <th>CP</th>
-                        <th>Municipio</th>
-                        <th>Estado</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($contactos_entrega as $c)
-                        @php $dir = $c->direccion_entrega @endphp
-
-                            <tr id="entrega-row-{{ $c->id_contacto }}"
-                                class="{{ $c->predeterminado ? 'table-success' : '' }}">
-
-                                <td>
-                                    <button type="button"
-                                            class="btn btn-sm btn-success seleccionar-entrega"
-                                            data-id="{{ $c->id_contacto }}"
-                                            data-route="{{ route('contactos.seleccionar', $c->id_contacto) }}">
-                                        <i class="fa fa-check"></i>
-                                    </button>
-                                </td>
-                                <td>{{ $dir->nombre }}</td>
-                                <td>{{ $c->nombreCompleto }}</td>
-                                <td>{{ $c->telefono1 }}</td>
-                                <td>{{ $c->email }}</td>
-                                <td>{{ $dir->calle }} #{{ $dir->num_ext }}</td>
-                                <td>{{ $dir->colonia->d_asenta ?? '-' }}</td>
-                                <td>{{ $dir->cp }}</td>
-                                <td>{{ $dir->ciudad->n_mnpio ?? '-'}}</td>
-                                <td>{{ $dir->estado->d_estado ?? '-' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                </div>
-            </div>
-
-            </div>
+      <div class="modal-body">
+        <div class="table-responsive border rounded p-3">
+          <table id="tabla-entregas"
+                 class="table table-hover table-bordered align-middle small text-start mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="text-center select-col"></th>
+                <th>Alias</th>
+                <th>Contacto</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Calle</th>
+                <th>Colonia</th>
+                <th>CP</th>
+                <th>Municipio</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($contactos_entrega as $c)
+                @php $dir = $c->direccion_entrega @endphp
+                <tr id="entrega-row-{{ $c->id_contacto }}" class="{{ $c->predeterminado ? 'table-success' : '' }}">
+                  <td class="text-center select-col">
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm seleccionar-entrega"
+                      data-id="{{ $c->id_contacto }}"
+                      data-route="{{ route('contactos.seleccionar', $c->id_contacto) }}">
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </td>
+                  <td>{{ $dir->nombre }}</td>
+                  <td>{{ $c->nombreCompleto }}</td>
+                  <td>{{ $c->telefono1 }}</td>
+                  <td>{{ $c->email }}</td>
+                  <td>{{ $dir->calle }} #{{ $dir->num_ext }}</td>
+                  <td>{{ $dir->colonia->d_asenta ?? '-' }}</td>
+                  <td>{{ $dir->cp }}</td>
+                  <td>{{ $dir->ciudad->n_mnpio ?? '-' }}</td>
+                  <td>{{ $dir->estado->d_estado ?? '-' }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
-    </div>
-    <!-- End Modal: Directorio de contactos + direcciones de entrega -->
+      </div>
 
+    </div>
+  </div>
+</div>
 
     <!-- Modal 4: Alta rápida Dirección de Entrega -->
     <div class="modal fade" id="modalCrearDireccionEntrega" tabindex="-1" aria-labelledby="modalCrearDireccionEntregaLabel" aria-hidden="true">
@@ -1113,19 +1094,7 @@
 
             // Aquí es donde se llenan los campos ocultos
             setV('id_razon_social', rs.id_razon_social);
-            setV('rfc',             rs.RFC);
-            setV('calle',           d.calle);
-            setV('num_ext',         d.num_ext);
-            setV('num_int',         d.num_int);
-            setV('cp',              d.cp);
-            setV('id_colonia',      d.colonia?.id_colonia);
-            setV('id_ciudad',       d.ciudad?.id_ciudad);
-            setV('id_estado',       d.estado?.id_estado);
-            setV('id_pais',         d.pais?.id_pais);
-            setV('uso_cfdi',        rs.id_uso_cfdi);
-            setV('metodo_pago',     rs.id_metodo_pago);
-            setV('forma_pago',      rs.id_forma_pago);
-            setV('regimen_fiscal',  rs.id_regimen_fiscal);
+
         }
         function limpiarFormulario(){
             form.reset();
@@ -1217,26 +1186,52 @@
                     return `${d.calle||''} #${d.num_ext||''}` + (d.num_int ? ' Int. '+d.num_int : '');
                 }
 
+                function valStr(v, prop = '') {
+                    if (!v)           return '—';               // null / undefined
+                    if (typeof v === 'string') return v;        // ya es texto
+                    if (prop && v[prop] !== undefined) return v[prop];   // modelo → campo
+                    // fallback genérico («nombre» o primera prop encontrada)
+                    return v.nombre ?? Object.values(v)[0] ?? '—';
+                }
+
+                function getTel(c){
+                return c?.telefono  ?? c?.telefono1 ?? '';   // acepta ambos nombres
+                }
+                function getExt(c){
+                return c?.ext       ?? c?.ext1      ?? '';
+                }
+
                 function pintarEntrega(ent) 
                 {
-                    const d = ent.direccion;
+                    if (!ent.contacto && ent.id_contacto) 
+                    {
+                        ent = {
+                        contacto : ent,
+                        direccion: ent.direccion_entrega,   // el atributo en el modelo Contacto
+                        };
+                        ent.id_direccion_entrega = ent.direccion?.id_direccion;
+                    }
+                      const d = ent.direccion ?? {};
+                      const c = ent.contacto ?? {};
 
-                    /* ------- datos visibles en la card ------- */
-                    setT('entrega-nombre',    d.nombre              || '—');
-                    setT('entrega-contacto',  ent.contacto.nombre   || '—');
-                    setT('entrega-telefono',  ent.contacto.telefono || '—');
-                    setT('entrega-ext',       ent.contacto.ext      || '—');   // ← ya existe el id
-                    setT('entrega-email',     ent.contacto.email    || '—');
+                        /* ► visibles */
+                        setT('entrega-nombre',   valStr(d.nombre));
+                        setT('entrega-contacto', [c?.nombre, c?.apellido_p, c?.apellido_m].filter(Boolean).join(' ') || '—');
+                        setT('entrega-telefono', getTel(c) || '—');
+                        setT('entrega-ext',      getExt(c) || '—');
+                        setT('entrega-email',    valStr(ent.contacto?.email));
 
-                    setT('entrega-calle',   formatCalle(d));
-                    setT('entrega-colonia', d.colonia || '—');
-                    setT('entrega-ciudad',  d.ciudad  || '—');
-                    setT('entrega-estado',  d.estado  || '—');
-                    setT('entrega-cp',      d.cp      || '—');
-                    setT('entrega-pais',    d.pais    || '—');
-                    setT('entrega-notas',   ent.notas || '—');
+                        setT('entrega-calle',    `${valStr(d.calle)} #${valStr(d.num_ext)}${d.num_int ? ' Int. '+d.num_int : ''}`);
+                        setT('entrega-colonia',  valStr(d.colonia, 'd_asenta'));
+                        setT('entrega-ciudad',   valStr(d.ciudad,  'n_mnpio'));
+                        setT('entrega-estado',   valStr(d.estado,  'd_estado'));
+                        setT('entrega-cp',       valStr(d.cp));
+                        setT('entrega-pais',     valStr(d.pais,    'nombre'));
+                        setT('entrega-notas',    valStr(ent.notas));
 
-                    setV('id_contacto_entrega', ent.contacto.id_contacto);
+                        /* ► ocultos  */
+                        setV('id_contacto_entrega', ent.contacto?.id_contacto);
+
 
                 }
 
@@ -1302,8 +1297,8 @@
             row.innerHTML = `
             <td>
                 <button type="button" class="btn btn-sm btn-success seleccionar-entrega"
-                        data-id="${ent.id_direccion_entrega}"
-                        data-route="/contactos/${ent.id_direccion_entrega}/seleccionar">
+                        data-id="${ent.contacto.id_contacto}"
+                        data-route="/contactos/${ent.contacto.id_contacto}/seleccionar">
                 <i class="fa fa-check"></i>
                 </button>
             </td>

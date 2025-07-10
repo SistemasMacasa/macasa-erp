@@ -118,7 +118,8 @@ Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: f
     //Seleccionar Razón Social para Cotización
     Route::post('/razones-sociales/{id}/seleccionar', [RazonSocialController::class, 'seleccionar'])->name('razones_sociales.seleccionar');
     //Procesar Guardar Cotización
-    Route::post('/cotizaciones', [CotizacionController::class, 'store'])->name('cotizaciones.store');
+    Route::post('/cotizaciones', [CotizacionController::class,'store'])
+        ->name('cotizaciones.store');
     //Seleccionar Contacto para Cotización
     Route::post('/contactos/{contacto}/seleccionar', [ContactoController::class, 'seleccionar'])->name('contactos.seleccionar');
 

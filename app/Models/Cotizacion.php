@@ -18,14 +18,16 @@ class Cotizacion extends Model
     protected $fillable = [
         'id_cliente',
         'id_razon_social',
+        'id_direccion_entrega',
+        'id_contacto_entrega',
         'id_vendedor',
+        'id_divisa',
+        'id_termino_pago', // opcional, si algún día se usa
         'fecha_alta',
         'vencimiento',
-        'id_contacto',
-        'id_divisa',
+        'estatus',
         'num_consecutivo',
         'orden_de_venta',   // (binario)
-        'estatus',
         'score_final',
     ];
 
