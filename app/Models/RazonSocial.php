@@ -24,7 +24,8 @@ class RazonSocial extends Model
         'dias_credito',
         'created_at',
         'updated_at',
-        'predeterminado'
+        'predeterminado',
+        'notas_facturacion'
     ];
 
     public function direccion_facturacion()

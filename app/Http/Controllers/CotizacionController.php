@@ -204,6 +204,13 @@ class CotizacionController extends Controller
         DB::beginTransaction();
         try 
         {
+            // Actualizar notas_facturacion en razón social
+            if (!empty($v['notas_facturacion'])) {
+                RazonSocial::where('id_razon_social', $v['id_razon_social'])->update([
+                    'notas' => trim($v['notas_facturacion'])
+                ]);
+            }
+
             /* A) Cotización */
             $cot = Cotizacion::create([
                 'id_cliente'          => $v['id_cliente'],
@@ -213,6 +220,7 @@ class CotizacionController extends Controller
                 'fecha_alta'          => $hoy,
                 'vencimiento'         => $vencimiento,
                 'num_consecutivo'     => $folio,
+                'notas_entrega'       => $v['notas_entrega'] ?? null,
             ]);
 
             /* B) Partidas */

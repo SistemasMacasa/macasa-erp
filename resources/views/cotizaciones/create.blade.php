@@ -226,7 +226,17 @@
                                 </div>
                                 
                                 <div class="col-12">
-                                    <hr class="mt-3">
+                                    <hr class="m-0">
+                                </div>
+
+                                <!-- Al final de la card de facturación -->
+                                <div class="col-12">
+                                    <label class="text-muted mb-1">
+                                        <i class="fas fa-sticky-note me-1 text-primary"></i> Nota para Facturación
+                                    </label>
+                                    <textarea id="fact-notas" class="form-control form-control-sm" rows="3"
+                                              placeholder="Ej. Favor de facturar con PO 123…"
+                                              style="resize: none; overflow: auto;"></textarea>
                                 </div>
 
                                
@@ -297,7 +307,7 @@
 
                                 {{-- ALIAS / NOMBRE DE LA DIRECCIÓN --}}
                                 <div class="col-12">
-                                    <div class="d-flex align-items-center mb-1">
+                                    <div class="d-flex align-items-center mb-2">
                                         <i class="fa fa-warehouse fa-fw text-primary me-2"></i>
                                         <span id="entrega-nombre" class="fw-semibold fs-5">
                                             {{ $contacto_entrega->direccion_entrega->nombre ?? '—' }}
@@ -309,8 +319,8 @@
                                         <div class="col col-xxl-4 col-md-3">
                                             <div class="d-flex align-items-center mb-1">
                                                 <i class="fa fa-user fa-fw text-primary me-2"></i>
-                                                <span id="entrega-contacto">
-                                                    {{ $contacto_entrega->nombreCompleto ?? '—' }} 
+                                                <span id="entrega-contacto" title="{{ $contacto_entrega->nombreCompleto ?? '—' }}">
+                                                    {{ isset($contacto_entrega->nombreCompleto) ? \Illuminate\Support\Str::limit($contacto_entrega->nombreCompleto, 24, '…') : '—' }}
                                                 </span>
                                             </div>
                                         </div>
@@ -338,7 +348,7 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    
                                 </div>
 
 
@@ -384,21 +394,31 @@
                                     <hr class="my-2">
                                 </div>
 
-                                {{-- NOTAS / REFERENCIAS --}}
+                                {{-- REFERENCIAS --}}
                                 <div class="col-12">
-                                    <div class="d-flex align-items-start">
+                                    <div class="d-flex align-items-start mb-1">
                                         <i class="fas fa-sticky-note fa-fw text-muted me-2 mt-1"></i>
                                         <div>
-                                            <span class="text-muted">Notas / Referencias</span>
+                                            <span class="text-muted">Referencias</span>
                                             <div id="entrega-notas" class="fw-semibold">
                                                 {{ $contacto_entrega->direccion_entrega->notas ?? '—' }}
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
 
                                 <div class="col-12">
-                                    <hr class="my-2">
+                                    <hr class="m-0">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="text-muted mb-1">
+                                        <i class="fas fa-sticky-note me-1 text-primary"></i> Nota para Entrega
+                                    </label>
+                                    <textarea id="entrega-notas" class="form-control form-control-sm" rows="3"
+                                              placeholder="Ej. Favor de facturar con PO 123…"
+                                              style="resize: none; overflow: auto;"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -409,72 +429,96 @@
             </div>
         </div>
 
-        {{-- 📦 Sección: Partidas --}}
-        <div class="card shadow mt-4">
-            <div class="card-header fw-bold">Agregar partidas</div>
-            <div class="card-body">
-                <!-- ============  Formulario partidas ============ -->
-                <form id="formPartida" class="row g-2 align-items-end">
-                    <div class="col-12 col-md-2">
-                        <label class="form-label small">SKU <span class="text-muted">(opcional)</span></label>
-                        <input name="sku" class="form-control form-control-sm">
-                    </div>
+{{-- 📦 Sección: Partidas --}}
+<div class="card shadow-sm mt-4 border-0">
+  <div class="card-header border-bottom">
+    <strong class="mb-0 me-auto text-subtitulo ">Agregar Partidas</strong>
+  </div>
 
-                    <div class="col-12 col-md-4">
-                        <label class="form-label small">Descripción *</label>
-                        <input name="descripcion" required class="form-control form-control-sm">
-                    </div>
+  <div class="card-body">
+    <form id="formPartida" class="row g-2">
 
-                    <div class="col-6 col-md-2">
-                        <label class="form-label small">Cantidad *</label>
-                        <input name="cantidad" type="number" min="1" step="1" required class="form-control form-control-sm">
-                    </div>
+  {{-- Descripción (100 % móvil / 6-cols ≥md) --}}
+  <div class="col-12 col-md-6">
+    <label class="form-label">Descripción *</label>
+    <textarea name="descripcion"
+              class="form-control"
+              placeholder="Ej. Servidor Dell…" required
+              style="height:80px;resize:none;"></textarea>
+  </div>
 
-                    <div class="col-6 col-md-2">
-                        <label class="form-label small">Precio *</label>
-                        <input name="precio" type="number" min="0" step="0.01" required class="form-control form-control-sm">
-                    </div>
+  {{-- Bloque derecho: SKU + fila de numéricos + botón --}}
+  <div class="col-12 col-md-6">
 
-                    <div class="col-6 col-md-2">
-                        <label class="form-label small">Costo *</label>
-                        <input name="costo" type="number" min="0" step="0.01" required class="form-control form-control-sm">
-                    </div>
+    {{-- SKU (ocupa el 100 % del ancho disponible) --}}
+    <label class="form-label">SKU <span class="text-muted">(opcional)</span></label>
+    <input name="sku" class="form-control mb-2" placeholder="Código interno">
 
-                    <div class="col-6 col-md-1 d-grid">
-                        <button type="submit" class="btn btn-sm btn-success">
-                            <i class="fa fa-plus"></i> Agregar
-                        </button>
-                    </div>
-                </form>
+    {{-- Fila flex: 3 inputs + botón --}}
+    <div class="d-flex gap-2">
 
-                <!-- ============  Tabla de partidas ============ -->
-                <table id="tablaPartidas" class="table table-sm table-bordered align-middle mt-3">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th><th>SKU</th><th>Descripción</th>
-                            <th class="text-end">Precio</th><th class="text-end">Costo</th>
-                            <th class="text-end">Cant.</th><th class="text-end">Importe</th><th></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                        <tfoot class="table-light">
-                            <tr>
-                            <th colspan="6" class="text-end">Subtotal</th>
-                            <th id="partidasSubtotal" class="text-end">0.00</th><th></th>
-                            </tr>
-                            <tr>
-                            <th colspan="6" class="text-end">IVA (16 %)</th>
-                            <th id="partidasIVA" class="text-end">0.00</th><th></th>
-                            </tr>
-                            <tr>
-                            <th colspan="6" class="text-end">Total</th>
-                            <th id="partidasTotal" class="text-end fw-bold">0.00</th><th></th>
-                            </tr>
-                        </tfoot>
-                </table>
+      <input name="precio"   type="number" min="0" step="0.01" required
+             class="form-control" placeholder="Precio *">
 
-            </div>
-        </div>
+      <input name="costo"    type="number" min="0" step="0.01" required
+             class="form-control" placeholder="Costo *">
+
+      <input name="cantidad" type="number" min="1" step="1" required
+             class="form-control" placeholder="Cant. *">
+
+      {{-- Botón: sin crecer, pegado a la derecha, alineado abajo --}}
+      <button type="submit"
+              class="btn btn-success flex-shrink-0 align-self-end px-4">
+        <i class="fa fa-plus me-1"></i> Agregar
+      </button>
+    </div>
+
+  </div>
+
+</form>
+
+
+
+    {{-- Tabla de partidas --}}
+    <div class="table-responsive mt-4">
+      <table id="tablaPartidas" class="table table-sm table-bordered align-middle mb-0">
+        <thead class="table-light text-center">
+          <tr>
+            <th>#</th>
+            <th>SKU</th>
+            <th>Descripción</th>
+            <th class="text-end">Precio</th>
+            <th class="text-end">Costo</th>
+            <th class="text-end">Cantidad</th>
+            <th class="text-end">Importe</th>
+            <th class="text-center"></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot class="table-light fw-semibold">
+          <tr>
+            <td colspan="6" class="text-end">Subtotal</td>
+            <td id="partidasSubtotal" class="text-end">0.00</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="6" class="text-end">IVA (16 %)</td>
+            <td id="partidasIVA" class="text-end">0.00</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="6" class="text-end">Total</td>
+            <td id="partidasTotal" class="text-end text-dark fw-bold">0.00</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
 
     </div> <!-- End SECCION PRINCIPAL -->
 
@@ -1216,7 +1260,9 @@
 
                         /* ► visibles */
                         setT('entrega-nombre',   valStr(d.nombre));
-                        setT('entrega-contacto', [c?.nombre, c?.apellido_p, c?.apellido_m].filter(Boolean).join(' ') || '—');
+                        let nombreCompleto = [c?.nombre, c?.apellido_p, c?.apellido_m].filter(Boolean).join(' ') || '—';
+                        if (nombreCompleto.length > 27) nombreCompleto = nombreCompleto.slice(0, 24) + '…';
+                        setT('entrega-contacto', nombreCompleto);
                         setT('entrega-telefono', getTel(c) || '—');
                         setT('entrega-ext',      getExt(c) || '—');
                         setT('entrega-email',    valStr(ent.contacto?.email));

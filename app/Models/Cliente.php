@@ -78,4 +78,10 @@ class Cliente extends Model
         return $this->hasMany(Nota::class, 'id_cliente', 'id_cliente')->orderBy('fecha_registro', 'desc');
     }
 
+    public function cotizaciones()
+    {
+        return $this->hasMany(\App\Models\Cotizacion::class, 'id_cliente', 'id_cliente');
+    }
+
+
 }

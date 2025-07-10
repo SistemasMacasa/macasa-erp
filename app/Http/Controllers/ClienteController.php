@@ -16,6 +16,9 @@ use App\Models\MetodoPago;
 use App\Models\UsoCfdi;
 use App\Models\RegimenFiscal;
 use App\Models\Nota;
+use App\Models\Cotizacion;
+use App\Models\Consecutivo;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Can;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -176,64 +179,28 @@ class ClienteController extends Controller
             ->orderBy('fecha_registro')
             ->get();
 
-        $cotizaciones = collect([
-            ['fecha' => '2025-04-01', 'id' => 'MC200123', 'razon' => 'ACME S.A. de C.V.', 'subtotal' => 12500.00, 'margen' => 2500.00, 'factor' => 20.4],
-            ['fecha' => '2025-04-03', 'id' => 'MC200124', 'razon' => 'Tech México S.A.', 'subtotal' => 9800.00, 'margen' => 1800.00, 'factor' => 18.3],
-            ['fecha' => '2025-04-05', 'id' => 'MC200125', 'razon' => 'Comercial XYZ S. de R.L', 'subtotal' => 15400.50, 'margen' => 3200.00, 'factor' => 21.2],
-            ['fecha' => '2025-04-07', 'id' => 'MC200126', 'razon' => 'Distribuidora ABC S.A.', 'subtotal' => 11200.00, 'margen' => 2100.00, 'factor' => 19.0],
-            ['fecha' => '2025-04-09', 'id' => 'MC200127', 'razon' => 'Global Tech Solutions', 'subtotal' => 8700.00, 'margen' => 1700.00, 'factor' => 19.5],
-            ['fecha' => '2025-04-11', 'id' => 'MC200128', 'razon' => 'Innovaciones S.A. de C.V.', 'subtotal' => 14300.00, 'margen' => 3500.00, 'factor' => 24],
-            ['fecha' => '2025-04-13', 'id' => 'MC200129', 'razon' => 'Servicios Integrales MX', 'subtotal' => 7600.00, 'margen' => 1200.00, 'factor' => 15.8],
-            ['fecha' => '2025-04-15', 'id' => 'MC200130', 'razon' => 'Corporativo Delta', 'subtotal' => 9900.00, 'margen' => 2200.00, 'factor' => 22.2],
-            ['fecha' => '2025-04-17', 'id' => 'MC200131', 'razon' => 'Grupo Empresarial Omega', 'subtotal' => 15800.00, 'margen' => 4100.00, 'factor' => 25.9],
-            ['fecha' => '2025-04-19', 'id' => 'MC200132', 'razon' => 'Soluciones Avanzadas', 'subtotal' => 13400.00, 'margen' => 3300.00, 'factor' => 24.6],
-            ['fecha' => '2025-04-21', 'id' => 'MC200133', 'razon' => 'TechnoWorld S.A.', 'subtotal' => 10500.00, 'margen' => 2100.00, 'factor' => 20],
-            ['fecha' => '2025-04-23', 'id' => 'MC200134', 'razon' => 'Comercializadora Alfa', 'subtotal' => 12000.00, 'margen' => 3000.00, 'factor' => 25],
-            ['fecha' => '2025-04-25', 'id' => 'MC200135', 'razon' => 'Distribuciones Beta', 'subtotal' => 8800.00, 'margen' => 1400.00, 'factor' => 15.9],
-            ['fecha' => '2025-04-27', 'id' => 'MC200136', 'razon' => 'Innovación Global', 'subtotal' => 16000.00, 'margen' => 4800.00, 'factor' => 30],
-            ['fecha' => '2025-04-29', 'id' => 'MC200137', 'razon' => 'Corporativo Gamma', 'subtotal' => 14500.00, 'margen' => 3500.00, 'factor' => 24.1],
-        ]);
+            $cotizaciones = Cotizacion::with(['razonSocial'])
+            ->where('id_cliente', $cliente->id_cliente)
+            ->orderByDesc('fecha_alta')
+            ->get()
+            ->map(function ($c) {
+                $subtotal = $c->subtotal ?: 0;
+                $margen = $c->score_final ?: 0;
+                $factor = $subtotal > 0 ? ($margen / $subtotal) * 100 : 0;
+
+                return [
+                    'fecha'    => $c->fecha,
+                    'id'       => $c->num_consecutivo,
+                    'razon'    => optional($c->razonSocial)->nombre ?? 'Sin razón',
+                    'subtotal' => $subtotal,
+                    'margen'   => $margen,
+                    'factor'   => $factor
+            ];
+            });
+
 
         // ===== Dummy de historial mientras no hay modelo Pedido =====
         $pedidos = collect([
-            ['fecha' => '2025-04-02', 'id' => 'MP21023', 'razon' => 'ACME S.A. de C.V.', 'subtotal' => 15230.50, 'margen' => 2800.00, 'factor' => 18.4],
-            ['fecha' => '2025-03-17', 'id' => 'MP20976', 'razon' => 'Tech México S.A.', 'subtotal' => 8650.00, 'margen' => 1910.00, 'factor' => 20.4],
-            ['fecha' => '2025-02-28', 'id' => 'MP20911', 'razon' => 'Comercial XYZ S. de R.L', 'subtotal' => 43120.90, 'margen' => 6550.00, 'factor' => 15.2],
-            ['fecha' => '2025-04-10', 'id' => 'MP21034', 'razon' => 'Distribuidora ABC S.A.', 'subtotal' => 12345.67, 'margen' => 2450.00, 'factor' => 19.8],
-            ['fecha' => '2025-03-25', 'id' => 'MP20987', 'razon' => 'Global Tech Solutions', 'subtotal' => 9876.54, 'margen' => 2020.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-15', 'id' => 'MP20899', 'razon' => 'Innovaciones S.A. de C.V.', 'subtotal' => 25678.90, 'margen' => 4450.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-05', 'id' => 'MP21028', 'razon' => 'Servicios Integrales MX', 'subtotal' => 7654.32, 'margen' => 1660.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-12', 'id' => 'MP20965', 'razon' => 'Corporativo Delta', 'subtotal' => 18900.00, 'margen' => 3200.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-20', 'id' => 'MP20905', 'razon' => 'Grupo Empresarial Omega', 'subtotal' => 34210.75, 'margen' => 5050.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-08', 'id' => 'MP21031', 'razon' => 'Soluciones Avanzadas', 'subtotal' => 11234.56, 'margen' => 2050.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-30', 'id' => 'MP20992', 'razon' => 'TechnoWorld S.A.', 'subtotal' => 6543.21, 'margen' => 1500.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-10', 'id' => 'MP20888', 'razon' => 'Comercializadora Alfa', 'subtotal' => 27890.12, 'margen' => 4600.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-12', 'id' => 'MP21036', 'razon' => 'Distribuciones Beta', 'subtotal' => 8765.43, 'margen' => 1780.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-20', 'id' => 'MP20980', 'razon' => 'Innovación Global', 'subtotal' => 14567.89, 'margen' => 2750.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-25', 'id' => 'MP20910', 'razon' => 'Corporativo Gamma', 'subtotal' => 39876.54, 'margen' => 6100.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-15', 'id' => 'MP21040', 'razon' => 'Servicios Empresariales', 'subtotal' => 13456.78, 'margen' => 2500.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-10', 'id' => 'MP20954', 'razon' => 'Tech Solutions MX', 'subtotal' => 9876.54, 'margen' => 2100.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-05', 'id' => 'MP20877', 'razon' => 'Comercial Delta', 'subtotal' => 31234.56, 'margen' => 4530.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-18', 'id' => 'MP21045', 'razon' => 'Distribuidora Zeta', 'subtotal' => 7654.32, 'margen' => 1710.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-05', 'id' => 'MP20943', 'razon' => 'Global Innovators', 'subtotal' => 16789.01, 'margen' => 2980.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-20', 'id' => 'MP21050', 'razon' => 'Alpha Solutions', 'subtotal' => 14500.00, 'margen' => 2750.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-22', 'id' => 'MP20995', 'razon' => 'Beta Enterprises', 'subtotal' => 9800.00, 'margen' => 1950.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-18', 'id' => 'MP20920', 'razon' => 'Gamma Corp.', 'subtotal' => 32000.00, 'margen' => 4800.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-25', 'id' => 'MP21060', 'razon' => 'Delta Innovations', 'subtotal' => 12000.00, 'margen' => 2200.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-28', 'id' => 'MP21000', 'razon' => 'Epsilon Group', 'subtotal' => 8700.00, 'margen' => 1830.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-12', 'id' => 'MP20890', 'razon' => 'Zeta Solutions', 'subtotal' => 25000.00, 'margen' => 4000.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-22', 'id' => 'MP21055', 'razon' => 'Omega Enterprises', 'subtotal' => 13500.00, 'margen' => 2600.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-15', 'id' => 'MP20970', 'razon' => 'Sigma Tech', 'subtotal' => 9400.00, 'margen' => 1950.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-08', 'id' => 'MP20885', 'razon' => 'Lambda Corp.', 'subtotal' => 31000.00, 'margen' => 4600.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-28', 'id' => 'MP21070', 'razon' => 'Theta Innovations', 'subtotal' => 11000.00, 'margen' => 2000.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-18', 'id' => 'MP20985', 'razon' => 'Iota Enterprises', 'subtotal' => 8900.00, 'margen' => 1920.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-22', 'id' => 'MP20930', 'razon' => 'Kappa Solutions', 'subtotal' => 27000.00, 'margen' => 4200.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-30', 'id' => 'MP21080', 'razon' => 'Lambda Innovations', 'subtotal' => 14000.00, 'margen' => 2650.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-25', 'id' => 'MP20998', 'razon' => 'Mu Enterprises', 'subtotal' => 9200.00, 'margen' => 1850.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-28', 'id' => 'MP20945', 'razon' => 'Nu Corp.', 'subtotal' => 29000.00, 'margen' => 4500.00, 'factor' => 35.4],
-            ['fecha' => '2025-04-18', 'id' => 'MP21048', 'razon' => 'Xi Solutions', 'subtotal' => 12500.00, 'margen' => 2350.00, 'factor' => 35.4],
-            ['fecha' => '2025-03-12', 'id' => 'MP20968', 'razon' => 'Omicron Group', 'subtotal' => 8800.00, 'margen' => 1870.00, 'factor' => 35.4],
-            ['fecha' => '2025-02-15', 'id' => 'MP20908', 'razon' => 'Pi Enterprises', 'subtotal' => 26000.00, 'margen' => 4300.00, 'factor' => 35.4],
         ]);
 
         $vendedores = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos

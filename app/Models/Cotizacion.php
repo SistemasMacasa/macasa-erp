@@ -30,6 +30,7 @@ class Cotizacion extends Model
         'num_consecutivo',
         'orden_de_venta',   // (binario)
         'score_final',
+        'notas_entrega',    
     ];
 
     /* -----------  RELACIONES  ----------- */

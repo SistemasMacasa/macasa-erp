@@ -2215,3 +2215,61 @@ input:checked+.slider:before {
   background-color: var(--bs-success);
   color: #fff;
 }
+
+/* Limita ancho de columnas de números */
+#tablaPartidas th.text-end,
+#tablaPartidas td.text-end {
+  white-space: nowrap;
+}
+
+/* Botón de eliminar más pequeño visualmente */
+#tablaPartidas .btn.btn-xs {
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+/* --- FORMULARIO DE PARTIDAS ----------------------------------- */
+
+/* Reducir el “gutter” horizontal ⇒ inputs más pegados entre sí */
+#formPartida.row {
+  --bs-gutter-x: 0.75rem;   /* 1 rem predeterminado → 0 .75 rem */
+}
+
+/* El textarea no debe robar todo el ancho: 100 % hasta md y 66 % en ≥ md */
+#formPartida textarea[name="descripcion"] {
+  height: 84px;           /* fijo, con scroll interno si se llena */
+  resize: none;
+  overflow-y: auto;
+}
+
+/* Alinear el bloque derecho exactamente bajo el borde del textarea */
+#formPartida .bloque-derecho {
+  padding-left: 0;        /* quita el gutter interno del col-*   */
+}
+
+/* Tres inputs numéricos en una sola fila, mismos anchos  */
+#formPartida .grupo-numericos > .form-control {
+  min-width: 0;           /* permite ajustar dentro del flex */
+}
+
+/* Botón Agregar: que no se descuadre en XS y quede alineado a la derecha */
+#formPartida .alinear-boton {
+  text-align: right;
+}
+
+/* --- TABLA DE PARTIDAS --------------------------------------- */
+
+/* Encabezados: todo a la izquierda salvo números */
+#tablaPartidas thead th {
+  text-align: left;
+}
+#tablaPartidas thead th.text-end,
+#tablaPartidas tbody td.text-end {
+  text-align: right;
+}
+
+/* Elimino extra-padding superior que crea un “hueco” entre form y tabla */
+#tablaPartidas {
+  margin-top: .5rem;
+}
