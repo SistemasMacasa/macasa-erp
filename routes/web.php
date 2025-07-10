@@ -11,11 +11,8 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RazonSocialController;
-<<<<<<< HEAD
 use App\Http\Controllers\MetasVentasController;
-=======
 use App\Http\Controllers\ContactoController;
->>>>>>> dev
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
 // Route::get('/', function () {

@@ -22,17 +22,13 @@ use App\Models\Colonia;
 use App\Models\Equipo;
 use App\Models\Usuario;
 use App\Models\Contacto;
-<<<<<<< HEAD
-=======
 use App\Models\Cotizacion;
 use App\Models\CotizacionPartida;
->>>>>>> dev
 use Illuminate\Support\Str;
 
 
 class CotizacionController extends Controller
 {
-<<<<<<< HEAD
     public function index(Request $request)
     {
         $year = $request->input('year', now()->year);
@@ -103,15 +99,6 @@ class CotizacionController extends Controller
         }
 
         return view('cotizaciones.index', compact('equipos', 'year', 'month'));
-=======
-    public function index()
-    {
-        $equipos = Equipo::with(['lider', 'usuarios'])->get();
-        $usuarios = Usuario::all();
-        // dd($equipos);
-
-        return view('cotizaciones.index', compact('equipos', 'usuarios'));
->>>>>>> dev
     }
 
 
@@ -337,18 +324,6 @@ class CotizacionController extends Controller
             ], 422);
         }
 
-<<<<<<< HEAD
-        $idColonia = $coloniaObj->id_colonia;
-        $idEstado  = Estado::where('c_estado',  $coloniaObj->c_estado)->value('id_estado');
-        $idCiudad  = Ciudad::where('c_estado',  $coloniaObj->c_estado)
-            ->where('c_mnpio', $coloniaObj->c_mnpio)
-            ->value('id_ciudad');
-
-        if (!$idEstado || !$idCiudad) {
-            throw ValidationException::withMessages([
-                'ubicacion' => ['No se pudo resolver ciudad/estado a partir de la colonia.']
-            ]);
-=======
         // Estado
         $estado = Estado::where('c_estado', $colonia->c_estado)->first();
         if (!$estado) {
@@ -356,7 +331,6 @@ class CotizacionController extends Controller
                 'success' => false,
                 'message' => 'No se encontró el estado ligado a la colonia.'
             ], 422);
->>>>>>> dev
         }
 
         // Ciudad / municipio  ← dupla (c_estado, c_mnpio)
@@ -374,18 +348,7 @@ class CotizacionController extends Controller
 
 
         /* 3. Crear todo en transacción */
-<<<<<<< HEAD
-        DB::transaction(function () use (
-            &$razon,
-            &$direccion,
-            $data,
-            $idColonia,
-            $idCiudad,
-            $idEstado
-        ) {
-=======
         DB::transaction(function () use (&$razon, &$direccion, $data, $colonia, $estado, $ciudad) {
->>>>>>> dev
             /* Dirección */
             $direccion = Direccion::create([
                 'id_cliente' => $data['id_cliente'],
@@ -436,10 +399,6 @@ class CotizacionController extends Controller
 
         // También la dirección por separado (por comodidad del front)
         $direccion->load(['colonia', 'ciudad', 'estado', 'pais']);
-<<<<<<< HEAD
-
-=======
->>>>>>> dev
         return response()->json([
             'success' => true,
             'razon_social' => $razon,
@@ -488,12 +447,6 @@ class CotizacionController extends Controller
             ], 422);
         }
 
-<<<<<<< HEAD
-        $idEstado = Estado::where('c_estado', $colonia->c_estado)->value('id_estado');
-        $idCiudad = Ciudad::where('c_estado', $colonia->c_estado)
-            ->where('c_mnpio', $colonia->c_mnpio)
-            ->value('id_ciudad');
-=======
         // Estado
         $estado = Estado::where('c_estado', $colonia->c_estado)->first();
         if (!$estado) {
@@ -502,7 +455,6 @@ class CotizacionController extends Controller
                 'message' => 'No se encontró el estado ligado a la colonia.'
             ], 422);
         }
->>>>>>> dev
 
         // Ciudad / municipio  ← dupla (c_estado, c_mnpio)
         $ciudad = Ciudad::where('c_estado', $colonia->c_estado)
@@ -542,17 +494,6 @@ class CotizacionController extends Controller
 
             // nuevo contacto
             $contacto = Contacto::create([
-<<<<<<< HEAD
-                'id_cliente'          => $v['id_cliente'],
-                'id_direccion_entrega' => $direccion->id_direccion,
-                'nombre'              => $v['contacto']['nombre'],
-                'apellido_p'          => $v['contacto']['apellido_p'],
-                'apellido_m'          => $v['contacto']['apellido_m'] ?? null,
-                'telefono1'           => $v['contacto']['telefono'] ?? null,
-                'ext1'                => $v['contacto']['ext'] ?? null,
-                'email'               => $v['contacto']['email'] ?? null,
-                'predeterminado'      => 1,
-=======
                 'id_cliente' => $v['id_cliente'],
                 'id_direccion_entrega' => $direccion->id_direccion,
                 'nombre' => $v['contacto']['nombre'],
@@ -562,21 +503,16 @@ class CotizacionController extends Controller
                 'ext1' => $v['contacto']['ext'] ?? null,
                 'email' => $v['contacto']['email'] ?? null,
                 'predeterminado' => 1,
->>>>>>> dev
             ]);
 
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-<<<<<<< HEAD
-            return response()->json(['success' => false, 'message' => 'Error interno'], 500);
-=======
             return response()->json([
                 'success' => false,
                 'message' => 'Error interno al guardar la dirección.'
             ], 500);
->>>>>>> dev
         }
 
         /* 4️⃣  PAYLOAD para el front */
@@ -606,9 +542,6 @@ class CotizacionController extends Controller
                 ],
         ]);
     }
-<<<<<<< HEAD
-}
-=======
 
 
     // app/Http/Controllers/CotizacionesController.php
@@ -642,4 +575,3 @@ class CotizacionController extends Controller
 
 
 }
->>>>>>> dev
