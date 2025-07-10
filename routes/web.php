@@ -287,10 +287,11 @@ Route::middleware(['auth', 'permission:Editar Equipos de Trabajo'])->group(funct
 Route::middleware(['auth', 'permission:Eliminar Equipos de trabajo'])->group(function () {
     Route::delete('/equipos/{id}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
 });
-
-Route::get('/metas-ventas', [MetasVentasController::class, 'index'])->name('ventas.metas');
-
-Route::post('/metas-ventas/guardar', [MetasVentasController::class, 'guardar'])->name('ventas.metas.guardar');
+Route::middleware(['auth', 'permission:Metas de Venta'])->group(function () {
+    Route::get('/metas-ventas', [MetasVentasController::class, 'index'])->name('ventas.metas');
+    
+    Route::post('/metas-ventas/guardar', [MetasVentasController::class, 'guardar'])->name('ventas.metas.guardar');
+});
 
 
 
