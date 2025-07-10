@@ -3,44 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-<<<<<<< HEAD
-
-class Cotizacion extends Model
-{
-    protected $table = 'cotizaciones';
-
-    protected $primaryKey = 'id_cotizacion';
-
-    public $timestamps = false;
-
-    protected $fillable = [
-        'id_cliente',
-        'id_razon_social',
-        'id_vendedor',
-        'fecha_alta',
-        'vencimiento',
-        'id_direccion_entre',
-        'estatus',
-        'id_divisa',
-        'num_consecutivo',
-        'orden_de_venta',
-        'score_final',
-        'notas_entrega',
-        'notas_facturacion',
-        'id_termino_pago'
-    ];
-
-    // Para que Laravel maneje estas columnas como fechas (Carbon)
-    protected $dates = [
-        'fecha_alta',
-        'vencimiento',
-    ];
-
-    public function vendedor()
-    {
-        return $this->belongsTo(Usuario::class, 'id_vendedor', 'id_usuario');
-    }
-=======
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Cotizacion extends Model
@@ -118,7 +80,15 @@ class Cotizacion extends Model
         return $this->belongsTo(Consecutivo::class, 'num_consecutivo', 'valor_actual');
     }
 
+        // Para que Laravel maneje estas columnas como fechas (Carbon)
+    protected $dates = [
+        'fecha_alta',
+        'vencimiento',
+    ];
 
+    public function vendedor()
+    {
+        return $this->belongsTo(Usuario::class, 'id_vendedor', 'id_usuario');
+    }
 
->>>>>>> dev
 }

@@ -21,40 +21,39 @@ use App\Models\Ciudad;
 use App\Models\Colonia;
 use App\Models\Equipo;
 use App\Models\Usuario;
+use App\Models\MetasVentas;
 use App\Models\Contacto;
-<<<<<<< HEAD
-=======
 use App\Models\Cotizacion;
 use App\Models\CotizacionPartida;
->>>>>>> dev
 use Illuminate\Support\Str;
 
 
 class CotizacionController extends Controller
 {
-<<<<<<< HEAD
     public function index(Request $request)
     {
         $year = $request->input('year', now()->year);
         $month = $request->input('month', now()->month);
 
-        // Obtener equipos con usuarios y líderes
+        // 1. Cargar equipos con usuarios
         $equipos = Equipo::with(['lider', 'usuarios'])->get();
 
-        // Cargar metas y cotizaciones filtradas
-        $usuarios = Usuario::with([
-            'metasVentas' => function ($query) use ($year, $month) {
-                $query->whereYear('mes_aplicacion', $year)
-                    ->whereMonth('mes_aplicacion', $month);
-            },
-            'cotizaciones' => function ($query) use ($year, $month) {
-                $query->whereYear('fecha_alta', $year)
-                    ->whereMonth('fecha_alta', $month);
-            }
-        ])->get()->keyBy('id_usuario');
+        // 2. Obtener metas del mes
+        $metas = MetasVentas::where('anio', $year)
+            ->where('mes', $month)
+            ->get()
+            ->keyBy('id_usuario');
 
+        // 3. Obtener cotizaciones del mes
+        $cotizaciones = Cotizacion::with('partidas')
+            ->whereYear('fecha_alta', $year)
+            ->whereMonth('fecha_alta', $month)
+            ->get()
+            ->groupBy('id_vendedor');
+
+        // 4. Recorrer los equipos y calcular datos por usuario
         foreach ($equipos as $equipo) {
-            // Inicia en cero
+            // Inicializar totales del equipo
             $equipo->cuota_cotizacion = 0;
             $equipo->alcance_cotizacion = 0;
             $equipo->porcentaje_cotizacion = 0;
@@ -63,36 +62,49 @@ class CotizacionController extends Controller
             $equipo->porcentaje_margen = 0;
 
             foreach ($equipo->usuarios as $usuario) {
-                $user = $usuarios->get($usuario->id_usuario);
-                $meta = $user->metasVentas->first();
+                $meta = $metas->get($usuario->id_usuario);
+                $cotizacionesUsuario = $cotizaciones->get($usuario->id_usuario, collect());
 
-                // Simulación si no hay metas reales
-                $cuota = $meta->cuota_cotizaciones ?? rand(8, 15);
-                $alcance = $user->cotizaciones->count();
-                $porcentaje = $cuota > 0 ? ($alcance / $cuota) * 100 : 0;
+                // 5. Cálculo: cuota cotización (directo de la meta)
+                $cuotaCotizacion = $meta->cuota_cotizaciones ?? 0;
 
-                $cuotaMargen = $meta->cuota_marginal_cotizaciones ?? rand(2000, 4000);
-                $alcanceMargen = $user->cotizaciones->sum('score_final') ?? rand(1500, 3500);
-                $porcentajeMargen = $cuotaMargen > 0 ? ($alcanceMargen / $cuotaMargen) * 100 : 0;
+                // 6. Alcance cotizaciones: cantidad de cotizaciones realizadas
+                $alcanceCotizacion = $cotizacionesUsuario->count();
 
-                // Inyectar datos al usuario
+                // 7. Porcentaje alcanzado
+                $porcentajeCotizacion = $cuotaCotizacion > 0
+                    ? ($alcanceCotizacion / $cuotaCotizacion) * 100
+                    : 0;
+
+                // 8. Cuota margen (meta establecida)
+                $cuotaMargen = $meta->cuota_marginal_facturacion ?? 0;
+
+                // 9. Alcance margen: suma de score_final
+                $alcanceMargen = $cotizacionesUsuario->sum('score_final');
+
+                // 10. Porcentaje margen alcanzado
+                $porcentajeMargen = $cuotaMargen > 0
+                    ? ($alcanceMargen / $cuotaMargen) * 100
+                    : 0;
+
+                // 11. Inyectar datos al usuario
                 $usuario->metas = [
-                    'cuota_cotizacion' => $cuota,
-                    'alcance_cotizacion' => $alcance,
-                    'porcentaje_cotizacion' => $porcentaje,
+                    'cuota_cotizacion' => $cuotaCotizacion,
+                    'alcance_cotizacion' => $alcanceCotizacion,
+                    'porcentaje_cotizacion' => $porcentajeCotizacion,
                     'cuota_margen' => $cuotaMargen,
                     'alcance_margen' => $alcanceMargen,
                     'porcentaje_margen' => $porcentajeMargen,
                 ];
 
-                // Sumar al equipo
-                $equipo->cuota_cotizacion += $cuota;
-                $equipo->alcance_cotizacion += $alcance;
+                // 12. Acumular al equipo
+                $equipo->cuota_cotizacion += $cuotaCotizacion;
+                $equipo->alcance_cotizacion += $alcanceCotizacion;
                 $equipo->cuota_margen += $cuotaMargen;
                 $equipo->alcance_margen += $alcanceMargen;
             }
 
-            // Cálculos de porcentaje del equipo
+            // 13. Porcentajes del equipo
             $equipo->porcentaje_cotizacion = $equipo->cuota_cotizacion > 0
                 ? ($equipo->alcance_cotizacion / $equipo->cuota_cotizacion) * 100
                 : 0;
@@ -103,16 +115,8 @@ class CotizacionController extends Controller
         }
 
         return view('cotizaciones.index', compact('equipos', 'year', 'month'));
-=======
-    public function index()
-    {
-        $equipos = Equipo::with(['lider', 'usuarios'])->get();
-        $usuarios = Usuario::all();
-        // dd($equipos);
-
-        return view('cotizaciones.index', compact('equipos', 'usuarios'));
->>>>>>> dev
     }
+
 
 
     public function create($id_cliente)
@@ -202,7 +206,7 @@ class CotizacionController extends Controller
 
         $partidas = json_decode($v['partidas'], true);
         if (!$partidas || !is_array($partidas)) {
-            return response()->json(['success'=>false,'message'=>'Partidas mal formateadas'],422);
+            return response()->json(['success' => false, 'message' => 'Partidas mal formateadas'], 422);
         }
 
         /* 2. Datos base */
@@ -215,8 +219,7 @@ class CotizacionController extends Controller
 
         /* 3. Transacción */
         DB::beginTransaction();
-        try 
-        {
+        try {
             /* A) Cotización */
             $cot = Cotizacion::create([
                 'id_cliente'          => $v['id_cliente'],
@@ -230,7 +233,7 @@ class CotizacionController extends Controller
 
             /* B) Partidas */
             $scoreTotal = 0;
-            foreach ($partidas as $p){
+            foreach ($partidas as $p) {
                 $p['id_cotizacion'] = $cot->id_cotizacion;
                 CotizacionPartida::create([
                     'id_cotizacion' => $cot->id_cotizacion,
@@ -252,12 +255,11 @@ class CotizacionController extends Controller
                 'success'     => true,
                 'redirect_to' => route('cotizaciones.index', $cot->id_cotizacion),
             ]);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error('Fallo al guardar cotización', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return response()->json(['success'=>false,'message'=>'Error interno'],500);
+            return response()->json(['success' => false, 'message' => 'Error interno'], 500);
         }
-
     }
 
 
@@ -268,9 +270,9 @@ class CotizacionController extends Controller
 
             /* ① buscamos (y bloqueamos) el registro del prefijo */
             $reg = DB::table('consecutivos')
-                    ->lockForUpdate()
-                    ->where('prefijo', 'MC2')
-                    ->first();
+                ->lockForUpdate()
+                ->where('prefijo', 'MC2')
+                ->first();
 
             /* ② si no existe, lo creamos                             */
             if (!$reg) {
@@ -285,11 +287,11 @@ class CotizacionController extends Controller
             } else {
                 $next = $reg->valor_actual + 1;
                 DB::table('consecutivos')
-                ->where('id', $reg->id)
-                ->update([
-                    'valor_actual' => $next,
-                    'updated_at'   => now(),
-                ]);
+                    ->where('id', $reg->id)
+                    ->update([
+                        'valor_actual' => $next,
+                        'updated_at'   => now(),
+                    ]);
             }
 
             /* ③ devolvemos el folio formateado -- MC200001, MC200002, … */
@@ -337,18 +339,6 @@ class CotizacionController extends Controller
             ], 422);
         }
 
-<<<<<<< HEAD
-        $idColonia = $coloniaObj->id_colonia;
-        $idEstado  = Estado::where('c_estado',  $coloniaObj->c_estado)->value('id_estado');
-        $idCiudad  = Ciudad::where('c_estado',  $coloniaObj->c_estado)
-            ->where('c_mnpio', $coloniaObj->c_mnpio)
-            ->value('id_ciudad');
-
-        if (!$idEstado || !$idCiudad) {
-            throw ValidationException::withMessages([
-                'ubicacion' => ['No se pudo resolver ciudad/estado a partir de la colonia.']
-            ]);
-=======
         // Estado
         $estado = Estado::where('c_estado', $colonia->c_estado)->first();
         if (!$estado) {
@@ -356,7 +346,6 @@ class CotizacionController extends Controller
                 'success' => false,
                 'message' => 'No se encontró el estado ligado a la colonia.'
             ], 422);
->>>>>>> dev
         }
 
         // Ciudad / municipio  ← dupla (c_estado, c_mnpio)
@@ -374,18 +363,7 @@ class CotizacionController extends Controller
 
 
         /* 3. Crear todo en transacción */
-<<<<<<< HEAD
-        DB::transaction(function () use (
-            &$razon,
-            &$direccion,
-            $data,
-            $idColonia,
-            $idCiudad,
-            $idEstado
-        ) {
-=======
         DB::transaction(function () use (&$razon, &$direccion, $data, $colonia, $estado, $ciudad) {
->>>>>>> dev
             /* Dirección */
             $direccion = Direccion::create([
                 'id_cliente' => $data['id_cliente'],
@@ -436,10 +414,6 @@ class CotizacionController extends Controller
 
         // También la dirección por separado (por comodidad del front)
         $direccion->load(['colonia', 'ciudad', 'estado', 'pais']);
-<<<<<<< HEAD
-
-=======
->>>>>>> dev
         return response()->json([
             'success' => true,
             'razon_social' => $razon,
@@ -488,12 +462,6 @@ class CotizacionController extends Controller
             ], 422);
         }
 
-<<<<<<< HEAD
-        $idEstado = Estado::where('c_estado', $colonia->c_estado)->value('id_estado');
-        $idCiudad = Ciudad::where('c_estado', $colonia->c_estado)
-            ->where('c_mnpio', $colonia->c_mnpio)
-            ->value('id_ciudad');
-=======
         // Estado
         $estado = Estado::where('c_estado', $colonia->c_estado)->first();
         if (!$estado) {
@@ -502,7 +470,6 @@ class CotizacionController extends Controller
                 'message' => 'No se encontró el estado ligado a la colonia.'
             ], 422);
         }
->>>>>>> dev
 
         // Ciudad / municipio  ← dupla (c_estado, c_mnpio)
         $ciudad = Ciudad::where('c_estado', $colonia->c_estado)
@@ -542,17 +509,6 @@ class CotizacionController extends Controller
 
             // nuevo contacto
             $contacto = Contacto::create([
-<<<<<<< HEAD
-                'id_cliente'          => $v['id_cliente'],
-                'id_direccion_entrega' => $direccion->id_direccion,
-                'nombre'              => $v['contacto']['nombre'],
-                'apellido_p'          => $v['contacto']['apellido_p'],
-                'apellido_m'          => $v['contacto']['apellido_m'] ?? null,
-                'telefono1'           => $v['contacto']['telefono'] ?? null,
-                'ext1'                => $v['contacto']['ext'] ?? null,
-                'email'               => $v['contacto']['email'] ?? null,
-                'predeterminado'      => 1,
-=======
                 'id_cliente' => $v['id_cliente'],
                 'id_direccion_entrega' => $direccion->id_direccion,
                 'nombre' => $v['contacto']['nombre'],
@@ -562,53 +518,45 @@ class CotizacionController extends Controller
                 'ext1' => $v['contacto']['ext'] ?? null,
                 'email' => $v['contacto']['email'] ?? null,
                 'predeterminado' => 1,
->>>>>>> dev
             ]);
 
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
-<<<<<<< HEAD
-            return response()->json(['success' => false, 'message' => 'Error interno'], 500);
-=======
             return response()->json([
                 'success' => false,
                 'message' => 'Error interno al guardar la dirección.'
             ], 500);
->>>>>>> dev
         }
 
         /* 4️⃣  PAYLOAD para el front */
         return response()->json([
             'success' => true,
             'entrega' => [
-                    'id_direccion_entrega' => $direccion->id_direccion,
-                    'contacto' => [
-                            'id_contacto' => $contacto->id_contacto,
-                            'nombre' => $contacto->nombreCompleto,
-                            'telefono' => $contacto->telefono1,
-                            'ext' => $contacto->ext1,
-                            'email' => $contacto->email,
-                        ],
-                    'direccion' => [
-                        'nombre' => $direccion->nombre,
-                        'calle' => $direccion->calle,
-                        'num_ext' => $direccion->num_ext,
-                        'num_int' => $direccion->num_int,
-                        'colonia' => $colonia->d_asenta,
-                        'ciudad' => $ciudad->n_mnpio,
-                        'estado' => $estado->d_estado,
-                        'pais' => 'México',
-                        'cp' => $direccion->cp,
-                    ],
-                    'notas' => $direccion->notas,
+                'id_direccion_entrega' => $direccion->id_direccion,
+                'contacto' => [
+                    'id_contacto' => $contacto->id_contacto,
+                    'nombre' => $contacto->nombreCompleto,
+                    'telefono' => $contacto->telefono1,
+                    'ext' => $contacto->ext1,
+                    'email' => $contacto->email,
                 ],
+                'direccion' => [
+                    'nombre' => $direccion->nombre,
+                    'calle' => $direccion->calle,
+                    'num_ext' => $direccion->num_ext,
+                    'num_int' => $direccion->num_int,
+                    'colonia' => $colonia->d_asenta,
+                    'ciudad' => $ciudad->n_mnpio,
+                    'estado' => $estado->d_estado,
+                    'pais' => 'México',
+                    'cp' => $direccion->cp,
+                ],
+                'notas' => $direccion->notas,
+            ],
         ]);
     }
-<<<<<<< HEAD
-}
-=======
 
 
     // app/Http/Controllers/CotizacionesController.php
@@ -638,8 +586,4 @@ class CotizacionController extends Controller
         $partida->delete();
         return response()->json(['success' => true]);
     }
-
-
-
 }
->>>>>>> dev
