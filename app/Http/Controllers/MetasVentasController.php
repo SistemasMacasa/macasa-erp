@@ -20,18 +20,19 @@ class MetasVentasController extends Controller
         $ordenarPor = $request->input('ordenar_por', 'username');
         $orden = $request->input('orden', 'asc');
 
-        $usuariosQuery = Usuario::where(function ($query) use ($month, $year) {
-            $query
-                ->where('estatus', 'Activo')
-                ->orWhere(function ($q) use ($month, $year) {
-                    $q->where('estatus', 'Inactivo')
-                        ->where('archivado', 1)
-                        ->whereNotNull('fecha_baja')
-                        ->whereYear('fecha_baja', $year)
-                        ->whereMonth('fecha_baja', $month);
-                });
-        });
+        // Rango del mes consultado
+        $inicioMes = \Carbon\Carbon::create($year, $month, 1)->startOfDay();
+        $finMes = \Carbon\Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
 
+        $usuariosQuery = Usuario::role('ventas') //  solo usuarios con rol de ventas
+            ->whereDate('fecha_alta', '<=', $finMes)
+            ->where(function ($q) use ($inicioMes) {
+                $q->whereNull('fecha_baja')
+                    ->orWhereDate('fecha_baja', '>=', $inicioMes);
+            });
+
+
+        // Búsqueda opcional
         if ($busqueda) {
             $usuariosQuery->where(function ($query) use ($busqueda) {
                 $query->where('username', 'like', "%$busqueda%")
@@ -41,9 +42,12 @@ class MetasVentasController extends Controller
             });
         }
 
-        $usuarios = $usuariosQuery->with(['metasVentas' => function ($query) use ($month, $year) {
-            $query->where('mes_aplicacion', "$year-$month");
-        }])
+        // Cargar metas del mes consultado
+        $usuarios = $usuariosQuery
+            ->with(['metasVentas' => function ($query) use ($month, $year) {
+                $query->where('anio', $year)
+                    ->where('mes', $month);
+            }])
             ->orderBy($ordenarPor, $orden)
             ->paginate($porPagina)
             ->appends($request->all());
@@ -60,8 +64,15 @@ class MetasVentasController extends Controller
     }
 
 
+
     public function guardar(Request $request)
     {
+        // Pre-procesar campos monetarios antes de validar
+        $request->merge([
+            'cuota_facturacion' => str_replace([',', '$'], '', $request->cuota_facturacion),
+            'cuota_marginal_facturacion' => str_replace([',', '$'], '', $request->cuota_marginal_facturacion),
+        ]);
+
         $validated = $request->validate([
             'id_usuario' => 'required|integer',
             'cuota_facturacion' => 'required|numeric',
@@ -72,28 +83,31 @@ class MetasVentasController extends Controller
             'year' => 'required|integer|min:2000|max:2100',
         ]);
 
-        $mes = $validated['month'];
-        $anio = $validated['year'];
+        // Calcular cuota_cotizaciones multiplicando días por cotizaciones diarias
+        $cuotaCotizaciones = $validated['dias_meta'] * $validated['cotizaciones_diarias'];
 
         MetasVentas::updateOrCreate(
             [
                 'id_usuario' => $validated['id_usuario'],
-                'mes' => $mes,
-                'anio' => $anio,
+                'mes' => $validated['month'],
+                'anio' => $validated['year'],
             ],
             [
                 'cuota_facturacion' => $validated['cuota_facturacion'],
                 'cuota_marginal_facturacion' => $validated['cuota_marginal_facturacion'],
                 'dias_meta' => $validated['dias_meta'],
                 'cotizaciones_diarias' => $validated['cotizaciones_diarias'],
+                'cuota_cotizaciones' => $cuotaCotizaciones, // <-- Aquí el resultado
+                'cuota_marginal_cotizaciones' => 0,
+                'cuota_llamadas' => 0,
             ]
         );
 
-        return back()->with('success', 'Metas guardadas correctamente.');
+        return redirect()->route('ventas.metas', [
+            'month' => $validated['month'],
+            'year' => $validated['year'],
+        ])->with('success', 'Metas guardadas correctamente.');
     }
-
-
-
 
     /**
      * Show the form for creating a new resource.

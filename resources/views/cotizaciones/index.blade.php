@@ -4,6 +4,11 @@
 
 @section('content')
     <div class="container-fluid">
+        {{-- 🧭 Migas de pan --}}
+        @section('breadcrumb')
+            <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
+            <li class="breadcrumb-item active">Cotizaciones</li>
+        @endsection
         <h1 class="mb-4">Cotizaciones</h1>
 
         {{-- 🎛 Botonera --}}
@@ -17,7 +22,7 @@
         <form method="GET" action="{{ route('cotizaciones.index') }}">
             <div class="card mb-3">
                 <div class="card-header text-center">
-                     <h5 class="mb-0 text-subtitulo">Filtros</h5>
+                    <h5 class="mb-0 text-subtitulo">Filtros</h5>
                 </div>
 
                 <div class="card-body">
@@ -37,7 +42,7 @@
                                 @endfor
                             </select>
                         </div>
-        
+
                         {{-- Mes --}}
                         <div class="col-md-2">
                             <label for="month" class="form-label">Mes</label>
@@ -52,7 +57,7 @@
                                 @endforeach
                             </select>
                         </div>
-        
+
                         {{-- Botón --}}
                         <div class="col-md-2 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary w-100">
@@ -68,19 +73,16 @@
 
 
         <div class="tabla-colapsable">
-            <div class="tabla-header">
-                <div class="header-tabla">Equipos de Trabajo</div>
-                <div class=""></div>
-                <div class="header-tabla">
+            <div class="tabla-header-top">
+                <div class="header-title">
+                    <i class="fa fa-users me-1"></i> Equipos de Trabajo
+                </div>
+                <div class="header-period">
                     VIENDO
                     {{ strtoupper(\Carbon\Carbon::createFromDate($year, $month, 1)->locale('es')->isoFormat('MMMM [del] YYYY')) }}
                 </div>
-
-                <div class=""></div>
-                <div class=""></div>
-                <div class=""></div>
-                <div class=""></div>
             </div>
+
 
             @foreach ($equipos as $equipo)
                 <div class="fila-lider" onclick="toggleCollapse({{ $equipo->id }})">

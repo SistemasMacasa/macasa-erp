@@ -237,6 +237,31 @@ body[data-bs-theme="dark"] {
   text-align: center;
 }
 
+.tabla-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f1f3f5;
+  padding: 12px 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 12px;
+}
+
+.tabla-header-top .header-title {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabla-header-top .header-period {
+  font-size: 1rem;
+  color: #495057;
+}
+
 
 .fila-lider {
   cursor: pointer;
@@ -2088,22 +2113,29 @@ input:checked+.slider:before {
 
 /* 1) Limitar altura total del body y habilitar scroll */
 #modalFacturacion .modal-dialog-scrollable .modal-body {
-  max-height: 70vh;      /* ocupa hasta 70% de la altura de la ventana */
-  overflow-y: auto;      /* scroll vertical cuando sobrepasa */
-  padding: 0rem 2rem 0rem 2rem;       /* espacio interior uniforme */
+  max-height: 70vh;
+  /* ocupa hasta 70% de la altura de la ventana */
+  overflow-y: auto;
+  /* scroll vertical cuando sobrepasa */
+  padding: 0rem 2rem 0rem 2rem;
+  /* espacio interior uniforme */
 }
 
 /* 2) Estilo del contenedor de la tabla */
 #modalFacturacion .table-responsive {
-  border: 1px solid #dee2e6;     /* línea sutil alrededor */
-  border-radius: 0.375rem;       /* esquinas redondeadas */
-  background-color: #ffffff;     /* fondo blanco */
+  border: 1px solid #dee2e6;
+  /* línea sutil alrededor */
+  border-radius: 0.375rem;
+  /* esquinas redondeadas */
+  background-color: #ffffff;
+  /* fondo blanco */
 }
 
 /* 3) Opcional: refinar el aspecto del modal-content */
 #modalFacturacion .modal-content {
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
+
 /* 1) Columna de acción súper estrecha */
 #modalFacturacion .select-col {
   width: 60px;
@@ -2172,9 +2204,12 @@ input:checked+.slider:before {
 
 /* 1) Limitar altura y habilitar scroll igual que modalFacturacion */
 #modalEntrega .modal-dialog-scrollable .modal-body {
-  max-height: 70vh;        /* ocupa hasta el 70% de la ventana */
-  overflow-y: auto;        /* scroll interno vertical */
-  padding: 0rem 2rem;      /* mismo padding que en Facturación */
+  max-height: 70vh;
+  /* ocupa hasta el 70% de la ventana */
+  overflow-y: auto;
+  /* scroll interno vertical */
+  padding: 0rem 2rem;
+  /* mismo padding que en Facturación */
 }
 
 /* 2) Marco y fondo de la tabla */

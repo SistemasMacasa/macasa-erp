@@ -14,10 +14,14 @@ class MetasVentas extends Model
 
     protected $fillable = [
         'id_usuario',
+        'mes',
+        'anio',
         'mes_aplicacion',
         'cuota_facturacion',
         'cuota_marginal_facturacion',
+        'dias_meta',
         'cuota_cotizaciones',
+        'cotizaciones_diarias',
         'cuota_marginal_cotizaciones',
         'cuota_llamadas',
     ];

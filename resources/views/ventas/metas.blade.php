@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'SIS 3.0 | Equipos de Trabajo')
+@section('title', 'SIS 3.0 | Metas de Venta')
 
 @section('content')
 
@@ -116,32 +116,31 @@
                                     <td>
                                         <input type="text" name="cuota_facturacion"
                                             class="form-control form-control-sm formato-cantidad"
-                                            value="${{ number_format($usuario->metaVenta?->cuota_facturacion ?? 0, 2) }}">
+                                            value="${{ number_format(optional($usuario->metasVentas->first())->cuota_facturacion ?? 0, 2) }}">
                                     </td>
                                     <td>
                                         <input type="text" name="cuota_marginal_facturacion"
                                             class="form-control form-control-sm formato-cantidad"
-                                            value="{{ number_format($usuario->metaVenta?->cuota_marginal_facturacion ?? 0, 2) }}">
+                                            value="${{ number_format(optional($usuario->metasVentas->first())->cuota_marginal_facturacion ?? 0, 2) }}">
                                     </td>
                                     <td class="text-center align-middle">
                                         <input type="number" name="dias_meta"
                                             class="form-control form-control-sm text-center short-number mx-auto"
-                                            style="width: 80px;" min="0" value="{{ $usuario->metaVenta?->dias_meta ?? '' }}">
+                                            style="width: 80px;" min="0"
+                                            value="{{ optional($usuario->metasVentas->first())->dias_meta ?? '' }}">
                                     </td>
                                     <td class="text-center align-middle">
                                         <input type="number" name="cotizaciones_diarias"
                                             class="form-control form-control-sm text-center short-number mx-auto" min="0"
-                                            value="{{ $usuario->metaVenta?->cotizaciones_diarias ?? '' }}">
+                                            value="{{ optional($usuario->metasVentas->first())->cotizaciones_diarias ?? '' }}">
                                     </td>
-                                    <!-- Campos ocultos: mes y año -->
-                                    <input type="hidden" name="mes" value="{{ $month }}">
-                                    <input type="hidden" name="anio" value="{{ $year }}">
 
                                     <td>
                                         <button type="submit" class="btn btn-sm btn-success">Guardar</button>
                                     </td>
                                 </form>
                             </tr>
+
                         @endforeach
                     </tbody>
 
