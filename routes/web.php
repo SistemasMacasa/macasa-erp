@@ -11,7 +11,11 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RazonSocialController;
+<<<<<<< HEAD
 use App\Http\Controllers\MetasVentasController;
+=======
+use App\Http\Controllers\ContactoController;
+>>>>>>> dev
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
 // Route::get('/', function () {
@@ -118,7 +122,16 @@ Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: f
     //Seleccionar Razón Social para Cotización
     Route::post('/razones-sociales/{id}/seleccionar', [RazonSocialController::class, 'seleccionar'])->name('razones_sociales.seleccionar');
     //Procesar Guardar Cotización
-    Route::post('/cotizaciones', [CotizacionController::class, 'store'])->name('cotizaciones.store');
+    Route::post('/cotizaciones', [CotizacionController::class,'store'])
+        ->name('cotizaciones.store');
+    //Seleccionar Contacto para Cotización
+    Route::post('/contactos/{contacto}/seleccionar', [ContactoController::class, 'seleccionar'])->name('contactos.seleccionar');
+
+Route::post('/cotizaciones/{cotizacion}/partidas', [CotizacionController::class,'agregarPartida'])
+     ->name('cotizaciones.agregarPartida');
+
+Route::delete('/cotizaciones/partidas/{partida}', [CotizacionController::class,'eliminarPartida']);
+
 });
 
 Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: function () {

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ciudad extends Model
 {
-    use HasFactory;
-    protected $table = 'ciudades'; // Nombre de la tabla en la base de datos
-
-    protected $fillable = ['clave', 'nombre'];
+    protected $table      = 'ciudades';
+    protected $primaryKey = 'id_ciudad';   // ← nueva PK
+    public    $timestamps = false;
+    protected $guarded = [];
 }

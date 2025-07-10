@@ -2085,3 +2085,133 @@ input:checked+.slider:before {
 .col-select {
   display: none;
 }
+
+/* 1) Limitar altura total del body y habilitar scroll */
+#modalFacturacion .modal-dialog-scrollable .modal-body {
+  max-height: 70vh;      /* ocupa hasta 70% de la altura de la ventana */
+  overflow-y: auto;      /* scroll vertical cuando sobrepasa */
+  padding: 0rem 2rem 0rem 2rem;       /* espacio interior uniforme */
+}
+
+/* 2) Estilo del contenedor de la tabla */
+#modalFacturacion .table-responsive {
+  border: 1px solid #dee2e6;     /* línea sutil alrededor */
+  border-radius: 0.375rem;       /* esquinas redondeadas */
+  background-color: #ffffff;     /* fondo blanco */
+}
+
+/* 3) Opcional: refinar el aspecto del modal-content */
+#modalFacturacion .modal-content {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+/* 1) Columna de acción súper estrecha */
+#modalFacturacion .select-col {
+  width: 60px;
+  padding: 0;
+}
+
+/* 2) Botón outline más compacto */
+#modalFacturacion .seleccionar-direccion {
+  padding: .25rem .4rem;
+  border-radius: .25rem;
+  transition: background-color .2s, border-color .2s, color .2s;
+}
+
+/* 3) Hover: relleno primario */
+#modalFacturacion .seleccionar-direccion:hover {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: #fff;
+}
+
+/* 4) Estado “predeterminado” */
+#modalFacturacion .table-success .seleccionar-direccion {
+  border-color: var(--bs-success);
+  background-color: var(--bs-success);
+  color: #fff;
+}
+
+/* cada sección como tarjeta ligera */
+#modalCrearDireccionFactura .form-section {
+  background-color: #f8f9fa;
+  border-left: .25rem solid var(--bs-primary);
+  border-radius: .25rem;
+  padding: 1rem 1.25rem;
+}
+
+/* encabezado de sección */
+#modalCrearDireccionFactura .section-header {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: var(--bs-primary);
+}
+
+/* etiquetas más sutiles */
+#modalCrearDireccionFactura .form-label {
+  font-size: .85rem;
+  color: #6c757d;
+}
+
+/* inputs y selects tamaño pequeño */
+#modalCrearDireccionFactura .form-control-sm,
+#modalCrearDireccionFactura .form-select-sm {
+  height: calc(1.5em + .5rem);
+}
+
+/* modal-content con un poco más de padding lateral */
+#modalCrearDireccionFactura .modal-body {
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+}
+
+
+/* ================================
+   HOMOGENEIZAR ESTILOS modalEntrega
+   ================================ */
+
+/* 1) Limitar altura y habilitar scroll igual que modalFacturacion */
+#modalEntrega .modal-dialog-scrollable .modal-body {
+  max-height: 70vh;        /* ocupa hasta el 70% de la ventana */
+  overflow-y: auto;        /* scroll interno vertical */
+  padding: 0rem 2rem;      /* mismo padding que en Facturación */
+}
+
+/* 2) Marco y fondo de la tabla */
+#modalEntrega .table-responsive {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+}
+
+/* 3) Sombra suave para el contenido */
+#modalEntrega .modal-content {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* 4) Columna de acción (checkbox/button) estrecha */
+#modalEntrega .select-col {
+  width: 60px;
+  padding: 0;
+}
+
+/* 5) Botón de selección compacto y con transición */
+#modalEntrega .seleccionar-entrega {
+  padding: .25rem .4rem;
+  border-radius: .25rem;
+  transition: background-color .2s, border-color .2s, color .2s;
+}
+
+/* 6) Hover: mismo relleno primario */
+#modalEntrega .seleccionar-entrega:hover {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: #fff;
+}
+
+/* 7) Estado “predeterminado”: verde suave */
+#modalEntrega .table-success .seleccionar-entrega {
+  border-color: var(--bs-success);
+  background-color: var(--bs-success);
+  color: #fff;
+}
