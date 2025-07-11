@@ -141,16 +141,20 @@
                                             <span class="text-danger asterisco">*</span>
                                         @endcan
                                     </label>
-                                    <select name="segmento" class="form-select" required>
+                                    <select name="id_segmento" class="form-select" required>
                                         <option value="" disabled selected>-- Selecciona --</option>
-                                        <option value="macasa cuentas especiales" @selected(old('segmento', $cliente->segmento) == 'macasa cuentas especiales')>Macasa
-                                            Cuentas Especiales</option>
-                                        <option value="tekne store ecommerce" @selected(old('segmento', $cliente->segmento) == 'tekne store ecommerce')>Tekne Store
-                                            E-Commerce</option>
-                                        <option value="la plaza ecommerce" @selected(old('segmento', $cliente->segmento) == 'la plaza ecommerce')>LaPlazaEnLinea
-                                            E-Commerce</option>
+                                        @foreach($segmentos as $segmento)
+                                            <option 
+                                                value="{{ $segmento->id_segmento }}"
+                                                @selected(old('id_segmento', $cliente->id_segmento ?? null) == $segmento->id_segmento)
+                                            >
+                                                {{ $segmento->nombre }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
+
+
 
                                 <div class="col-md-2">
                                     <label class="form-label">Origen de la Cuenta</label>
@@ -474,21 +478,20 @@
                                 </div>
 
                                 <div class="campo-dato-secundario">
-                                    <label class="form-label">Segmento <span
-                                            class="text-danger asterisco">*</span></label>
+                                    <label class="form-label">Segmento <span class="text-danger asterisco">*</span></label>
                                     <select name="segmento" class="form-select" required>
                                         <option value="">-- Selecciona --</option>
-                                        <option value="macasa cuentas especiales" @selected(old('segmento', $cliente->segmento) == 'macasa cuentas especiales')>
-                                            Macasa Cuentas Especiales
-                                        </option>
-                                        <option value="tekne store ecommerce" @selected(old('segmento', $cliente->segmento) == 'tekne store ecommerce')>
-                                            Tekne Store E-Commerce
-                                        </option>
-                                        <option value="la plaza ecommerce" @selected(old('segmento', $cliente->segmento) == 'la plaza ecommerce')>
-                                            LaPlazaEnLinea E-Commerce
-                                        </option>
+                                        @foreach($segmentos as $segmento)
+                                            <option 
+                                                value="{{ $segmento->nombre }}"
+                                                @selected(old('segmento', $cliente->segmento ?? null) == $segmento->nombre)
+                                            >
+                                                {{ ucfirst($segmento->nombre) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
+
 
                                 <div class="col campo-dato-secundario">
                                     <label class="form-label">Origen de la Cuenta</label>

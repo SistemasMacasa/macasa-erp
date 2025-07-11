@@ -16,6 +16,7 @@ use App\Models\MetodoPago;
 use App\Models\UsoCfdi;
 use App\Models\RegimenFiscal;
 use App\Models\Nota;
+use App\Models\Segmento;
 use Illuminate\Validation\Rules\Can;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -25,12 +26,12 @@ class ClienteController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->hasRole('Ventas')) {
-            $query = Cliente::with(['primerContacto', 'vendedor'])
+            $query = Cliente::with(['primerContacto', 'vendedor', 'segmento'])
                 ->where('estatus', 'activo')
                 ->where('id_vendedor', auth()->user()->id_usuario);
         } else {
             // 1) consulta base + relaciones
-            $query = Cliente::with(['primerContacto', 'vendedor'])
+            $query = Cliente::with(['primerContacto', 'vendedor', 'segmento'])
                 ->where('estatus', 'activo');
         }
 
@@ -68,9 +69,10 @@ class ClienteController extends Controller
             $query->where('sector', $sector);
         }
 
-        if ($segmento = $request->input('segmento')) {      // segmento = 'macasa cuentas especiales' | …
-            $query->where('segmento', $segmento);
+        if ($segmento = $request->input('segmento')) {
+            $query->where('id_segmento', $segmento);
         }
+
 
         // Ciclo de venta
         if ($cycle = $request->input('cycle')) {            // cycle = 'cotizacion' | 'venta'
@@ -111,7 +113,9 @@ class ClienteController extends Controller
         }
         // Los sacamos directo de la tabla para que no se “desincronicen”
         $sectores = Cliente::select('sector')->distinct()->pluck('sector');
-        $segmentos = Cliente::select('segmento')->distinct()->pluck('segmento');
+        $segmentos = Segmento::orderBy('nombre')
+            ->pluck('nombre', 'id_segmento');
+
         $ciclos = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
 
         return view('clientes.index', compact(
@@ -138,14 +142,18 @@ class ClienteController extends Controller
             // Agrega más países según sea necesario
         ];
         $regimen_fiscales = RegimenFiscal::pluck('nombre', 'id_regimen_fiscal');
-        return view('clientes.create', compact('vendedores', 'metodos_pago', 'formas_pago', 'usos_cfdi', 'ciudades', 'estados', 'paises', 'tipo', 'regimen_fiscales'));
+        $segmentos = Segmento::orderBy('nombre')->get(); // o el campo que represente el nombre
+        return view('clientes.create', compact('vendedores', 'metodos_pago', 'formas_pago', 'usos_cfdi', 'ciudades', 'estados', 'paises', 'tipo', 'regimen_fiscales', 'segmentos'));
     }
     public function edit($id)
     {
-        $cliente = Cliente::findOrFail($id);
+        $cliente = Cliente::with('segmento')->findOrFail($id);
         $vendedores = Usuario::whereNull('id_cliente')->get(); // usuarios internos
-        return view('clientes.edit', compact('cliente', 'vendedores'));
+        $segmentos = Segmento::orderBy('nombre')->get(); // Aquí cargas todos los segmentos
+
+        return view('clientes.edit', compact('cliente', 'vendedores', 'segmentos'));
     }
+
     public function view($id)
     {
 
@@ -253,6 +261,7 @@ class ClienteController extends Controller
             '2' => 'gobierno',
             '3' => 'persona',
         ];
+        $segmentos = Segmento::all();
         // Navegación entre clientes/cuentas eje
         if (auth()->user()->hasRole('Ventas')) {
             // Solo navegar si el cliente pertenece al ejecutivo autenticado
@@ -302,7 +311,8 @@ class ClienteController extends Controller
                 'nextId',
                 'sectores',
                 'usuario',
-                'cotizaciones'
+                'cotizaciones',
+                'segmentos'
             )
         );
     }
@@ -336,7 +346,8 @@ class ClienteController extends Controller
                 'nombre' => 'nullable|string|max:60',
                 'id_vendedor' => 'nullable|integer',
                 'sector' => 'nullable|string|max:100',
-                'segmento' => 'nullable|string|max:100',
+                'id_segmento' => 'nullable|exists:segmentos,id_segmento',
+
 
                 'contacto.0.nombre' => 'nullable|string|max:60',
                 'contacto.0.apellido_p' => 'nullable|string|max:27',
@@ -370,7 +381,7 @@ class ClienteController extends Controller
                     'tipo' => $data['tipo'],
                     'id_vendedor' => $data['id_vendedor'],
                     'sector' => $data['sector'],
-                    'segmento' => $data['segmento'],
+                    'id_segmento'  => $data['id_segmento'] ?? null, // 👈 Aquí la clave
                 ]);
 
                 // Actualizar el contacto principal
@@ -497,7 +508,7 @@ class ClienteController extends Controller
 
                 // Datos personales …
                 'email' => 'nullable|email|max:120',
-                'segmento' => 'nullable|string|max:100',
+                'id_segmento' => 'required|exists:segmentos,id_segmento',
                 'genero' => 'nullable|string|max:17',
             ];
             // ── Teléfonos / Extensiones / Celulares (1‒5) ───────────────────────────
@@ -518,7 +529,7 @@ class ClienteController extends Controller
                     'estatus' => $request->input('estatus'),
                     'tipo' => $request->input('tipo'),
                     'sector' => $request->input('sector'),
-                    'segmento' => $request->input('segmento'),
+                    'id_segmento' => $request->input('id_segmento'),
                     'id_vendedor' => $request->filled('id_vendedor')
                         ? $request->input('id_vendedor')
                         : null,
@@ -608,7 +619,7 @@ class ClienteController extends Controller
 
                 // Datos personales …
                 'email' => 'nullable|email|max:120',
-                'segmento' => 'nullable|string|max:100',
+                'id_segmento' => 'required|exists:segmentos,id_segmento',
                 'genero' => 'nullable|string|max:17',
                 'contacto.0.telefono*' => 'nullable|digits:10',
                 'contacto.0.celular*' => 'nullable|digits:10',
@@ -630,7 +641,8 @@ class ClienteController extends Controller
                     'estatus' => $request->input('estatus'),
                     'tipo' => $request->input('tipo'),
                     'sector' => $request->input('sector'),
-                    'segmento' => $request->input('segmento'),
+                    'id_segmento' => $request->input('id_segmento'),
+
                     'id_vendedor' => $datos['id_vendedor']
                         ? $request->input('id_vendedor')
                         : null,
@@ -699,7 +711,7 @@ class ClienteController extends Controller
                 /* -------- Cuenta -------- */
                 'nombre' => ['required', 'string', 'max:100'],
                 'sector' => ['required', 'string', 'max:100'],
-                'segmento' => ['required', 'string', 'max:100'],
+                'id_segmento' => ['required','integer', 'exists:segmentos,id_segmento'],
                 'id_vendedor' => ['nullable', 'integer', 'exists:usuarios,id_usuario'],
 
                 /* -------- Contacto(s) ---- */
@@ -731,7 +743,7 @@ class ClienteController extends Controller
                     'estatus' => $request->input('estatus'),
                     'tipo' => $request->input('tipo'),
                     'sector' => $request->input('sector'),
-                    'segmento' => $request->input('segmento'),
+                    'id_segmento' => $request->input('id_segmento'),
                     'id_vendedor' => $request->filled('id_vendedor')
                         ? $request->input('id_vendedor')
                         : null,
