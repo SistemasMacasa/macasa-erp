@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ciudad extends Model
 {
-    protected $table      = 'ciudades';
+    protected $table = 'ciudades';
     protected $primaryKey = 'id_ciudad';   // ← nueva PK
-    public    $timestamps = false;
+    public $timestamps = false;
     protected $guarded = [];
+
+    public function estado()
+    {
+        return $this->belongsTo(Estado::class, 'id_estado');
+    }
+
 }
