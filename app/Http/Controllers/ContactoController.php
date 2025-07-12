@@ -42,6 +42,7 @@ class ContactoController extends Controller
                     'telefono' => $contacto->telefono1,
                     'ext' => $contacto->ext1,
                     'email' => $contacto->email,
+                    'notas_entrega' => $contacto->notas_entrega
                 ],
                 'direccion' => [
                     'nombre' => $dir->nombre,
@@ -54,9 +55,35 @@ class ContactoController extends Controller
                     'pais' => 'México',
                     'cp' => $dir->cp,
                 ],
-                'notas' => $dir->notas,
             ],
         ]);
     }
+
+    public function edit($id)
+    {
+        $contacto = Contacto::with('direccion_entrega.colonia', 'direccion_entrega.ciudad', 'direccion_entrega.estado', 'direccion_entrega.pais')
+                            ->findOrFail($id);
+
+        return view('contactos.edit', compact('contacto'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $contacto = Contacto::findOrFail($id);
+
+        $request->validate([
+            'nombre'         => 'required|string|max:255',
+            'telefono1'      => 'nullable|string',
+            'email'          => 'nullable|email',
+            'notas_entrega'  => 'nullable|string',
+            // validaciones para dirección si se edita
+        ]);
+
+        $contacto->update($request->only(['nombre', 'telefono1', 'email', 'notas_entrega']));
+
+        return redirect()->route('cotizaciones.create', $contacto->id_cliente)
+                        ->with('success', 'Contacto actualizado correctamente.');
+    }
+
 
 }

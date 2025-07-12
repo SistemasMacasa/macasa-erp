@@ -141,6 +141,13 @@ Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: fun
         '/nueva-entrega',
         [CotizacionController::class, 'storeDireccionEntregaFactura']
     )->name('cotizaciones.nueva-entrega');
+    //Editar razon social + dirección de factura + notas para facturar.
+    Route::get('/razones-sociales/{id}/edit', [RazonSocialController::class, 'edit'])->name('razones_sociales.edit');
+    Route::put('/razones-sociales/{id}', [RazonSocialController::class, 'update'])->name('razones_sociales.update');
+    //Editar contacto de entrega + direccion de entrega + notas para entregar.
+    Route::get('/contacto-entrega/{id}/edit', [ContactoController::class, 'edit'])->name('contacto_entrega.edit');
+    Route::put('/contacto-entrega/{id}', [ContactoController::class, 'update'])->name('contacto_entrega.update');
+
 });
 
 Route::middleware(['auth', 'permission:Permisos'])->group(callback: function () {
@@ -294,3 +301,4 @@ Route::post('/metas-ventas/guardar', [MetasVentasController::class, 'guardar'])-
 
 
 
+Route::get('/cotizaciones/{id}/pdf', [CotizacionController::class, 'pdf'])->name('cotizaciones.pdf');

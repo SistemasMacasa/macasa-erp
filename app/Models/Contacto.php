@@ -45,6 +45,7 @@ class Contacto extends Model
         'telefono5',
         'ext5',
         'celular5',
+        'notas_entrega',
         'predeterminado',
     ];
 

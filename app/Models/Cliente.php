@@ -35,13 +35,15 @@ class Cliente extends Model
     /** Todos los contactos del cliente */
     public function contactos()
     {
-        return $this->hasMany(Contacto::class, 'id_cliente', 'id_cliente');
+        return $this->hasMany(Contacto::class, 'id_cliente', 'id_cliente')
+        ->whereNull('id_direccion_entrega');
     }
     /** El contacto principal (el “predeterminado”) */
     public function contacto_predet()
     {
         return $this->hasOne(Contacto::class, 'id_cliente', 'id_cliente')
-                    ->where('predeterminado', 1);
+        ->whereNull('id_direccion_entrega')            
+        ->where('predeterminado', 1);
     }
     /** El primer contacto (el “principal”) */
     public function primerContacto()
@@ -66,6 +68,11 @@ class Cliente extends Model
                             ->from('contactos')
                             ->whereNotNull('id_direccion_entrega');
                     });
+    }
+    public function contactos_entrega()
+    {
+        return $this->hasMany(Contacto::class, 'id_cliente', 'id_cliente')
+            ->whereNotNull('id_direccion_entrega');
     }
     public function contacto_entrega_predet()
     {

@@ -83,10 +83,11 @@ class Cotizacion extends Model
     }
 
     // Para que Laravel maneje estas columnas como fechas (Carbon)
-    protected $dates = [
-        'fecha_alta',
-        'vencimiento',
+    protected $casts = [
+    'fecha_alta' => 'datetime',
+    'vencimiento' => 'datetime',
     ];
+
 
     public function vendedor()
     {

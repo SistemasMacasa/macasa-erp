@@ -709,9 +709,10 @@
                     style="border-style: none !important;">
                     <thead class="table-light position-sticky top-0" style="z-index:1">
                         <tr>
+                            <th>PDF</th>
                             <th data-type="date" class="div-10ch text-normal">Fecha <span class="sort-arrow"></span>
                             </th>
-                            <th data-type="text" class="div-10ch text-normal">ID&nbsp;cotización <span
+                            <th data-type="text" class="div-10ch text-normal">Consecutivo <span
                                     class="sort-arrow"></span>
                             </th>
                             <th data-type="text" class="campo-dato-secundario text-normal">Razón social <span
@@ -731,8 +732,15 @@
                         @php $cantidad_cotizaciones = 0; @endphp
                         @forelse ($cotizaciones as $c)
                             <tr>
+                                <td>
+                                    <a href="{{ route('cotizaciones.pdf', $c['id_cotizacion']) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fa fa-file-pdf"></i> PDF
+                                    </a>
+                                    
+
+                                </td>
                                 <td>{{ \Carbon\Carbon::parse($c['fecha'])->format('d-m-Y') }}</td>
-                                <td>{{ $c['id'] }}</td>
+                                <td>{{ $c['num_consecutivo'] }}</td>
                                 <td>{{ $c['razon'] }}</td>
                                 <td class="text-end">$ {{ number_format($c['subtotal'], 2) }}</td>
                                 <td class="text-end">{{ number_format($c['margen'], 2) }}</td>
@@ -847,7 +855,7 @@
     <div class="card" id="historialNotas">
         {{-- Cabecera de la tarjeta --}}
         <div class="card-header d-flex">
-            <h5 class="mb-0 flex-grow-1">Historial de notas</h5>
+            <h5 class="mb-0 flex-grow-1 text-subtitulo">Historial de notas</h5>
         </div>
         <div class="card-body">
 
@@ -1006,7 +1014,6 @@
                                     <th>Nombre</th>
                                     <th>Email</th>
                                     <th>Teléfono</th>
-                                    <th>Notas</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1020,7 +1027,6 @@
                                         <td>{{ $contacto->nombre }}</td>
                                         <td>{{ $contacto->email }}</td>
                                         <td>{{ $contacto->telefono1 }}</td>
-                                        <td>{{ $contacto->notas }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -1039,9 +1045,9 @@
                         <table class="table table-bordered table-hover small align-middle">
                             <thead class="table-light">
                                 <tr>
+                                    <th>Nombre Dirección</th>
                                     <th>Dirección</th>
                                     <th>Contacto asignado</th>
-                                    <th>Email</th>
                                     <th>Teléfono</th>
                                     <th>Notas</th>
                                 </tr>
@@ -1049,18 +1055,18 @@
                             <tbody>
                                 @forelse ($cliente->direccionesEntrega as $direccion)
                                     @php
-                                        $contactoEntrega = $cliente->contactos
+                                        $contactoEntrega = $cliente->contactos_entrega
                                             ->where('id_direccion_entrega', $direccion->id_direccion)
                                             ->where('predeterminado', 1)
                                             ->first();
                                     @endphp
                                     <tr>
+                                        <td>{{ $direccion->nombre }}</td>
                                         <td>{{ $direccion->calle }}, {{ $direccion->id_ciudad }},
                                             {{ $direccion->id_estado }}</td>
-                                        <td>{{ $contactoEntrega?->contactosEntrega ?? '—' }}</td>
-                                        <td>{{ $contactoEntrega?->email ?? '—' }}</td>
+                                        <td>{{ $contactoEntrega?->nombreCompleto ?? '—' }}</td>
                                         <td>{{ $contactoEntrega?->telefono1 ?? '—' }}</td>
-                                        <td>{{ $contactoEntrega?->notas ?? '—' }}</td>
+                                        <td>{{ $contactoEntrega?->notas_entrega ?? '—' }}</td>
                                     </tr>
                                 @empty
                                     <tr>
