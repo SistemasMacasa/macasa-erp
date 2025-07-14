@@ -366,24 +366,9 @@
 
                         {{-- Segmento filtrado --}}
                         <td class="py-1 px-2 text-center">
-                            @php $seg = mb_strtolower($c->segmento ?? ''); @endphp
-                            @switch($seg)
-                                @case('macasa cuentas especiales')
-                                    {{ 'Macasa Cuentas Especiales' }}
-                                @break
-
-                                @case('tekne store ecommerce')
-                                    {{ 'Tekne Store E-Commerce' }}
-                                @break
-
-                                @case('la plaza ecommerce')
-                                    {{ 'LaPlazaEnLinea E-Commerce' }}
-                                @break
-
-                                @default
-                                    —
-                            @endswitch
+                            {{ $c->segmento->nombre ?? '—' }}
                         </td>
+
 
                         {{-- Ciclo Venta --}}
                         <td class="py-1 px-2 text-center">

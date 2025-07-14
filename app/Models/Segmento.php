@@ -26,4 +26,10 @@ class Segmento extends Model
     {
         return $this->hasMany(Cliente::class, 'id_segmento', 'id_segmento');
     }
+    
+    // Un segmento tiene muchas sucursales
+    public function sucursales()
+    {
+        return $this->hasMany(Sucursal::class, 'id_segmento', 'id_segmento');
+    }
 }

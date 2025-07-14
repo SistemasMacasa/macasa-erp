@@ -40,9 +40,9 @@
                     <input type="hidden" name="tipo" value="erp"><!-- alta desde ERP -->
 
                     <!-- ───────────────────────────────
-                                                                                                        TARJETA ÚNICA  →  Cuenta Empresarial
-                                                                                                        (contiene también los datos del contacto principal)
-                                                                                                    ─────────────────────────────────── -->
+                                                                                                                        TARJETA ÚNICA  →  Cuenta Empresarial
+                                                                                                                        (contiene también los datos del contacto principal)
+                                                                                                                    ─────────────────────────────────── -->
                     <!-- ╭━━━━━━━━━━ Cuenta Empresarial + Contacto ━━━━━━━━━━╮ -->
                     <div class="card mb-4">
                         <div class="card-header text-center">
@@ -86,15 +86,23 @@
                                 </div>
 
                                 <div class="col-xxl-2 col-xl-2 col-lg-2">
-                                    <label class="form-label text-normal">Segmento <span class="text-danger">*</span></label>
-                                    <select name="segmento" class="form-select" required>
+                                    <label for="id_segmento" class="form-label text-normal">Segmento <span
+                                            class="text-danger">*</span></label>
+                                    <select name="id_segmento" id="id_segmento"
+                                        class="form-select @error('id_segmento') is-invalid @enderror" required>
                                         <option value="" disabled selected>-- Selecciona --</option>
-                                        <option value="macasa cuentas especiales">Macasa Cuentas Especiales</option>
-                                        <option value="macasa ecommerce">Macasa E-commerce</option>
-                                        <option value="tekne store ecommerce">Tekne Store E-commerce</option>
-                                        <option value="la plaza ecommerce">La Plaza E-commerce</option>
+                                        @foreach($segmentos as $segmento)
+                                            <option value="{{ $segmento->id_segmento }}"
+                                                @selected(old('id_segmento') == $segmento->id_segmento)>
+                                                {{ $segmento->nombre }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                    @error('id_segmento')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                             </div>
                             <hr>
 
@@ -149,7 +157,8 @@
 
                                 <div class="row mb-3">
                                     {{-- Teléfonos fijos --}}
-                                    <div class="col-xxl-4 col-xl-4 col-lg-4" id="telefonos-col" style="padding-right: 0 !important;">
+                                    <div class="col-xxl-4 col-xl-4 col-lg-4" id="telefonos-col"
+                                        style="padding-right: 0 !important;">
                                         <div class="mb-2 telefono-item">
                                             <label class="text-normal">Teléfono 1 <span class="text-danger">*</span></label>
 
@@ -275,24 +284,15 @@
                                 </div>
                                 <!-- Segmento -->
                                 <div class="col-xxl-2 col-xl-2 col-lg-2">
-                                    <label for="segmento" class="form-label text-normal">Segmento <span
-                                            class="text-danger">*</span></label>
-                                    <select name="segmento" id="segmento" class="form-select" required>
+                                    <label class="form-label text-normal">Segmento <span class="text-danger">*</span></label>
+                                    <select name="id_segmento" class="form-select" required>
                                         <option value="" disabled selected>-- Selecciona --</option>
-                                        <option value="macasa cuentas especiales" @selected(old('segmento') == 'macasa cuentas especiales')>
-                                            Macasa Cuentas Especiales
-                                        </option>
-                                        <option value="tekne store ecommerce" @selected(old('segmento') == 'tekne store ecommerce')>
-                                            Tekne Store E-Commerce
-                                        </option>
-                                        <option value="la plaza ecommerce" @selected(old('segmento') == 'la plaza ecommerce')>
-                                            LaPlazaEnLinea E-Commerce
-                                        </option>
+                                        @foreach($segmentos as $segmento)
+                                            <option value="{{ $segmento->id_segmento }}">{{ $segmento->nombre }}</option>
+                                        @endforeach
                                     </select>
-                                    @error('segmento')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
                                 </div>
+
                                 <!-- Género -->
                                 <div class="col-xxl-2 col-xl-2 col-lg-2">
                                     <label for="genero" class="form-label text-normal">Género <span
@@ -428,13 +428,13 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'mb-2 telefono-item';
                 wrapper.innerHTML = `
-                                                        <label></label>
-                                                        <div class="input-group input-group-separated">
-                                                            <input type="text" class="form-control phone-field" placeholder="Teléfono" style="min-width:16ch; max-width:16ch" required>
-                                                            <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
-                                                            <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-                                                        </div>
-                                                        `;
+                                                                <label></label>
+                                                                <div class="input-group input-group-separated">
+                                                                    <input type="text" class="form-control phone-field" placeholder="Teléfono" style="min-width:16ch; max-width:16ch" required>
+                                                                    <input type="text" class="form-control ext-field div-10ch"   placeholder="Ext." maxlength="7">
+                                                                    <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+                                                                </div>
+                                                                `;
 
                 telCol.appendChild(wrapper);
                 reindex('telefono');
@@ -448,12 +448,12 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'mb-2 celular-item';
                 wrapper.innerHTML = `
-                                                        <label></label>
-                                                        <div class="input-group input-group-separated">
-                                                            <input type="text" class="form-control phone-field" style="min-width:16ch; max-width:16px;" placeholder="Celular">
-                                                            <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
-                                                        </div>
-                                                        `;
+                                                                <label></label>
+                                                                <div class="input-group input-group-separated">
+                                                                    <input type="text" class="form-control phone-field" style="min-width:16ch; max-width:16px;" placeholder="Celular">
+                                                                    <button type="button" class="btn btn-outline-danger eliminar-item btn-field">X</button>
+                                                                </div>
+                                                                `;
 
                 celCol.appendChild(wrapper);
                 reindex('celular');

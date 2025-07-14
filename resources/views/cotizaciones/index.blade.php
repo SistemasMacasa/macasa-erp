@@ -69,9 +69,6 @@
             </div>
         </form>
 
-
-
-
         <div class="tabla-colapsable">
             <div class="tabla-header-top">
                 <div class="header-title">
@@ -85,7 +82,7 @@
 
 
             @foreach ($equipos as $equipo)
-                <div class="fila-lider" onclick="toggleCollapse({{ $equipo->id }})">
+                <div class="fila-lider" onclick="toggleCollapse({{ $equipo->id_equipo }})">
                     <div><strong>{{ $equipo->nombre}}</strong>
                     </div>
                     {{-- <div>{{ number_format($equipo->cuota_cotizacion, 2) }}</div>
@@ -96,7 +93,7 @@
                     <div>{{ number_format($equipo->porcentaje_margen, 2) }}%</div> --}}
                 </div>
 
-                <div id="collapse-{{ $equipo->id }}" class="collapse-content">
+                <div id="collapse-{{ $equipo->id_equipo }}" class="collapse-content">
                     <div style="padding: 25px;">
                         <div class="tabla-header">
                             <div class="header-tabla"></div>
@@ -140,22 +137,18 @@
                 </div>
             @endforeach
         </div>
-
-        {{-- Aquí se listarán las cotizaciones --}}
-        {{-- <div class="card shadow">
-            <div class="card-body">
-                <p class="text-muted">Aquí aparecerán las cotizaciones registradas. Usa el botón "Nueva cotización" para
-                    comenzar una.</p>
-                <a href="#" class="btn btn-primary">+ Nueva cotización</a>
-            </div>
-        </div> --}}
     </div>
 
     <script>
-        function toggleCollapse(id) {
-            const element = document.getElementById('collapse-' + id);
+        function toggleCollapse(id_equipo) {
+            const element = document.getElementById('collapse-' + id_equipo);
+            if (!element) {
+                console.error('Elemento no encontrado: collapse-' + id_equipo);
+                return;
+            }
             element.classList.toggle('open');
         }
+
     </script>
 
 @endsection

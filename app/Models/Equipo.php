@@ -11,6 +11,8 @@ class Equipo extends Model
 
     protected $table = 'equipos';
 
+    protected $primaryKey = 'id_equipo';
+
     protected $fillable = [
         'nombre',
         'descripcion',
@@ -36,5 +38,11 @@ class Equipo extends Model
             'equipo_id',
             'usuario_id'
         )->withPivot('rol')->withTimestamps();
+    }
+    
+    // Un equipo pertenece a una sucursal
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'id_sucursal', 'id_sucursal');
     }
 }

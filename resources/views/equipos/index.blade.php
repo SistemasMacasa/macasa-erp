@@ -22,8 +22,6 @@
             <button type="button" id="btnCrearEquipo" class="col-md-2 btn btn-primary btn-principal">
                 <i class="fa fa-users-cog me-1"></i> Crear Equipo de trabajo
             </button>
-
-
         </div>
         <div class="table-responsive mb-3 shadow-lg">
             @if ($equipos->isEmpty())
@@ -43,7 +41,7 @@
                     <tbody>
                         @foreach ($equipos as $equipo)
                             <tr>
-                                <td>{{ $equipo->id }}</td>
+                                <td>{{ $equipo->id_equipo }}</td>
                                 <td>{{ $equipo->nombre }}</td>
                                 <td>
                                     {{ $equipo->lider ? $equipo->lider->nombre . ' ' . $equipo->lider->apellido_p : 'Sin líder' }}
@@ -71,7 +69,7 @@
                                 </td>
                                 <td>
                                     {{-- <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-info btn-sm">Ver</a> --}}
-                                    <button class="btn btn-primary btn-sm btn-editar-equipo" data-id="{{ $equipo->id }}">
+                                    <button class="btn btn-primary btn-sm btn-editar-equipo" data-id="{{ $equipo->id_equipo }}">
                                         Editar
                                     </button>
                                     <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline;">
@@ -103,6 +101,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="id_sucursal" class="form-label">Sucursal</label>
+                            <select name="id_sucursal" class="form-select" required>
+                                <option value="">Seleccione una sucursal</option>
+                                @foreach($sucursales as $sucursal)
+                                    <option value="{{ $sucursal->id_sucursal }}">{{ $sucursal->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre del equipo</label>
@@ -239,7 +247,4 @@
             });
         });
     </script>
-
-
-
 @endsection
