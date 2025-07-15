@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Razón Social')
+@section('title', 'SIS 3.0 | Editar Razón Social')
 
 @section('content')
     <div class="container-fluid">
@@ -25,40 +25,37 @@
         </div>
 
         <form method="POST" action="{{ route('razones_sociales.update', $razon->id_razon_social) }}">
-            @csrf
-            @method('PUT')
+    @csrf
+    @method('PUT')
+    <input type="hidden" name="id_cliente" value="{{ $razon->id_cliente }}">
 
-            <input type="hidden" name="id_cliente" value="{{ $razon->id_cliente }}">
+    {{-- 🧾 Información general --}}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title text-subtitulo mb-3"><i class="fa fa-id-card me-2"></i>Información de la Razón Social</h5>
 
-            <div class="mb-3">
-                <label class="form-label">Nombre o Razón Social</label>
-                <input type="text" name="nombre" class="form-control" value="{{ old('nombre', $razon->nombre) }}" required>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nombre o Razón Social</label>
+                    <input type="text" name="nombre" class="form-control" value="{{ old('nombre', $razon->nombre) }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">RFC</label>
+                    <input type="text" name="RFC" class="form-control" value="{{ old('RFC', $razon->RFC) }}" maxlength="13" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Notas para Facturación</label>
+                    <textarea name="notas_facturacion" class="form-control" rows="3">{{ old('notas_facturacion', $razon->notas_facturacion) }}</textarea>
+                    <small class="text-muted">Estas notas se usarán al emitir CFDI y persisten entre cotizaciones.</small>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="mb-3">
-                <label class="form-label">RFC</label>
-                <input type="text" name="RFC" class="form-control" value="{{ old('RFC', $razon->RFC) }}" maxlength="13"
-                    required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Notas para Facturación</label>
-                <textarea name="notas_facturacion" class="form-control"
-                    rows="4">{{ old('notas_facturacion', $razon->notas_facturacion) }}</textarea>
-                <small class="text-muted">Estas notas se usarán al emitir CFDI y persisten entre cotizaciones.</small>
-            </div>
-
-            <div class="text-end">
-                <a href="{{ route('cotizaciones.create', $razon->id_cliente) }}" class="btn btn-secondary">
-                    <i class="fa fa-chevron-left me-1"></i> Cancelar
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-save me-1"></i> Guardar cambios
-                </button>
-            </div>
-            <hr class="my-4">
-
-            {{-- Catálogos Fiscales --}}
+    {{-- 📚 Catálogos Fiscales --}}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title text-subtitulo mb-3"><i class="fa fa-file-invoice-dollar me-2 text-primary"></i>Datos fiscales</h5>
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Uso CFDI</label>
@@ -101,77 +98,82 @@
                     </select>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <hr class="my-4">
-
-            <h5 class="mt-4 mb-2"><i class="fa fa-map-marker-alt me-2 text-danger"></i> Dirección de Facturación</h5>
+    {{-- 📍 Dirección de Facturación --}}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title text-subtitulo mb-3"><i class="fa fa-map-marker-alt me-2 text-danger"></i>Dirección de Facturación</h5>
 
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Calle</label>
-                    <input type="text" name="calle" class="form-control"
-                        value="{{ old('calle', $razon->direccion_facturacion->calle) }}" required>
+                    <input type="text" name="calle" class="form-control" value="{{ old('calle', $razon->direccion_facturacion->calle) }}" required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Número exterior</label>
-                    <input type="text" name="num_ext" class="form-control"
-                        value="{{ old('num_ext', $razon->direccion_facturacion->num_ext) }}" required>
+                    <input type="text" name="num_ext" class="form-control" value="{{ old('num_ext', $razon->direccion_facturacion->num_ext) }}" required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Número interior</label>
-                    <input type="text" name="num_int" class="form-control"
-                        value="{{ old('num_int', $razon->direccion_facturacion->num_int) }}">
+                    <input type="text" name="num_int" class="form-control" value="{{ old('num_int', $razon->direccion_facturacion->num_int) }}">
                 </div>
-
                 <div class="col-md-3">
                     <label class="form-label">Código Postal</label>
-                    <input type="text" name="cp" id="cp" class="form-control"
-                        value="{{ old('cp', $razon->direccion_facturacion->cp) }}" maxlength="5" required>
+                    <input type="text" name="cp" id="cp" class="form-control" value="{{ old('cp', $razon->direccion_facturacion->cp) }}" maxlength="5" required>
                 </div>
-
                 <div class="col-md-6">
                     <label class="form-label">Colonia</label>
                     <select name="id_colonia" id="colonia" class="form-select" required></select>
                 </div>
-
                 <div class="col-md-3">
                     <label class="form-label">Ciudad</label>
                     <input type="text" class="form-control" id="ciudad" disabled>
                     <input type="hidden" name="id_ciudad" id="id_ciudad">
                 </div>
-
                 <div class="col-md-4">
                     <label class="form-label">Estado</label>
                     <input type="text" class="form-control" id="estado" disabled>
                     <input type="hidden" name="id_estado" id="id_estado">
                 </div>
-
                 <div class="col-md-4">
                     <label class="form-label">País</label>
                     <select name="id_pais" class="form-select" required>
                         @foreach($paises as $id => $nombre)
-                            <option value="{{ $id }}" {{ old('id_pais', $razon->direccion_facturacion->id_pais) == $id ? 'selected' : '' }}>{{ $nombre->nombre }}</option>
+                            <option value="{{ $nombre->id_pais }}" {{ old('id_pais', $razon->direccion_facturacion->id_pais) == $nombre->id_pais ? 'selected' : '' }}>
+                                {{ $nombre->nombre }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
             </div>
+        </div>
+    </div>
+
+    {{-- 🎯 Botones --}}
+    <div class="d-flex justify-content-end gx-3">
+        <a href="{{ route('cotizaciones.create', $razon->id_cliente) }}" class="btn btn-outline-secondary">
+            <i class="fa fa-chevron-left me-1"></i> Cancelar
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-save me-1"></i> Guardar cambios
+        </button>
+    </div>
+</form>
 
 
     </div>
 
-
-
-    </form>
-    </div>
 
     @push('scripts')
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const cpInput = document.getElementById('cp');
-                const colSel = document.getElementById('colonia');
-                const ciudad = document.getElementById('ciudad');
-                const estado = document.getElementById('estado');
+                const colSel  = document.getElementById('colonia');
+                const ciudad  = document.getElementById('ciudad');
+                const estado  = document.getElementById('estado');
                 const idCiudad = document.getElementById('id_ciudad');
                 const idEstado = document.getElementById('id_estado');
 
@@ -201,8 +203,8 @@
                             colSel.appendChild(option);
                         });
 
-                        ciudad.value = data.head.municipio;
-                        estado.value = data.head.estado;
+                        ciudad.value   = data.head.municipio;
+                        estado.value   = data.head.estado;
                         idCiudad.value = data.head.id_ciudad || '';
                         idEstado.value = data.head.id_estado || '';
                     } catch (e) {
@@ -222,6 +224,7 @@
                 });
             });
         </script>
+
 
 
 

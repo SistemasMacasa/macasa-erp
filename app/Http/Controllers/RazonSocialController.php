@@ -61,47 +61,62 @@ class RazonSocialController extends Controller
 
 
     public function update(Request $request, $id)
-    {
-        $razon = RazonSocial::with('direccion_facturacion')->findOrFail($id);
+{
+    $razon = RazonSocial::with('direccion_facturacion')->findOrFail($id);
 
-        $request->validate([
-            'nombre' => 'required|string|max:100',
-            'RFC' => 'required|string|max:13',
-            'notas_facturacion' => 'nullable|string',
+    $request->validate([
+        'nombre'             => 'required|string|max:100',
+        'RFC'                => 'required|string|max:13',
+        'notas_facturacion'  => 'nullable|string',
+        'calle'              => 'required|string|max:100',
+        'num_ext'            => 'required|string|max:20',
+        'num_int'            => 'nullable|string|max:20',
+        'id_colonia'         => 'required|exists:colonias,id_colonia',
+        'id_pais'            => 'required|exists:paises,id_pais',
+        'cp'                 => 'required|digits:5',
+    ]);
 
-            // Dirección
-            'calle' => 'required|string|max:100',
-            'num_ext' => 'required|string|max:20',
-            'num_int' => 'nullable|string|max:20',
-            'id_colonia' => 'required|exists:colonias,id_colonia',
-            'id_ciudad' => 'required|exists:ciudades,id_ciudad',
-            'id_estado' => 'required|exists:estados,id_estado',
-            'id_pais' => 'required|exists:paises,id_pais',
-            'cp' => 'required|digits:5',
-        ]);
+    $colonia = Colonia::findOrFail($request->id_colonia);
 
-        // Actualizar razón social
-        $razon->update([
-            'nombre' => $request->nombre,
-            'RFC' => $request->RFC,
-            'notas_facturacion' => $request->notas_facturacion,
-        ]);
+    // Obtenemos la ciudad de forma manual
+    $ciudad = Ciudad::where('c_mnpio', $colonia->c_mnpio)
+                    ->where('c_estado', $colonia->c_estado)
+                    ->first();
 
-        // Actualizar dirección de facturación relacionada
-        $razon->direccion_facturacion->update([
-            'calle' => $request->calle,
-            'num_ext' => $request->num_ext,
-            'num_int' => $request->num_int,
-            'cp' => $request->cp,
-            'id_colonia' => $request->id_colonia,
-            'id_ciudad' => $request->id_ciudad,
-            'id_estado' => $request->id_estado,
-            'id_pais' => $request->id_pais,
-        ]);
+    $estado = Estado::where('c_estado', $colonia->c_estado)->first();
 
-        return redirect()->route('cotizaciones.create', $razon->id_cliente)
-            ->with('success', 'Razón social actualizada correctamente.');
+    // Validación básica por si alguna relación no existe
+    if (!$ciudad || !$estado) {
+        return back()->withErrors(['colonia' => 'No se pudo determinar ciudad o estado desde la colonia seleccionada.']);
     }
+
+
+    $razon->update([
+        'nombre'             => $request->nombre,
+        'RFC'                => $request->RFC,
+        'notas_facturacion'  => $request->notas_facturacion,
+        'id_uso_cfdi'        => $request->id_uso_cfdi,
+        'id_metodo_pago'     => $request->id_metodo_pago,
+        'id_forma_pago'      => $request->id_forma_pago,
+        'id_regimen_fiscal'  => $request->id_regimen_fiscal
+    ]);
+
+    $razon->direccion_facturacion->update([
+        'calle'       => $request->calle,
+        'num_ext'     => $request->num_ext,
+        'num_int'     => $request->num_int,
+        'cp'          => $request->cp,
+        'id_colonia'  => $colonia->id_colonia,
+        'id_ciudad'   => $ciudad->id_ciudad,
+        'id_estado'   => $estado->id_estado,
+        'id_pais'     => $request->id_pais,
+    ]);
+
+
+    return redirect()->route('cotizaciones.create', $razon->id_cliente)
+        ->with('success', 'Razón social actualizada correctamente.');
+}
+
 
 
 

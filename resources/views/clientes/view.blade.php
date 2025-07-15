@@ -749,9 +749,10 @@
                             @php ++$cantidad_cotizaciones @endphp
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted text-subtitulo">Sin cotizaciones
+                                <td colspan="7" class="text-center text-muted text-normal">Sin cotizaciones
                                     registradas…</td>
                             </tr>
+                            
                         @endforelse
                     </tbody>
                     <tfoot class="table-light position-sticky bottom-0"
@@ -827,7 +828,7 @@
                             @php ++$cantidad_pedidos; @endphp
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted text-normal">Sin pedidos registrados…
+                                <td colspan="7" class="text-center text-muted text-normal">Sin pedidos registrados…
                                 </td>
                             </tr>
                         @endforelse
@@ -1057,7 +1058,6 @@
                                     @php
                                         $contactoEntrega = $cliente->contactos_entrega
                                             ->where('id_direccion_entrega', $direccion->id_direccion)
-                                            ->where('predeterminado', 1)
                                             ->first();
                                     @endphp
                                     <tr>
