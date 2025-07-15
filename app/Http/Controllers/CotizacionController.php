@@ -51,6 +51,18 @@ class CotizacionController extends Controller
             ->get()
             ->groupBy('id_vendedor');
 
+        // Agrupar cotizaciones por usuario y luego por fecha (detalle)
+        $detallesPorUsuario = [];
+
+        foreach ($cotizaciones as $idUsuario => $cotizacionesUsuario) {
+            // Agrupar por fecha (formato Y-m-d)
+            $detallesPorUsuario[$idUsuario] = $cotizacionesUsuario
+                ->groupBy(function ($cotizacion) {
+                    return \Carbon\Carbon::parse($cotizacion->fecha_alta)->format('Y-m-d');
+                });
+        }
+
+
         // 4. Recorrer los equipos y calcular datos por usuario
         foreach ($equipos as $equipo) {
             // Inicializar totales del equipo
@@ -114,7 +126,7 @@ class CotizacionController extends Controller
                 : 0;
         }
 
-        return view('cotizaciones.index', compact('equipos', 'year', 'month'));
+        return view('cotizaciones.index', compact('equipos', 'year', 'month', 'detallesPorUsuario'));
     }
 
 
