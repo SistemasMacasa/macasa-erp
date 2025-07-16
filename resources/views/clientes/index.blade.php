@@ -82,21 +82,14 @@
                         <label for="segmento" class="form-label text-normal">Segmento</label>
                         <select name="segmento" id="segmento" class="form-select">
                             <option value="">Todos</option>
-                            @foreach ($segmentos as $s)
-                                @php
-                                    $label = match ($s) {
-                                        'macasa cuentas especiales' => 'Macasa Cuentas Especiales',
-                                        'tekne store ecommerce' => 'Tekne Store E-Commerce',
-                                        'la plaza ecommerce' => 'LaPlazaEnLinea E-Commerce',
-                                        default => ucfirst($s), // por si aparece otro
-                                    };
-                                @endphp
-                                <option value="{{ $s }}" {{ request('segmento') == $s ? 'selected' : '' }}>
-                                    {{ $label }}
+                            @foreach ($segmentos as $id => $nombre)
+                                <option value="{{ $id }}" {{ request('segmento') == $id ? 'selected' : '' }}>
+                                    {{ $nombre }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
+
 
 
                     {{-- Ciclo de venta --}}
@@ -373,24 +366,9 @@
 
                         {{-- Segmento filtrado --}}
                         <td class="py-1 px-2 text-center">
-                            @php $seg = mb_strtolower($c->segmento ?? ''); @endphp
-                            @switch($seg)
-                                @case('macasa cuentas especiales')
-                                    {{ 'Macasa Cuentas Especiales' }}
-                                @break
-
-                                @case('tekne store ecommerce')
-                                    {{ 'Tekne Store E-Commerce' }}
-                                @break
-
-                                @case('la plaza ecommerce')
-                                    {{ 'LaPlazaEnLinea E-Commerce' }}
-                                @break
-
-                                @default
-                                    —
-                            @endswitch
+                            {{ $c->segmento->nombre ?? '—' }}
                         </td>
+
 
                         {{-- Ciclo Venta --}}
                         <td class="py-1 px-2 text-center">

@@ -313,6 +313,17 @@ body[data-bs-theme="dark"] {
   width: 80px;
 }
 
+#panel-detalle-usuario {
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+#panel-detalle-usuario.abierto {
+  max-height: 1000px;
+  /* ajusta según el contenido máximo esperado */
+}
+
+
 
 
 

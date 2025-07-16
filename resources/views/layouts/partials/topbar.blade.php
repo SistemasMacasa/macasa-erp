@@ -235,7 +235,7 @@
                     <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/mcarreon.png')}}"
                         alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1 fw-medium">
-                        {{ $usuario->nombre }} {{ $usuario->apellido_p }} {{ $usuario->apellido_m }}
+                        {{ $usuario->nombreCompleto }}
                     </span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>

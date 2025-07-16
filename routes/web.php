@@ -13,6 +13,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RazonSocialController;
 use App\Http\Controllers\MetasVentasController;
 use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\EstructuraController;
+
 
 //La ruta necesita dos parámetros: La dirección y una función, o un método de controlador.
 // Route::get('/', function () {
@@ -119,16 +121,15 @@ Route::middleware(['auth', 'permission:Levantar Cotizacion'])->group(callback: f
     //Seleccionar Razón Social para Cotización
     Route::post('/razones-sociales/{id}/seleccionar', [RazonSocialController::class, 'seleccionar'])->name('razones_sociales.seleccionar');
     //Procesar Guardar Cotización
-    Route::post('/cotizaciones', [CotizacionController::class,'store'])
+    Route::post('/cotizaciones', [CotizacionController::class, 'store'])
         ->name('cotizaciones.store');
     //Seleccionar Contacto para Cotización
     Route::post('/contactos/{contacto}/seleccionar', [ContactoController::class, 'seleccionar'])->name('contactos.seleccionar');
 
-Route::post('/cotizaciones/{cotizacion}/partidas', [CotizacionController::class,'agregarPartida'])
-     ->name('cotizaciones.agregarPartida');
+    Route::post('/cotizaciones/{cotizacion}/partidas', [CotizacionController::class, 'agregarPartida'])
+        ->name('cotizaciones.agregarPartida');
 
-Route::delete('/cotizaciones/partidas/{partida}', [CotizacionController::class,'eliminarPartida']);
-
+    Route::delete('/cotizaciones/partidas/{partida}', [CotizacionController::class, 'eliminarPartida']);
 });
 
 Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: function () {
@@ -266,7 +267,6 @@ Route::middleware(['auth', 'permission:Eliminar Usuario'])->group(function () {
     // Desarchivar usuario (reactivar)
     Route::patch('/usuarios/{usuario}/desarchivar', [UsuarioController::class, 'desarchivar'])
         ->name('usuarios.desarchivar');
-
 });
 
 
@@ -287,10 +287,23 @@ Route::middleware(['auth', 'permission:Editar Equipos de Trabajo'])->group(funct
 Route::middleware(['auth', 'permission:Eliminar Equipos de trabajo'])->group(function () {
     Route::delete('/equipos/{id}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
 });
+Route::middleware(['auth', 'permission:Metas de Venta'])->group(function () {
+    Route::get('/metas-ventas', [MetasVentasController::class, 'index'])->name('ventas.metas');
 
-Route::get('/metas-ventas', [MetasVentasController::class, 'index'])->name('ventas.metas');
+    Route::post('/metas-ventas/guardar', [MetasVentasController::class, 'guardar'])->name('ventas.metas.guardar');
+});
 
-Route::post('/metas-ventas/guardar', [MetasVentasController::class, 'guardar'])->name('ventas.metas.guardar');
 
+    // Segmentos
+    Route::post('/segmentos', [EstructuraController::class, 'storeSegmento'])->name('segmentos.store');
+    Route::put('/segmentos/{segmento}', [EstructuraController::class, 'updateSegmento'])->name('segmentos.update');
+    Route::delete('/segmentos/{segmento}', [EstructuraController::class, 'destroySegmento'])->name('segmentos.destroy');
 
+    // Sucursales
+    Route::post('/sucursales', [EstructuraController::class, 'storeSucursal'])->name('sucursales.store');
+    Route::put('/sucursales/{sucursal}', [EstructuraController::class, 'updateSucursal'])->name('sucursales.update');
+    Route::delete('/sucursales/{sucursal}', [EstructuraController::class, 'destroySucursal'])->name('sucursales.destroy');
+
+    // Vista principal
+    Route::get('/estructura', [EstructuraController::class, 'index'])->name('estructura.index');
 

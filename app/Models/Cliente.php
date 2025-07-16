@@ -19,6 +19,7 @@ class Cliente extends Model
         'tipo',
         'id_vendedor',
         'sector',
+        'id_segmento',
         'segmento'
     ];
 
@@ -41,7 +42,7 @@ class Cliente extends Model
     public function contacto_predet()
     {
         return $this->hasOne(Contacto::class, 'id_cliente', 'id_cliente')
-                    ->where('predeterminado', 1);
+            ->where('predeterminado', 1);
     }
     /** El primer contacto (el “principal”) */
     public function primerContacto()
@@ -56,22 +57,22 @@ class Cliente extends Model
     public function razon_social_predet()
     {
         return $this->hasOne(RazonSocial::class, 'id_cliente', 'id_cliente')
-                    ->where('predeterminado', 1);
+            ->where('predeterminado', 1);
     }
     public function direccionesEntrega()
     {
         return $this->hasMany(Direccion::class, 'id_cliente', 'id_cliente')
-                    ->whereIn('id_direccion', function ($query) {
-                        $query->select('id_direccion_entrega')
-                            ->from('contactos')
-                            ->whereNotNull('id_direccion_entrega');
-                    });
+            ->whereIn('id_direccion', function ($query) {
+                $query->select('id_direccion_entrega')
+                    ->from('contactos')
+                    ->whereNotNull('id_direccion_entrega');
+            });
     }
     public function contacto_entrega_predet()
     {
         return $this->hasOne(Contacto::class, 'id_cliente', 'id_cliente')
-                    ->where('predeterminado', 1)
-                    ->whereNotNull('id_direccion_entrega');
+            ->where('predeterminado', 1)
+            ->whereNotNull('id_direccion_entrega');
     }
     public function notas()
     {
@@ -84,4 +85,8 @@ class Cliente extends Model
     }
 
 
+    public function segmento()
+    {
+        return $this->belongsTo(Segmento::class, 'id_segmento', 'id_segmento');
+    }
 }
