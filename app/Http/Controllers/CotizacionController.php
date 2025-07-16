@@ -25,12 +25,16 @@ use App\Models\MetasVentas;
 use App\Models\Contacto;
 use App\Models\Cotizacion;
 use App\Models\CotizacionPartida;
+use App\Models\Pedido;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class CotizacionController extends Controller
 {
+    use AuthorizesRequests;
     public function index(Request $request)
     {
         $year = $request->input('year', now()->year);
@@ -619,5 +623,110 @@ class CotizacionController extends Controller
                 ->setPaper('letter');
 
         return $pdf->stream("Cotizacion-{$cotizacion->num_consecutivo}.pdf");
+    }
+
+
+        /* ----------- FORM EDIT ----------- */
+    public function edit(Cotizacion $cotizacion)
+    {
+        $cotizacion->load([
+            'cliente',             // relaciones que necesites
+            'partidas',            // hasMany a CotizacionPartida
+            'pedido'               // hasOne
+        ]);
+
+        return view('cotizaciones.edit', compact('cotizacion'));
+    }
+
+    /* ----------- UPDATE GENERAL (archivo + emitir pedido + notas) ----------- */
+    public function update(Request $req, Cotizacion $cotizacion)
+    {
+        /* 1. Carga de archivo ------------------------------------------------ */
+        if ($req->hasFile('orden_de_venta')) {
+            $req->validate([
+                'orden_de_venta' => [
+                    'file',
+                    'max:'.CE::MAX_OC,
+                    'mimes:'.implode(',', CE::EXT_PERMITIDAS)
+                ]
+            ]);
+
+            $path = $req->file('orden_de_venta')
+                        ->store('ordenes_compra', ['disk' => 'public']);
+
+            $cotizacion->orden_de_venta = $path;
+        }
+
+        /* 2. Campos editables (solo si no es pedido o user tiene permiso) ---- */
+        if (!$cotizacion->pedido || auth()->user()->can('editar pedido')) {
+            $cotizacion->fill($req->only([
+                'notas_facturacion',
+                'notas_entrega',
+                // agrega aquí los campos que sí se pueden editar
+            ]));
+        }
+
+        /* 3. Emitir pedido --------------------------------------------------- */
+        if ($req->filled('emitir_pedido') && !$cotizacion->pedido) {
+            $this->emitirPedido($cotizacion);
+        }
+
+        $cotizacion->save();
+
+        return back()->with('ok', 'Cotización actualizada');
+    }
+
+    /* ----------- AJAX :: Editar Partida ------------------------------------ */
+    public function updatePartida(Request $req, CotizacionPartida $partida)
+    {
+        $this->authorize('update', $partida);          // policy Spatie
+        $partida->update($req->only([
+            'descripcion', 'cantidad', 'precio', 'costo'
+        ]));
+        return response()->json(['ok' => true]);
+    }
+
+    /* ----------- AJAX :: Eliminar Partida ---------------------------------- */
+    public function destroyPartida(CotizacionPartida $partida)
+    {
+        $this->authorize('delete', $partida);          // policy Spatie
+        $partida->delete();
+        return response()->json(['ok' => true]);
+    }
+
+    /* ----------- Descarga protegida de OC ---------------------------------- */
+    public function descargarOrden(Cotizacion $cotizacion)
+    {
+        $this->authorize('view', $cotizacion);
+
+        if (config('filesystems.default') === 's3') {
+            /* URL firmada 5 min para S3 */
+            return redirect(
+                Storage::temporaryUrl($cotizacion->orden_de_venta, now()->addMinutes(5))
+            );
+        }
+
+        return Storage::disk('public')->download($cotizacion->orden_de_venta);
+    }
+
+    /* ========== MÉTODO PRIVADO ============================================ */
+    private function emitirPedido(Cotizacion $cot)
+    {
+        /* a) Crear registro en pedidos */
+        $pedido = Pedido::create(['id_cotizacion' => $cot->id]);
+
+        /* b) Nota / log interno */
+        registrarNota($cot->id, 'Pedido emitido por '.auth()->user()->name);
+
+        /* c) Destinatarios */
+        $dest = User::role(['Dirección','Compras','Administración'])
+                    ->pluck('email')
+                    ->merge($cot->usuario->email);
+
+        /* d) Enviar correo */
+        Mail::to($dest)->send(new PedidoEmitidoMail($cot, $pedido));
+
+        /* e) Disparar evento WhatsApp placeholder */
+        event(new PedidoEmitidoWhatsApp($cot));
     }
 }

@@ -94,6 +94,10 @@ class Cotizacion extends Model
         return $this->belongsTo(Usuario::class, 'id_vendedor', 'id_usuario');
     }
 
+        public function pedido()
+    {
+        return $this->hasOne(Pedido::class, 'id_cotizacion');
+    }
 
 
 }

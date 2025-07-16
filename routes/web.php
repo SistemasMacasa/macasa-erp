@@ -302,3 +302,19 @@ Route::post('/metas-ventas/guardar', [MetasVentasController::class, 'guardar'])-
 
 
 Route::get('/cotizaciones/{id}/pdf', [CotizacionController::class, 'pdf'])->name('cotizaciones.pdf');
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('cotizaciones', CotizacionController::class)->only(['edit','update']);
+
+    // endpoints AJAX para partidas
+    Route::put ('/partidas/{partida}', [CotizacionController::class,'updatePartida'])
+        ->name('partidas.update');
+    Route::delete('/partidas/{partida}', [CotizacionController::class,'destroyPartida'])
+        ->name('partidas.destroy');
+
+    // descarga protegida de OC (local o S3 presigned)
+    Route::get('/cotizaciones/{cotizacion}/orden-compra', [CotizacionController::class,'descargarOrden'])
+        ->name('cotizaciones.orden-compra');
+});
