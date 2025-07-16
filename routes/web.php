@@ -142,6 +142,13 @@ Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: fun
         '/nueva-entrega',
         [CotizacionController::class, 'storeDireccionEntregaFactura']
     )->name('cotizaciones.nueva-entrega');
+    //Editar razon social + dirección de factura + notas para facturar.
+    Route::get('/razones-sociales/{id}/edit', [RazonSocialController::class, 'edit'])->name('razones_sociales.edit');
+    Route::put('/razones-sociales/{id}', [RazonSocialController::class, 'update'])->name('razones_sociales.update');
+    //Editar contacto de entrega + direccion de entrega + notas para entregar.
+    Route::get('/contacto-entrega/{id}/edit', [ContactoController::class, 'edit'])->name('contacto_entrega.edit');
+    Route::put('/contacto-entrega/{id}', [ContactoController::class, 'update'])->name('contacto_entrega.update');
+
 });
 
 Route::middleware(['auth', 'permission:Permisos'])->group(callback: function () {
@@ -307,3 +314,20 @@ Route::middleware(['auth', 'permission:Metas de Venta'])->group(function () {
     // Vista principal
     Route::get('/estructura', [EstructuraController::class, 'index'])->name('estructura.index');
 
+Route::get('/cotizaciones/{id}/pdf', [CotizacionController::class, 'pdf'])->name('cotizaciones.pdf');
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('cotizaciones', CotizacionController::class)->only(['edit','update']);
+
+    // endpoints AJAX para partidas
+    Route::put ('/partidas/{partida}', [CotizacionController::class,'updatePartida'])
+        ->name('partidas.update');
+    Route::delete('/partidas/{partida}', [CotizacionController::class,'destroyPartida'])
+        ->name('partidas.destroy');
+
+    // descarga protegida de OC (local o S3 presigned)
+    Route::get('/cotizaciones/{cotizacion}/orden-compra', [CotizacionController::class,'descargarOrden'])
+        ->name('cotizaciones.orden-compra');
+});

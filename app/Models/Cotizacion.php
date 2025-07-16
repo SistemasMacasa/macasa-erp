@@ -30,7 +30,7 @@ class Cotizacion extends Model
         'num_consecutivo',
         'orden_de_venta',   // (binario)
         'score_final',
-        'notas_entrega',    
+        'notas_entrega',
     ];
 
     /* -----------  RELACIONES  ----------- */
@@ -58,7 +58,7 @@ class Cotizacion extends Model
 
     public function contactoEntrega()
     {
-        return $this->belongsTo(Contacto::class, 'id_contacto');
+        return $this->belongsTo(Contacto::class, 'id_contacto_entrega');
     }
 
     /* -----------  ACCESOR útil ----------- */
@@ -83,16 +83,21 @@ class Cotizacion extends Model
     }
 
     // Para que Laravel maneje estas columnas como fechas (Carbon)
-    protected $dates = [
-        'fecha_alta',
-        'vencimiento',
+    protected $casts = [
+        'fecha_alta' => 'datetime',
+        'vencimiento' => 'datetime',
     ];
+
 
     public function vendedor()
     {
         return $this->belongsTo(Usuario::class, 'id_vendedor', 'id_usuario');
     }
 
+        public function pedido()
+    {
+        return $this->hasOne(Pedido::class, 'id_cotizacion');
+    }
 
 
 }

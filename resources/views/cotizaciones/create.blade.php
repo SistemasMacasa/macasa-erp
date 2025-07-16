@@ -49,29 +49,29 @@
                         <div class="d-flex flex-row align-items-center gap-2">
                             {{-- Botón Directorio con badge numérico --}}
                             <button
-                            id="btn-directorio"
-                            type="button"
-                            class="btn btn-primary btn-sm position-relative"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalFacturacion"
-                            aria-label="Abrir directorio ({{ $rsCount }})"
-                            {{ $rsCount ? '' : 'disabled' }}
-                            >
-                            <i class="fa fa-address-book"></i>
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-info text-white"
-                                style="
-                                font-size: .6rem;
-                                line-height: 1;
-                                width: 1.25rem;
-                                height: 1.25rem;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                "
-                            >
-                                {{ $rsCount }}
-                            </span>
+                                id="btn-directorio"
+                                type="button"
+                                class="btn btn-primary btn-sm position-relative"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalFacturacion"
+                                aria-label="Abrir directorio ({{ $rsCount }})"
+                                {{ $rsCount ? '' : 'disabled' }}
+                                >
+                                <i class="fa fa-address-book"></i>
+                                <span
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-info text-white"
+                                    style="
+                                    font-size: .6rem;
+                                    line-height: 1;
+                                    width: 1.25rem;
+                                    height: 1.25rem;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    "
+                                >
+                                    {{ $rsCount }}
+                                </span>
                             </button>
 
                             {{-- Botón “+” para agregar nueva razón social --}}
@@ -97,7 +97,8 @@
                             @csrf
                             {{-- Campos invisibles que se sobreescriben por JS --}}
                             <input type="hidden" name="id_razon_social"  id="id_razon_social">
-                            
+                            <input type="hidden" name="notas_facturacion" id="notas_facturacion"
+                                            value="{{ trim($rsPredet->notas_facturacion ?? '') }}">
 
                         <div class="card-body h-100">
                             <div class="row g-3">
@@ -229,15 +230,17 @@
                                     <hr class="m-0">
                                 </div>
 
-                                <!-- Al final de la card de facturación -->
+                                <!-- Notas para facturación -->
                                 <div class="col-12">
-                                    <label class="text-muted mb-1">
+                                    <label class="text-muted small mb-1">
                                         <i class="fas fa-sticky-note me-1 text-primary"></i> Nota para Facturación
                                     </label>
-                                    <textarea id="fact-notas" class="form-control form-control-sm" rows="3"
-                                              placeholder="Ej. Favor de facturar con PO 123…"
-                                              style="resize: none; overflow: auto;"></textarea>
+                                    <textarea id="fact-notas" class="form-control form-control-sm" rows="3" disabled>
+                                        {{ trim($rsPredet->notas_facturacion ?? '') }}
+                                    </textarea>
+                                    
                                 </div>
+
 
                                
                             </div>
@@ -265,8 +268,19 @@
                                     aria-label="Abrir directorio de entregas ({{ $contactos_entrega->count() }})"
                                     {{ $contactos_entrega->isEmpty() ? 'disabled' : '' }}>
                                         <i class="fa fa-address-book"></i>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-info">
-                                                {{ $contactos_entrega->count() }}
+                                        <span
+                                            class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-info text-white"
+                                            style="
+                                                font-size: .6rem;
+                                                line-height: 1;
+                                                width: 1.25rem;
+                                                height: 1.25rem;
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                            "
+                                        >
+                                            {{ $contactos_entrega->count() }}
                                         </span>
                             </button>
 
@@ -400,7 +414,7 @@
                                         <i class="fas fa-sticky-note fa-fw text-muted me-2 mt-1"></i>
                                         <div>
                                             <span class="text-muted">Referencias</span>
-                                            <div id="entrega-notas" class="fw-semibold">
+                                            <div id="" class="fw-semibold">
                                                 {{ $contacto_entrega->direccion_entrega->notas ?? '—' }}
                                             </div>
                                         </div>
@@ -412,14 +426,18 @@
                                     <hr class="m-0">
                                 </div>
 
+                                <!-- Notas para Entrega -->
                                 <div class="col-12">
-                                    <label class="text-muted mb-1">
+                                    <label class="text-muted small mb-1">
                                         <i class="fas fa-sticky-note me-1 text-primary"></i> Nota para Entrega
                                     </label>
-                                    <textarea id="entrega-notas" class="form-control form-control-sm" rows="3"
-                                              placeholder="Ej. Favor de facturar con PO 123…"
-                                              style="resize: none; overflow: auto;"></textarea>
+                                    <textarea id="entrega-notas" class="form-control form-control-sm" rows="3" disabled>
+                                        {{ trim($contacto_entrega->notas_entrega ?? '') }}
+                                    </textarea>
+                                    <input type="hidden" name="notas_entrega" id="notas_entrega"
+                                            value="{{ trim($contacto_entrega->notas_entrega ?? '') }}">
                                 </div>
+
                             </div>
                         </div>
 
@@ -429,96 +447,93 @@
             </div>
         </div>
 
-{{-- 📦 Sección: Partidas --}}
-<div class="card shadow-sm mt-4 border-0">
-  <div class="card-header border-bottom">
-    <strong class="mb-0 me-auto text-subtitulo ">Agregar Partidas</strong>
-  </div>
+        {{-- 📦 Sección: Partidas --}}
+        <div class="card shadow-sm mt-4 border-0">
+            <div class="card-header border-bottom">
+                <strong class="mb-0 me-auto text-subtitulo ">Agregar Partidas</strong>
+            </div>
 
-  <div class="card-body">
-    <form id="formPartida" class="row g-2">
+            <div class="card-body">
+                <form id="formPartida" class="row g-2">
 
-  {{-- Descripción (100 % móvil / 6-cols ≥md) --}}
-  <div class="col-12 col-md-6">
-    <label class="form-label">Descripción *</label>
-    <textarea name="descripcion"
-              class="form-control"
-              placeholder="Ej. Servidor Dell…" required
-              style="height:80px;resize:none;"></textarea>
-  </div>
+            {{-- Descripción (100 % móvil / 6-cols ≥md) --}}
+            <div class="col-12 col-md-6">
+                <label class="form-label">Descripción *</label>
+                <textarea name="descripcion"
+                        class="form-control"
+                        placeholder="Ej. Servidor Dell…" required
+                        style="height:80px;resize:none;"></textarea>
+            </div>
 
-  {{-- Bloque derecho: SKU + fila de numéricos + botón --}}
-  <div class="col-12 col-md-6">
+            {{-- Bloque derecho: SKU + fila de numéricos + botón --}}
+            <div class="col-12 col-md-6">
 
-    {{-- SKU (ocupa el 100 % del ancho disponible) --}}
-    <label class="form-label">SKU <span class="text-muted">(opcional)</span></label>
-    <input name="sku" class="form-control mb-2" placeholder="Código interno">
+                {{-- SKU (ocupa el 100 % del ancho disponible) --}}
+                <label class="form-label">SKU <span class="text-muted">(opcional)</span></label>
+                <input name="sku" class="form-control mb-2" placeholder="Código interno">
 
-    {{-- Fila flex: 3 inputs + botón --}}
-    <div class="d-flex gap-2">
+                {{-- Fila flex: 3 inputs + botón --}}
+                <div class="d-flex gap-2">
 
-      <input name="precio"   type="number" min="0" step="0.01" required
-             class="form-control" placeholder="Precio *">
+                <input name="precio"   type="number" min="0" step="0.01" required
+                        class="form-control" placeholder="Precio *">
 
-      <input name="costo"    type="number" min="0" step="0.01" required
-             class="form-control" placeholder="Costo *">
+                <input name="costo"    type="number" min="0" step="0.01" required
+                        class="form-control" placeholder="Costo *">
 
-      <input name="cantidad" type="number" min="1" step="1" required
-             class="form-control" placeholder="Cant. *">
+                <input name="cantidad" type="number" min="1" step="1" required
+                        class="form-control" placeholder="Cant. *">
 
-      {{-- Botón: sin crecer, pegado a la derecha, alineado abajo --}}
-      <button type="submit"
-              class="btn btn-success flex-shrink-0 align-self-end px-4">
-        <i class="fa fa-plus me-1"></i> Agregar
-      </button>
-    </div>
+                {{-- Botón: sin crecer, pegado a la derecha, alineado abajo --}}
+                <button type="submit"
+                        class="btn btn-success flex-shrink-0 align-self-end px-4">
+                    <i class="fa fa-plus me-1"></i> Agregar
+                </button>
+                </div>
 
-  </div>
+            </div>
 
-</form>
-
-
-
-    {{-- Tabla de partidas --}}
-    <div class="table-responsive mt-4">
-      <table id="tablaPartidas" class="table table-sm table-bordered align-middle mb-0">
-        <thead class="table-light text-center">
-          <tr>
-            <th>#</th>
-            <th>SKU</th>
-            <th>Descripción</th>
-            <th class="text-end">Precio</th>
-            <th class="text-end">Costo</th>
-            <th class="text-end">Cantidad</th>
-            <th class="text-end">Importe</th>
-            <th class="text-center"></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot class="table-light fw-semibold">
-          <tr>
-            <td colspan="6" class="text-end">Subtotal</td>
-            <td id="partidasSubtotal" class="text-end">0.00</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td colspan="6" class="text-end">IVA (16 %)</td>
-            <td id="partidasIVA" class="text-end">0.00</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td colspan="6" class="text-end">Total</td>
-            <td id="partidasTotal" class="text-end text-dark fw-bold">0.00</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-</div>
+            </form>
 
 
 
+                {{-- Tabla de partidas --}}
+                <div class="table-responsive mt-4">
+                    <table id="tablaPartidas" class="table table-sm table-bordered align-middle mb-0">
+                        <thead class="table-light text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>SKU</th>
+                            <th>Descripción</th>
+                            <th class="text-end">Precio</th>
+                            <th class="text-end">Costo</th>
+                            <th class="text-end">Cantidad</th>
+                            <th class="text-end">Importe</th>
+                            <th class="text-center"></th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot class="table-light fw-semibold">
+                        <tr>
+                            <td colspan="6" class="text-end">Subtotal</td>
+                            <td id="partidasSubtotal" class="text-end">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-end">IVA (16 %)</td>
+                            <td id="partidasIVA" class="text-end">0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-end">Total</td>
+                            <td id="partidasTotal" class="text-end text-dark fw-bold">0.00</td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     </div> <!-- End SECCION PRINCIPAL -->
 
@@ -558,13 +573,20 @@
                     @forelse($razones_sociales as $rs)
                         <tr id="rs-row-{{ $rs->id_razon_social }}"
                             class="{{ $rs->predeterminado ? 'table-success' : '' }}">
-                        <td class="text-center select-col">
-                            <button type="button"
-                                    class="btn btn-primary btn-sm seleccionar-direccion"
-                                    data-id="{{ $rs->id_razon_social }}"
-                                    data-route="{{ route('razones_sociales.seleccionar', $rs->id_razon_social) }}">
-                            <i class="fa fa-check"></i>
-                            </button>
+                        <td class="text-center select-col p-2">
+                            <div class="d-flex flex-row gap-2 justify-content-center">
+                                <button type="button"
+                                        class="btn btn-warning btn-sm"
+                                        onclick="window.location='{{ route('razones_sociales.edit', $rs->id_razon_social) }}'">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-primary btn-sm seleccionar-direccion"
+                                        data-id="{{ $rs->id_razon_social }}"
+                                        data-route="{{ route('razones_sociales.seleccionar', $rs->id_razon_social) }}">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                            </div>
                         </td>
                         <td>{{ $rs->nombre }}</td>
                         <td>{{ $rs->RFC }}</td>
@@ -610,147 +632,147 @@
 
             <div class="modal-body py-3 px-4">
                 <form id="formNuevaRazonSocialFactura">
-                @csrf
-                <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
+                    @csrf
+                    <input type="hidden" name="id_cliente" value="{{ $cliente->id_cliente }}">
 
-                <!-- Sección Razón Social -->
-                <div class="form-section mb-4">
-                    <div class="section-header mb-3">
-                    <i class="fa fa-id-card-alt text-primary me-2"></i>
-                    <span class="fw-semibold fs-6">Razón Social</span>
-                    </div>
-                    <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label small text-secondary">Razón Social *</label>
-                        <input type="text" name="nombre" class="form-control form-control-sm" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label small text-secondary">RFC *</label>
-                        <input type="text" name="rfc" class="form-control form-control-sm" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small text-secondary">Uso CFDI *</label>
-                        <select name="id_uso_cfdi" class="form-select form-select-sm" required>
-                        <option value="" disabled selected>Selecciona uno</option>
-                        @foreach($uso_cfdis as $uso)
-                            <option value="{{ $uso->id_uso_cfdi }}">
-                            {{ $uso->clave }} – {{ $uso->nombre }}
-                            </option>
-                        @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small text-secondary">Método de pago *</label>
-                        <select name="id_metodo_pago" class="form-select form-select-sm" required>
-                        <option value="" disabled selected>Selecciona uno</option>
-                        @foreach($metodos->unique('clave') as $metodo)
-                            <option value="{{ $metodo->id_metodo_pago }}">
-                            {{ $metodo->clave }} – {{ $metodo->nombre }}
-                            </option>
-                        @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small text-secondary">Forma de pago *</label>
-                        <select name="id_forma_pago" class="form-select form-select-sm" required>
-                        <option value="" disabled selected>Selecciona uno</option>
-                        @foreach($formas->unique('clave') as $forma)
-                            <option value="{{ $forma->id_forma_pago }}">
-                            {{ $forma->clave }} – {{ $forma->nombre }}
-                            </option>
-                        @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small text-secondary">Régimen Fiscal *</label>
-                        <select name="id_regimen_fiscal" class="form-select form-select-sm" required>
-                        <option value="" disabled selected>Selecciona uno</option>
-                        @foreach($regimenes as $regimen)
-                            <option value="{{ $regimen->id_regimen_fiscal }}">
-                            {{ $regimen->clave }} – {{ $regimen->nombre }}
-                            </option>
-                        @endforeach
-                        </select>
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Sección Dirección de Facturación -->
-                <div class="form-section mb-4">
-                    <div class="section-header mb-3">
-                    <i class="fa fa-map-marked-alt text-primary me-2"></i>
-                    <span class="fw-semibold fs-6">Dirección de Facturación</span>
-                    </div>
-                    <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label small text-secondary">Calle *</label>
-                        <input type="text" name="direccion[calle]" class="form-control form-control-sm" required>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label small text-secondary">Num. Ext. *</label>
-                        <input type="text" name="direccion[num_ext]" class="form-control form-control-sm" required>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label small text-secondary">Num. Int.</label>
-                        <input type="text" name="direccion[num_int]" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small text-secondary">C.P. *</label>
-                        <input type="text"
-                            name="direccion[cp]"
-                            maxlength="5"
-                            class="form-control form-control-sm cp-field-factura"
-                            required>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small text-secondary">Colonia *</label>
-                        <select name="direccion[id_colonia]" class="form-select form-select-sm colonia-select-factura" required>
-                        <option value="">— Selecciona CP primero —</option>
-                        </select>
+                    <!-- Sección Razón Social -->
+                    <div class="form-section mb-4">
+                        <div class="section-header mb-3">
+                        <i class="fa fa-id-card-alt text-primary me-2"></i>
+                        <span class="fw-semibold fs-6">Razón Social</span>
+                        </div>
+                        <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small text-secondary">Razón Social *</label>
+                            <input type="text" name="nombre" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small text-secondary">RFC *</label>
+                            <input type="text" name="rfc" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-secondary">Uso CFDI *</label>
+                            <select name="id_uso_cfdi" class="form-select form-select-sm" required>
+                            <option value="" disabled selected>Selecciona uno</option>
+                            @foreach($uso_cfdis as $uso)
+                                <option value="{{ $uso->id_uso_cfdi }}">
+                                {{ $uso->clave }} – {{ $uso->nombre }}
+                                </option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-secondary">Método de pago *</label>
+                            <select name="id_metodo_pago" class="form-select form-select-sm" required>
+                            <option value="" disabled selected>Selecciona uno</option>
+                            @foreach($metodos->unique('clave') as $metodo)
+                                <option value="{{ $metodo->id_metodo_pago }}">
+                                {{ $metodo->clave }} – {{ $metodo->nombre }}
+                                </option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-secondary">Forma de pago *</label>
+                            <select name="id_forma_pago" class="form-select form-select-sm" required>
+                            <option value="" disabled selected>Selecciona uno</option>
+                            @foreach($formas->unique('clave') as $forma)
+                                <option value="{{ $forma->id_forma_pago }}">
+                                {{ $forma->clave }} – {{ $forma->nombre }}
+                                </option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-secondary">Régimen Fiscal *</label>
+                            <select name="id_regimen_fiscal" class="form-select form-select-sm" required>
+                            <option value="" disabled selected>Selecciona uno</option>
+                            @foreach($regimenes as $regimen)
+                                <option value="{{ $regimen->id_regimen_fiscal }}">
+                                {{ $regimen->clave }} – {{ $regimen->nombre }}
+                                </option>
+                            @endforeach
+                            </select>
+                        </div>
+                        </div>
                     </div>
 
-                    <!-- Estado y Municipio son informativos, no se procesan en el backend -->
-                    <div class="col-md-3">
-                        <label class="form-label small text-secondary">Municipio *</label>
-                        <select name="municipio" class="form-select form-select-sm municipio-field-factura" required>
-                        <option value="">— Selecciona CP primero —</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small text-secondary">Estado *</label>
-                        <select name="estado" class="form-select form-select-sm estado-field-factura" required>
-                        <option value="">— Selecciona CP primero —</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small text-secondary">País *</label>
-                        <select name="direccion[id_pais]" class="form-select form-select-sm pais-field-factura" required>
-                        @foreach($paises as $pais)
-                            <option value="{{ $pais->id_pais }}"
-                            {{ $pais->nombre === 'México' ? 'selected' : '' }}>
-                            {{ $pais->nombre }}
-                            </option>
-                        @endforeach
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label small text-secondary">Notas / Referencias</label>
-                        <textarea name="notas"
-                                class="form-control form-control-sm"
-                                style="height: 100px; resize: none;"></textarea>
-                    </div>
-                    </div>
-                </div>
+                    <!-- Sección Dirección de Facturación -->
+                    <div class="form-section mb-4">
+                        <div class="section-header mb-3">
+                        <i class="fa fa-map-marked-alt text-primary me-2"></i>
+                        <span class="fw-semibold fs-6">Dirección de Facturación</span>
+                        </div>
+                        <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small text-secondary">Calle *</label>
+                            <input type="text" name="direccion[calle]" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small text-secondary">Num. Ext. *</label>
+                            <input type="text" name="direccion[num_ext]" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small text-secondary">Num. Int.</label>
+                            <input type="text" name="direccion[num_int]" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-secondary">C.P. *</label>
+                            <input type="text"
+                                name="direccion[cp]"
+                                maxlength="5"
+                                class="form-control form-control-sm cp-field-factura"
+                                required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small text-secondary">Colonia *</label>
+                            <select name="direccion[id_colonia]" class="form-select form-select-sm colonia-select-factura" required>
+                            <option value="">— Selecciona CP primero —</option>
+                            </select>
+                        </div>
 
-                <!-- Footer -->
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
-                    Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-sm btn-primary">
-                    <i class="fa fa-save me-1"></i> Guardar
-                    </button>
-                </div>
+                        <!-- Estado y Municipio son informativos, no se procesan en el backend -->
+                        <div class="col-md-3">
+                            <label class="form-label small text-secondary">Municipio *</label>
+                            <select name="municipio" class="form-select form-select-sm municipio-field-factura" required>
+                            <option value="">— Selecciona CP primero —</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small text-secondary">Estado *</label>
+                            <select name="estado" class="form-select form-select-sm estado-field-factura" required>
+                            <option value="">— Selecciona CP primero —</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small text-secondary">País *</label>
+                            <select name="direccion[id_pais]" class="form-select form-select-sm pais-field-factura" required>
+                            @foreach($paises as $pais)
+                                <option value="{{ $pais->id_pais }}"
+                                {{ $pais->nombre === 'México' ? 'selected' : '' }}>
+                                {{ $pais->nombre }}
+                                </option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small text-secondary">Notas / Referencias</label>
+                            <textarea name="notas_facturacion"
+                                    class="form-control form-control-sm"
+                                    style="height: 100px; resize: none;"></textarea>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-save me-1"></i> Guardar
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -796,15 +818,23 @@
               @foreach($contactos_entrega as $c)
                 @php $dir = $c->direccion_entrega @endphp
                 <tr id="entrega-row-{{ $c->id_contacto }}" class="{{ $c->predeterminado ? 'table-success' : '' }}">
-                  <td class="text-center select-col">
-                    <button
-                      type="button"
-                      class="btn btn-primary btn-sm seleccionar-entrega"
-                      data-id="{{ $c->id_contacto }}"
-                      data-route="{{ route('contactos.seleccionar', $c->id_contacto) }}">
-                      <i class="fa fa-check"></i>
-                    </button>
-                  </td>
+                <td class="text-center select-col p-2">
+                    <div class="d-flex flex-row gap-2 justify-content-center">
+                        <button
+                            type="button"
+                            class="btn btn-warning btn-sm"
+                            onclick="window.location='{{ route('contacto_entrega.edit', $c->id_contacto) }}'">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-sm seleccionar-entrega"
+                            data-id="{{ $c->id_contacto }}"
+                            data-route="{{ route('contactos.seleccionar', $c->id_contacto) }}">
+                            <i class="fa fa-check"></i>
+                        </button>
+                    </div>
+                </td>
                   <td>{{ $dir->nombre }}</td>
                   <td>{{ $c->nombreCompleto }}</td>
                   <td>{{ $c->telefono1 }}</td>
@@ -1009,13 +1039,20 @@
             tr.classList.add('table-success');
 
             tr.innerHTML = `
-                <td>
-                <button type="button"
-                        class="btn btn-sm btn-success seleccionar-direccion"
-                        data-id="${rs.id_razon_social}"
-                        data-route="/razones-sociales/${rs.id_razon_social}/seleccionar">
-                    <i class="fa fa-check"></i>
-                </button>
+                <td class="text-center select-col p-2">
+                    <div class="d-flex flex-row gap-2 justify-content-center">
+                        <button type="button"
+                                class="btn btn-warning btn-sm"
+                                onclick="window.location='/razones-sociales/${rs.id_razon_social}/edit'">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button type="button"
+                                class="btn btn-primary btn-sm seleccionar-direccion"
+                                data-id="${rs.id_razon_social}"
+                                data-route="/razones-sociales/${rs.id_razon_social}/seleccionar">
+                            <i class="fa fa-check"></i>
+                        </button>
+                    </div>
                 </td>
                 <td>${rs.nombre                  ?? ''}</td>
                 <td>${rs.RFC                     ?? ''}</td>
@@ -1135,6 +1172,7 @@
             setT('dir-ciudad',  d.ciudad?.n_mnpio);
             setT('dir-estado',  d.estado?.d_estado);
             setT('dir-cp',      d.cp);
+            setT('fact-notas',  rs.notas_facturacion)
 
             // Aquí es donde se llenan los campos ocultos
             setV('id_razon_social', rs.id_razon_social);
@@ -1273,7 +1311,7 @@
                         setT('entrega-estado',   valStr(d.estado,  'd_estado'));
                         setT('entrega-cp',       valStr(d.cp));
                         setT('entrega-pais',     valStr(d.pais,    'nombre'));
-                        setT('entrega-notas',    valStr(ent.notas));
+                        setT('entrega-notas',    valStr(ent.contacto?.notas_entrega, 'notas_entrega'));
 
                         /* ► ocultos  */
                         setV('id_contacto_entrega', ent.contacto?.id_contacto);

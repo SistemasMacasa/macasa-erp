@@ -25,11 +25,16 @@ use App\Models\MetasVentas;
 use App\Models\Contacto;
 use App\Models\Cotizacion;
 use App\Models\CotizacionPartida;
+use App\Models\Pedido;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CotizacionController extends Controller
 {
+    use AuthorizesRequests;
     public function index(Request $request)
     {
         $year = $request->input('year', now()->year);
@@ -227,7 +232,7 @@ class CotizacionController extends Controller
         $vendedorId  = auth()->id();
         $folio       = $this->nextConsecutivo();      // MC2xxxxx
 
-        \Log::debug('Payload recibido para cotización:', $v);
+        \Log::debug('Payload recibido en CotizacionController@store para cotización:', $v);
 
         /* 3. Transacción */
         DB::beginTransaction();
@@ -244,7 +249,7 @@ class CotizacionController extends Controller
             $cot = Cotizacion::create([
                 'id_cliente'          => $v['id_cliente'],
                 'id_razon_social'     => $v['id_razon_social'],
-                'id_contacto_entrega' => $v['id_contacto_entrega'],   // ← nombre correcto
+                'id_contacto_entrega' => $v['id_contacto_entrega'], 
                 'id_vendedor'         => $vendedorId,
                 'fecha_alta'          => $hoy,
                 'vencimiento'         => $vencimiento,
@@ -270,11 +275,17 @@ class CotizacionController extends Controller
             $scoreTotal = $cot->partidas->sum('score');
             $cot->update(['score_final' => $scoreTotal]);
 
+            /* D) Subtotal */
+            $subtotal = $cot->partidas->reduce(function ($carry, $p) {
+                return $carry + ($p->cantidad * $p->precio);
+            }, 0);
+            $cot->update(['subtotal' => $subtotal]);
+
             DB::commit();
 
             return response()->json([
                 'success'     => true,
-                'redirect_to' => route('cotizaciones.index', $cot->id_cotizacion),
+                'redirect_to' => route('cotizaciones.create', $v['id_cliente']),
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -339,6 +350,7 @@ class CotizacionController extends Controller
             'id_metodo_pago' => 'required|exists:metodo_pagos,id_metodo_pago',
             'id_forma_pago' => 'required|exists:forma_pagos,id_forma_pago',
             'id_regimen_fiscal' => 'required|exists:regimen_fiscales,id_regimen_fiscal',
+            'notas_facturacion' => 'nullable|string|',
 
             /* Dirección */
             'direccion.calle' => 'required|string|max:100',
@@ -417,6 +429,7 @@ class CotizacionController extends Controller
                 'saldo' => 0,
                 'limite_credito' => 0,
                 'id_direccion_facturacion' => $direccion->id_direccion,
+                'notas_facturacion' => $data['notas_facturacion'],
                 'predeterminado' => 1,
             ]);
         });
@@ -606,5 +619,126 @@ class CotizacionController extends Controller
     {
         $partida->delete();
         return response()->json(['success' => true]);
+    }
+
+    public function pdf($id)
+    {
+        $cotizacion = Cotizacion::with([
+            'cliente',
+            'razonSocial',
+            'contactoEntrega',
+            'partidas',
+            'vendedor'
+        ])->findOrFail($id);
+
+        $pdf = Pdf::loadView('pdf.cotizacion', compact('cotizacion'))
+                ->setPaper('letter');
+
+        return $pdf->stream("Cotizacion-{$cotizacion->num_consecutivo}.pdf");
+    }
+
+
+        /* ----------- FORM EDIT ----------- */
+    public function edit(Cotizacion $cotizacion)
+    {
+        $cotizacion->load([
+            'cliente',             // relaciones que necesites
+            'partidas',            // hasMany a CotizacionPartida
+            'pedido'               // hasOne
+        ]);
+
+        return view('cotizaciones.edit', compact('cotizacion'));
+    }
+
+    /* ----------- UPDATE GENERAL (archivo + emitir pedido + notas) ----------- */
+    public function update(Request $req, Cotizacion $cotizacion)
+    {
+        /* 1. Carga de archivo ------------------------------------------------ */
+        if ($req->hasFile('orden_de_venta')) {
+            $req->validate([
+                'orden_de_venta' => [
+                    'file',
+                    'max:'.CE::MAX_OC,
+                    'mimes:'.implode(',', CE::EXT_PERMITIDAS)
+                ]
+            ]);
+
+            $path = $req->file('orden_de_venta')
+                        ->store('ordenes_compra', ['disk' => 'public']);
+
+            $cotizacion->orden_de_venta = $path;
+        }
+
+        /* 2. Campos editables (solo si no es pedido o user tiene permiso) ---- */
+        if (!$cotizacion->pedido || auth()->user()->can('editar pedido')) {
+            $cotizacion->fill($req->only([
+                'notas_facturacion',
+                'notas_entrega',
+                // agrega aquí los campos que sí se pueden editar
+            ]));
+        }
+
+        /* 3. Emitir pedido --------------------------------------------------- */
+        if ($req->filled('emitir_pedido') && !$cotizacion->pedido) {
+            $this->emitirPedido($cotizacion);
+        }
+
+        $cotizacion->save();
+
+        return back()->with('ok', 'Cotización actualizada');
+    }
+
+    /* ----------- AJAX :: Editar Partida ------------------------------------ */
+    public function updatePartida(Request $req, CotizacionPartida $partida)
+    {
+        $this->authorize('update', $partida);          // policy Spatie
+        $partida->update($req->only([
+            'descripcion', 'cantidad', 'precio', 'costo'
+        ]));
+        return response()->json(['ok' => true]);
+    }
+
+    /* ----------- AJAX :: Eliminar Partida ---------------------------------- */
+    public function destroyPartida(CotizacionPartida $partida)
+    {
+        $this->authorize('delete', $partida);          // policy Spatie
+        $partida->delete();
+        return response()->json(['ok' => true]);
+    }
+
+    /* ----------- Descarga protegida de OC ---------------------------------- */
+    public function descargarOrden(Cotizacion $cotizacion)
+    {
+        $this->authorize('view', $cotizacion);
+
+        if (config('filesystems.default') === 's3') {
+            /* URL firmada 5 min para S3 */
+            return redirect(
+                Storage::temporaryUrl($cotizacion->orden_de_venta, now()->addMinutes(5))
+            );
+        }
+
+        return Storage::disk('public')->download($cotizacion->orden_de_venta);
+    }
+
+    /* ========== MÉTODO PRIVADO ============================================ */
+    private function emitirPedido(Cotizacion $cot)
+    {
+        /* a) Crear registro en pedidos */
+        $pedido = Pedido::create(['id_cotizacion' => $cot->id]);
+
+        /* b) Nota / log interno */
+        registrarNota($cot->id, 'Pedido emitido por '.auth()->user()->name);
+
+        /* c) Destinatarios */
+        $dest = User::role(['Dirección','Compras','Administración'])
+                    ->pluck('email')
+                    ->merge($cot->usuario->email);
+
+        /* d) Enviar correo */
+        Mail::to($dest)->send(new PedidoEmitidoMail($cot, $pedido));
+
+        /* e) Disparar evento WhatsApp placeholder */
+        event(new PedidoEmitidoWhatsApp($cot));
     }
 }

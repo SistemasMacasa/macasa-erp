@@ -173,10 +173,7 @@ class ClienteController extends Controller
             'razon_social_predet.forma_pago',
             'razon_social_predet.regimen_fiscal',
             'razon_social_predet.direccion_facturacion',
-            // ❗ Quitamos este bloque:
-            // 'contacto_entrega_predet.direccion_entrega.ciudad',
-            // 'contacto_entrega_predet.direccion_entrega.estado',
-            // 'contacto_entrega_predet.direccion_entrega.pais',
+            'contactos_entrega'
         ])
             ->findOrFail($id);
 
@@ -198,7 +195,8 @@ class ClienteController extends Controller
 
                 return [
                     'fecha'    => $c->fecha,
-                    'id'       => $c->num_consecutivo,
+                    'id_cotizacion' => $c->id_cotizacion,
+                    'num_consecutivo'       => $c->num_consecutivo,
                     'razon'    => optional($c->razonSocial)->nombre ?? 'Sin razón',
                     'subtotal' => $subtotal,
                     'margen'   => $margen,

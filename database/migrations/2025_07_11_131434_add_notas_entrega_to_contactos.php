@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        Schema::table('cotizaciones', function (Blueprint $table) {
-            $table->dropColumn('notas_facturacion');
+        Schema::table('contactos', function (Blueprint $table) {
+            $table->text('notas_entrega')->nullable()->after('id_direccion_entrega');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('cotizaciones', function (Blueprint $table) {
-            $table->text('notas_facturacion')->nullable()->after('id_regimen_fiscal');
+        Schema::table('contactos', function (Blueprint $table) {
+            $table->dropColumn('notas_entrega');
         });
     }
+
 };
