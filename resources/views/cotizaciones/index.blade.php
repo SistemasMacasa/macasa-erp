@@ -83,18 +83,16 @@
             @foreach ($equipos as $equipo)
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="headingEquipo{{ $equipo->id_equipo }}">
-                        <button class="accordion-button collapsed" type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseEquipo{{ $equipo->id_equipo }}"
-                            aria-expanded="false"
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseEquipo{{ $equipo->id_equipo }}" aria-expanded="false"
                             aria-controls="collapseEquipo{{ $equipo->id_equipo }}">
                             <strong>{{ $equipo->nombre }}</strong>
                         </button>
                     </h2>
                     <div id="collapseEquipo{{ $equipo->id_equipo }}"
-                        class="accordion-collapse collapse"
-                        aria-labelledby="headingEquipo{{ $equipo->id_equipo }}"
-                        data-bs-parent="#equiposAccordion">
+                        class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
+                        aria-labelledby="headingEquipo{{ $equipo->id_equipo }}" data-bs-parent="#equiposAccordion">
+
                         <div class="accordion-body">
 
                             {{-- Tabla de usuarios del equipo --}}
@@ -120,12 +118,17 @@
                                                 👤 <strong>{{ $usuario->nombre }} {{ $usuario->apellido_p }}</strong>
                                                 <small class="text-muted">({{ $usuario->pivot->rol }})</small>
                                             </div>
-                                            <div class="text-center">{{ number_format($usuario->metas['cuota_cotizacion'] ?? 0, 2) }}</div>
-                                            <div class="text-center">{{ number_format($usuario->metas['alcance_cotizacion'] ?? 0, 2) }}</div>
-                                            <div class="text-center">{{ number_format($usuario->metas['porcentaje_cotizacion'] ?? 0, 2) }}%</div>
+                                            <div class="text-center">{{ number_format($usuario->metas['cuota_cotizacion'] ?? 0, 2) }}
+                                            </div>
+                                            <div class="text-center">{{ number_format($usuario->metas['alcance_cotizacion'] ?? 0, 2) }}
+                                            </div>
+                                            <div class="text-center">
+                                                {{ number_format($usuario->metas['porcentaje_cotizacion'] ?? 0, 2) }}%</div>
                                             <div class="text-center">${{ number_format($usuario->metas['cuota_margen'] ?? 0, 2) }}</div>
-                                            <div class="text-center">${{ number_format($usuario->metas['alcance_margen'] ?? 0, 2) }}</div>
-                                            <div class="text-center">{{ number_format($usuario->metas['porcentaje_margen'] ?? 0, 2) }}%</div>
+                                            <div class="text-center">${{ number_format($usuario->metas['alcance_margen'] ?? 0, 2) }}
+                                            </div>
+                                            <div class="text-center">{{ number_format($usuario->metas['porcentaje_margen'] ?? 0, 2) }}%
+                                            </div>
                                         </div>
                                     @endforeach
                                 @endif
@@ -307,4 +310,32 @@
             }
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filas = document.querySelectorAll('.fila-miembro');
+            let ultimoSeleccionado = null;
+
+            filas.forEach(fila => {
+                fila.addEventListener('click', function () {
+                    const idUsuario = this.getAttribute('onclick').match(/\d+/)[0];
+
+                    // Si estás clicando el mismo que ya estaba seleccionado
+                    if (ultimoSeleccionado === idUsuario) {
+                        // Quitar selección
+                        this.classList.remove('seleccionado');
+                        ultimoSeleccionado = null;
+                    } else {
+                        // Quitar selección de todas las filas
+                        filas.forEach(f => f.classList.remove('seleccionado'));
+                        // Agregar selección a esta
+                        this.classList.add('seleccionado');
+                        ultimoSeleccionado = idUsuario;
+                    }
+                });
+            });
+        });
+
+    </script>
+
 @endsection

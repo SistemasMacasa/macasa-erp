@@ -323,6 +323,16 @@ body[data-bs-theme="dark"] {
   /* ajusta según el contenido máximo esperado */
 }
 
+.fila-miembro {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fila-miembro.seleccionado {
+  background-color: #d4edc9;
+  /* un verde pistache clarito */
+}
+
 
 
 
@@ -2279,24 +2289,28 @@ input:checked+.slider:before {
 
 /* Reducir el “gutter” horizontal ⇒ inputs más pegados entre sí */
 #formPartida.row {
-  --bs-gutter-x: 0.75rem;   /* 1 rem predeterminado → 0 .75 rem */
+  --bs-gutter-x: 0.75rem;
+  /* 1 rem predeterminado → 0 .75 rem */
 }
 
 /* El textarea no debe robar todo el ancho: 100 % hasta md y 66 % en ≥ md */
 #formPartida textarea[name="descripcion"] {
-  height: 84px;           /* fijo, con scroll interno si se llena */
+  height: 84px;
+  /* fijo, con scroll interno si se llena */
   resize: none;
   overflow-y: auto;
 }
 
 /* Alinear el bloque derecho exactamente bajo el borde del textarea */
 #formPartida .bloque-derecho {
-  padding-left: 0;        /* quita el gutter interno del col-*   */
+  padding-left: 0;
+  /* quita el gutter interno del col-*   */
 }
 
 /* Tres inputs numéricos en una sola fila, mismos anchos  */
-#formPartida .grupo-numericos > .form-control {
-  min-width: 0;           /* permite ajustar dentro del flex */
+#formPartida .grupo-numericos>.form-control {
+  min-width: 0;
+  /* permite ajustar dentro del flex */
 }
 
 /* Botón Agregar: que no se descuadre en XS y quede alineado a la derecha */
@@ -2310,6 +2324,7 @@ input:checked+.slider:before {
 #tablaPartidas thead th {
   text-align: left;
 }
+
 #tablaPartidas thead th.text-end,
 #tablaPartidas tbody td.text-end {
   text-align: right;

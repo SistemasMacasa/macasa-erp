@@ -17,6 +17,7 @@ class Equipo extends Model
         'nombre',
         'descripcion',
         'lider_id',
+        'id_sucursal',
     ];
 
     /**

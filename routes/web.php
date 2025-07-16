@@ -148,7 +148,6 @@ Route::middleware(['auth', 'permission:Crear Direcciones'])->group(callback: fun
     //Editar contacto de entrega + direccion de entrega + notas para entregar.
     Route::get('/contacto-entrega/{id}/edit', [ContactoController::class, 'edit'])->name('contacto_entrega.edit');
     Route::put('/contacto-entrega/{id}', [ContactoController::class, 'update'])->name('contacto_entrega.update');
-
 });
 
 Route::middleware(['auth', 'permission:Permisos'])->group(callback: function () {
@@ -301,33 +300,33 @@ Route::middleware(['auth', 'permission:Metas de Venta'])->group(function () {
 });
 
 
-    // Segmentos
-    Route::post('/segmentos', [EstructuraController::class, 'storeSegmento'])->name('segmentos.store');
-    Route::put('/segmentos/{segmento}', [EstructuraController::class, 'updateSegmento'])->name('segmentos.update');
-    Route::delete('/segmentos/{segmento}', [EstructuraController::class, 'destroySegmento'])->name('segmentos.destroy');
+// Segmentos
+Route::post('/segmentos', [EstructuraController::class, 'storeSegmento'])->name('segmentos.store');
+Route::put('/segmentos/{segmento}', [EstructuraController::class, 'updateSegmento'])->name('segmentos.update');
+Route::delete('/segmentos/{segmento}', [EstructuraController::class, 'destroySegmento'])->name('segmentos.destroy');
 
-    // Sucursales
-    Route::post('/sucursales', [EstructuraController::class, 'storeSucursal'])->name('sucursales.store');
-    Route::put('/sucursales/{sucursal}', [EstructuraController::class, 'updateSucursal'])->name('sucursales.update');
-    Route::delete('/sucursales/{sucursal}', [EstructuraController::class, 'destroySucursal'])->name('sucursales.destroy');
+// Sucursales
+Route::post('/sucursales', [EstructuraController::class, 'storeSucursal'])->name('sucursales.store');
+Route::put('/sucursales/{sucursal}', [EstructuraController::class, 'updateSucursal'])->name('sucursales.update');
+Route::delete('/sucursales/{sucursal}', [EstructuraController::class, 'destroySucursal'])->name('sucursales.destroy');
 
-    // Vista principal
-    Route::get('/estructura', [EstructuraController::class, 'index'])->name('estructura.index');
+// Vista principal
+Route::get('/estructura', [EstructuraController::class, 'index'])->name('estructura.index');
 
 Route::get('/cotizaciones/{id}/pdf', [CotizacionController::class, 'pdf'])->name('cotizaciones.pdf');
 
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('cotizaciones', CotizacionController::class)->only(['edit','update']);
+    Route::resource('cotizaciones', CotizacionController::class)->only(['edit', 'update']);
 
     // endpoints AJAX para partidas
-    Route::put ('/partidas/{partida}', [CotizacionController::class,'updatePartida'])
+    Route::put('/partidas/{partida}', [CotizacionController::class, 'updatePartida'])
         ->name('partidas.update');
-    Route::delete('/partidas/{partida}', [CotizacionController::class,'destroyPartida'])
+    Route::delete('/partidas/{partida}', [CotizacionController::class, 'destroyPartida'])
         ->name('partidas.destroy');
 
     // descarga protegida de OC (local o S3 presigned)
-    Route::get('/cotizaciones/{cotizacion}/orden-compra', [CotizacionController::class,'descargarOrden'])
+    Route::get('/cotizaciones/{cotizacion}/orden-compra', [CotizacionController::class, 'descargarOrden'])
         ->name('cotizaciones.orden-compra');
 });
