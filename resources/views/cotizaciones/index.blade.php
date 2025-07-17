@@ -83,12 +83,38 @@
             @foreach ($equipos as $equipo)
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="headingEquipo{{ $equipo->id_equipo }}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        <button class="accordion-button collapsed py-2 px-3" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseEquipo{{ $equipo->id_equipo }}" aria-expanded="false"
-                            aria-controls="collapseEquipo{{ $equipo->id_equipo }}">
-                            <strong>{{ $equipo->nombre }}</strong>
+                            aria-controls="collapseEquipo{{ $equipo->id_equipo }}" style="font-size: 0.85rem;">
+
+                            <div class="d-flex align-items-center w-100">
+                                {{-- Nombre del equipo a la izquierda --}}
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa fa-users text-primary"></i>
+                                    <span class="fw-semibold">{{ $equipo->nombre }}</span>
+                                </div>
+
+                                {{-- Contenedor centrado de segmento y sucursal --}}
+                                <div class="ms-auto d-flex gap-4 text-muted small" style="max-width: 600px;">
+                                    <span class="d-flex align-items-center">
+                                        <i class="fa fa-sitemap me-1 text-secondary"></i>
+                                        Segmento: <strong class="ms-1">{{ $equipo->sucursal->segmento->nombre ?? '—' }}</strong>
+                                    </span>
+                                    <span class="d-flex align-items-center">
+                                        <i class="fa fa-building me-1 text-secondary"></i>
+                                        Sucursal: <strong class="ms-1">{{ $equipo->sucursal->nombre ?? '—' }}</strong>
+                                    </span>
+                                </div>
+                            </div>
+
                         </button>
                     </h2>
+
+
+
+
+
+
                     <div id="collapseEquipo{{ $equipo->id_equipo }}"
                         class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
                         aria-labelledby="headingEquipo{{ $equipo->id_equipo }}" data-bs-parent="#equiposAccordion">
@@ -123,7 +149,8 @@
                                             <div class="text-center">{{ number_format($usuario->metas['alcance_cotizacion'] ?? 0, 2) }}
                                             </div>
                                             <div class="text-center">
-                                                {{ number_format($usuario->metas['porcentaje_cotizacion'] ?? 0, 2) }}%</div>
+                                                {{ number_format($usuario->metas['porcentaje_cotizacion'] ?? 0, 2) }}%
+                                            </div>
                                             <div class="text-center">${{ number_format($usuario->metas['cuota_margen'] ?? 0, 2) }}</div>
                                             <div class="text-center">${{ number_format($usuario->metas['alcance_margen'] ?? 0, 2) }}
                                             </div>

@@ -41,7 +41,7 @@ class CotizacionController extends Controller
         $month = $request->input('month', now()->month);
 
         // 1. Cargar equipos con usuarios
-        $equipos = Equipo::with(['lider', 'usuarios'])->get();
+        $equipos = Equipo::with(['lider', 'usuarios', 'sucursal.segmento'])->get();
 
         // 2. Obtener metas del mes
         $metas = MetasVentas::where('anio', $year)

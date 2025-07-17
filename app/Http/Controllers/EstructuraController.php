@@ -10,8 +10,11 @@ class EstructuraController extends Controller
 {
     public function index()
     {
-        $segmentos = Segmento::with('sucursales')->get();
-        
+        $segmentos = Segmento::with([
+            'sucursales.equipos.usuarios',
+            'sucursales.equipos.lider',
+        ])->get();
+
         return view('estructura.index', compact('segmentos'));
     }
 

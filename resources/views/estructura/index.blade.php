@@ -8,6 +8,7 @@
             <li class="breadcrumb-item"><a href="{{ route('inicio') }}">Inicio</a></li>
             <li class="breadcrumb-item active">Estructura Organizacional</li>
         @endsection
+
         <h2 class="mb-3 text-titulo">Estructura: Segmentos y Sucursales</h2>
 
         {{-- 🎛 Botonera --}}
@@ -18,8 +19,7 @@
 
             {{-- Botón Modal Crear Segmento --}}
             <button class="col-md-2 btn btn-primary btn-principal" data-bs-toggle="modal"
-                data-bs-target="#modalCrearSegmento">+ Crear
-                Segmento</button>
+                data-bs-target="#modalCrearSegmento">+ Crear Segmento</button>
         </div>
 
         {{-- Tabla colapsable de segmentos --}}
@@ -54,13 +54,14 @@
                                         data-bs-target="#modalEliminarSegmento{{ $segmento->id_segmento }}">
                                         <i class="fa fa-trash me-1"></i> Eliminar Segmento
                                     </button>
-                                    <button class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                        data-bs-target="#modalCrearSucursal{{ $segmento->id_segmento }}">
+                                    <button class="btn btn-success btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#modalAgregarSucursal-{{ $segmento->id_segmento }}">
                                         <i class="fa fa-plus me-1"></i> Agregar Sucursal
                                     </button>
                                 </div>
                             </div>
-                            {{-- Tabla de sucursales + acciones del segmento --}}
+
+                            {{-- Tabla de sucursales --}}
                             <table class="table table-bordered align-middle">
                                 <thead>
                                     <tr class="table-light">
@@ -70,15 +71,6 @@
                                                     <strong>Sucursales:</strong>
                                                     {{ $segmento->sucursales->pluck('nombre')->join(', ') ?: 'Sin sucursales' }}
                                                 </span>
-                                                {{-- <div>
-                                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditarSegmento{{ $segmento->id_segmento }}">Editar</button>
-                                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                        data-bs-target="#modalEliminarSegmento{{ $segmento->id_segmento }}">Eliminar</button>
-                                                    <button class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                                        data-bs-target="#modalCrearSucursal{{ $segmento->id_segmento }}">+
-                                                        Agregar Sucursal</button>
-                                                </div> --}}
                                             </div>
                                         </th>
                                     </tr>
@@ -89,7 +81,8 @@
                                 </thead>
                                 <tbody>
                                     @foreach($segmento->sucursales as $sucursal)
-                                        <tr>
+                                        <tr data-bs-toggle="collapse" data-bs-target="#equiposSucursal{{ $sucursal->id_sucursal }}"
+                                            class="cursor-pointer">
                                             <td>{{ $sucursal->nombre }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
@@ -99,167 +92,211 @@
                                             </td>
                                         </tr>
 
-                                        <!-- Modal Crear Segmento -->
-                                        <div class="modal fade" id="modalCrearSucursal{{ $segmento->id_segmento }}" tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <form action="{{ route('sucursales.store') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="id_segmento" value="{{ $segmento->id_segmento }}">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Agregar Sucursal a {{ $segmento->nombre }}</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="text" name="nombre" class="form-control"
-                                                                placeholder="Nombre de sucursal" required>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Cancelar</button>
-                                                            <button class="btn btn-success" type="submit">Crear</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <!-- Modal Editar Sucursal -->
-                                        <div class="modal fade" id="modalEditarSucursal{{ $sucursal->id_sucursal }}" tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <form action="{{ route('sucursales.update', $sucursal) }}" method="POST">
-                                                    @csrf @method('PUT')
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Editar Sucursal</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="text" name="nombre" class="form-control"
-                                                                value="{{ $sucursal->nombre }}" required>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Cancelar</button>
-                                                            <button class="btn btn-primary" type="submit">Guardar cambios</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
+                                        {{-- Fila colapsable para mostrar equipos --}}
+                                        <tr class="collapse" id="equiposSucursal{{ $sucursal->id_sucursal }}">
+                                            <td colspan="2" class="p-0">
+                                                <table class="table table-bordered mb-0">
+                                                    <thead class="table-secondary">
+                                                        <tr>
+                                                            <th>Equipo</th>
+                                                            <th>Usuarios</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse($sucursal->equipos as $equipo)
+                                                            <tr onclick="toggleEquipo({{ $equipo->id_equipo }})" class="cursor-pointer">
+                                                                <td>
+                                                                    <i class="fa fa-users me-1"></i>{{ $equipo->nombre }}
+                                                                    @if($equipo->descripcion)
+                                                                        <small class="text-muted d-block">{{ $equipo->descripcion }}</small>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    {{ $equipo->usuarios->count() }} usuarios
+                                                                    <i class="fa fa-chevron-down ms-1"></i>
+                                                                </td>
+                                                            </tr>
 
-                                        <!-- Modal Eliminar Sucursal -->
-                                        <div class="modal fade" id="modalEliminarSucursal{{ $sucursal->id_sucursal }}"
-                                            tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <form action="{{ route('sucursales.destroy', $sucursal) }}" method="POST">
-                                                    @csrf @method('DELETE')
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Eliminar Sucursal</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            ¿Estás seguro que deseas eliminar la sucursal
-                                                            <strong>{{ $sucursal->nombre }}</strong>?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Cancelar</button>
-                                                            <button class="btn btn-danger" type="submit">Eliminar</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
+                                                            <tr>
+                                                                <td colspan="2" class="p-0">
+                                                                    <div id="equipo-detalle-{{ $equipo->id_equipo }}"
+                                                                        class="equipo-detalle">
+                                                                        <ul class="list-unstyled mb-0">
+                                                                            @if($equipo->lider)
+                                                                                <li><strong>Líder:</strong>
+                                                                                    {{ $equipo->lider->nombre_completo }}</li>
+                                                                            @endif
+                                                                            @foreach($equipo->usuarios as $usuario)
+                                                                                @continue($equipo->lider && $usuario->id_usuario === $equipo->lider->id_usuario)
+                                                                                <li>{{ $usuario->nombre_completo }}</li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="2" class="text-center">Sin equipos</td>
+                                                            </tr>
+                                                        @endforelse
 
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-                            <!-- Modal Editar Segmento -->
-                            <div class="modal fade" id="modalEditarSegmento{{ $segmento->id_segmento }}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <form action="{{ route('segmentos.update', $segmento) }}" method="POST">
-                                        @csrf @method('PUT')
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Editar Segmento</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <input type="text" name="nombre" class="form-control"
-                                                    value="{{ $segmento->nombre }}" required>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                <button class="btn btn-primary" type="submit">Guardar cambios</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <!-- Modal Eliminar Segmento -->
-                            <div class="modal fade" id="modalEliminarSegmento{{ $segmento->id_segmento }}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <form action="{{ route('segmentos.destroy', $segmento) }}" method="POST">
-                                        @csrf @method('DELETE')
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Eliminar Segmento</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro que deseas eliminar el segmento
-                                                <strong>{{ $segmento->nombre }}</strong>?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                <button class="btn btn-danger" type="submit">Eliminar</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
 
                         </div>
                     </div>
                 </div>
             @endforeach
-            <!-- Modal Crear Segmento -->
-            <div class="modal fade" id="modalCrearSegmento" tabindex="-1" aria-labelledby="modalCrearSegmentoLabel"
-                aria-hidden="true">
+        </div>
+
+        {{-- 🔧 MODALES --}}
+        {{-- Crear segmento --}}
+        <div class="modal fade" id="modalCrearSegmento" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ route('segmentos.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Crear nuevo segmento</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="nombreSegmento" class="form-label">Nombre del segmento</label>
+                            <input type="text" class="form-control" name="nombre" id="nombreSegmento" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-primary" type="submit">Crear segmento</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @foreach($segmentos as $segmento)
+            {{-- Editar segmento --}}
+            <div class="modal fade" id="modalEditarSegmento{{ $segmento->id_segmento }}" tabindex="-1">
                 <div class="modal-dialog">
-                    <form action="{{ route('segmentos.store') }}" method="POST">
-                        @csrf
+                    <form action="{{ route('segmentos.update', $segmento) }}" method="POST">
+                        @csrf @method('PUT')
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalCrearSegmentoLabel">Crear nuevo
-                                    segmento</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Cerrar"></button>
+                                <h5 class="modal-title">Editar Segmento</h5>
+                                <button class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
-                                <label for="nombreSegmento" class="form-label">Nombre del
-                                    segmento</label>
-                                <input type="text" class="form-control" name="nombre" id="nombreSegmento"
-                                    placeholder="Ej. Segmento Norte" required>
+                                <input type="text" name="nombre" class="form-control" value="{{ $segmento->nombre }}" required>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Crear segmento</button>
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button class="btn btn-primary" type="submit">Guardar cambios</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
 
-    {{-- Modal crear segmento --}}
-    {{-- @include('estructura.modales.crear_segmento') --}}
+            {{-- Eliminar segmento --}}
+            <div class="modal fade" id="modalEliminarSegmento{{ $segmento->id_segmento }}" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="{{ route('segmentos.destroy', $segmento) }}" method="POST">
+                        @csrf @method('DELETE')
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Eliminar Segmento</h5>
+                                <button class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro que deseas eliminar el segmento <strong>{{ $segmento->nombre }}</strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button class="btn btn-danger" type="submit">Eliminar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Agregar sucursal --}}
+            <div class="modal fade" id="modalAgregarSucursal-{{ $segmento->id_segmento }}" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="{{ route('sucursales.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="id_segmento" value="{{ $segmento->id_segmento }}">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Agregar Sucursal a {{ $segmento->nombre }}</h5>
+                                <button class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" name="nombre" class="form-control" placeholder="Nombre de sucursal" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button class="btn btn-success" type="submit">Crear</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @foreach($segmento->sucursales as $sucursal)
+                {{-- Editar sucursal --}}
+                <div class="modal fade" id="modalEditarSucursal{{ $sucursal->id_sucursal }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <form action="{{ route('sucursales.update', $sucursal) }}" method="POST">
+                            @csrf @method('PUT')
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Editar Sucursal</h5>
+                                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" name="nombre" class="form-control" value="{{ $sucursal->nombre }}" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {{-- Eliminar sucursal --}}
+                <div class="modal fade" id="modalEliminarSucursal{{ $sucursal->id_sucursal }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <form action="{{ route('sucursales.destroy', $sucursal) }}" method="POST">
+                            @csrf @method('DELETE')
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Eliminar Sucursal</h5>
+                                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Seguro que deseas eliminar la sucursal <strong>{{ $sucursal->nombre }}</strong>?
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        @endforeach
+    </div>
+    <script>
+        function toggleEquipo(id) {
+            const detalle = document.getElementById('equipo-detalle-' + id);
+            detalle.classList.toggle('abierto');
+        }
+    </script>
 @endsection
