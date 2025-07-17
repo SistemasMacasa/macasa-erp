@@ -52,6 +52,9 @@ class RolePermissionSeeder extends Seeder
                 'Crear Equipos de Trabajo',
                 'Editar Equipos de Trabajo',
                 'Eliminar Equipos de trabajo',
+                'Editar Cotizacion',
+                'Editar Pedido',
+                'Emitir Pedido'
             ],
             'Ventas' => [
                 'Mis Cuentas',
@@ -62,7 +65,9 @@ class RolePermissionSeeder extends Seeder
                 'Cuentas Archivadas',
                 'Monitor de Cotizaciones',
                 'Monitor de Ventas',
-                'Metas de Venta'
+                'Metas de Venta',
+                'Editar Cotizacion',
+                'Editar Pedido'
             ],
             // Agrega permisos base para otros roles si aplica:
             'Compras' => [],

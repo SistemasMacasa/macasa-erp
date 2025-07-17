@@ -319,7 +319,11 @@ Route::get('/cotizaciones/{id}/pdf', [CotizacionController::class, 'pdf'])->name
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('cotizaciones', CotizacionController::class)->only(['edit','update']);
+    Route::get('/cotizaciones/{cotizacion}/edit', [CotizacionController::class, 'edit'])
+        ->name('cotizaciones.edit');
+
+    Route::put('/cotizaciones/{cotizacion}', [CotizacionController::class, 'update'])
+        ->name('cotizaciones.update');
 
     // endpoints AJAX para partidas
     Route::put ('/partidas/{partida}', [CotizacionController::class,'updatePartida'])

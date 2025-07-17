@@ -134,8 +134,6 @@ class CotizacionController extends Controller
         return view('cotizaciones.index', compact('equipos', 'year', 'month', 'detallesPorUsuario'));
     }
 
-
-
     public function create($id_cliente)
     {
         $cliente = Cliente::with([
@@ -293,7 +291,6 @@ class CotizacionController extends Controller
             return response()->json(['success' => false, 'message' => 'Error interno'], 500);
         }
     }
-
 
     /* ---------- helper para consecutivo seguro ---------- */
     protected function nextConsecutivo(): string
@@ -455,7 +452,6 @@ class CotizacionController extends Controller
         ], 201);
     }
 
-
     /**
      * Alta rápida dirección de entrega + contacto predeterminado.
      */
@@ -592,7 +588,6 @@ class CotizacionController extends Controller
         ]);
     }
 
-
     // app/Http/Controllers/CotizacionesController.php
     public function agregarPartida(Request $req, Cotizacion $cotizacion)
     {
@@ -642,17 +637,25 @@ class CotizacionController extends Controller
     public function edit(Cotizacion $cotizacion)
     {
         $cotizacion->load([
-            'cliente',             // relaciones que necesites
-            'partidas',            // hasMany a CotizacionPartida
-            'pedido'               // hasOne
+            'cliente.razonesSociales', // cargamos razones sociales del cliente directamente
+            'partidas',
+            'pedido',
+            'razonSocial' // si quieres seguir usando la razón actual seleccionada
         ]);
 
-        return view('cotizaciones.edit', compact('cotizacion'));
+        // obtenemos todas las razones sociales del cliente
+        $razones_sociales = $cotizacion->cliente->razonesSociales;
+
+        $contactos_entrega = $cotizacion->cliente->contactos_entrega;
+
+        return view('cotizaciones.edit', compact('cotizacion', 'razones_sociales', 'contactos_entrega'));
     }
+
 
     /* ----------- UPDATE GENERAL (archivo + emitir pedido + notas) ----------- */
     public function update(Request $req, Cotizacion $cotizacion)
     {
+        $this->authorize('update', $cotizacion);
         /* 1. Carga de archivo ------------------------------------------------ */
         if ($req->hasFile('orden_de_venta')) {
             $req->validate([
@@ -691,7 +694,8 @@ class CotizacionController extends Controller
     /* ----------- AJAX :: Editar Partida ------------------------------------ */
     public function updatePartida(Request $req, CotizacionPartida $partida)
     {
-        $this->authorize('update', $partida);          // policy Spatie
+        $this->authorize('update', $partida);
+
         $partida->update($req->only([
             'descripcion', 'cantidad', 'precio', 'costo'
         ]));
@@ -724,6 +728,7 @@ class CotizacionController extends Controller
     /* ========== MÉTODO PRIVADO ============================================ */
     private function emitirPedido(Cotizacion $cot)
     {
+        $this->authorize('emitir', $cot);
         /* a) Crear registro en pedidos */
         $pedido = Pedido::create(['id_cotizacion' => $cot->id]);
 
