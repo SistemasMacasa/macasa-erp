@@ -95,12 +95,13 @@
 
         /* Totales */
         .totales-card {
-            background: #f0f6ff;
+            background: #f4f6f8;
             border-radius: 6px;
             padding: 6px 10px;
             width: 100%;
-            font-size: 10px;
+            box-sizing: border-box;
         }
+
 
         .totales-card td.label {
             text-align: right;
@@ -192,11 +193,12 @@
                     <td style="width:60%;">
                         <img src="{{ public_path('assets/images/logo.png') }}" style="height:40px;">
                     </td>
-                    <td style="width:40%; text-align:right;">
-                        <div style="display:inline-block;background:#e6edff;border:1px solid #9fbafc;
-                      border-radius:4px;padding:6px 14px;font-size:11px;">
+                    <td style="width:40%; text-align:right; ">
+                        <div style="display:inline-block; background:#f4f6f8; border:1px solid #bbb;
+    border-radius:4px; padding:6px 14px; font-size:11px;">
                             <strong>Cotización #{{ $cotizacion->num_consecutivo }}</strong>
                         </div>
+
                     </td>
                 </tr>
             </table>
@@ -217,14 +219,14 @@
 
             <tr>
                 <td style="width:50%;">
-                    <h2>Emite</h2>
+                    <h2 style="color:#000;">Emite</h2>
                     <strong>MC Comercializadora de Cómputo y Redes, S.A. de C.V.</strong><br>
                     Av. Primero de Mayo #15 Int. 1025, Naucalpan de Juárez,<br>
                     CP 53500, Estado de México.<br>
                     Tel: (55)-5003‑2830 &nbsp;|&nbsp; mcarreon@macasahs.com.mx
                 </td>
                 <td style="width:50%;">
-                    <h2>Para</h2>
+                    <h2 style="color:#000;">Para</h2>
                     <strong>{{ $cotizacion->cliente->nombre ?? '' }}</strong><br>
                     {{ $cotizacion->contactoEntrega->direccion_entrega->calle ?? '' }}
                     #{{ $cotizacion->contactoEntrega->direccion_entrega->num_ext ?? '' }}@if(isset($cotizacion->contactoEntrega->direccion_entrega->num_int)),
@@ -277,17 +279,18 @@
 
 
 
-        <h2>Propuesta Económica</h2>
+        <h2 style="color: #000;">Propuesta Económica</h2>
         <table>
             <thead>
                 <tr>
-                    <th style="width:6%;">#</th>
+                    <th style="background:#f4f6f8;">#</th>
                     @if($mostrarSku)
-                    <th style="width:14%;">SKU</th>@endif
-                    <th style="width:46%;">Descripción</th>
-                    <th style="width:14%;" class="text-right">P. Unit.</th>
-                    <th style="width:10%;" class="text-center">Cant.</th>
-                    <th style="width:16%;" class="text-right">Importe</th>
+                    <th style="background:#f4f6f8;"># de Parte</th>@endif
+                    <th style="background:#f4f6f8;">Descripción</th>
+                    <th style="background:#f4f6f8;" class="text-right">P. Unit.</th>
+                    <th style="background:#f4f6f8;" class="text-center">Cant.</th>
+                    <th style="background:#f4f6f8;" class="text-right">Importe</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -323,30 +326,40 @@
                     <ul class="blue">
                         <li>Precios y condiciones sujetos a cambio sin previo aviso.</li>
                         <li>No hay devoluciones una vez confirmado el pedido.</li>
-                        <li>Pedidos &lt; $2,500 MN + IVA: envío $150 MN + IVA.</li>
+                        <li>En pedidos menores a $2,500 MN + IVA: El  envío es $150 MN + IVA.</li>
                         <li>Confirme garantías con su ejecutivo antes de autorizar.</li>
                     </ul>
                 </td>
-                <td style="width:30%; vertical-align:top;">
-                    <div class="totales-card">
-                        <table>
-                            <tr>
-                                <td class="label">Subtotal:</td>
-                                <td class="value">${{ number_format($subtotal, 2) }}</td>
-                            </tr>
-                            <tr>
-                                <td class="label">IVA (16%):</td>
-                                <td class="value">${{ number_format($subtotal * 0.16, 2) }}</td>
-                            </tr>
-                            <tr class="total">
-                                <td class="label">TOTAL:</td>
-                                <td class="value">${{ number_format($subtotal * 1.16, 2) }}</td>
-                            </tr>
-                        </table>
-                    </div>
+                <td style="width:30%; vertical-align:top; padding:0;">
+                    <table
+                        style="width:100%; background:#f4f6f8; border-radius:6px; border-spacing:0; font-size:10.2px;">
+                        <tr>
+                            <td style="text-align:right; font-weight:bold; padding:4px 6px; white-space:nowrap;">
+                                Subtotal:</td>
+                            <td style="text-align:right; padding:4px 6px; white-space:nowrap;">
+                                ${{ number_format($subtotal, 2) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right; font-weight:bold; padding:4px 6px; white-space:nowrap;">IVA
+                                (16%):</td>
+                            <td style="text-align:right; padding:4px 6px; white-space:nowrap;">
+                                ${{ number_format($subtotal * 0.16, 2) }}
+                            </td>
+                        </tr>
+                        <tr style="font-size:11.5px;">
+                            <td style="text-align:right; font-weight:bold; padding:6px 6px; white-space:nowrap;">TOTAL:
+                            </td>
+                            <td style="text-align:right; padding:6px 6px; white-space:nowrap;">
+                                ${{ number_format($subtotal * 1.16, 2) }}
+                            </td>
+                        </tr>
+                    </table>
                 </td>
+
             </tr>
         </table>
+
 
     </div> {{-- /contenido --}}
 
@@ -364,7 +377,7 @@
                     left:0; table-layout:fixed; z-index:2;">
 
                 <tr>
-                    @foreach (['dell', 'hp', 'lenovo', 'microsoft', 'kingston'] as $logo)
+                    @foreach (['dell', 'hp', 'lenovo','apple', 'microsoft', 'kingston'] as $logo)
                         <td><img src="{{ public_path('assets/images/partners/' . $logo . '.png') }}"
                                 style="max-height:38px;">
                         </td>

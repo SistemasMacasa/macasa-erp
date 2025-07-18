@@ -184,17 +184,17 @@ class ClienteController extends Controller
             ->orderBy('fecha_registro')
             ->get();
 
-            $cotizaciones = Cotizacion::with(['razonSocial'])
-            ->where('id_cliente', $cliente->id_cliente)
-            ->orderByDesc('fecha_alta')
-            ->get()
-            ->map(function ($c) {
+        $cotizaciones = Cotizacion::with(['razonSocial'])
+        ->where('id_cliente', $cliente->id_cliente)
+        ->orderByDesc('fecha_alta')
+        ->get()
+        ->map(function ($c) {
                 $subtotal = $c->subtotal ?: 0;
                 $margen = $c->score_final ?: 0;
                 $factor = $subtotal > 0 ? ($margen / $subtotal) * 100 : 0;
 
                 return [
-                    'fecha'    => $c->fecha,
+                    'fecha_alta'    => $c->fecha_alta,
                     'id_cotizacion' => $c->id_cotizacion,
                     'num_consecutivo'       => $c->num_consecutivo,
                     'razon'    => optional($c->razonSocial)->nombre ?? 'Sin razón',
@@ -202,7 +202,7 @@ class ClienteController extends Controller
                     'margen'   => $margen,
                     'factor'   => $factor
             ];
-            });
+        });
 
 
         // ===== Dummy de historial mientras no hay modelo Pedido =====

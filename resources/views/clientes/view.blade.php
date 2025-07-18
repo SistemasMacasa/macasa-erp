@@ -704,7 +704,7 @@
                 style="max-height: 380px; overflow-y: auto; background: var(--tabla-header-bg);">
                 @php
                     $totalSubtotal = $cotizaciones->sum('subtotal');
-                    $totalMargen = $cotizaciones->sum('margen'); // o lo que te pidan mostrar
+                    $totalMargen = $cotizaciones->sum('margen'); 
                     $totalFactor = $cotizaciones->sum('factor');
                 @endphp
 
@@ -735,15 +735,32 @@
                         @php $cantidad_cotizaciones = 0; @endphp
                         @forelse ($cotizaciones as $c)
                             <tr>
-                                <td>
-                                    <a href="{{ route('cotizaciones.pdf', $c['id_cotizacion']) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
-                                        <i class="fa fa-file-pdf"></i> PDF
+                                <td style="white-space: nowrap;">
+                                    <a href="{{ route('cotizaciones.pdf', $c['id_cotizacion']) }}" target="_blank"
+                                        class="btn btn-sm d-inline-flex align-items-center gap-2 px-2 py-1 text-danger"
+                                        style="
+                                        border-radius: 999px;
+                                        font-weight: 500;
+                                        background-color: transparent;
+                                        border: 1px solid #dc3545;
+                                        transition: border-color 0.2s ease, background-color 0.2s ease;
+                                        box-shadow: 0 2px 6px rgba(220,53,69,0.1);
+                                        "
+                                        onmouseover="this.style.backgroundColor='rgba(220,53,69,0.08)'; this.style.borderColor='#dc3545';"
+                                        onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#dc3545';"
+                                        onfocus="this.style.boxShadow='0 0 0 3px rgba(220,53,69,0.3)';"
+                                        onblur="this.style.boxShadow='0 2px 6px rgba(220,53,69,0.1)';"
+                                    >
+                                        <i class="fa fa-file-pdf" style="font-size: 1.1em;"></i>
+                                        <span class="d-none d-md-inline">PDF</span>
                                     </a>
-                                    
-
                                 </td>
-                                <td>{{ \Carbon\Carbon::parse($c['fecha'])->format('d-m-Y') }}</td>
-                                <td>{{ $c['num_consecutivo'] }}</td>
+                                <td>{{ \Carbon\Carbon::parse($c['fecha_alta'])->format('d-m-Y') }}</td>
+                                <td>
+                                    <a href="{{ route('cotizaciones.edit', $c['id_cotizacion']) }}">
+                                        {{ $c['num_consecutivo'] }}
+                                    </a>
+                                </td>
                                 <td>{{ $c['razon'] }}</td>
                                 <td class="text-end">$ {{ number_format($c['subtotal'], 2) }}</td>
                                 <td class="text-end">{{ number_format($c['margen'], 2) }}</td>
