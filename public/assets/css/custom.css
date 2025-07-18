@@ -332,19 +332,23 @@ body[data-bs-theme="dark"] {
   background-color: #d4edc9;
   /* un verde pistache clarito */
 }
+
 .equipo-detalle {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    padding: 0 1rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 1rem;
 }
 
 .equipo-detalle.abierto {
-    max-height: 500px;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+  max-height: 500px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
+.equipo-card {
+  background-color: #f9fbff;
+}
 
 
 

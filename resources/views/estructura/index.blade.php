@@ -17,18 +17,20 @@
                 <i class="fa fa-arrow-left me-1"></i> Regresar
             </a>
 
-            {{-- Botón Modal Crear Segmento --}}
             <button class="col-md-2 btn btn-primary btn-principal" data-bs-toggle="modal"
-                data-bs-target="#modalCrearSegmento">+ Crear Segmento</button>
+                data-bs-target="#modalCrearSegmento">
+                + Crear Segmento
+            </button>
         </div>
 
         {{-- Tabla colapsable de segmentos --}}
         <div class="accordion" id="segmentosAccordion">
             <div class="tabla-header-top">
                 <div class="header-title">
-                    <i class="fa fa-users me-1"></i> Organizacion
+                    <i class="fa fa-users me-1"></i> Organización
                 </div>
             </div>
+
             @foreach($segmentos as $segmento)
                 <div class="accordion-item mb-2">
                     <h2 class="accordion-header" id="heading{{ $segmento->id_segmento }}">
@@ -40,10 +42,11 @@
                     <div id="collapse{{ $segmento->id_segmento }}" class="accordion-collapse collapse"
                         data-bs-parent="#segmentosAccordion">
                         <div class="accordion-body">
+                            {{-- Info segmento + acciones --}}
                             <div
-                                class="d-flex justify-content-between align-items-center mb-2 p-2 gap-2 bg-light rounded shadow-sm border">
+                                class="d-flex justify-content-between align-items-center mb-2 p-2 gap-2 bg-light rounded shadow-sm border border-primary border-2">
                                 <strong class="mb-0">
-                                    <i class="fa fa-layer-group me-1"></i> Segmento: {{ $segmento->nombre }}
+                                    {{-- <i class="fa fa-layer-group me-1"></i> --}}
                                 </strong>
                                 <div class="btn-group gap-2">
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
@@ -61,123 +64,92 @@
                                 </div>
                             </div>
 
-                            {{-- Tabla de sucursales --}}
-                            <table class="table table-bordered align-middle">
-                                <thead>
-                                    <tr class="table-light">
-                                        <th colspan="2">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span>
-                                                    <strong>Sucursales:</strong>
-                                                    {{ $segmento->sucursales->pluck('nombre')->join(', ') ?: 'Sin sucursales' }}
-                                                </span>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($segmento->sucursales as $sucursal)
-                                        <tr data-bs-toggle="collapse" data-bs-target="#equiposSucursal{{ $sucursal->id_sucursal }}"
-                                            class="cursor-pointer">
-                                            <td>{{ $sucursal->nombre }}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditarSucursal{{ $sucursal->id_sucursal }}">Editar</button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#modalEliminarSucursal{{ $sucursal->id_sucursal }}">Eliminar</button>
-                                            </td>
-                                        </tr>
+                            {{-- Sucursales --}}
+                            <div class="accordion" id="sucursalesAccordion-{{ $segmento->id_segmento }}" style="padding: 22px">
+                                @foreach($segmento->sucursales as $sucursal)
+                                    <div class="accordion-item mb-2">
+                                        <h2 class="accordion-header" id="headingSucursal{{ $sucursal->id_sucursal }}">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#collapseSucursal{{ $sucursal->id_sucursal }}">
+                                                <strong>Sucursal:</strong> {{ $sucursal->nombre }}
+                                            </button>
+                                        </h2>
+                                        <div id="collapseSucursal{{ $sucursal->id_sucursal }}" class="accordion-collapse collapse"
+                                            data-bs-parent="#sucursalesAccordion-{{ $segmento->id_segmento }}">
+                                            <div class="accordion-body">
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light border rounded">
+                                                    <strong>
+                                                        <i class="fa fa-building me-1"></i> {{ $sucursal->nombre }}
+                                                    </strong>
+                                                    <div class="btn-group gap-2">
+                                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                            data-bs-target="#modalEditarSucursal{{ $sucursal->id_sucursal }}">Editar</button>
+                                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                            data-bs-target="#modalEliminarSucursal{{ $sucursal->id_sucursal }}">Eliminar</button>
+                                                    </div>
+                                                </div>
 
-                                        {{-- Fila colapsable para mostrar equipos --}}
-                                        <tr class="collapse" id="equiposSucursal{{ $sucursal->id_sucursal }}">
-                                            <td colspan="2" class="p-0">
-                                                <table class="table table-bordered mb-0">
-                                                    <thead class="table-secondary">
-                                                        <tr>
-                                                            <th>Equipo</th>
-                                                            <th>Usuarios</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @forelse($sucursal->equipos as $equipo)
-                                                            <tr onclick="toggleEquipo({{ $equipo->id_equipo }})" class="cursor-pointer">
-                                                                <td>
-                                                                    <i class="fa fa-users me-1"></i>{{ $equipo->nombre }}
-                                                                    @if($equipo->descripcion)
-                                                                        <small class="text-muted d-block">{{ $equipo->descripcion }}</small>
-                                                                    @endif
-                                                                </td>
-                                                                <td>
-                                                                    {{ $equipo->usuarios->count() }} usuarios
-                                                                    <i class="fa fa-chevron-down ms-1"></i>
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td colspan="2" class="p-0">
-                                                                    <div id="equipo-detalle-{{ $equipo->id_equipo }}"
-                                                                        class="equipo-detalle">
-                                                                        <ul class="list-unstyled mb-0">
-                                                                            @if($equipo->lider)
-                                                                                <li><strong>Líder:</strong>
-                                                                                    {{ $equipo->lider->nombre_completo }}</li>
-                                                                            @endif
-                                                                            @foreach($equipo->usuarios as $usuario)
-                                                                                @continue($equipo->lider && $usuario->id_usuario === $equipo->lider->id_usuario)
-                                                                                <li>{{ $usuario->nombre_completo }}</li>
-                                                                            @endforeach
-                                                                        </ul>
+                                                {{-- Equipos --}}
+                                                <div class="accordion" id="equiposAccordion-{{ $sucursal->id_sucursal }}">
+                                                    @foreach($sucursal->equipos as $equipo)
+                                                        <div class="accordion-item mb-2">
+                                                            <h2 class="accordion-header" id="headingEquipo{{ $equipo->id_equipo }}">
+                                                                <button class="accordion-button collapsed border border-purple"
+                                                                    type="button" data-bs-toggle="collapse"
+                                                                    data-bs-target="#collapseEquipo{{ $equipo->id_equipo }}">
+                                                                    <strong>Equipo:</strong> {{ $equipo->nombre }}
+                                                                </button>
+                                                            </h2>
+                                                            <div id="collapseEquipo{{ $equipo->id_equipo }}"
+                                                                class="accordion-collapse collapse"
+                                                                data-bs-parent="#equiposAccordion-{{ $sucursal->id_sucursal }}">
+                                                                <div class="accordion-body">
+                                                                    <div class="bg-light border rounded p-2">
+                                                                        <strong>
+                                                                            <i class="fa fa-users me-1"></i> Miembros del equipo
+                                                                        </strong>
+                                                                        <div class="table-responsive">
+                                                                            <table class="table table-hover mt-2 mb-0">
+                                                                                <tbody>
+                                                                                    @forelse($equipo->usuarios as $usuario)
+                                                                                        <tr>
+                                                                                            <td width="40">
+                                                                                                <i class="fa fa-user text-muted"></i>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <strong>{{ $usuario->nombre_completo }}</strong>
+                                                                                                <small class="text-muted">
+                                                                                                    ({{ $equipo->lider && $usuario->id_usuario === $equipo->lider->id_usuario ? 'líder' : 'miembro' }})
+                                                                                                </small>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    @empty
+                                                                                        <tr>
+                                                                                            <td colspan="2" class="text-center text-muted">
+                                                                                                Este equipo no tiene miembros.</td>
+                                                                                        </tr>
+                                                                                    @endforelse
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-                                                        @empty
-                                                            <tr>
-                                                                <td colspan="2" class="text-center">Sin equipos</td>
-                                                            </tr>
-                                                        @endforelse
-
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
-
-        {{-- 🔧 MODALES --}}
-        {{-- Crear segmento --}}
-        <div class="modal fade" id="modalCrearSegmento" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="{{ route('segmentos.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Crear nuevo segmento</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <label for="nombreSegmento" class="form-label">Nombre del segmento</label>
-                            <input type="text" class="form-control" name="nombre" id="nombreSegmento" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button class="btn btn-primary" type="submit">Crear segmento</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         @foreach($segmentos as $segmento)
             {{-- Editar segmento --}}
             <div class="modal fade" id="modalEditarSegmento{{ $segmento->id_segmento }}" tabindex="-1">
@@ -193,7 +165,7 @@
                                 <input type="text" name="nombre" class="form-control" value="{{ $segmento->nombre }}" required>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 <button class="btn btn-primary" type="submit">Guardar cambios</button>
                             </div>
                         </div>
@@ -215,7 +187,7 @@
                                 ¿Estás seguro que deseas eliminar el segmento <strong>{{ $segmento->nombre }}</strong>?
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 <button class="btn btn-danger" type="submit">Eliminar</button>
                             </div>
                         </div>
@@ -238,7 +210,7 @@
                                 <input type="text" name="nombre" class="form-control" placeholder="Nombre de sucursal" required>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 <button class="btn btn-success" type="submit">Crear</button>
                             </div>
                         </div>
@@ -261,7 +233,7 @@
                                     <input type="text" name="nombre" class="form-control" value="{{ $sucursal->nombre }}" required>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <button class="btn btn-primary" type="submit">Guardar cambios</button>
                                 </div>
                             </div>
@@ -283,7 +255,7 @@
                                     ¿Seguro que deseas eliminar la sucursal <strong>{{ $sucursal->nombre }}</strong>?
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <button class="btn btn-danger" type="submit">Eliminar</button>
                                 </div>
                             </div>

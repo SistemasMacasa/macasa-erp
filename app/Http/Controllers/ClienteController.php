@@ -184,7 +184,7 @@ class ClienteController extends Controller
             ->orderBy('fecha_registro')
             ->get();
 
-            $cotizaciones = Cotizacion::with(['razonSocial'])
+        $cotizaciones = Cotizacion::with(['razonSocial'])
             ->where('id_cliente', $cliente->id_cliente)
             ->orderByDesc('fecha_alta')
             ->get()
@@ -201,13 +201,12 @@ class ClienteController extends Controller
                     'subtotal' => $subtotal,
                     'margen'   => $margen,
                     'factor'   => $factor
-            ];
+                ];
             });
 
 
         // ===== Dummy de historial mientras no hay modelo Pedido =====
-        $pedidos = collect([
-        ]);
+        $pedidos = collect([]);
 
         $vendedores = Usuario::whereNull('id_cliente')->where('estatus', 'activo')->get(); // usuarios internos activos
         $metodos_pago = MetodoPago::pluck('nombre', 'id_metodo_pago');
@@ -676,7 +675,7 @@ class ClienteController extends Controller
                 /* -------- Cuenta -------- */
                 'nombre' => ['required', 'string', 'max:100'],
                 'sector' => ['required', 'string', 'max:100'],
-                'id_segmento' => ['required','integer', 'exists:segmentos,id_segmento'],
+                'id_segmento' => ['required', 'integer', 'exists:segmentos,id_segmento'],
                 'id_vendedor' => ['nullable', 'integer', 'exists:usuarios,id_usuario'],
 
                 /* -------- Contacto(s) ---- */
@@ -1102,9 +1101,10 @@ class ClienteController extends Controller
             $query->where('sector', $sector);
         }
 
-        if ($segmento = $request->input('segmento')) {      // segmento = 'macasa cuentas especiales' | …
-            $query->where('segmento', $segmento);
+        if ($segmento = $request->input('segmento')) {
+            $query->where('id_segmento', $segmento);
         }
+
 
         // Ciclo de venta
         if ($cycle = $request->input('cycle')) {            // cycle = 'cotizacion' | 'venta'
@@ -1137,7 +1137,10 @@ class ClienteController extends Controller
 
         // Los sacamos directo de la tabla para que no se “desincronicen”
         $sectores = Cliente::select('sector')->distinct()->pluck('sector');
-        $segmentos = Cliente::select('segmento')->distinct()->pluck('segmento');
+
+        $segmentos = Segmento::orderBy('nombre')
+            ->pluck('nombre', 'id_segmento');
+
         $ciclos = Cliente::select('ciclo_venta')->distinct()->pluck('ciclo_venta');
 
         return view('clientes.archivadas', compact(
