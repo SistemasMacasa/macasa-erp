@@ -628,6 +628,11 @@ class CotizacionController extends Controller
 
         $pdf = Pdf::loadView('pdf.cotizacion', compact('cotizacion'))
                 ->setPaper('letter');
+        $pdf->set_option('isHtml5ParserEnabled', true);
+        $pdf->set_option('isPhpEnabled', true);
+        $pdf->set_option('defaultFont', 'DejaVu Sans');
+        $pdf->set_option('isHtml5ParserEnabled', true);
+
 
         return $pdf->stream("Cotizacion-{$cotizacion->num_consecutivo}.pdf");
     }

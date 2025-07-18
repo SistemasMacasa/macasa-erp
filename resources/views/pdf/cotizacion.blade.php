@@ -5,25 +5,48 @@
     <meta charset="UTF-8">
     <title>Cotización #{{ $cotizacion->num_consecutivo }}</title>
 
+    {{-- ================= ESTILOS GLOBAL ================= --}}
     <style>
         @page {
-            margin: 28px;
+            margin-top: 70px;
+            /* ya está bien */
+            margin-bottom: 100px;
+            /* antes 88 px → ahora igual a la nueva altura */
+            margin-left: 20mm;
+            margin-right: 20mm;
         }
+
+
+        /* 60 mm deja espacio seguro al pie */
+
+        .footer-logos td {
+            width: 20%;
+        }
+
+        /* distribución exacta de logos */
+
 
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 10.5px;
-            color: #222;
+            font-size: 10.2px;
+            color: #2e2e2e;
+            line-height: 1.4;
         }
 
         h1 {
             font-size: 19px;
-            color: #0050a5;
-            text-align: center;
-            margin: 18px 0 14px;
+            color: #003366;
+            margin: 0 0 4px;
+            text-transform: uppercase;
         }
 
-        /* Tablas genéricas */
+        h2 {
+            font-size: 13px;
+            color: #003366;
+            margin: 0 0 4px;
+            text-transform: uppercase;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -31,31 +54,20 @@
 
         th,
         td {
-            border: 0.6px solid #b5b5b5;
-            padding: 6px;
+            padding: 4px 6px;
             vertical-align: top;
+            line-height: 1.35;
+            word-wrap: break-word;
         }
 
         th {
-            background: #f4f6f8;
+            background: #e6edff;
             font-weight: bold;
+            font-size: 10px;
         }
 
-        /* Tablas sin borde externo */
-        .no-border td {
-            border: none;
-            padding: 2px 0;
-        }
-
-        /* Tabla meta (datos rápidos) */
-        .meta td {
-            border: 0.6px solid #d1d1d1;
-        }
-
-        .meta td.label {
-            background: #f4f6f8;
-            font-weight: bold;
-            width: 28%;
+        tbody tr:nth-child(even) {
+            background: #f7f9fb;
         }
 
         .text-right {
@@ -66,144 +78,308 @@
             text-align: center;
         }
 
-        .section {
-            margin-top: 22px;
+        .fw-bold {
+            font-weight: bold;
         }
+
+        /* META tabla */
+        .meta-table td.label {
+            background: #f4f6f8;
+            font-weight: bold;
+            width: 22%;
+        }
+
+        .meta-table td {
+            border: 0.6px solid #d1d1d1;
+        }
+
+        /* Totales */
+        .totales-card {
+            background: #f0f6ff;
+            border-radius: 6px;
+            padding: 6px 10px;
+            width: 100%;
+            font-size: 10px;
+        }
+
+        .totales-card td.label {
+            text-align: right;
+            padding-right: 8px;
+            font-weight: bold;
+            width: 70%;
+        }
+
+        .totales-card td.value {
+            text-align: right;
+            width: 30%;
+        }
+
+        .totales-card tr.total td {
+            font-size: 11.5px;
+        }
+
+        .totales-wrapper {
+            page-break-inside: avoid;
+        }
+
+        /* Bullets */
+        ul.blue {
+            list-style-type: disc;
+            margin: 2px 0 0 14px;
+            padding: 0;
+        }
+
+        ul.blue li {
+            margin-bottom: 2px;
+        }
+
+        /* Header & Footer */
+        header {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            height: 60px;
+            margin-top: -60px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            height: 50px;
+            margin-bottom: -50px;
+        }
+
+
+        .footer-logos td {
+            width: 20%;
+            text-align: center;
+        }
+
+
+        .page-number:after {
+            content: counter(page) " / " counter(pages);
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+        }
+
+        /* ——— Imágenes de cabecera y pie ——— */
+        .img-full {
+            width: 100%;
+            height: auto;
+            /* ← deja que mantenga proporción */
+            display: block;
+        }
+
+        .mt-tight {
+            margin-top: -30px;
+        }
+
+        /* ajuste fino: -12 px */
     </style>
 </head>
 
 <body>
+    {{-- ========== HEADER (htmlpageheader) ========== --}}
+    <htmlpageheader name="all">
+        <div style="position:relative; height:120px;">
+            <table style="width:100%; position:relative; z-index:2;">
+                <tr>
+                    <td style="width:60%;">
+                        <img src="{{ public_path('assets/images/logo.png') }}" style="height:40px;">
+                    </td>
+                    <td style="width:40%; text-align:right;">
+                        <div style="display:inline-block;background:#e6edff;border:1px solid #9fbafc;
+                      border-radius:4px;padding:6px 14px;font-size:11px;">
+                            <strong>Cotización #{{ $cotizacion->num_consecutivo }}</strong>
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
-    {{-- LOGO --}}
-    <div style="text-align:center;">
-        <img src="{{ public_path('assets/images/logo.png') }}" style="width:175px;">
-    </div>
+            {{-- barra corporativa al fondo, sin tapar --}}
+            <img src="{{ public_path('assets/images/barra.png') }}" class="img-full"
+                style="position:absolute; left:0; bottom:0; z-index:1;">
 
-    {{-- Línea divisoria --}}
-    <hr style="border:0; border-top:0.6px solid #b5b5b5; margin:8px 0 20px;">
+        </div>
+    </htmlpageheader>
+    <sethtmlpageheader name="all" value="on" />
 
-    {{-- Emisor / Dirección de entrega --}}
-    <table class="no-border">
-        <tr>
-            <td style="width:47%;">
-                <strong>Emite</strong><br>
-                MC Comercializadora de Cómputo y Redes<br>
-                Av. Primero de Mayo #15 Int. 1025<br>
-                Naucalpan de Juárez, 53500, México<br>
-                01&nbsp;(55)&nbsp;5003-2830<br>
-                Email: mcarreon@macasahs.com.mx
-            </td>
 
-            <td style="width:53%;">
-                <strong>Dirección de Entrega</strong><br>
-                {{ $cotizacion->contactoEntrega->nombre ?? 'Nombre de Contacto' }}<br>
-                {{ $cotizacion->contactoEntrega->direccion_entrega->calle ?? '' }}
-                {{ $cotizacion->contactoEntrega->direccion_entrega->num_ext ?? '' }}<br>
-                {{ $cotizacion->contactoEntrega->direccion_entrega->colonia->d_asenta ?? '' }}<br>
-                {{ $cotizacion->contactoEntrega->direccion_entrega->colonia->D_mnpio ?? '' }},
-                {{ $cotizacion->contactoEntrega->direccion_entrega->cp ?? '' }}<br>
-                {{ $cotizacion->contactoEntrega->direccion_entrega->colonia->d_estado ?? '' }}<br>
-                Teléfono: {{ $cotizacion->contactoEntrega->telefono1 ?? '-' }}<br>
-                Email: {{ $cotizacion->contactoEntrega->email ?? '-' }}
-            </td>
-        </tr>
-    </table>
+    {{-- ======= CONTENIDO (compensar header) ======= --}}
+    <div>
+        {{-- EMITE / PARA --}}
+        <table class="mt-tight" style="margin-bottom:6px;">
 
-    {{-- Título --}}
-    <h1>Cotización # {{ $cotizacion->num_consecutivo }}</h1>
+            <tr>
+                <td style="width:50%;">
+                    <h2>Emite</h2>
+                    <strong>MC Comercializadora de Cómputo y Redes, S.A. de C.V.</strong><br>
+                    Av. Primero de Mayo #15 Int. 1025, Naucalpan de Juárez,<br>
+                    CP 53500, Estado de México.<br>
+                    Tel: (55)-5003‑2830 &nbsp;|&nbsp; mcarreon@macasahs.com.mx
+                </td>
+                <td style="width:50%;">
+                    <h2>Para</h2>
+                    <strong>{{ $cotizacion->cliente->nombre ?? '' }}</strong><br>
+                    {{ $cotizacion->contactoEntrega->direccion_entrega->calle ?? '' }}
+                    #{{ $cotizacion->contactoEntrega->direccion_entrega->num_ext ?? '' }}@if(isset($cotizacion->contactoEntrega->direccion_entrega->num_int)),
+                    Int.{{ $cotizacion->contactoEntrega->direccion_entrega->num_int }}@endif
+                    {{ $cotizacion->contactoEntrega->direccion_entrega->colonia->d_asenta ?? '' }},
+                    {{ $cotizacion->contactoEntrega->direccion_entrega->ciudad->n_mnpio ?? '' }}<br>
+                    CP {{ $cotizacion->contactoEntrega->direccion_entrega->cp ?? '' }},
+                    {{ $cotizacion->contactoEntrega->direccion_entrega->colonia->d_estado ?? '' }}<br>
+                    Tel: {{ $cotizacion->contactoEntrega->telefono1 ?? '-' }} &nbsp;|&nbsp;
+                    {{ $cotizacion->contactoEntrega->email ?? '-' }}
+                </td>
+            </tr>
+        </table>
 
-    {{-- Datos clave --}}
-    <table class="meta">
-        <tr>
-            <td class="label">Vendedor</td>
-            <td>{{ $cotizacion->vendedor->nombreCompleto ?? 'N/D' }}</td>
-            <td class="label">Comprador</td>
-            <td>{{ $cotizacion->cliente->contacto_predet->nombreCompleto ?? 'N/D' }}</td>
-        </tr>
-        <tr>
-            <td class="label">Fecha</td>
-            <td>{{ $cotizacion->fecha_alta->format('d/m/Y') }}</td>
-            <td class="label">Vigencia</td>
-            <td>{{ $cotizacion->vencimiento->format('d/m/Y') }}</td>
-        </tr>
-        <tr>
-            <td class="label">Condición de Pago</td>
-            <td>[Condición&nbsp;por&nbsp;definir]</td>
-            <td class="label">Tiempo de Entrega</td>
-            <td>[Entrega&nbsp;por&nbsp;definir]</td>
-        </tr>
-        <tr>
-            <td class="label">Moneda</td>
-            <td>MXN</td>
-            <td class="label"></td>
-            <td></td>
-        </tr>
-    </table>
+        {{-- META DATOS --}}
+        <table class="meta-table" style="margin-bottom:12px;">
+            <tr>
+                <td class="label">Vendedor</td>
+                <td>{{ $cotizacion->vendedor->nombreCompleto ?? 'N/D' }}</td>
+                <td class="label">Comprador</td>
+                <td>{{ $cotizacion->cliente->contacto_predet->nombreCompleto ?? 'N/D' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Fecha</td>
+                <td>{{ $cotizacion->fecha_alta->format('d/m/Y') }}</td>
+                <td class="label">Vigencia</td>
+                <td>{{ $cotizacion->vencimiento->format('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Cond. Pago</td>
+                <td>[Por definir]</td>
+                <td class="label">Tiempo Entrega</td>
+                <td>[Por definir]</td>
+            </tr>
+            <tr>
+                <td class="label">Moneda</td>
+                <td>MXN</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
 
-    {{-- Productos --}}
-    <div class="section">
+        {{-- PROUESTA --}}
+
+        @php
+            $mostrarSku = $cotizacion->partidas->contains(function ($p) {
+                return !empty($p->sku);
+            });
+        @endphp
+
+
+
+        <h2>Propuesta Económica</h2>
         <table>
             <thead>
                 <tr>
-                    <th style="width:17%;">SKU</th>
-                    <th>Descripción</th>
-                    <th style="width:16%;">Precio Unitario</th>
-                    <th style="width:10%;">Cantidad</th>
-                    <th style="width:16%;">Importe</th>
+                    <th style="width:6%;">#</th>
+                    @if($mostrarSku)
+                    <th style="width:14%;">SKU</th>@endif
+                    <th style="width:46%;">Descripción</th>
+                    <th style="width:14%;" class="text-right">P. Unit.</th>
+                    <th style="width:10%;" class="text-center">Cant.</th>
+                    <th style="width:16%;" class="text-right">Importe</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($cotizacion->partidas as $p)
+                @php
+                    $subtotal = 0;
+                @endphp
+                @foreach($cotizacion->partidas as $i => $p)
                     <tr>
-                        <td>{{ $p->sku ?? '-' }}</td>
-                        <td>{{ $p->descripcion }}</td>
-                        <td class="text-right">${{ number_format($p->precio_unitario, 2) }}</td>
+                        <td class="text-center">{{ $i + 1 }}</td>
+                        @if($mostrarSku)
+                        <td>{{ $p->sku ?? '-' }}</td>@endif
+                        <td>{!! nl2br(e($p->descripcion)) !!}</td>
+                        <td class="text-right">${{ number_format($p->precio, 2) }}</td>
                         <td class="text-center">{{ $p->cantidad }}</td>
-                        <td class="text-right">${{ number_format($p->importe, 2) }}</td>
+                        <td class="text-right">${{ number_format($p->precio * $p->cantidad, 2) }}</td>
                     </tr>
+                    @php
+                        $subtotal += $p->precio * $p->cantidad;
+                    @endphp
                 @endforeach
             </tbody>
         </table>
-    </div>
 
-    {{-- Totales + Datos bancarios --}}
-    <table class="no-border" style="margin-top:20px;">
-        <tr>
-            <td style="width:60%; vertical-align:top;">
-                <p style="margin-bottom:4px;"><strong>Favor de realizar su pago a nombre de:</strong><br>
-                    MC Comercializadora de Cómputo y Redes, S.A de C.V.<br>
-                    BANCO SCOTIABANK<br>
-                    Cuenta 00101474386<br>
-                    CLABE 044180001014743869
-                </p>
+        {{-- TOTALES + NOTAS (en fila) --}}
+        <table class="no-break" style="width:100%; margin-top:12px;">
+            <tr>
+                <td style="width:70%; vertical-align:top;">
+                    <p class="fw-bold" style="margin:0 0 4px;">Favor de realizar su pago a nombre de:</p>
+                    MC Comercializadora de Cómputo y Redes, S.A. de C.V.<br>
+                    Banco SCOTIABANK • Cuenta 00101474386 • CLABE 044180001014743869
 
-                <p><strong>Aspectos importantes de nuestro proceso:</strong></p>
-                <ol style="font-size:9px; margin-left:14px; padding-right:8px;">
-                    <li>Precios y condiciones sujetos a cambio sin previo aviso.</li>
-                    <li>Una vez confirmado el pedido, no hay devoluciones.</li>
-                    <li>Pedidos &lt; $2,500 + IVA: cargo de envío $150 + IVA.</li>
-                    <li>Confirme procesos de garantía con su ejecutivo antes de autorizar el pedido.</li>
-                </ol>
-            </td>
+                    <p class="fw-bold" style="margin:6px 0 2px;">Aspectos importantes de nuestro proceso:</p>
+                    <ul class="blue">
+                        <li>Precios y condiciones sujetos a cambio sin previo aviso.</li>
+                        <li>No hay devoluciones una vez confirmado el pedido.</li>
+                        <li>Pedidos &lt; $2,500 MN + IVA: envío $150 MN + IVA.</li>
+                        <li>Confirme garantías con su ejecutivo antes de autorizar.</li>
+                    </ul>
+                </td>
+                <td style="width:30%; vertical-align:top;">
+                    <div class="totales-card">
+                        <table>
+                            <tr>
+                                <td class="label">Subtotal:</td>
+                                <td class="value">${{ number_format($subtotal, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="label">IVA (16%):</td>
+                                <td class="value">${{ number_format($subtotal * 0.16, 2) }}</td>
+                            </tr>
+                            <tr class="total">
+                                <td class="label">TOTAL:</td>
+                                <td class="value">${{ number_format($subtotal * 1.16, 2) }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-            <td style="width:40%; vertical-align:top;">
-                <table>
-                    <tr>
-                        <td class="text-right"><strong>Subtotal:</strong></td>
-                        <td class="text-right">${{ number_format($cotizacion->subtotal, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="text-right"><strong>IVA (16%):</strong></td>
-                        <td class="text-right">${{ number_format($cotizacion->iva, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="text-right"><strong>Total:</strong></td>
-                        <td class="text-right">${{ number_format($cotizacion->total, 2) }}</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    </div> {{-- /contenido --}}
+
+    {{-- ========== FOOTER (htmlpagefooter) ========== --}}
+    <htmlpagefooter name="last">
+        <div style="position:relative; height:120px;"> {{-- ↑ nuevo alto total --}}
+
+            <!-- franja azul pegada al borde inferior -->
+            <img src="{{ public_path('assets/images/pie_pag.png') }}" class="img-full"
+                style="position:absolute; left:0; bottom:0; z-index:1;">
+
+            <!-- logos 32 px por encima de la franja -->
+            <table class="footer-logos" style="width:100%; position:absolute;
+                            bottom:2px;    
+                    left:0; table-layout:fixed; z-index:2;">
+
+                <tr>
+                    @foreach (['dell', 'hp', 'lenovo', 'microsoft', 'kingston'] as $logo)
+                        <td><img src="{{ public_path('assets/images/partners/' . $logo . '.png') }}"
+                                style="max-height:38px;">
+                        </td>
+                    @endforeach
+                </tr>
+            </table>
+
+            <!-- numeración -->
+            <div style="position:absolute; right:22mm; bottom:8px;
+                  font-size:8px; color:#6d6d6d; z-index:3;">
+                <span class="page-number"></span>
+            </div>
+        </div>
+    </htmlpagefooter>
+    <sethtmlpagefooter name="last" value="on" show-this-page="1" />
 
 </body>
 
